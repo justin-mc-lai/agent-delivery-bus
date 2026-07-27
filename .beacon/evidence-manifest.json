@@ -2,11 +2,31 @@
   "schema_version": "1.0",
   "entries": [
     {
+      "path": "docs/beacon/v0.0.1/.machine/execution/implementation-summary-delivery-bus-mvp.json",
+      "sha256": "17efab0dab8fdc2b49f5ab4c1bd88eb3da0ce5c3987d7ee3ed67a7e8e239b618",
+      "updated_at": "2026-07-27T14:01:43.731535+00:00"
+    },
+    {
+      "path": "docs/beacon/v0.0.1/.machine/execution/technical-implementation-delivery-bus-mvp.json",
+      "sha256": "aee2a894024146f2e0c01f063473885b31ee5f5526baa79ac668ab14266d538d",
+      "updated_at": "2026-07-27T14:01:43.731306+00:00"
+    },
+    {
       "path": "docs/beacon/v0.0.1/.machine/requirement/feature-package-validation.json",
       "sha256": "6808b01ad31a2ea21e85ae31c092131944038367c1fcffee2255336e447cfb6b",
-      "updated_at": "2026-07-27T13:59:29.730226+00:00"
+      "updated_at": "2026-07-27T14:01:43.731388+00:00"
+    },
+    {
+      "path": "docs/beacon/v0.0.1/.machine/trace/implementation/delivery-bus-mvp/technical-implementation-delivery-bus-mvp.md",
+      "sha256": "70e34f73b7e8eb372bb20eff9e98d7e5c2cc99a03322db8ff536b3795e626e96",
+      "updated_at": "2026-07-27T14:01:43.731464+00:00"
+    },
+    {
+      "path": "docs/beacon/v0.0.1/execution/implementation-brief-delivery-bus-mvp.md",
+      "sha256": "42e9a9a18d3000025cde00999d48215f86b5f48c5c919144ba15fdae7ae18555",
+      "updated_at": "2026-07-27T14:01:43.731588+00:00"
     }
   ],
-  "updated_at": "2026-07-27T13:59:29.730232+00:00",
+  "updated_at": "2026-07-27T14:01:43.731594+00:00",
   "version": "v0.0.1"
 }

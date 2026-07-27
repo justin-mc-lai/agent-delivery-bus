@@ -5,7 +5,7 @@
   "version": "v0.0.1",
   "current_revision_id": "R2",
   "lifecycle_status": "frozen",
-  "updated_at": "2026-07-27T13:58:00.401806+00:00",
+  "updated_at": "2026-07-27T14:01:43.695969+00:00",
   "revisions": [
     {
       "revision_id": "R1",
@@ -103,7 +103,7 @@
       "revision_id": "R2",
       "title": "delivery-bus-mvp",
       "priority": "medium",
-      "status": "frozen",
+      "status": "implemented",
       "items": [
         {
           "id": "AC-001",
@@ -111,8 +111,8 @@
           "theme": "general",
           "text": "Acceptance criteria TBD",
           "required": true,
-          "status": "draft",
-          "implemented_by_run_id": null,
+          "status": "implemented",
+          "implemented_by_run_id": "run-20260727T140143Z-ff6d",
           "verified_by_run_id": null,
           "accepted_at": null,
           "changed_in_revision": "R2",
@@ -125,8 +125,8 @@
           "kind": "task",
           "text": "Implement current frozen revision",
           "required": true,
-          "status": "draft",
-          "implemented_by_run_id": null,
+          "status": "implemented",
+          "implemented_by_run_id": "run-20260727T140143Z-ff6d",
           "verified_by_run_id": null,
           "accepted_at": null,
           "changed_in_revision": "R2"
@@ -157,7 +157,14 @@
         "section_count": 0,
         "sections": {},
         "derived_items": []
-      }
+      },
+      "feature": "delivery-bus-mvp",
+      "feature_slug": "delivery-bus-mvp",
+      "version": "v0.0.1",
+      "last_changed_files": [
+        "README.md",
+        "pyproject.toml"
+      ]
     }
   ]
 }

@@ -1,0 +1,160 @@
+{
+  "schema_version": "1.0",
+  "semantic_contract_version": "1.0",
+  "feature": "delivery-bus-mvp",
+  "feature_slug": "delivery-bus-mvp",
+  "version": "v0.0.1",
+  "stage": "implement",
+  "generated_at": "2026-07-27T14:01:43.663694+00:00",
+  "source_hash": "7513a09a2ce18eeff93c698d2aa67d8de313b67d8a52e5e707dde50618aa5ab7",
+  "projection_seq": "semantic-7513a09a2ce18eef",
+  "transaction_id": "tx-semantic-delivery-bus-mvp-semantic-7513a09a2ce18eef",
+  "source_documents": [
+    {
+      "type": "prd",
+      "path": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+      "fingerprint": "c4abb64d95be67fc29fe55b17a901b1f00ed8613f49069cb48f4c29598806d8d"
+    },
+    {
+      "type": "user-story",
+      "path": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+      "fingerprint": "c4abb64d95be67fc29fe55b17a901b1f00ed8613f49069cb48f4c29598806d8d"
+    },
+    {
+      "type": "test-case",
+      "path": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
+      "fingerprint": "b4633497d6f0284e27a1d3c86c4a9076b17ee798adbfdfc18cc39be30d557947"
+    }
+  ],
+  "stage_context": {
+    "schema_version": "1.0",
+    "run_id": "run-20260727T140143Z-ff6d",
+    "stage": "implement",
+    "feature": "delivery-bus-mvp",
+    "version": "v0.0.1",
+    "generated_at": "2026-07-27T14:01:43.656446+00:00",
+    "memory_recall": [],
+    "lifecycle_events": [],
+    "requirement_refs": [
+      "docs/beacon/v0.0.1/release/v0.0.1.md"
+    ],
+    "evidence_refs": [],
+    "decision_trace": [],
+    "blockers": [],
+    "transaction_lineage": {
+      "current_transaction_id": "",
+      "projection_seq": "",
+      "source_hash": "",
+      "previous_transaction_id": "",
+      "recent_transaction_ids": [],
+      "attempt_seq": null,
+      "action": ""
+    },
+    "semantic_context_source": "workflow-memory"
+  },
+  "official_language": {
+    "page_names": [
+      {
+        "label": "delivery-bus-mvp",
+        "slug": "delivery-bus-mvp",
+        "source": "requirement_truth"
+      }
+    ],
+    "status_labels": [
+      "降级",
+      "错误",
+      "正常",
+      "阻塞",
+      "加载中"
+    ],
+    "module_labels": [
+      "重启后仍可查询完整状态",
+      "头部摘要",
+      "状态反馈",
+      "推荐动作"
+    ],
+    "action_labels": [
+      "重试但不会重复派工的本地控制",
+      "恢复路径",
+      "重试限制的任务",
+      "进入",
+      "返回",
+      "重试",
+      "重试是常态",
+      "恢复",
+      "返回同一",
+      "返回稳定"
+    ],
+    "preferred_terms": [
+      {
+        "from": "implementation",
+        "to": "implement",
+        "scope": "stage_vocabulary"
+      },
+      {
+        "from": "verify",
+        "to": "qa",
+        "scope": "stage_vocabulary"
+      },
+      {
+        "from": "review",
+        "to": "qa",
+        "scope": "stage_vocabulary"
+      },
+      {
+        "from": "delivery",
+        "to": "release",
+        "scope": "stage_vocabulary"
+      },
+      {
+        "from": "raw runtime log",
+        "to": "运行摘要",
+        "scope": "product_copy"
+      },
+      {
+        "from": "machine contract",
+        "to": "机器内部契约",
+        "scope": "product_copy"
+      }
+    ],
+    "banned_terms": [
+      "implementation",
+      "verify",
+      "review",
+      "delivery",
+      "machine contract",
+      "canonical-envelope",
+      "raw runtime log",
+      "transaction_id",
+      "projection_seq"
+    ]
+  },
+  "usage_guidelines": [
+    "先引用 semantic-contract.json，再进入 prototype 或 implement，不要在阶段内临时翻译需求。",
+    "页面名、状态名、模块名优先复用官方词表，避免 implementation / verify / delivery 这类旧阶段词汇出现在前台。",
+    "允许 taste-skill 做设计增强，但不得覆盖 requirement truth 或反向改写 semantic contract。",
+    "发现语义漂移时，优先重建 semantic layer，再继续 prototype freeze 或 implement delivery。"
+  ],
+  "default_design_bridge": {
+    "repo": "https://github.com/Leonxlnx/taste-skill",
+    "skill_id": "taste-skill",
+    "entry": "",
+    "detected": false,
+    "kind": "external-default-bridge",
+    "supported_stages": [
+      "prototype",
+      "implement"
+    ],
+    "capabilities": [
+      "prototype",
+      "implement",
+      "taste-design",
+      "semantic-normalization"
+    ],
+    "install_hint": "npx skills add https://github.com/Leonxlnx/taste-skill --skill taste-skill"
+  },
+  "compiler": {
+    "semantic_context_source": "workflow-memory",
+    "capability_snapshot": {}
+  }
+}

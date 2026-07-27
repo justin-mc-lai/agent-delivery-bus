@@ -9,6 +9,9 @@ description = "Governed local control plane for Beacon delivery through Hermes K
 requires-python = ">=3.9"
 dependencies = []
 
+[project.optional-dependencies]
+test = ["pytest>=8,<9"]
+
 [project.scripts]
 adb = "agent_delivery_bus.cli:main"
 

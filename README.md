@@ -13,3 +13,10 @@ bin/adb dispatch --project beacon --stage plan --feature example --dry-run --jso
 
 默认配置是 `config/projects.json`，默认本地状态库是
 `data/agent-delivery-bus.sqlite3`。可用全局参数 `--config`、`--db` 覆盖。
+
+开发验收使用 pytest 生成 Beacon QA9 所需的 JUnit 证据：
+
+```bash
+python3 -m pip install -e '.[test]'
+python3 -m pytest -q
+```
