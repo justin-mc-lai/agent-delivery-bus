@@ -20,7 +20,7 @@ task_source: acceptance_criteria
 - [x] TASK-009 Implement AC-ADB-009: 提供 `skills/agent-delivery-bus`，SKILL frontmatter 仅含 name/description，... · ac=AC-ADB-009 · evidence=`.beacon/evidence/implement/delivery-bus-mvp/AC-ADB-009.json`
 - [x] TASK-010 Implement AC-ADB-010: MVP 不读取 Hermes SQLite、不直接修改目标 repo、不自动执行 Beacon 修复、不自动 release；releas... · ac=AC-ADB-010 · evidence=`.beacon/evidence/implement/delivery-bus-mvp/AC-ADB-010.json`
 - [x] TASK-011 Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/delivery-bus-mvp/GATES.json`
-- [ ] TASK-012 Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/delivery-bus-mvp/QA-MATRIX.json`
+- [x] TASK-012 Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/delivery-bus-mvp/QA-MATRIX.json`
 
 ## Boundary
 

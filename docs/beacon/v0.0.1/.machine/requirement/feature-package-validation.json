@@ -6,7 +6,7 @@
   "status": "pass",
   "blocked": false,
   "reason_code": "",
-  "generated_at": "2026-07-27T13:59:29.729129+00:00",
+  "generated_at": "2026-07-27T14:04:36.773946+00:00",
   "package_dir": "docs/beacon/v0.0.1/features/delivery-bus-mvp",
   "truth_frontmatter": {
     "slug": "delivery-bus-mvp",
@@ -42,7 +42,7 @@
   "checkbox_gate_bypass": false,
   "task_evidence_gate": {
     "pass": true,
-    "checked_ok": 11,
+    "checked_ok": 12,
     "checked_bad": 0,
     "unbound": 0,
     "findings": [],

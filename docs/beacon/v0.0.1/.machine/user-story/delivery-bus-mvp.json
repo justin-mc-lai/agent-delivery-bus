@@ -5,7 +5,7 @@
   "version": "v0.0.1",
   "current_revision_id": "R2",
   "lifecycle_status": "frozen",
-  "updated_at": "2026-07-27T14:02:19.067232+00:00",
+  "updated_at": "2026-07-27T14:04:23.607832+00:00",
   "revisions": [
     {
       "revision_id": "R1",
@@ -103,7 +103,7 @@
       "revision_id": "R2",
       "title": "delivery-bus-mvp",
       "priority": "medium",
-      "status": "accepted",
+      "status": "implemented",
       "items": [
         {
           "id": "AC-001",
@@ -125,7 +125,7 @@
           "kind": "task",
           "text": "Implement current frozen revision",
           "required": true,
-          "status": "accepted",
+          "status": "implemented",
           "implemented_by_run_id": "run-20260727T140143Z-ff6d",
           "verified_by_run_id": null,
           "accepted_at": "2026-07-27T14:02:19.062889+00:00",
@@ -136,8 +136,8 @@
           "kind": "test",
           "text": "Verify AC-001 — Acceptance criteria TBD",
           "required": true,
-          "status": "passed",
-          "implemented_by_run_id": null,
+          "status": "implemented",
+          "implemented_by_run_id": "run-20260727T140143Z-ff6d",
           "verified_by_run_id": "run-20260727T220214571539",
           "accepted_at": null,
           "changed_in_revision": "R2",

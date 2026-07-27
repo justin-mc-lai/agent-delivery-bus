@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "ac_id": "QA",
+  "status": "pass",
+  "feature": "delivery-bus-mvp",
+  "version": "v0.0.1",
+  "qa_run_id": "run-20260727T220214571539",
+  "summary": {
+    "cases_total": 11,
+    "passed": 11,
+    "failed": 0,
+    "blocked": 0,
+    "pass_rate": 1.0,
+    "automation_rate": 1.0
+  },
+  "evidence_refs": [
+    ".beacon/qa/status.json",
+    ".beacon/qa/features/delivery-bus-mvp/matrix.qa9.json",
+    ".beacon/qa/features/delivery-bus-mvp/ac-closure.json",
+    ".beacon/qa/features/delivery-bus-mvp/scorecard.json",
+    ".beacon/evidence/auto-test/run-20260727T220214571539/summary.json",
+    ".beacon/evidence/auto-test/run-20260727T220214571539/contract/junit.xml",
+    ".beacon/release-gate-report.json"
+  ],
+  "adversarial_review": [
+    {
+      "risk": "重复请求创建多个 Hermes task",
+      "result": "pass",
+      "evidence": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-005/run-20260727T220214571539.json"
+    },
+    {
+      "risk": "审批 token 被重放、越权或并发消费",
+      "result": "pass",
+      "evidence": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-003/run-20260727T220214571539.json"
+    },
+    {
+      "risk": "Hermes worker success 被错误提升为 Beacon completed",
+      "result": "pass",
+      "evidence": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-008/run-20260727T220214571539.json"
+    },
+    {
+      "risk": "预检或 dispatch 路径修改目标仓、读取 Hermes SQLite 或自动 release",
+      "result": "pass",
+      "evidence": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-010/run-20260727T220214571539.json"
+    },
+    {
+      "risk": "项目 alias 冲突或 Beacon context 不合格时仍继续派工",
+      "result": "pass",
+      "evidence": [
+        ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-001/run-20260727T220214571539.json",
+        ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-002/run-20260727T220214571539.json"
+      ]
+    }
+  ],
+  "verified_at": "2026-07-27"
+}

@@ -5,7 +5,7 @@
   "truth_package_contract": "beacon-feature-package-v2",
   "machine_json_role": "generated_state_not_truth",
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-07-27T13:59:29.893650+00:00",
+  "generated_at": "2026-07-27T14:04:37.011998+00:00",
   "feature": "delivery-bus-mvp",
   "feature_slug": "delivery-bus-mvp",
   "version": "v0.0.1",
@@ -20,7 +20,7 @@
   "source_hashes": {
     "truth": "c4abb64d95be67fc29fe55b17a901b1f00ed8613f49069cb48f4c29598806d8d",
     "tests": "b4633497d6f0284e27a1d3c86c4a9076b17ee798adbfdfc18cc39be30d557947",
-    "tasks": "c967aead75d2f175444daf2f3349d288053940fbf08764fbfec1272de8fd52db",
+    "tasks": "f3872d4a6a83f7abb378b9e90a6eefd969e9947c499a30099d0a02d87f4a0af6",
     "evidence": "e7ce73688611ccde60c5073908e9214ccfbacd7fbdd0c9fdc070a39a7e550ebd"
   },
   "truth_frontmatter": {
@@ -251,7 +251,7 @@
     {
       "id": "TASK-012",
       "title": "Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/delivery-bus-mvp/QA-MATRIX.json`",
-      "status": "unchecked"
+      "status": "checked"
     }
   ],
   "checkbox_errors": [],
