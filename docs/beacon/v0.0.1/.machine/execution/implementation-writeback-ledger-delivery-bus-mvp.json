@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "artifact": "implementation_writeback_ledger",
+  "feature": "delivery-bus-mvp",
+  "feature_slug": "delivery-bus-mvp",
+  "version": "v0.0.1",
+  "entries": [
+    {
+      "recorded_at": "2026-07-27T13:49:57.095075+00:00",
+      "revision_id": "R1",
+      "run_id": "manual-d147978",
+      "implemented_item_ids": [
+        "TASK-001",
+        "TEST-001",
+        "AC-001"
+      ],
+      "changed_files": [
+        "config/projects.json",
+        "src/agent_delivery_bus",
+        "tests",
+        "skills/agent-delivery-bus",
+        "README.md"
+      ]
+    }
+  ],
+  "last_recorded_at": "2026-07-27T13:49:57.095075+00:00"
+}

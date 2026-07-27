@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "feature": "delivery-bus-mvp",
+  "feature_slug": "delivery-bus-mvp",
+  "version": "v0.0.1",
+  "generated_at": "2026-07-27T13:49:21.082740+00:00",
+  "expansion_profile": "pua-web",
+  "scenario_depth": "standard",
+  "families_required": [
+    "happy",
+    "negative",
+    "boundary",
+    "recovery",
+    "compatibility"
+  ],
+  "stories": [
+    {
+      "ac_id": "AC-001",
+      "theme": "general",
+      "text": "Acceptance criteria TBD",
+      "scenario_ids": [],
+      "scenario_families": [],
+      "required_families": [],
+      "scenarios": []
+    }
+  ],
+  "scenarios": []
+}

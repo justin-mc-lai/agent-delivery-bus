@@ -208,7 +208,7 @@
     "fill_depth_pass": true,
     "note": "Polish L0/narrative only after A/B/C; preserve_machine_fields=true; freeze needs D+exec too"
   },
-  "evaluated_at": "2026-07-27T13:31:07.137088+00:00",
+  "evaluated_at": "2026-07-27T13:49:20.201401+00:00",
   "paths": {
     "truth": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
     "tests": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",

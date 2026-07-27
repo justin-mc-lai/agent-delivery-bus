@@ -7,11 +7,19 @@
   "source_revision_id": "",
   "reason": "freeze",
   "doc_status": "frozen",
-  "delivery_status": "idle",
-  "lifecycle_status": "idle",
+  "delivery_status": "implemented",
+  "lifecycle_status": "implemented",
   "baseline_hash": "sha256:011344e55de09cf161cba67bf978719fc70529ec8512b6e8a801cc05a0938981",
   "superseded_by": "",
   "created_at": "2026-07-27T13:31:07.137861+00:00",
   "frozen_at": "2026-07-27T13:31:07.138532+00:00",
-  "accepted_at": ""
+  "accepted_at": "",
+  "last_implementation_run_id": "manual-d147978",
+  "changed_files": [
+    "config/projects.json",
+    "src/agent_delivery_bus",
+    "tests",
+    "skills/agent-delivery-bus",
+    "README.md"
+  ]
 }

@@ -2,21 +2,31 @@
   "schema_version": "1.0",
   "entries": [
     {
+      "path": ".beacon/state/implementation-delivery-bus-mvp.json",
+      "sha256": "1dfd88989dfb8d24bbb982aeb4499252de766d94503deb9d0aa012bd869499fc",
+      "updated_at": "2026-07-27T13:49:57.096450+00:00"
+    },
+    {
+      "path": "README.md",
+      "sha256": "43075064cc0c6e06d16e2ba3bbb8d98df6c6cabacacc26565a825ad14fa8a96a",
+      "updated_at": "2026-07-27T13:49:57.096659+00:00"
+    },
+    {
       "path": "docs/beacon/v0.0.1/.machine/execution/init-report.json",
       "sha256": "c0de568308a37b83bbf40a42a689e6c02a537c179c8fe5367eb4a27fa8564a6c",
-      "updated_at": "2026-07-27T13:48:20.012390+00:00"
+      "updated_at": "2026-07-27T13:49:57.096009+00:00"
     },
     {
       "path": "docs/beacon/v0.0.1/.machine/requirement/feature-package-validation.json",
       "sha256": "678bf5dda68aa1b709a326b8587bd8c5c4a1c6f6d2c312160a74170c640169dc",
-      "updated_at": "2026-07-27T13:48:20.012645+00:00"
+      "updated_at": "2026-07-27T13:49:57.096257+00:00"
     },
     {
       "path": "docs/beacon/v0.0.1/execution/init-report.md",
       "sha256": "8552a209a67ce3818b81b5fc7f9892a6d1f3e8d7b9be851c3b6638baace0a467",
-      "updated_at": "2026-07-27T13:48:20.012563+00:00"
+      "updated_at": "2026-07-27T13:49:57.096391+00:00"
     }
   ],
-  "updated_at": "2026-07-27T13:48:20.012652+00:00",
+  "updated_at": "2026-07-27T13:49:57.096701+00:00",
   "version": "v0.0.1"
 }
