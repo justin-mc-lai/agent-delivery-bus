@@ -1,3 +1,72 @@
+# BEACON:GITIGNORE:START
+# BEACON:GITIGNORE:VERSION:v1.6.11
+# Local orchestration scratch state
+.omx/
+.omc/
+
+# Beacon runtime scratch state that should not be committed by default
+.beacon/analysis/
+.beacon/debug/ideas/
+.beacon/debug/issues/
+.beacon/debug/runs/
+.beacon/iteration-governance/
+.beacon/ralph/
+.beacon/team/
+.beacon/handoffs/
+.beacon/state/checkpoints/
+.beacon/state/debug-feedback/
+.beacon/state/hud-hook/
+.beacon/state/input-audit/
+.beacon/state/skill-discovery/
+.beacon/state/team-hud/
+.beacon/state/workflow-hud/
+.beacon/validation/
+
+# Timestamped transient workflow runs
+.beacon/runs/run-20*/
+
+# Timestamped transient change-impact snapshots
+.beacon/state/change-impact/run-20*.json
+
+# Timestamped transient rolling baselines/spec fingerprints
+.beacon/state/baselines/v*/bl-run-20*.json
+.beacon/state/spec-fingerprints/v*/run-20*.json
+
+# Timestamped transient auto-test evidence, implement runs, and workflow memory snapshots
+.beacon/evidence/auto-test/run-20*/
+.beacon/implement/run-20*/
+.beacon/state/workflow-memory/run-20*/
+.beacon/evidence/qa-feature/*/tc-*/run-20*.json
+.beacon/handoffs/implement-to-qa/*/run-20*.json
+
+# Rolling local runtime state and evo experiment scratch
+.beacon/flaky-history.json
+.beacon/state/evo/experiments/evo-20*.json
+.beacon/state/evo/ledger.jsonl
+.beacon/state/requirement-clarity-*.json
+.beacon/state/technical-review-contract-*.json
+.beacon/state/exhaustion.json
+
+# Only explicitly promoted canonical QA and test-result surfaces stay tracked
+.beacon/evidence/test-results/*
+!.beacon/evidence/test-results/beacon-prototype-frontend-route-closure/
+!.beacon/evidence/test-results/beacon-prototype-frontend-route-closure/**
+!.beacon/evidence/test-results/beacon-qa-confidence-autoresearch-closure/
+!.beacon/evidence/test-results/beacon-qa-confidence-autoresearch-closure/**
+!.beacon/evidence/test-results/beacon-source-architecture-sync/
+!.beacon/evidence/test-results/beacon-source-architecture-sync/**
+.beacon/qa/features/*
+!.beacon/qa/features/beacon-qa-confidence-autoresearch-closure/
+!.beacon/qa/features/beacon-qa-confidence-autoresearch-closure/**
+
+# Local temp scratch
+.tmp/
+
+# Python cache noise
+__pycache__/
+*.py[cod]
+# BEACON:GITIGNORE:END
+
 # Beacon local runtime state
 .agents/
 .beacon/analysis/

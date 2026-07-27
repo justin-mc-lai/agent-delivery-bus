@@ -1,6 +1,6 @@
 <!-- BEACON:START -->
-<!-- BEACON:VERSION:v1.6.10 -->
-<!-- BEACON:DOCS_VERSION:v1.6.10 -->
+<!-- BEACON:VERSION:v1.6.11 -->
+<!-- BEACON:DOCS_VERSION:v1.6.11 -->
 # CLAUDE.md
 
 This file is Beacon-managed runtime guidance.
@@ -23,8 +23,8 @@ This file is Beacon-managed runtime guidance.
 - `beacon status --verbose`
 
 ## Requirement materials and docs paths
-- Runtime target version: `v1.6.10`
-- Docs target version: `v1.6.10`
+- Runtime target version: `v1.6.11`
+- Docs target version: `v1.6.11`
 - `docs/beacon/global-boundaries.md` is the canonical cross-version global constraint source.
 - `docs/beacon/<version>/` is the canonical source of truth.
 - `docs/beacon/<version>/SUMMARY.md`
@@ -33,3 +33,4 @@ This file is Beacon-managed runtime guidance.
 - `docs/beacon/<version>/qa/test-cases/`
 - `docs/beacon/<version>/execution/`
 <!-- BEACON:END -->
+
