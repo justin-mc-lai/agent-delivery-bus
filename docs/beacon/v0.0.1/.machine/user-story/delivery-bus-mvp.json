@@ -1,0 +1,88 @@
+{
+  "schema_version": "1.0",
+  "feature": "delivery-bus-mvp",
+  "feature_slug": "delivery-bus-mvp",
+  "version": "v0.0.1",
+  "current_revision_id": "R1",
+  "lifecycle_status": "frozen",
+  "updated_at": "2026-07-27T13:31:07.126462+00:00",
+  "revisions": [
+    {
+      "revision_id": "R1",
+      "feature_slug": "delivery-bus-mvp",
+      "source_revision_id": null,
+      "reason": "draft",
+      "doc_status": "frozen",
+      "delivery_status": "idle",
+      "baseline_hash": "sha256:011344e55de09cf161cba67bf978719fc70529ec8512b6e8a801cc05a0938981",
+      "superseded_by": null,
+      "created_at": "2026-07-27T13:31:07.124451+00:00",
+      "frozen_at": "2026-07-27T13:31:07.138807+00:00",
+      "accepted_at": null,
+      "accepted_by": null
+    }
+  ],
+  "stories": [
+    {
+      "story_id": "US-001",
+      "revision_id": "R1",
+      "title": "delivery-bus-mvp",
+      "priority": "medium",
+      "status": "frozen",
+      "items": [
+        {
+          "id": "AC-001",
+          "kind": "ac",
+          "theme": "general",
+          "text": "Acceptance criteria TBD",
+          "required": true,
+          "status": "draft",
+          "implemented_by_run_id": null,
+          "verified_by_run_id": null,
+          "accepted_at": null,
+          "changed_in_revision": null,
+          "story_id": "",
+          "details": [],
+          "source": "fallback"
+        },
+        {
+          "id": "TASK-001",
+          "kind": "task",
+          "text": "Implement current frozen revision",
+          "required": true,
+          "status": "draft",
+          "implemented_by_run_id": null,
+          "verified_by_run_id": null,
+          "accepted_at": null,
+          "changed_in_revision": null
+        },
+        {
+          "id": "TEST-001",
+          "kind": "test",
+          "text": "Verify AC-001 — Acceptance criteria TBD",
+          "required": true,
+          "status": "draft",
+          "implemented_by_run_id": null,
+          "verified_by_run_id": null,
+          "accepted_at": null,
+          "changed_in_revision": null,
+          "covers": [
+            "AC-001"
+          ],
+          "story_id": "",
+          "source": "fallback"
+        }
+      ],
+      "research_projection": {
+        "schema_version": "1.0",
+        "feature": "delivery-bus-mvp",
+        "version": "v0.0.1",
+        "source": "research:/Users/apple/Developer/Personal/products/agent-delivery-bus/docs/beacon/v0.0.1/research/delivery-bus-mvp.md",
+        "present": false,
+        "section_count": 0,
+        "sections": {},
+        "derived_items": []
+      }
+    }
+  ]
+}

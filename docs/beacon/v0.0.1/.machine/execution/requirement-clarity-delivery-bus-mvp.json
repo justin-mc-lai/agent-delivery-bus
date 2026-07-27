@@ -6,22 +6,10 @@
   "runtime_version": "v1.6.11",
   "runtime_capability_line": "v1.3.3",
   "required": true,
-  "reason_code": "domain_fsm_missing",
-  "blocked": true,
-  "status": "blocked",
-  "findings": [
-    {
-      "file": "/Users/apple/Developer/Personal/products/agent-delivery-bus/docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
-      "line": 1,
-      "kind": "domain_fsm_missing",
-      "text": "domain feature requires Domain FSM section with states/transitions",
-      "reason_code": "domain_fsm_missing",
-      "ac_id": "",
-      "aggregate": "",
-      "section": "",
-      "repair_route": "beacon-gen-truth"
-    }
-  ],
+  "reason_code": "",
+  "blocked": false,
+  "status": "pass",
+  "findings": [],
   "report_json_path": "docs/beacon/v0.0.1/.machine/execution/requirement-clarity-delivery-bus-mvp.json",
   "report_markdown_path": "docs/beacon/v0.0.1/execution/requirement-clarity-delivery-bus-mvp.md",
   "state_path": ".beacon/state/requirement-clarity-delivery-bus-mvp.json",
@@ -39,7 +27,7 @@
     "review_gates": [],
     "qa_coverage_hints": [],
     "evidence_lines": {},
-    "generated_at": "2026-07-27T13:29:43.724671+00:00",
+    "generated_at": "2026-07-27T13:31:06.902132+00:00",
     "feature": "delivery-bus-mvp",
     "feature_slug": "delivery-bus-mvp",
     "prd_ref": "docs/beacon/v0.0.1/prd/delivery-bus-mvp.md",
@@ -53,18 +41,10 @@
     "truth_path": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
     "tests_path": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
     "required": true,
-    "blocked": true,
-    "status": "blocked",
-    "reason_code": "domain_fsm_missing",
-    "findings": [
-      {
-        "kind": "domain_fsm_missing",
-        "reason_code": "domain_fsm_missing",
-        "text": "domain feature requires Domain FSM section with states/transitions",
-        "file": "/Users/apple/Developer/Personal/products/agent-delivery-bus/docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
-        "line": 1
-      }
-    ],
+    "blocked": false,
+    "status": "pass",
+    "reason_code": "",
+    "findings": [],
     "requirement": {
       "required": true,
       "reason": "explicit_domain_mark",
@@ -105,7 +85,7 @@
       },
       "frontmatter_errors": [],
       "has_domain_model_section": true,
-      "has_domain_fsm_section": false,
+      "has_domain_fsm_section": true,
       "has_illegal_transition_section": true,
       "entities": [
         {
@@ -195,7 +175,115 @@
           "requires": "Hermes success 不可单独产生 completed"
         }
       ],
-      "aggregates": [],
+      "aggregates": [
+        {
+          "name": "Dispatch",
+          "states": [
+            "awaiting_approval",
+            "blocked",
+            "cancelled",
+            "completed",
+            "dispatched",
+            "draft",
+            "failed",
+            "queued",
+            "reconciling"
+          ],
+          "transitions": [
+            {
+              "from": "",
+              "to": "draft",
+              "guard": "normalized request persisted",
+              "initial": "true"
+            },
+            {
+              "from": "draft",
+              "to": "awaiting_approval",
+              "guard": "restricted stage and strict preflight passed"
+            },
+            {
+              "from": "draft",
+              "to": "queued",
+              "guard": "open stage or matching approval reserved"
+            },
+            {
+              "from": "awaiting_approval",
+              "to": "queued",
+              "guard": "open stage or matching approval reserved"
+            },
+            {
+              "from": "queued",
+              "to": "dispatched",
+              "guard": "Hermes task receipt recovered or created"
+            },
+            {
+              "from": "reconciling",
+              "to": "dispatched",
+              "guard": "Hermes task receipt recovered or created"
+            },
+            {
+              "from": "queued",
+              "to": "reconciling",
+              "guard": "external result unknown or worker succeeded"
+            },
+            {
+              "from": "dispatched",
+              "to": "reconciling",
+              "guard": "external result unknown or worker succeeded"
+            },
+            {
+              "from": "draft",
+              "to": "blocked",
+              "guard": "required gate or closure evidence missing"
+            },
+            {
+              "from": "awaiting_approval",
+              "to": "blocked",
+              "guard": "required gate or closure evidence missing"
+            },
+            {
+              "from": "reconciling",
+              "to": "blocked",
+              "guard": "required gate or closure evidence missing"
+            },
+            {
+              "from": "queued",
+              "to": "failed",
+              "guard": "terminal external failure"
+            },
+            {
+              "from": "dispatched",
+              "to": "failed",
+              "guard": "terminal external failure"
+            },
+            {
+              "from": "reconciling",
+              "to": "completed",
+              "guard": "stage closure verified"
+            },
+            {
+              "from": "draft",
+              "to": "cancelled",
+              "guard": "cancellation completed before delivery closure"
+            },
+            {
+              "from": "awaiting_approval",
+              "to": "cancelled",
+              "guard": "cancellation completed before delivery closure"
+            },
+            {
+              "from": "queued",
+              "to": "cancelled",
+              "guard": "cancellation completed before delivery closure"
+            },
+            {
+              "from": "dispatched",
+              "to": "cancelled",
+              "guard": "cancellation completed before delivery closure"
+            }
+          ]
+        }
+      ],
       "illegal_transition_slots": [
         {
           "description": "awaiting_approval → queued without an atomically reserved matching token",
@@ -296,12 +384,13 @@
         "AC-ADB-003",
         "AC-ADB-004",
         "AC-ADB-005",
+        "AC-ADB-006",
         "AC-ADB-007",
+        "AC-ADB-008",
+        "AC-ADB-009",
         "AC-ADB-010"
       ],
-      "orphan_ac_ids": [
-        "AC-ADB-008"
-      ],
+      "orphan_ac_ids": [],
       "aggregates_missing_illegal_slots": [],
       "raw_section_titles": [
         "人话",
@@ -313,7 +402,8 @@
         "Domain Model",
         "Intent Coverage Matrix",
         "Acceptance Criteria",
-        "Dispatch FSM 五元组",
+        "Domain FSM — Dispatch",
+        "FSM 五元组",
         "Illegal transitions",
         "Stage Closure Contract",
         "Public CLI Contract",
@@ -327,16 +417,10 @@
     "validation": {
       "schema_version": "1.0",
       "required": true,
-      "blocked": true,
-      "status": "blocked",
-      "reason_code": "domain_fsm_missing",
-      "findings": [
-        {
-          "kind": "domain_fsm_missing",
-          "reason_code": "domain_fsm_missing",
-          "text": "domain feature requires Domain FSM section with states/transitions"
-        }
-      ],
+      "blocked": false,
+      "status": "pass",
+      "reason_code": "",
+      "findings": [],
       "projection": {
         "schema_version": "1.0",
         "domain_fsm_schema": "domain-fsm.v1",
@@ -368,7 +452,7 @@
         },
         "frontmatter_errors": [],
         "has_domain_model_section": true,
-        "has_domain_fsm_section": false,
+        "has_domain_fsm_section": true,
         "has_illegal_transition_section": true,
         "entities": [
           {
@@ -458,7 +542,115 @@
             "requires": "Hermes success 不可单独产生 completed"
           }
         ],
-        "aggregates": [],
+        "aggregates": [
+          {
+            "name": "Dispatch",
+            "states": [
+              "awaiting_approval",
+              "blocked",
+              "cancelled",
+              "completed",
+              "dispatched",
+              "draft",
+              "failed",
+              "queued",
+              "reconciling"
+            ],
+            "transitions": [
+              {
+                "from": "",
+                "to": "draft",
+                "guard": "normalized request persisted",
+                "initial": "true"
+              },
+              {
+                "from": "draft",
+                "to": "awaiting_approval",
+                "guard": "restricted stage and strict preflight passed"
+              },
+              {
+                "from": "draft",
+                "to": "queued",
+                "guard": "open stage or matching approval reserved"
+              },
+              {
+                "from": "awaiting_approval",
+                "to": "queued",
+                "guard": "open stage or matching approval reserved"
+              },
+              {
+                "from": "queued",
+                "to": "dispatched",
+                "guard": "Hermes task receipt recovered or created"
+              },
+              {
+                "from": "reconciling",
+                "to": "dispatched",
+                "guard": "Hermes task receipt recovered or created"
+              },
+              {
+                "from": "queued",
+                "to": "reconciling",
+                "guard": "external result unknown or worker succeeded"
+              },
+              {
+                "from": "dispatched",
+                "to": "reconciling",
+                "guard": "external result unknown or worker succeeded"
+              },
+              {
+                "from": "draft",
+                "to": "blocked",
+                "guard": "required gate or closure evidence missing"
+              },
+              {
+                "from": "awaiting_approval",
+                "to": "blocked",
+                "guard": "required gate or closure evidence missing"
+              },
+              {
+                "from": "reconciling",
+                "to": "blocked",
+                "guard": "required gate or closure evidence missing"
+              },
+              {
+                "from": "queued",
+                "to": "failed",
+                "guard": "terminal external failure"
+              },
+              {
+                "from": "dispatched",
+                "to": "failed",
+                "guard": "terminal external failure"
+              },
+              {
+                "from": "reconciling",
+                "to": "completed",
+                "guard": "stage closure verified"
+              },
+              {
+                "from": "draft",
+                "to": "cancelled",
+                "guard": "cancellation completed before delivery closure"
+              },
+              {
+                "from": "awaiting_approval",
+                "to": "cancelled",
+                "guard": "cancellation completed before delivery closure"
+              },
+              {
+                "from": "queued",
+                "to": "cancelled",
+                "guard": "cancellation completed before delivery closure"
+              },
+              {
+                "from": "dispatched",
+                "to": "cancelled",
+                "guard": "cancellation completed before delivery closure"
+              }
+            ]
+          }
+        ],
         "illegal_transition_slots": [
           {
             "description": "awaiting_approval → queued without an atomically reserved matching token",
@@ -559,12 +751,13 @@
           "AC-ADB-003",
           "AC-ADB-004",
           "AC-ADB-005",
+          "AC-ADB-006",
           "AC-ADB-007",
+          "AC-ADB-008",
+          "AC-ADB-009",
           "AC-ADB-010"
         ],
-        "orphan_ac_ids": [
-          "AC-ADB-008"
-        ],
+        "orphan_ac_ids": [],
         "aggregates_missing_illegal_slots": [],
         "raw_section_titles": [
           "人话",
@@ -576,7 +769,8 @@
           "Domain Model",
           "Intent Coverage Matrix",
           "Acceptance Criteria",
-          "Dispatch FSM 五元组",
+          "Domain FSM — Dispatch",
+          "FSM 五元组",
           "Illegal transitions",
           "Stage Closure Contract",
           "Public CLI Contract",
@@ -589,13 +783,13 @@
       },
       "summary": {
         "entity_count": 7,
-        "aggregate_count": 0,
+        "aggregate_count": 1,
         "illegal_slot_count": 10,
-        "orphan_ac_count": 1,
-        "bound_ac_count": 7
+        "orphan_ac_count": 0,
+        "bound_ac_count": 10
       }
     },
-    "recommended_action": "author_domain_model_domain_fsm_entity_precedence_and_illegal_slots_before_freeze"
+    "recommended_action": ""
   },
   "human_closure_contract": {
     "required": false,
@@ -690,6 +884,5 @@
     "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
     "docs/beacon/v0.0.1/features/delivery-bus-mvp/tasks.md",
     "docs/beacon/v0.0.1/features/delivery-bus-mvp/evidence.md"
-  ],
-  "recommended_action": "author_domain_model_domain_fsm_entity_precedence_and_illegal_slots_before_freeze"
+  ]
 }

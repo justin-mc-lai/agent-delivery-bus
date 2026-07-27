@@ -3,10 +3,10 @@ schema_version: "1.0"
 project_root: "/Users/apple/Developer/Personal/products/agent-delivery-bus"
 topology_kind: "single_repo"
 default_execution_service: "agent-delivery-bus"
-transaction_id: "tx-project-governance-ce49cf43c411fd00"
-committed_at: "2026-07-27T13:21:21.619442+00:00"
-source_hash: "ce49cf43c411fd007225224c45028bb8f460b1e26345ba3ac5cc8659a2ea14a5"
-event_type: "update"
+transaction_id: "tx-project-governance-6bfd1a252ca2bf2e"
+committed_at: "2026-07-27T13:31:07.272134+00:00"
+source_hash: "6bfd1a252ca2bf2e4c709b94a769fe43a01c62983f912ac0a279b56b7cbf5d18"
+event_type: "freeze-version-contract"
 parser_contract: "beacon-project-governance-v1"
 ---
 
@@ -29,5 +29,12 @@ parser_contract: "beacon-project-governance-v1"
   - `agent-delivery-bus`: `main`
 - truth_canonical: `main`
 - branch_governance_template: `standard-feature`
+- previous_version_baseline_branch: `main`
+- next_version_feature_branch: `beacon/v0.0.1/<feature-slug>`
 - worktree_mode: `dedicated`
-- worktree_path: `.worktrees`
+- worktree_path: `.beacon/worktrees/v0.0.1`
+- require_workspace_admission: `true`
+- merge_direction_policy: `master->main`
+- merge_direction_policy: `main->uat`
+- forbidden_directions: `uat->main`
+- forbidden_directions: `uat_as_feature_base`

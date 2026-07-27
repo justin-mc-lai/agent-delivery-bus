@@ -3,8 +3,8 @@
 - feature: `delivery-bus-mvp`
 - version: `v0.0.1`
 - required: `True`
-- status: `blocked`
-- reason_code: `domain_fsm_missing`
+- status: `pass`
+- reason_code: ``
 
 ## Human Closure Contract
 - required: `False`
@@ -44,4 +44,4 @@
 - `docs/beacon/v0.0.1/features/delivery-bus-mvp/evidence.md`
 
 ## Findings
-- `domain_fsm_missing` /Users/apple/Developer/Personal/products/agent-delivery-bus/docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md:1 :: domain feature requires Domain FSM section with states/transitions
+- none

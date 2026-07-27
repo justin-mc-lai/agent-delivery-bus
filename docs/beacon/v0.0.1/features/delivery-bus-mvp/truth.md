@@ -1,7 +1,7 @@
 ---
 slug: delivery-bus-mvp
 version: v0.0.1
-status: draft
+status: frozen
 revision_id: R1
 language: zh
 domain_required: true
