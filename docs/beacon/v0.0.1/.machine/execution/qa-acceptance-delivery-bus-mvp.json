@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "artifact": "qa_acceptance_envelope",
+  "version": "v0.0.1",
+  "feature": "delivery-bus-mvp",
+  "feature_slug": "delivery-bus-mvp",
+  "revision_id": "R2",
+  "verdict": "passed",
+  "accepted_at": "2026-07-27T14:02:19.062889+00:00",
+  "accepted_by": "qa",
+  "run_id": "run-20260727T220214571539",
+  "transaction_id": "tx-qa-acceptance-delivery-bus-mvp-1f65f1aa139a",
+  "source_hash": "sha256:1f65f1aa139aef72d617c39624c82240e16a68559c0323b0802494e39d87cea3",
+  "projection_seq": 1,
+  "source_command": "beacon qa run \"delivery-bus-mvp\" --project-root /Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.1/delivery-bus-mvp --version v0.0.1",
+  "requirement_refs": [
+    "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+    "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+    "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
+    "docs/beacon/v0.0.1/.machine/execution/delivery-bus-mvp.revision.json"
+  ],
+  "test_case_refs": [],
+  "evidence_refs": [
+    ".beacon/auto-test-status.json",
+    ".beacon/qa/status.json",
+    ".beacon/coverage-summary.json",
+    ".beacon/release-gate-report.json"
+  ],
+  "story_status": "implemented",
+  "revision_delivery_status": "implemented",
+  "required_ac_count": 0,
+  "required_test_count": 0,
+  "canonical_envelope_ref": "docs/beacon/v0.0.1/.machine/execution/qa-acceptance-delivery-bus-mvp.json",
+  "markdown_ref": "docs/beacon/v0.0.1/execution/qa-acceptance-brief-delivery-bus-mvp.md",
+  "transaction_lineage": {
+    "current_transaction_id": "tx-qa-acceptance-delivery-bus-mvp-1f65f1aa139a",
+    "projection_seq": 1,
+    "source_hash": "sha256:1f65f1aa139aef72d617c39624c82240e16a68559c0323b0802494e39d87cea3",
+    "workflow_memory_ref": ".beacon/memory/workflow-lifecycle.json",
+    "memory_event_id": "",
+    "memory_entry_id": "f7949a7d-c826-4ac0-a5dc-0c2b34ccc1e9"
+  },
+  "sink_checksums": {
+    "machine": "sha256:14b7031a4df61679e9fd6e1c91443048426a449e04d928d87ceed60976f4c00d",
+    "human": "sha256:bc8b1b8ef91caff0dc198634e47b9831c90a7928fa978b15930bf72768a11d94",
+    "runtime": "sha256:8714a08a995fc3386fb3a5f22f30d6a712b8dfe419e68149de0ecc0902396f57"
+  },
+  "runtime_projection_ref": ".beacon/transactions/qa-acceptance-delivery-bus-mvp.json",
+  "transaction_status": "applied",
+  "failed_sinks": []
+}

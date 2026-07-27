@@ -2,31 +2,155 @@
   "schema_version": "1.0",
   "entries": [
     {
+      "path": ".beacon/auto-test-status.json",
+      "sha256": "138611a0b71dfeb9cb41ae6ef5b18c4c0233e44b29e29082772c2ea0e8111dfa",
+      "updated_at": "2026-07-27T14:02:33.636502+00:00"
+    },
+    {
+      "path": ".beacon/coverage-summary.json",
+      "sha256": "766038d47e7414c1b0008b17572e2b53b4e23c897cb2355a2fe05a61f7948fcb",
+      "updated_at": "2026-07-27T14:02:33.637142+00:00"
+    },
+    {
+      "path": ".beacon/evidence-signature-chain.json",
+      "sha256": "00b1b25fa00b04570cc1bbc767b66506f830d4d49f08ace70e74076941c7369b",
+      "updated_at": "2026-07-27T14:02:33.637423+00:00"
+    },
+    {
+      "path": ".beacon/evidence/auto-test/run-20260727T220214571539/contract/command.txt",
+      "sha256": "093f4549b4da824e1f7a9ad1369dbce37076a3ea37faa903ea5bd7b9b9c56d72",
+      "updated_at": "2026-07-27T14:02:33.637784+00:00"
+    },
+    {
+      "path": ".beacon/evidence/auto-test/run-20260727T220214571539/contract/junit.xml",
+      "sha256": "2adc57e58ee698c3472081a111877b9539af15212a0782339e9bce9c2509e5cf",
+      "updated_at": "2026-07-27T14:02:33.637998+00:00"
+    },
+    {
+      "path": ".beacon/evidence/auto-test/run-20260727T220214571539/contract/result.json",
+      "sha256": "6daf0c3536c44c62168bd77e1038006396e889fc2440953a397d1e4c1effee61",
+      "updated_at": "2026-07-27T14:02:33.638235+00:00"
+    },
+    {
+      "path": ".beacon/evidence/auto-test/run-20260727T220214571539/contract/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "updated_at": "2026-07-27T14:02:33.638307+00:00"
+    },
+    {
+      "path": ".beacon/evidence/auto-test/run-20260727T220214571539/contract/stdout.log",
+      "sha256": "83eb26ca254781491a5460b8169b3f7a6210db1a77be9d87946ff0770ecf7eb5",
+      "updated_at": "2026-07-27T14:02:33.638498+00:00"
+    },
+    {
+      "path": ".beacon/evidence/auto-test/run-20260727T220214571539/qa9/tc-execution-map.json",
+      "sha256": "350e9276e8fdd545e2f99765d696558e469f08530e245f95ed09a46e838bd6ee",
+      "updated_at": "2026-07-27T14:02:33.638753+00:00"
+    },
+    {
+      "path": ".beacon/evidence/auto-test/run-20260727T220214571539/qa9/tc-results.json",
+      "sha256": "dba1dd9354b6c1cc4377e8b18bf24a9c396e93820aaa7c5c6b5be20e3cde5a1e",
+      "updated_at": "2026-07-27T14:02:33.639004+00:00"
+    },
+    {
+      "path": ".beacon/evidence/auto-test/run-20260727T220214571539/summary.json",
+      "sha256": "53e09fc91271be05a94853ee33c9b66c6fbcd61b6eb245a08abc3ac84ed578f3",
+      "updated_at": "2026-07-27T14:02:33.639294+00:00"
+    },
+    {
+      "path": ".beacon/flaky-history.json",
+      "sha256": "28aa576429791595cbd0515baa300956b75d40f8170c27c469e591d139f718ef",
+      "updated_at": "2026-07-27T14:02:33.639398+00:00"
+    },
+    {
+      "path": ".beacon/gate-report.json",
+      "sha256": "6a2ae9c2f8bf70cab52bd1330584c087309ac78b0875a7c31da25d28cb3d65f0",
+      "updated_at": "2026-07-27T14:02:33.639503+00:00"
+    },
+    {
+      "path": ".beacon/qa/features/delivery-bus-mvp/ac-closure.json",
+      "sha256": "ddbe3d1a9b1f0bdd6e490281662d4c391466d0aeb3fd9b2f6f07e11068ae9b8c",
+      "updated_at": "2026-07-27T14:02:33.639860+00:00"
+    },
+    {
+      "path": ".beacon/qa/features/delivery-bus-mvp/exhaustiveness-report.json",
+      "sha256": "230d504586627c75bd3fd8031d22bf831f8f56dfb45e8673d3945e161298c40e",
+      "updated_at": "2026-07-27T14:02:33.639966+00:00"
+    },
+    {
+      "path": ".beacon/qa/features/delivery-bus-mvp/matrix.qa9.json",
+      "sha256": "7a7d95f561e70106be2fb35d9a6a816a2720bbc21104537eb4fc4f32422136fa",
+      "updated_at": "2026-07-27T14:02:33.640264+00:00"
+    },
+    {
+      "path": ".beacon/qa/features/delivery-bus-mvp/plan.json",
+      "sha256": "bd01d259e1b0938bdfddea9d0f86a4c103bbcadae9764b264253bc09a5de13b0",
+      "updated_at": "2026-07-27T14:02:33.640507+00:00"
+    },
+    {
+      "path": ".beacon/qa/features/delivery-bus-mvp/scorecard.json",
+      "sha256": "2faa64d3a5702653b43fa60a63557b7964c6a54d1e534f01b5ec0af625ef0f4b",
+      "updated_at": "2026-07-27T14:02:33.640711+00:00"
+    },
+    {
+      "path": ".beacon/qa/features/delivery-bus-mvp/status.json",
+      "sha256": "c520bf1d4bbd747d366695b1158f541b692c5216d109b005faf204d808efdb1b",
+      "updated_at": "2026-07-27T14:02:33.641029+00:00"
+    },
+    {
+      "path": ".beacon/qa/status.json",
+      "sha256": "138611a0b71dfeb9cb41ae6ef5b18c4c0233e44b29e29082772c2ea0e8111dfa",
+      "updated_at": "2026-07-27T14:02:33.641125+00:00"
+    },
+    {
+      "path": ".beacon/release-gate-report.json",
+      "sha256": "fffc840452036d064d807d7b09aba66a6a4139fe5cdc5061147dd75d0ca7c8e7",
+      "updated_at": "2026-07-27T14:02:33.641222+00:00"
+    },
+    {
+      "path": ".beacon/transactions/qa-acceptance-delivery-bus-mvp.json",
+      "sha256": "a95ff6c0c5be0af8e010347369fad67b4e8743759d0e78a0412808a09e6c27fd",
+      "updated_at": "2026-07-27T14:02:33.641325+00:00"
+    },
+    {
       "path": "docs/beacon/v0.0.1/.machine/execution/implementation-summary-delivery-bus-mvp.json",
       "sha256": "17efab0dab8fdc2b49f5ab4c1bd88eb3da0ce5c3987d7ee3ed67a7e8e239b618",
-      "updated_at": "2026-07-27T14:01:43.731535+00:00"
+      "updated_at": "2026-07-27T14:02:33.641681+00:00"
+    },
+    {
+      "path": "docs/beacon/v0.0.1/.machine/execution/qa-acceptance-delivery-bus-mvp.json",
+      "sha256": "0d74692677cf7c002c1cf39d10fd56c6967b00639ada799000ee09841894afd3",
+      "updated_at": "2026-07-27T14:02:33.641778+00:00"
     },
     {
       "path": "docs/beacon/v0.0.1/.machine/execution/technical-implementation-delivery-bus-mvp.json",
       "sha256": "aee2a894024146f2e0c01f063473885b31ee5f5526baa79ac668ab14266d538d",
-      "updated_at": "2026-07-27T14:01:43.731306+00:00"
+      "updated_at": "2026-07-27T14:02:33.641880+00:00"
     },
     {
       "path": "docs/beacon/v0.0.1/.machine/requirement/feature-package-validation.json",
       "sha256": "6808b01ad31a2ea21e85ae31c092131944038367c1fcffee2255336e447cfb6b",
-      "updated_at": "2026-07-27T14:01:43.731388+00:00"
+      "updated_at": "2026-07-27T14:02:33.642196+00:00"
     },
     {
       "path": "docs/beacon/v0.0.1/.machine/trace/implementation/delivery-bus-mvp/technical-implementation-delivery-bus-mvp.md",
       "sha256": "70e34f73b7e8eb372bb20eff9e98d7e5c2cc99a03322db8ff536b3795e626e96",
-      "updated_at": "2026-07-27T14:01:43.731464+00:00"
+      "updated_at": "2026-07-27T14:02:33.642317+00:00"
     },
     {
       "path": "docs/beacon/v0.0.1/execution/implementation-brief-delivery-bus-mvp.md",
       "sha256": "42e9a9a18d3000025cde00999d48215f86b5f48c5c919144ba15fdae7ae18555",
-      "updated_at": "2026-07-27T14:01:43.731588+00:00"
+      "updated_at": "2026-07-27T14:02:33.642413+00:00"
+    },
+    {
+      "path": "docs/beacon/v0.0.1/execution/qa-acceptance-brief-delivery-bus-mvp.md",
+      "sha256": "ac52f4fa05739f9207ca0327295ccd26a8973593e4d532035d8a5ac7f55e4db4",
+      "updated_at": "2026-07-27T14:02:33.642507+00:00"
     }
   ],
-  "updated_at": "2026-07-27T14:01:43.731594+00:00",
-  "version": "v0.0.1"
+  "updated_at": "2026-07-27T14:02:33.642510+00:00",
+  "version": "v0.0.1",
+  "rebuild_reason": "doctor repair-evidence-manifest",
+  "dropped_count": 0,
+  "dropped_sample": [],
+  "run_id": "run-20260727T220214571539"
 }

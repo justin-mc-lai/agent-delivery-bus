@@ -1,32 +1,32 @@
 {
   "scope": "qa9",
-  "timestamp": "2026-07-27T21:52:00.835287",
+  "timestamp": "2026-07-27T22:02:14.572144",
   "project": "/Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.1/delivery-bus-mvp",
   "version": "v0.0.1",
-  "run_id": "run-20260727T215200834720",
-  "spec_fingerprint_hash": "b81321257f243dc10ceab5589518493dd38a4f592c14b55ee7b3274d856bd768",
-  "status": "failed",
+  "run_id": "run-20260727T220214571539",
+  "spec_fingerprint_hash": "12372bf884d6484378c88ff3d84c65041bf431b67de7ecaaf8d996c889d807a7",
+  "status": "passed",
   "selected_layers": [
     "contract"
   ],
   "execution": {
-    "run_id": "run-20260727T215200834720",
+    "run_id": "run-20260727T220214571539",
     "version": "v0.0.1",
-    "evidence_dir": ".beacon/evidence/auto-test/run-20260727T215200834720",
+    "evidence_dir": ".beacon/evidence/auto-test/run-20260727T220214571539",
     "spec_fingerprint": {
-      "fingerprint_hash": "b81321257f243dc10ceab5589518493dd38a4f592c14b55ee7b3274d856bd768",
+      "fingerprint_hash": "12372bf884d6484378c88ff3d84c65041bf431b67de7ecaaf8d996c889d807a7",
       "version": "v0.0.1",
-      "generated_at": "2026-07-27T13:52:03.058814+00:00"
+      "generated_at": "2026-07-27T14:02:19.052726+00:00"
     },
     "layers": [
       {
         "layer": "contract",
-        "command": "python3 -m unittest tests.test_registry -v",
+        "command": "python3 -m pytest -q tests/test_registry.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
         "exit_code": 0,
         "status": "passed",
         "reason_code": "",
         "timeout_seconds": 300,
-        "assertion_count": 0,
+        "assertion_count": 3,
         "was_flaky": false,
         "attempt_count": 1,
         "attempts": [
@@ -35,16 +35,17 @@
             "exit_code": 0
           }
         ],
-        "execution_fingerprint": "9e6f6624c7e31f18af58e99d7abc6d8d5696a854465b711153595876a16896a3",
-        "started_at": "2026-07-27T21:52:00.914134",
-        "ended_at": "2026-07-27T21:52:01.013994",
-        "junit_path": "",
-        "junit_valid": false,
+        "execution_fingerprint": "f5df4424b0e32893e51279596abb802f2e11e626b8ef831e5cf999c3fae4ff66",
+        "started_at": "2026-07-27T22:02:14.649712",
+        "ended_at": "2026-07-27T22:02:15.032639",
+        "junit_path": ".beacon/evidence/auto-test/run-20260727T220214571539/contract/junit.xml",
+        "junit_valid": true,
         "evidence_ref": [
-          ".beacon/evidence/auto-test/run-20260727T215200834720/contract/command.txt",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/contract/stdout.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/contract/stderr.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/contract/result.json"
+          ".beacon/evidence/auto-test/run-20260727T220214571539/contract/command.txt",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/contract/stdout.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/contract/stderr.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/contract/junit.xml",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/contract/result.json"
         ]
       }
     ],
@@ -57,9 +58,9 @@
       "freshness_violations": []
     },
     "artifacts": [
-      ".beacon/evidence/auto-test/run-20260727T215200834720/qa9/tc-execution-map.json",
-      ".beacon/evidence/auto-test/run-20260727T215200834720/qa9/tc-results.json",
-      ".beacon/evidence/auto-test/run-20260727T215200834720/summary.json",
+      ".beacon/evidence/auto-test/run-20260727T220214571539/qa9/tc-execution-map.json",
+      ".beacon/evidence/auto-test/run-20260727T220214571539/qa9/tc-results.json",
+      ".beacon/evidence/auto-test/run-20260727T220214571539/summary.json",
       ".beacon/flaky-history.json",
       ".beacon/evidence-signature-chain.json"
     ],
@@ -114,21 +115,22 @@
         "status": "passed",
         "layer_status": "passed",
         "reason_code": "",
-        "assertion_count": 0,
-        "command": "python3 -m unittest tests.test_registry -v",
-        "run_id": "run-20260727T215200834720",
+        "assertion_count": 3,
+        "command": "python3 -m pytest -q tests/test_registry.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+        "run_id": "run-20260727T220214571539",
         "evidence_path": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-001/__RUN_ID__.json",
         "evidence_ref": [
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-001/command.txt",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-001/stdout.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-001/stderr.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-001/result.json"
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-001/command.txt",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-001/stdout.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-001/stderr.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-001/junit.xml",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-001/result.json"
         ],
-        "execution_fingerprint": "9a0915fd6c4252dadc21cf164b69bc047a919c19226a7972c9bc99957902bec5",
-        "started_at": "2026-07-27T21:52:01.093954",
-        "ended_at": "2026-07-27T21:52:01.190804",
-        "junit_path": "",
-        "junit_valid": false,
+        "execution_fingerprint": "fbe55fa82754d0b090b20d81fea7eacb77f2ba1f02c29d7b61079e7620717509",
+        "started_at": "2026-07-27T22:02:15.110679",
+        "ended_at": "2026-07-27T22:02:15.413311",
+        "junit_path": ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-001/junit.xml",
+        "junit_valid": true,
         "browser_required": false,
         "browser_evidence_pack_ref": "",
         "browser_runner_learning_ref": "",
@@ -151,21 +153,22 @@
         "status": "passed",
         "layer_status": "passed",
         "reason_code": "",
-        "assertion_count": 0,
-        "command": "python3 -m unittest tests.test_preflight -v",
-        "run_id": "run-20260727T215200834720",
+        "assertion_count": 4,
+        "command": "python3 -m pytest -q tests/test_preflight.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+        "run_id": "run-20260727T220214571539",
         "evidence_path": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-002/__RUN_ID__.json",
         "evidence_ref": [
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-002/command.txt",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-002/stdout.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-002/stderr.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-002/result.json"
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-002/command.txt",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-002/stdout.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-002/stderr.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-002/junit.xml",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-002/result.json"
         ],
-        "execution_fingerprint": "08b2e87c04f5650f0daef7791ff8a23e8e589813f571b3e350b5cba005c69096",
-        "started_at": "2026-07-27T21:52:01.266794",
-        "ended_at": "2026-07-27T21:52:01.360692",
-        "junit_path": "",
-        "junit_valid": false,
+        "execution_fingerprint": "30ab37e48442ea57bd306580f4d4349bc827cdea0d00a7349d4b6d3b46b3ccb4",
+        "started_at": "2026-07-27T22:02:15.488107",
+        "ended_at": "2026-07-27T22:02:15.791461",
+        "junit_path": ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-002/junit.xml",
+        "junit_valid": true,
         "browser_required": false,
         "browser_evidence_pack_ref": "",
         "browser_runner_learning_ref": "",
@@ -188,21 +191,22 @@
         "status": "passed",
         "layer_status": "passed",
         "reason_code": "",
-        "assertion_count": 0,
-        "command": "python3 -m unittest tests.test_approvals -v",
-        "run_id": "run-20260727T215200834720",
+        "assertion_count": 2,
+        "command": "python3 -m pytest -q tests/test_approvals.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+        "run_id": "run-20260727T220214571539",
         "evidence_path": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-003/__RUN_ID__.json",
         "evidence_ref": [
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-003/command.txt",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-003/stdout.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-003/stderr.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-003/result.json"
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-003/command.txt",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-003/stdout.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-003/stderr.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-003/junit.xml",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-003/result.json"
         ],
-        "execution_fingerprint": "62773907ecc41cd07f3065319c72c3305a5301b58b3dea52f210f7b1c0463b4a",
-        "started_at": "2026-07-27T21:52:01.438072",
-        "ended_at": "2026-07-27T21:52:01.528786",
-        "junit_path": "",
-        "junit_valid": false,
+        "execution_fingerprint": "add4742c397fab05fe84823af7abb372be4c3b160b57a6cfd29eee1f4b886d0d",
+        "started_at": "2026-07-27T22:02:15.866195",
+        "ended_at": "2026-07-27T22:02:16.160729",
+        "junit_path": ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-003/junit.xml",
+        "junit_valid": true,
         "browser_required": false,
         "browser_evidence_pack_ref": "",
         "browser_runner_learning_ref": "",
@@ -225,21 +229,22 @@
         "status": "passed",
         "layer_status": "passed",
         "reason_code": "",
-        "assertion_count": 0,
-        "command": "python3 -m unittest tests.test_storage -v",
-        "run_id": "run-20260727T215200834720",
+        "assertion_count": 2,
+        "command": "python3 -m pytest -q tests/test_storage.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+        "run_id": "run-20260727T220214571539",
         "evidence_path": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-004/__RUN_ID__.json",
         "evidence_ref": [
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-004/command.txt",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-004/stdout.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-004/stderr.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-004/result.json"
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-004/command.txt",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-004/stdout.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-004/stderr.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-004/junit.xml",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-004/result.json"
         ],
-        "execution_fingerprint": "a1a72414b2edb9e78e05a600c02d258e75816ec1be0f089b0953e0749e5b6b11",
-        "started_at": "2026-07-27T21:52:01.603829",
-        "ended_at": "2026-07-27T21:52:01.697830",
-        "junit_path": "",
-        "junit_valid": false,
+        "execution_fingerprint": "b2d39af23a8c959752f4b0942d96a2181cc5ea36b01d30117788fd907ce6a0f6",
+        "started_at": "2026-07-27T22:02:16.233631",
+        "ended_at": "2026-07-27T22:02:16.518841",
+        "junit_path": ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-004/junit.xml",
+        "junit_valid": true,
         "browser_required": false,
         "browser_evidence_pack_ref": "",
         "browser_runner_learning_ref": "",
@@ -262,21 +267,22 @@
         "status": "passed",
         "layer_status": "passed",
         "reason_code": "",
-        "assertion_count": 0,
-        "command": "python3 -m unittest tests.test_service.DispatchIdempotencyTests -v",
-        "run_id": "run-20260727T215200834720",
+        "assertion_count": 2,
+        "command": "python3 -m pytest -q tests/test_service.py::DispatchIdempotencyTests --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+        "run_id": "run-20260727T220214571539",
         "evidence_path": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-005/__RUN_ID__.json",
         "evidence_ref": [
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-005/command.txt",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-005/stdout.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-005/stderr.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-005/result.json"
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-005/command.txt",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-005/stdout.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-005/stderr.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-005/junit.xml",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-005/result.json"
         ],
-        "execution_fingerprint": "fbd2981902a6510e09da60e44361c8ad147a25c58ea0ff01d940774cb46a492d",
-        "started_at": "2026-07-27T21:52:01.773998",
-        "ended_at": "2026-07-27T21:52:01.876481",
-        "junit_path": "",
-        "junit_valid": false,
+        "execution_fingerprint": "320b51648df379a92a5a6a46699a29011724ab9c24088c1e36da7d41ce1f8f4f",
+        "started_at": "2026-07-27T22:02:16.589442",
+        "ended_at": "2026-07-27T22:02:16.897059",
+        "junit_path": ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-005/junit.xml",
+        "junit_valid": true,
         "browser_required": false,
         "browser_evidence_pack_ref": "",
         "browser_runner_learning_ref": "",
@@ -299,21 +305,22 @@
         "status": "passed",
         "layer_status": "passed",
         "reason_code": "",
-        "assertion_count": 0,
-        "command": "python3 -m unittest tests.test_adapters.HermesAdapterTests -v",
-        "run_id": "run-20260727T215200834720",
+        "assertion_count": 1,
+        "command": "python3 -m pytest -q tests/test_adapters.py::HermesAdapterTests --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+        "run_id": "run-20260727T220214571539",
         "evidence_path": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-006/__RUN_ID__.json",
         "evidence_ref": [
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-006/command.txt",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-006/stdout.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-006/stderr.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-006/result.json"
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-006/command.txt",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-006/stdout.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-006/stderr.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-006/junit.xml",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-006/result.json"
         ],
-        "execution_fingerprint": "99f584550dbd2c61483682be00ee63ea93241a5ba942de95f4514154c99bd6a5",
-        "started_at": "2026-07-27T21:52:01.952921",
-        "ended_at": "2026-07-27T21:52:02.042620",
-        "junit_path": "",
-        "junit_valid": false,
+        "execution_fingerprint": "557307c3d1d9d61e6a63f588f7fa52e0ba2810a2148178205d2ade7a11c8ca87",
+        "started_at": "2026-07-27T22:02:16.970257",
+        "ended_at": "2026-07-27T22:02:17.255340",
+        "junit_path": ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-006/junit.xml",
+        "junit_valid": true,
         "browser_required": false,
         "browser_evidence_pack_ref": "",
         "browser_runner_learning_ref": "",
@@ -336,21 +343,22 @@
         "status": "passed",
         "layer_status": "passed",
         "reason_code": "",
-        "assertion_count": 0,
-        "command": "python3 -m unittest tests.test_service.DispatchStateMachineTests -v",
-        "run_id": "run-20260727T215200834720",
+        "assertion_count": 3,
+        "command": "python3 -m pytest -q tests/test_service.py::DispatchStateMachineTests --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+        "run_id": "run-20260727T220214571539",
         "evidence_path": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-007/__RUN_ID__.json",
         "evidence_ref": [
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-007/command.txt",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-007/stdout.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-007/stderr.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-007/result.json"
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-007/command.txt",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-007/stdout.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-007/stderr.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-007/junit.xml",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-007/result.json"
         ],
-        "execution_fingerprint": "688f10b079c7c219f5d98d95ef085597d5753605c41fd7a50a9094ca29a19bb4",
-        "started_at": "2026-07-27T21:52:02.125412",
-        "ended_at": "2026-07-27T21:52:02.233054",
-        "junit_path": "",
-        "junit_valid": false,
+        "execution_fingerprint": "d1f489a464cc7760f9fdef647a67bfa177e2a5953f1913372c8505459fca6d7c",
+        "started_at": "2026-07-27T22:02:17.328143",
+        "ended_at": "2026-07-27T22:02:17.628003",
+        "junit_path": ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-007/junit.xml",
+        "junit_valid": true,
         "browser_required": false,
         "browser_evidence_pack_ref": "",
         "browser_runner_learning_ref": "",
@@ -373,21 +381,22 @@
         "status": "passed",
         "layer_status": "passed",
         "reason_code": "",
-        "assertion_count": 0,
-        "command": "python3 -m unittest tests.test_reconcile -v",
-        "run_id": "run-20260727T215200834720",
+        "assertion_count": 1,
+        "command": "python3 -m pytest -q tests/test_reconcile.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+        "run_id": "run-20260727T220214571539",
         "evidence_path": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-008/__RUN_ID__.json",
         "evidence_ref": [
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-008/command.txt",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-008/stdout.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-008/stderr.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-008/result.json"
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-008/command.txt",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-008/stdout.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-008/stderr.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-008/junit.xml",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-008/result.json"
         ],
-        "execution_fingerprint": "407979b67610ffd7c5c68c5bb97734d4c7e5aa045e33c0080aaf72b50f730413",
-        "started_at": "2026-07-27T21:52:02.309984",
-        "ended_at": "2026-07-27T21:52:02.418250",
-        "junit_path": "",
-        "junit_valid": false,
+        "execution_fingerprint": "da35cca4316c0547c446071afb0acdb5ad20f6d3f536f06fd45cdfd40b2e7416",
+        "started_at": "2026-07-27T22:02:17.703889",
+        "ended_at": "2026-07-27T22:02:18.013004",
+        "junit_path": ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-008/junit.xml",
+        "junit_valid": true,
         "browser_required": false,
         "browser_evidence_pack_ref": "",
         "browser_runner_learning_ref": "",
@@ -410,21 +419,22 @@
         "status": "passed",
         "layer_status": "passed",
         "reason_code": "",
-        "assertion_count": 0,
-        "command": "python3 -m unittest tests.test_skill_contract -v",
-        "run_id": "run-20260727T215200834720",
+        "assertion_count": 2,
+        "command": "python3 -m pytest -q tests/test_skill_contract.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+        "run_id": "run-20260727T220214571539",
         "evidence_path": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-009/__RUN_ID__.json",
         "evidence_ref": [
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-009/command.txt",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-009/stdout.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-009/stderr.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-009/result.json"
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-009/command.txt",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-009/stdout.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-009/stderr.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-009/junit.xml",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-009/result.json"
         ],
-        "execution_fingerprint": "4c784f3b05bb728bc19221f5e8ae39106aa28265c9485f43461295ffeaafd105",
-        "started_at": "2026-07-27T21:52:02.496659",
-        "ended_at": "2026-07-27T21:52:02.638156",
-        "junit_path": "",
-        "junit_valid": false,
+        "execution_fingerprint": "171f7ea6c581f3f1fbeae6b4e385a89cb969f106177c191fa736cae392162bee",
+        "started_at": "2026-07-27T22:02:18.089904",
+        "ended_at": "2026-07-27T22:02:18.444215",
+        "junit_path": ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-009/junit.xml",
+        "junit_valid": true,
         "browser_required": false,
         "browser_evidence_pack_ref": "",
         "browser_runner_learning_ref": "",
@@ -447,21 +457,22 @@
         "status": "passed",
         "layer_status": "passed",
         "reason_code": "",
-        "assertion_count": 0,
-        "command": "python3 -m unittest tests.test_boundaries -v",
-        "run_id": "run-20260727T215200834720",
+        "assertion_count": 2,
+        "command": "python3 -m pytest -q tests/test_boundaries.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+        "run_id": "run-20260727T220214571539",
         "evidence_path": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-010/__RUN_ID__.json",
         "evidence_ref": [
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-010/command.txt",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-010/stdout.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-010/stderr.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-010/result.json"
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-010/command.txt",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-010/stdout.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-010/stderr.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-010/junit.xml",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-010/result.json"
         ],
-        "execution_fingerprint": "a57c70bb26d46d268e04291d412219fbf443e00cf1946272c01c5b87233cae27",
-        "started_at": "2026-07-27T21:52:02.716911",
-        "ended_at": "2026-07-27T21:52:02.823207",
-        "junit_path": "",
-        "junit_valid": false,
+        "execution_fingerprint": "b634a544968731bfd61ec2e57ba1d30d68e809585d6c84dacb71cb1f744c5526",
+        "started_at": "2026-07-27T22:02:18.515876",
+        "ended_at": "2026-07-27T22:02:18.831057",
+        "junit_path": ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-010/junit.xml",
+        "junit_valid": true,
         "browser_required": false,
         "browser_evidence_pack_ref": "",
         "browser_runner_learning_ref": "",
@@ -486,19 +497,19 @@
         "reason_code": "",
         "assertion_count": 1,
         "command": "PYTHONPATH=src python3 -m agent_delivery_bus.cli --config config/projects.json --db :memory: projects list --json",
-        "run_id": "run-20260727T215200834720",
+        "run_id": "run-20260727T220214571539",
         "evidence_path": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-cli/__RUN_ID__.json",
         "evidence_ref": [
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-CLI/command.txt",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-CLI/stdout.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-CLI/stderr.log",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-CLI/junit.xml",
-          ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-CLI/result.json"
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-CLI/command.txt",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-CLI/stdout.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-CLI/stderr.log",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-CLI/junit.xml",
+          ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-CLI/result.json"
         ],
-        "execution_fingerprint": "3449e6ba9aa09bd527a18b7a0d026f3c04509e284d24517ab862e509852ad1a4",
-        "started_at": "2026-07-27T21:52:02.898741",
-        "ended_at": "2026-07-27T21:52:02.991156",
-        "junit_path": ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-CLI/junit.xml",
+        "execution_fingerprint": "72b3a0fb16846dadc3e4e8e90e94ec19ea513ff141e17785f03595ab6df0726d",
+        "started_at": "2026-07-27T22:02:18.906261",
+        "ended_at": "2026-07-27T22:02:18.996323",
+        "junit_path": ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-CLI/junit.xml",
         "junit_valid": true,
         "browser_required": false,
         "browser_evidence_pack_ref": "",
@@ -512,31 +523,16 @@
       }
     ]
   },
-  "quality_issues": [
-    {
-      "layer": "contract",
-      "reason_code": "assertion_count_zero_pass",
-      "message": "layer contract passed but assertion_count=0"
-    },
-    {
-      "layer": "contract",
-      "reason_code": "junit_missing_or_invalid",
-      "message": "layer contract missing junit.xml"
-    }
-  ],
+  "quality_issues": [],
   "schema_version": "1.0",
-  "updated_at": "2026-07-27T13:52:03.003657+00:00",
+  "updated_at": "2026-07-27T14:02:19.005539+00:00",
   "summary": {
     "feature": "delivery-bus-mvp",
     "version": "v0.0.1",
-    "status": "failed",
-    "release_ready": false,
-    "continue_decision": "stop_for_repair",
-    "stop_reasons": [
-      "assertion_count_zero_pass",
-      "design_baseline_missing",
-      "junit_missing_or_invalid"
-    ],
+    "status": "passed",
+    "release_ready": true,
+    "continue_decision": "ready_for_release",
+    "stop_reasons": [],
     "reconciliation_required": false,
     "reconciliation_reason_code": "",
     "reconciliation_artifact_path": "",
@@ -552,7 +548,7 @@
   "feature": "delivery-bus-mvp",
   "feature_slug": "delivery-bus-mvp",
   "implementation_done": true,
-  "evidence_done": false,
+  "evidence_done": true,
   "story_sequence": [
     {
       "ac_id": "AC-001",
@@ -565,7 +561,10 @@
   "targeted_rerun": {
     "required": true,
     "reason_codes": [
-      "previous_feature_qa_not_passed"
+      "previous_feature_qa_not_passed",
+      "implementation_run_changed",
+      "source_matrix_changed",
+      "artifact_updates_pending"
     ],
     "targeted_layers": [
       "contract"
@@ -607,7 +606,15 @@
     "verification_item_count": 11
   },
   "feature_matrix_path": ".beacon/qa/features/delivery-bus-mvp/matrix.qa9.json",
-  "blocking_artifact_updates": [],
+  "blocking_artifact_updates": [
+    {
+      "artifact": "review_quality",
+      "required": true,
+      "reason": "run quality review after native implementation",
+      "status": "open",
+      "notes": ""
+    }
+  ],
   "per_item_results": [
     {
       "ac_id": "AC-ADB-001",
@@ -625,10 +632,11 @@
       "browser_evidence_authenticity_status": "",
       "replay_ref": "",
       "evidence_ref": [
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-001/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-001/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-001/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-001/result.json"
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-001/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-001/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-001/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-001/junit.xml",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-001/result.json"
       ]
     },
     {
@@ -647,10 +655,11 @@
       "browser_evidence_authenticity_status": "",
       "replay_ref": "",
       "evidence_ref": [
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-002/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-002/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-002/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-002/result.json"
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-002/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-002/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-002/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-002/junit.xml",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-002/result.json"
       ]
     },
     {
@@ -669,10 +678,11 @@
       "browser_evidence_authenticity_status": "",
       "replay_ref": "",
       "evidence_ref": [
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-003/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-003/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-003/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-003/result.json"
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-003/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-003/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-003/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-003/junit.xml",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-003/result.json"
       ]
     },
     {
@@ -691,10 +701,11 @@
       "browser_evidence_authenticity_status": "",
       "replay_ref": "",
       "evidence_ref": [
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-004/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-004/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-004/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-004/result.json"
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-004/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-004/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-004/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-004/junit.xml",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-004/result.json"
       ]
     },
     {
@@ -713,10 +724,11 @@
       "browser_evidence_authenticity_status": "",
       "replay_ref": "",
       "evidence_ref": [
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-005/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-005/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-005/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-005/result.json"
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-005/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-005/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-005/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-005/junit.xml",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-005/result.json"
       ]
     },
     {
@@ -735,10 +747,11 @@
       "browser_evidence_authenticity_status": "",
       "replay_ref": "",
       "evidence_ref": [
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-006/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-006/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-006/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-006/result.json"
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-006/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-006/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-006/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-006/junit.xml",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-006/result.json"
       ]
     },
     {
@@ -757,10 +770,11 @@
       "browser_evidence_authenticity_status": "",
       "replay_ref": "",
       "evidence_ref": [
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-007/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-007/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-007/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-007/result.json"
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-007/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-007/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-007/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-007/junit.xml",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-007/result.json"
       ]
     },
     {
@@ -779,10 +793,11 @@
       "browser_evidence_authenticity_status": "",
       "replay_ref": "",
       "evidence_ref": [
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-008/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-008/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-008/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-008/result.json"
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-008/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-008/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-008/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-008/junit.xml",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-008/result.json"
       ]
     },
     {
@@ -801,10 +816,11 @@
       "browser_evidence_authenticity_status": "",
       "replay_ref": "",
       "evidence_ref": [
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-009/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-009/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-009/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-009/result.json"
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-009/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-009/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-009/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-009/junit.xml",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-009/result.json"
       ]
     },
     {
@@ -823,10 +839,11 @@
       "browser_evidence_authenticity_status": "",
       "replay_ref": "",
       "evidence_ref": [
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-010/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-010/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-010/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-010/result.json"
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-010/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-010/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-010/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-010/junit.xml",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-010/result.json"
       ]
     },
     {
@@ -845,11 +862,11 @@
       "browser_evidence_authenticity_status": "",
       "replay_ref": "",
       "evidence_ref": [
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-CLI/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-CLI/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-CLI/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-CLI/junit.xml",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-CLI/result.json"
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-CLI/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-CLI/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-CLI/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-CLI/junit.xml",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-CLI/result.json"
       ]
     }
   ],
@@ -874,6 +891,7 @@
     "verification_surface": "qa",
     "docs_version": "v0.0.1",
     "runtime_version": "v1.6.11",
+    "refs": {},
     "findings": []
   },
   "requirement_completeness_gate": {
@@ -893,8 +911,8 @@
     "schema_version": "1.0",
     "feature": "delivery-bus-mvp",
     "feature_slug": "delivery-bus-mvp",
-    "run_id": "run-20260727T215200834720",
-    "generated_at": "2026-07-27T13:52:03.036321+00:00",
+    "run_id": "run-20260727T220214571539",
+    "generated_at": "2026-07-27T14:02:19.035784+00:00",
     "execution_mode": "feature-aware",
     "scenario_count": 11,
     "browser_scenario_count": 0,
@@ -944,10 +962,11 @@
         "flake_penalty": 0.0
       },
       "evidence_ref": [
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-001/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-001/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-001/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-001/result.json"
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-001/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-001/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-001/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-001/junit.xml",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-001/result.json"
       ]
     },
     {
@@ -979,10 +998,11 @@
         "flake_penalty": 0.0
       },
       "evidence_ref": [
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-002/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-002/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-002/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-002/result.json"
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-002/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-002/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-002/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-002/junit.xml",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-002/result.json"
       ]
     },
     {
@@ -1014,10 +1034,11 @@
         "flake_penalty": 0.0
       },
       "evidence_ref": [
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-003/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-003/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-003/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-003/result.json"
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-003/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-003/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-003/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-003/junit.xml",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-003/result.json"
       ]
     },
     {
@@ -1049,10 +1070,11 @@
         "flake_penalty": 0.0
       },
       "evidence_ref": [
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-004/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-004/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-004/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-004/result.json"
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-004/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-004/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-004/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-004/junit.xml",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-004/result.json"
       ]
     },
     {
@@ -1084,10 +1106,11 @@
         "flake_penalty": 0.0
       },
       "evidence_ref": [
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-005/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-005/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-005/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-005/result.json"
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-005/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-005/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-005/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-005/junit.xml",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-005/result.json"
       ]
     },
     {
@@ -1119,10 +1142,11 @@
         "flake_penalty": 0.0
       },
       "evidence_ref": [
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-006/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-006/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-006/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-006/result.json"
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-006/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-006/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-006/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-006/junit.xml",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-006/result.json"
       ]
     },
     {
@@ -1154,10 +1178,11 @@
         "flake_penalty": 0.0
       },
       "evidence_ref": [
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-007/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-007/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-007/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-007/result.json"
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-007/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-007/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-007/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-007/junit.xml",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-007/result.json"
       ]
     },
     {
@@ -1189,10 +1214,11 @@
         "flake_penalty": 0.0
       },
       "evidence_ref": [
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-008/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-008/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-008/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-008/result.json"
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-008/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-008/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-008/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-008/junit.xml",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-008/result.json"
       ]
     },
     {
@@ -1224,10 +1250,11 @@
         "flake_penalty": 0.0
       },
       "evidence_ref": [
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-009/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-009/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-009/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-009/result.json"
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-009/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-009/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-009/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-009/junit.xml",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-009/result.json"
       ]
     },
     {
@@ -1259,10 +1286,11 @@
         "flake_penalty": 0.0
       },
       "evidence_ref": [
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-010/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-010/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-010/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-010/result.json"
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-010/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-010/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-010/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-010/junit.xml",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-010/result.json"
       ]
     },
     {
@@ -1294,11 +1322,11 @@
         "flake_penalty": 0.0
       },
       "evidence_ref": [
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-CLI/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-CLI/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-CLI/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-CLI/junit.xml",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9-tc/TC-ADB-CLI/result.json"
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-CLI/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-CLI/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-CLI/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-CLI/junit.xml",
+        ".beacon/evidence/auto-test/run-20260727T220214571539/qa9-tc/TC-ADB-CLI/result.json"
       ]
     }
   ],
@@ -1308,7 +1336,7 @@
     "schema_version": "1.0",
     "feature": "delivery-bus-mvp",
     "feature_slug": "delivery-bus-mvp",
-    "run_id": "run-20260727T215200834720",
+    "run_id": "run-20260727T220214571539",
     "ac_total": 11,
     "ac_accepted": 11,
     "scenario_total": 11,
@@ -1362,6 +1390,7 @@
       "verification_surface": "qa",
       "docs_version": "v0.0.1",
       "runtime_version": "v1.6.11",
+      "refs": {},
       "findings": []
     },
     "qa_outcome_taxonomy": {
@@ -1759,20 +1788,16 @@
       "advisory_or_blocked_finding_count": 0,
       "policy": "absorbed_deep_findings_only"
     },
-    "continue_decision": "stop_for_repair",
-    "stop_reasons": [
-      "assertion_count_zero_pass",
-      "design_baseline_missing",
-      "junit_missing_or_invalid"
-    ],
+    "continue_decision": "ready_for_release",
+    "stop_reasons": [],
     "test_case_backfill_required": false,
     "resume_command": "beacon help --project-root /Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.1/delivery-bus-mvp --version v0.0.1 --feature \"delivery-bus-mvp\"",
     "repair_handoff": {
       "action": "qa-repair",
-      "reason": "assertion_count_zero_pass, junit_missing_or_invalid",
+      "reason": "qa_round_incomplete",
       "command": "beacon help --project-root /Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.1/delivery-bus-mvp --version v0.0.1 --feature \"delivery-bus-mvp\""
     },
-    "release_ready": false,
+    "release_ready": true,
     "domain_fsm_coverage": {
       "schema_version": "1.0",
       "required": true,
@@ -1803,8 +1828,8 @@
           {
             "ac_id": "TC-ADB-007",
             "tc_id": "AC-ADB-007",
-            "path_type": "`python3 -m unittest tests.test_service.DispatchStateMachineTests -v`",
-            "raw": "TC-ADB-007 | AC-ADB-007 | `python3 -m unittest tests.test_service.DispatchStateMachineTests -v` | exit_code==0；合法转换留事件，非法转换返回 `invalid_transition`"
+            "path_type": "`python3 -m pytest -q tests/test_service.py::DispatchStateMachineTests --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+            "raw": "TC-ADB-007 | AC-ADB-007 | `python3 -m pytest -q tests/test_service.py::DispatchStateMachineTests --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"` | exit_code==0；合法转换留事件，非法转换返回 `invalid_transition`"
           }
         ]
       },
@@ -1821,64 +1846,64 @@
           {
             "ac_id": "TC-ADB-007",
             "tc_id": "AC-ADB-007",
-            "path_type": "`python3 -m unittest tests.test_service.DispatchStateMachineTests -v`",
-            "raw": "TC-ADB-007 | AC-ADB-007 | `python3 -m unittest tests.test_service.DispatchStateMachineTests -v` | exit_code==0；合法转换留事件，非法转换返回 `invalid_transition`"
+            "path_type": "`python3 -m pytest -q tests/test_service.py::DispatchStateMachineTests --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+            "raw": "TC-ADB-007 | AC-ADB-007 | `python3 -m pytest -q tests/test_service.py::DispatchStateMachineTests --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"` | exit_code==0；合法转换留事件，非法转换返回 `invalid_transition`"
           }
         ],
         "other_rows": [
           {
             "ac_id": "TC-ADB-001",
             "tc_id": "AC-ADB-001",
-            "path_type": "`python3 -m unittest tests.test_registry -v`",
-            "raw": "TC-ADB-001 | AC-ADB-001 | `python3 -m unittest tests.test_registry -v` | exit_code==0；覆盖 list、slug/alias/path resolve、重复 slug、alias 冲突和 repo 缺失"
+            "path_type": "`python3 -m pytest -q tests/test_registry.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+            "raw": "TC-ADB-001 | AC-ADB-001 | `python3 -m pytest -q tests/test_registry.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"` | exit_code==0；覆盖 list、slug/alias/path resolve、重复 slug、alias 冲突和 repo 缺失"
           },
           {
             "ac_id": "TC-ADB-002",
             "tc_id": "AC-ADB-002",
-            "path_type": "`python3 -m unittest tests.test_preflight -v`",
-            "raw": "TC-ADB-002 | AC-ADB-002 | `python3 -m unittest tests.test_preflight -v` | exit_code==0；strict check 失败返回稳定 reason_code/resume_action 且无写目标仓命令"
+            "path_type": "`python3 -m pytest -q tests/test_preflight.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+            "raw": "TC-ADB-002 | AC-ADB-002 | `python3 -m pytest -q tests/test_preflight.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"` | exit_code==0；strict check 失败返回稳定 reason_code/resume_action 且无写目标仓命令"
           },
           {
             "ac_id": "TC-ADB-003",
             "tc_id": "AC-ADB-003",
-            "path_type": "`python3 -m unittest tests.test_approvals -v`",
-            "raw": "TC-ADB-003 | AC-ADB-003 | `python3 -m unittest tests.test_approvals -v` | exit_code==0；覆盖 hash-only、expiry、scope、reserve/finalize/release、重放与并发 reservation"
+            "path_type": "`python3 -m pytest -q tests/test_approvals.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+            "raw": "TC-ADB-003 | AC-ADB-003 | `python3 -m pytest -q tests/test_approvals.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"` | exit_code==0；覆盖 hash-only、expiry、scope、reserve/finalize/release、重放与并发 reservation"
           },
           {
             "ac_id": "TC-ADB-004",
             "tc_id": "AC-ADB-004",
-            "path_type": "`python3 -m unittest tests.test_storage -v`",
-            "raw": "TC-ADB-004 | AC-ADB-004 | `python3 -m unittest tests.test_storage -v` | exit_code==0；事务回滚、重启恢复、事件 append-only 与 sequence 单调成立"
+            "path_type": "`python3 -m pytest -q tests/test_storage.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+            "raw": "TC-ADB-004 | AC-ADB-004 | `python3 -m pytest -q tests/test_storage.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"` | exit_code==0；事务回滚、重启恢复、事件 append-only 与 sequence 单调成立"
           },
           {
             "ac_id": "TC-ADB-005",
             "tc_id": "AC-ADB-005",
-            "path_type": "`python3 -m unittest tests.test_service.DispatchIdempotencyTests -v`",
-            "raw": "TC-ADB-005 | AC-ADB-005 | `python3 -m unittest tests.test_service.DispatchIdempotencyTests -v` | exit_code==0；重复请求复用 binding，payload 冲突阻断且 Hermes create 仅一次"
+            "path_type": "`python3 -m pytest -q tests/test_service.py::DispatchIdempotencyTests --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+            "raw": "TC-ADB-005 | AC-ADB-005 | `python3 -m pytest -q tests/test_service.py::DispatchIdempotencyTests --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"` | exit_code==0；重复请求复用 binding，payload 冲突阻断且 Hermes create 仅一次"
           },
           {
             "ac_id": "TC-ADB-006",
             "tc_id": "AC-ADB-006",
-            "path_type": "`python3 -m unittest tests.test_adapters.HermesAdapterTests -v`",
-            "raw": "TC-ADB-006 | AC-ADB-006 | `python3 -m unittest tests.test_adapters.HermesAdapterTests -v` | exit_code==0；JSON CLI argv 含 board/worktree/skill/runtime/retry/idempotency 且不访问 Hermes DB"
+            "path_type": "`python3 -m pytest -q tests/test_adapters.py::HermesAdapterTests --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+            "raw": "TC-ADB-006 | AC-ADB-006 | `python3 -m pytest -q tests/test_adapters.py::HermesAdapterTests --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"` | exit_code==0；JSON CLI argv 含 board/worktree/skill/runtime/retry/idempotency 且不访问 Hermes DB"
           },
           {
             "ac_id": "TC-ADB-008",
             "tc_id": "AC-ADB-008",
-            "path_type": "`python3 -m unittest tests.test_reconcile -v`",
-            "raw": "TC-ADB-008 | AC-ADB-008 | `python3 -m unittest tests.test_reconcile -v` | exit_code==0；worker success 仅进入 reconciling，Beacon closure pass 后才 completed"
+            "path_type": "`python3 -m pytest -q tests/test_reconcile.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+            "raw": "TC-ADB-008 | AC-ADB-008 | `python3 -m pytest -q tests/test_reconcile.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"` | exit_code==0；worker success 仅进入 reconciling，Beacon closure pass 后才 completed"
           },
           {
             "ac_id": "TC-ADB-009",
             "tc_id": "AC-ADB-009",
-            "path_type": "`python3 -m unittest tests.test_skill_contract -v`",
-            "raw": "TC-ADB-009 | AC-ADB-009 | `python3 -m unittest tests.test_skill_contract -v` | exit_code==0；frontmatter/openai.yaml/symlink 安装契约及 quick_validate 全部通过"
+            "path_type": "`python3 -m pytest -q tests/test_skill_contract.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+            "raw": "TC-ADB-009 | AC-ADB-009 | `python3 -m pytest -q tests/test_skill_contract.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"` | exit_code==0；frontmatter/openai.yaml/symlink 安装契约及 quick_validate 全部通过"
           },
           {
             "ac_id": "TC-ADB-010",
             "tc_id": "AC-ADB-010",
-            "path_type": "`python3 -m unittest tests.test_boundaries -v`",
-            "raw": "TC-ADB-010 | AC-ADB-010 | `python3 -m unittest tests.test_boundaries -v` | exit_code==0；release、target mutation、Hermes DB 和自动修复路径均 fail-closed"
+            "path_type": "`python3 -m pytest -q tests/test_boundaries.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+            "raw": "TC-ADB-010 | AC-ADB-010 | `python3 -m pytest -q tests/test_boundaries.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"` | exit_code==0；release、target mutation、Hermes DB 和自动修复路径均 fail-closed"
           }
         ],
         "has_legal_walk": true,
@@ -1892,46 +1917,12 @@
     },
     "domain_fsm_qa_blocked": false,
     "domain_fsm_qa_reason_code": "",
-    "design_alignment": {
-      "required": true,
-      "has_baseline": false,
-      "paths": [],
-      "deferred": false,
-      "status": "blocked"
-    },
-    "design_md_lint": {
-      "required": true,
-      "status": "blocked",
-      "blocked": true,
-      "reason_code": "design_md_lint_missing",
-      "evidence_path": "",
-      "summary": {}
-    },
-    "ui_state_matrix": {
-      "schema_version": "1.0",
-      "schema": "ui-state-matrix.v1",
-      "blocked": true,
-      "status": "blocked",
-      "reason_code": "ui_state_matrix_missing",
-      "findings": [
-        {
-          "kind": "matrix_missing",
-          "reason_code": "ui_state_matrix_missing",
-          "text": "ui-state-matrix.v1 requires at least one business-state → UI surface row"
-        }
-      ],
-      "matrix": {
-        "schema": "ui-state-matrix.v1",
-        "states": [],
-        "state_names": [],
-        "has_matrix": false
-      },
-      "required": true
-    },
-    "ui_design_ship_blocked": true,
-    "ui_design_ship_reason_code": "design_baseline_missing"
+    "design_alignment": {},
+    "design_md_lint": {},
+    "ui_state_matrix": {},
+    "ui_design_ship_blocked": false
   },
-  "release_ready": false,
+  "release_ready": true,
   "delivery_contract": {
     "schema_version": "1.0",
     "feature": "delivery-bus-mvp",
@@ -1962,15 +1953,17 @@
       ".beacon/qa/features/delivery-bus-mvp/matrix.qa9.json",
       ".beacon/qa/features/delivery-bus-mvp/ac-closure.json",
       ".beacon/qa/features/delivery-bus-mvp/scorecard.json",
-      ".beacon/release-gate-report.json"
+      ".beacon/release-gate-report.json",
+      "docs/beacon/v0.0.1/.machine/execution/implementation-summary-delivery-bus-mvp.json",
+      "docs/beacon/v0.0.1/.machine/execution/technical-implementation-delivery-bus-mvp.json"
     ],
     "runner": "",
     "adapter_type": "",
     "execution_surface": "qa",
     "team_mode": false,
-    "qa_status": "failed",
+    "qa_status": "passed",
     "gate_status": "",
-    "release_ready": false,
+    "release_ready": true,
     "risk_flags": []
   },
   "host_native_delivery": {
@@ -2003,16 +1996,18 @@
       ".beacon/qa/features/delivery-bus-mvp/matrix.qa9.json",
       ".beacon/qa/features/delivery-bus-mvp/ac-closure.json",
       ".beacon/qa/features/delivery-bus-mvp/scorecard.json",
-      ".beacon/release-gate-report.json"
+      ".beacon/release-gate-report.json",
+      "docs/beacon/v0.0.1/.machine/execution/implementation-summary-delivery-bus-mvp.json",
+      "docs/beacon/v0.0.1/.machine/execution/technical-implementation-delivery-bus-mvp.json"
     ],
     "runner": "",
     "adapter_type": "",
     "execution_surface": "qa",
     "team_mode": false,
-    "qa_status": "failed",
+    "qa_status": "passed",
     "gate_status": "",
-    "release_ready": false,
+    "release_ready": true,
     "risk_flags": []
   },
-  "current_spec_fingerprint_hash": "b81321257f243dc10ceab5589518493dd38a4f592c14b55ee7b3274d856bd768"
+  "current_spec_fingerprint_hash": "12372bf884d6484378c88ff3d84c65041bf431b67de7ecaaf8d996c889d807a7"
 }

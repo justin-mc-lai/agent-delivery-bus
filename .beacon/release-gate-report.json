@@ -1,26 +1,10 @@
 {
   "stage": "release",
   "mode": "strict",
-  "status": "Blocked",
-  "issues": [
-    {
-      "reason_code": "assertion_count_zero_pass",
-      "message": "assertion_count_zero_pass",
-      "blocked": true
-    },
-    {
-      "reason_code": "design_baseline_missing",
-      "message": "design_baseline_missing",
-      "blocked": true
-    },
-    {
-      "reason_code": "junit_missing_or_invalid",
-      "message": "junit_missing_or_invalid",
-      "blocked": true
-    }
-  ],
-  "blocked_count": 3,
-  "run_id": "run-20260727T215200834720",
+  "status": "Pass",
+  "issues": [],
+  "blocked_count": 0,
+  "run_id": "run-20260727T220214571539",
   "version": "v0.0.1",
-  "updated_at": "2026-07-27T13:52:03.054813+00:00"
+  "updated_at": "2026-07-27T14:02:19.049674+00:00"
 }
