@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0",
+  "ac_id": "AC-ADB-003",
+  "status": "pass",
+  "artifacts": ["src/agent_delivery_bus/approvals.py"],
+  "tests": ["python3 -m unittest tests.test_approvals -v"],
+  "verified_at": "2026-07-27"
+}

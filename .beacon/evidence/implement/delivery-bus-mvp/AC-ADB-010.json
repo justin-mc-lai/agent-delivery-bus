@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0",
+  "ac_id": "AC-ADB-010",
+  "status": "pass",
+  "artifacts": ["src/agent_delivery_bus/service.py", "src/agent_delivery_bus/preflight.py", "skills/agent-delivery-bus/references/contracts.md"],
+  "tests": ["python3 -m unittest tests.test_boundaries -v"],
+  "verified_at": "2026-07-27"
+}

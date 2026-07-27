@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0",
+  "ac_id": "AC-ADB-001",
+  "status": "pass",
+  "artifacts": ["config/projects.json", "src/agent_delivery_bus/registry.py", "src/agent_delivery_bus/cli.py"],
+  "tests": ["python3 -m unittest tests.test_registry -v", "projects list CLI contract"],
+  "verified_at": "2026-07-27"
+}

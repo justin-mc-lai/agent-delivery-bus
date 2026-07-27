@@ -1,0 +1,367 @@
+from __future__ import annotations
+
+import hashlib
+import json
+from typing import Any
+
+from .adapters.beacon import BeaconAdapter
+from .adapters.hermes import HermesAdapter, board_slug
+from .approvals import ApprovalService, RESTRICTED_STAGES
+from .errors import CommandTimedOut, DeliveryBusError
+from .preflight import Preflight
+from .registry import Project, ProjectRegistry
+from .storage import Storage
+
+
+ENABLED_STAGES = {"plan", "implement", "qa", "freeze"}
+TERMINAL_HERMES_SUCCESS = {"done", "completed", "success", "succeeded"}
+TERMINAL_HERMES_FAILURE = {"blocked", "failed", "cancelled", "archived"}
+
+
+def normalized_request(project: Project, *, stage: str, feature: str) -> dict[str, Any]:
+    return {
+        "schema_version": "1.0",
+        "project_slug": project.slug,
+        "canonical_repo": project.repo,
+        "docs_version": project.current_docs_version,
+        "stage": stage.strip().lower(),
+        "feature": feature.strip(),
+    }
+
+
+def request_digest(request: dict[str, Any]) -> str:
+    canonical = json.dumps(request, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def task_body(project: Project, *, stage: str, feature: str) -> str:
+    approval_note = "A matching one-time approval was reserved by Agent Delivery Bus." if stage in RESTRICTED_STAGES else "This stage is not approval-gated."
+    return "\n".join(
+        [
+            f"Project: {project.slug}",
+            f"Repository: {project.repo}",
+            f"Beacon docs version: {project.current_docs_version}",
+            f"Stage: {stage}",
+            f"Feature: {feature}",
+            "",
+            approval_note,
+            "Run the project Beacon workflow for this stage and preserve Beacon gates.",
+            "Do not release, merge, push, or repair Beacon context unless a separate human instruction explicitly authorizes it.",
+            "Worker success is an execution receipt only; Agent Delivery Bus will reconcile Beacon evidence separately.",
+        ]
+    )
+
+
+class DeliveryService:
+    def __init__(
+        self,
+        registry: ProjectRegistry,
+        storage: Storage,
+        *,
+        preflight: Preflight | None = None,
+        hermes: HermesAdapter | None = None,
+        beacon: BeaconAdapter | None = None,
+    ):
+        self.registry = registry
+        self.storage = storage
+        self.hermes = hermes or HermesAdapter()
+        self.beacon = beacon or BeaconAdapter()
+        self.preflight = preflight or Preflight(self.beacon, self.hermes)
+        self.approvals = ApprovalService(storage)
+
+    def dispatch(
+        self,
+        *,
+        project_slug: str,
+        stage: str,
+        feature: str,
+        approval_token: str = "",
+        dry_run: bool = False,
+        forced_idempotency_key: str = "",
+    ) -> dict[str, Any]:
+        project = self.registry.resolve(slug=project_slug)
+        if not project.dispatchable:
+            raise DeliveryBusError("project_not_dispatchable", f"Project {project.slug} is not dispatchable")
+        stage = stage.strip().lower()
+        feature = feature.strip()
+        if not feature:
+            raise DeliveryBusError("feature_required", "feature is required")
+        if stage == "release":
+            raise DeliveryBusError(
+                "stage_not_enabled",
+                "Automatic release dispatch is disabled in v0.0.1",
+                resume_action=f"run Beacon release manually in {project.repo} after reviewing evidence",
+            )
+        if stage not in ENABLED_STAGES:
+            raise DeliveryBusError("stage_invalid", f"Unsupported stage: {stage}")
+
+        request = normalized_request(project, stage=stage, feature=feature)
+        digest = request_digest(request)
+        idempotency_key = forced_idempotency_key or f"adb-v1-{digest}"
+        preflight = self.preflight.run(project, stage=stage)
+        if dry_run:
+            return {
+                "status": "blocked" if preflight["blocked"] else "pass",
+                "blocked": preflight["blocked"],
+                "reason_code": preflight["reason_code"],
+                "resume_action": preflight["resume_action"],
+                "dry_run": True,
+                "request": request,
+                "idempotency_key": idempotency_key,
+                "board": board_slug(project.slug),
+                "workspace": f"worktree:{project.repo}" if stage == "implement" else f"dir:{project.repo}",
+                "preflight": preflight,
+            }
+
+        self.storage.snapshot_project(project.slug, project.to_dict())
+        dispatch, created = self.storage.create_dispatch(
+            idempotency_key=idempotency_key,
+            request_hash=digest,
+            request=request,
+            project_slug=project.slug,
+            stage=stage,
+            feature=feature,
+        )
+        dispatch_id = dispatch["dispatch_id"]
+        if not created and dispatch["state"] in {"blocked", "failed"}:
+            if preflight["blocked"]:
+                return {
+                    "status": dispatch["state"],
+                    "blocked": True,
+                    "duplicate": True,
+                    "reason_code": preflight["reason_code"],
+                    "resume_action": preflight["resume_action"],
+                    "dispatch": dispatch,
+                }
+            dispatch = self.storage.transition(
+                dispatch_id,
+                expected_from=("blocked", "failed"),
+                to_state="draft",
+                event_type="retry",
+                payload={"preflight": preflight},
+            )
+        elif not created and dispatch["state"] == "queued":
+            return {
+                "status": "reconciling",
+                "blocked": True,
+                "duplicate": True,
+                "reason_code": "reconciliation_required",
+                "resume_action": "run `adb reconcile` before retrying a queued request",
+                "dispatch": dispatch,
+            }
+        elif not created and dispatch["state"] not in {"draft", "awaiting_approval"}:
+            return {
+                "status": dispatch["state"],
+                "blocked": dispatch["state"] == "reconciling",
+                "duplicate": True,
+                "reason_code": dispatch.get("last_reason_code") or "",
+                "resume_action": dispatch.get("resume_action") or "",
+                "dispatch": dispatch,
+            }
+        if preflight["blocked"]:
+            if dispatch["state"] == "draft":
+                dispatch = self.storage.transition(
+                    dispatch_id,
+                    expected_from="draft",
+                    to_state="blocked",
+                    event_type="preflight_failed",
+                    reason_code=preflight["reason_code"],
+                    resume_action=preflight["resume_action"],
+                    payload={"preflight": preflight},
+                )
+            return {
+                "status": "blocked",
+                "blocked": True,
+                "reason_code": preflight["reason_code"],
+                "resume_action": preflight["resume_action"],
+                "dispatch": dispatch,
+            }
+
+        approval_id: str | None = dispatch.get("approval_id")
+        if stage in RESTRICTED_STAGES:
+            if dispatch["state"] == "draft":
+                dispatch = self.storage.transition(
+                    dispatch_id,
+                    expected_from="draft",
+                    to_state="awaiting_approval",
+                    event_type="submit_restricted",
+                )
+            if not approval_token:
+                return {
+                    "status": "awaiting_approval",
+                    "blocked": True,
+                    "reason_code": "approval_required",
+                    "resume_action": "issue an approval token with `adb approve`, then repeat the same dispatch request",
+                    "dispatch": dispatch,
+                }
+            try:
+                approval = self.approvals.reserve(
+                    approval_token,
+                    dispatch_id=dispatch_id,
+                    project_slug=project.slug,
+                    stage=stage,
+                    feature=feature,
+                )
+            except DeliveryBusError as exc:
+                dispatch = self.storage.transition(
+                    dispatch_id,
+                    expected_from="awaiting_approval",
+                    to_state="blocked",
+                    event_type="approval_rejected",
+                    reason_code=exc.reason_code,
+                    resume_action=exc.resume_action,
+                )
+                return {
+                    "status": "blocked",
+                    "blocked": True,
+                    "reason_code": exc.reason_code,
+                    "resume_action": exc.resume_action,
+                    "dispatch": dispatch,
+                }
+            approval_id = str(approval["approval_id"])
+            dispatch = self.storage.transition(
+                dispatch_id,
+                expected_from="awaiting_approval",
+                to_state="queued",
+                event_type="approve",
+                approval_id=approval_id,
+            )
+        elif dispatch["state"] == "draft":
+            dispatch = self.storage.transition(
+                dispatch_id,
+                expected_from="draft",
+                to_state="queued",
+                event_type="submit_open",
+            )
+
+        try:
+            self.hermes.ensure_board(project)
+            receipt = self.hermes.create_task(
+                project,
+                stage=stage,
+                feature=feature,
+                body=task_body(project, stage=stage, feature=feature),
+                idempotency_key=idempotency_key,
+            )
+            dispatch = self.storage.transition(
+                dispatch_id,
+                expected_from="queued",
+                to_state="dispatched",
+                event_type="hermes_created",
+                approval_id=approval_id,
+                hermes_board=str(receipt["board"]),
+                hermes_task_id=str(receipt["task_id"]),
+                payload={"receipt": receipt},
+            )
+            if approval_id:
+                self.approvals.finalize(approval_id, dispatch_id=dispatch_id)
+            return {"status": "dispatched", "blocked": False, "duplicate": not created, "dispatch": dispatch}
+        except CommandTimedOut as exc:
+            dispatch = self.storage.transition(
+                dispatch_id,
+                expected_from="queued",
+                to_state="reconciling",
+                event_type="hermes_unknown",
+                reason_code="reconciliation_required",
+                resume_action="run `adb reconcile` before retrying",
+                payload={"error": str(exc), "data": exc.data or {}},
+            )
+            return {
+                "status": "reconciling",
+                "blocked": True,
+                "reason_code": "reconciliation_required",
+                "resume_action": "run `adb reconcile` before retrying",
+                "dispatch": dispatch,
+            }
+        except DeliveryBusError as exc:
+            if approval_id:
+                self.approvals.release(approval_id, dispatch_id=dispatch_id)
+            dispatch = self.storage.transition(
+                dispatch_id,
+                expected_from="queued",
+                to_state="failed",
+                event_type="hermes_failed",
+                reason_code=exc.reason_code,
+                resume_action=exc.resume_action,
+                payload={"error": str(exc), "data": exc.data or {}},
+            )
+            return {
+                "status": "failed",
+                "blocked": True,
+                "reason_code": exc.reason_code,
+                "resume_action": exc.resume_action,
+                "dispatch": dispatch,
+            }
+
+    def reconcile(self, dispatch_id: str) -> dict[str, Any]:
+        dispatch = self.storage.get_dispatch(dispatch_id)
+        project = self.registry.resolve(slug=dispatch["project_slug"])
+        board = dispatch.get("hermes_board") or board_slug(project.slug)
+        task_id = dispatch.get("hermes_task_id")
+        if not task_id:
+            task = self.hermes.find_by_idempotency(board, dispatch["idempotency_key"])
+            if task is None:
+                return {
+                    "status": "reconciling",
+                    "blocked": True,
+                    "reason_code": "hermes_task_not_found",
+                    "resume_action": "inspect the Hermes board before retrying dispatch",
+                    "dispatch": dispatch,
+                }
+            task_id = str(task.get("id") or task.get("task_id") or "")
+            dispatch = self.storage.transition(
+                dispatch_id,
+                expected_from="reconciling",
+                to_state="dispatched",
+                event_type="external_task_found",
+                hermes_board=board,
+                hermes_task_id=task_id,
+                payload={"task": task},
+            )
+            if dispatch.get("approval_id"):
+                self.approvals.finalize(dispatch["approval_id"], dispatch_id=dispatch_id)
+        task = self.hermes.show_task(board, task_id)
+        status = str(task.get("status") or task.get("state") or "").lower()
+        if status in TERMINAL_HERMES_FAILURE:
+            if dispatch["state"] == "dispatched":
+                dispatch = self.storage.transition(
+                    dispatch_id,
+                    expected_from="dispatched",
+                    to_state="failed",
+                    event_type="worker_failed",
+                    reason_code="hermes_terminal_failure",
+                    payload={"task": task},
+                )
+            return {"status": "failed", "blocked": True, "reason_code": "hermes_terminal_failure", "dispatch": dispatch}
+        if status not in TERMINAL_HERMES_SUCCESS:
+            return {"status": dispatch["state"], "blocked": False, "remote_status": status, "dispatch": dispatch}
+        if dispatch["state"] == "dispatched":
+            dispatch = self.storage.transition(
+                dispatch_id,
+                expected_from="dispatched",
+                to_state="reconciling",
+                event_type="worker_succeeded",
+                payload={"task": task},
+            )
+        closure = self.beacon.closure(
+            project,
+            stage=dispatch["stage"],
+            feature=dispatch["feature"],
+        )
+        if not closure.get("pass"):
+            return {
+                "status": "reconciling",
+                "blocked": True,
+                "reason_code": "beacon_evidence_incomplete",
+                "resume_action": "complete the stage-specific Beacon gate/evidence, then reconcile again",
+                "closure": closure,
+                "dispatch": dispatch,
+            }
+        dispatch = self.storage.transition(
+            dispatch_id,
+            expected_from="reconciling",
+            to_state="completed",
+            event_type="closure_verified",
+            payload={"closure": closure, "task": task},
+        )
+        return {"status": "completed", "blocked": False, "closure": closure, "dispatch": dispatch}

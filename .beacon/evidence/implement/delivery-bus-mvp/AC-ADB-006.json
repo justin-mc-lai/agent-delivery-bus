@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0",
+  "ac_id": "AC-ADB-006",
+  "status": "pass",
+  "artifacts": ["src/agent_delivery_bus/adapters/hermes.py"],
+  "tests": ["python3 -m unittest tests.test_adapters.HermesAdapterTests -v"],
+  "integration_result": "Created six empty adb-* Hermes boards with registered default workdirs; no task was created.",
+  "verified_at": "2026-07-27"
+}
