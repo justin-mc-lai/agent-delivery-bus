@@ -1,0 +1,29 @@
+# Beacon local runtime state
+.beacon/analysis/
+.beacon/debug/
+.beacon/handoffs/
+.beacon/implement/
+.beacon/memory/
+.beacon/qa/
+.beacon/ralph/
+.beacon/runs/
+.beacon/state/
+.beacon/team/
+.beacon/traces/
+.beacon/validation/
+.beacon/worktrees/
+
+# Review-time vendored humanizer copies are reproducible runtime material.
+skills/beacon/references/truth-humanizer/vendor/
+skills/.beacon/
+
+# Governed implementation worktrees
+.worktrees/
+
+# Python and local state
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+data/
+.tmp/

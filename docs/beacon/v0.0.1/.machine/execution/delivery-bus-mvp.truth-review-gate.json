@@ -1,0 +1,217 @@
+{
+  "schema": "truth-review-gate.v1",
+  "schema_version": "1.0",
+  "feature": "delivery-bus-mvp",
+  "version": "v0.0.1",
+  "pass": true,
+  "blocked": false,
+  "review_gate_pass": true,
+  "abc_pass": true,
+  "reason_code": "",
+  "domain_required": true,
+  "checks": {
+    "A_intent_coverage": {
+      "pass": true,
+      "check": "A",
+      "name": "intent_coverage",
+      "required": true,
+      "matrix_rows": 10,
+      "missing_must": [],
+      "reason": "",
+      "findings": [],
+      "matrix": [
+        {
+          "intent_id": "INT-001",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-ADB-001",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-002",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-ADB-002",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-003",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-ADB-003",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-004",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-ADB-004",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-005",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-ADB-005",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-006",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-ADB-006",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-007",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-ADB-007",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-008",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-ADB-008",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-009",
+          "source": "derived-safety",
+          "strength": "must",
+          "landing": "AC-ADB-009",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-010",
+          "source": "derived-operations",
+          "strength": "must",
+          "landing": "AC-ADB-010",
+          "status": "covered"
+        }
+      ]
+    },
+    "B_fsm_audit": {
+      "pass": true,
+      "check": "B",
+      "name": "fsm_audit",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "fsm": {
+        "transition_count": 20,
+        "from_states": [
+          "awaiting_approval",
+          "blocked",
+          "dispatched",
+          "draft",
+          "failed",
+          "queued",
+          "reconciling"
+        ],
+        "hanging_states": [],
+        "terminals": [
+          "cancelled",
+          "completed"
+        ],
+        "illegal_present": true,
+        "five_tuple_present": true
+      }
+    },
+    "C_testability": {
+      "pass": true,
+      "check": "C",
+      "name": "testability",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "ac_count": 10,
+      "tc_count": 11,
+      "missing_ac": [],
+      "covered": {
+        "AC-ADB-001": [
+          "TC-ADB-001",
+          "TC-ADB-CLI"
+        ],
+        "AC-ADB-002": [
+          "TC-ADB-002",
+          "TC-ADB-CLI"
+        ],
+        "AC-ADB-003": [
+          "TC-ADB-003"
+        ],
+        "AC-ADB-004": [
+          "TC-ADB-004",
+          "TC-ADB-CLI"
+        ],
+        "AC-ADB-005": [
+          "TC-ADB-005"
+        ],
+        "AC-ADB-006": [
+          "TC-ADB-006"
+        ],
+        "AC-ADB-007": [
+          "TC-ADB-007"
+        ],
+        "AC-ADB-008": [
+          "TC-ADB-008"
+        ],
+        "AC-ADB-009": [
+          "TC-ADB-009"
+        ],
+        "AC-ADB-010": [
+          "TC-ADB-010"
+        ]
+      }
+    },
+    "C_domain_exec_layer": {
+      "pass": true,
+      "check": "C_exec",
+      "name": "domain_exec_layer",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "exec_tc_count": 11,
+      "exec_tc_ids": [
+        "TC-ADB-001",
+        "TC-ADB-002",
+        "TC-ADB-003",
+        "TC-ADB-004",
+        "TC-ADB-005",
+        "TC-ADB-006",
+        "TC-ADB-007",
+        "TC-ADB-008",
+        "TC-ADB-009",
+        "TC-ADB-010",
+        "TC-ADB-CLI"
+      ],
+      "domain_kind": "business"
+    },
+    "D_fill_depth": {
+      "pass": true,
+      "check": "D",
+      "name": "fill_depth",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "package_maturity": "filled",
+      "domain_kind": "business",
+      "business_domain": true
+    }
+  },
+  "findings": [],
+  "humanizer": {
+    "rule": "humanizer_only_after_abc_pass_before_freeze",
+    "abc_pass": true,
+    "allowed_now": true,
+    "fill_depth_pass": true,
+    "note": "Polish L0/narrative only after A/B/C; preserve_machine_fields=true; freeze needs D+exec too"
+  },
+  "evaluated_at": "2026-07-27T13:29:28.119752+00:00",
+  "paths": {
+    "truth": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+    "tests": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
+    "report": "docs/beacon/v0.0.1/.machine/execution/delivery-bus-mvp.truth-review-gate.json"
+  }
+}

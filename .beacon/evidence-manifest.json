@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "entries": [
+    {
+      "path": "docs/beacon/v0.0.1/.machine/execution/init-report.json",
+      "sha256": "c0de568308a37b83bbf40a42a689e6c02a537c179c8fe5367eb4a27fa8564a6c",
+      "updated_at": "2026-07-27T13:21:44.259256+00:00"
+    },
+    {
+      "path": "docs/beacon/v0.0.1/.machine/requirement/feature-package-validation.json",
+      "sha256": "9739ccdd2c9f79492207697934112f112d47e2c5740510edb6897ce98f36fa9c",
+      "updated_at": "2026-07-27T13:21:44.259517+00:00"
+    },
+    {
+      "path": "docs/beacon/v0.0.1/execution/init-report.md",
+      "sha256": "8552a209a67ce3818b81b5fc7f9892a6d1f3e8d7b9be851c3b6638baace0a467",
+      "updated_at": "2026-07-27T13:21:44.259447+00:00"
+    }
+  ],
+  "updated_at": "2026-07-27T13:21:44.259524+00:00",
+  "version": "v0.0.1"
+}

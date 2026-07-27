@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "program_slug": "agent-delivery-bus-v001",
+  "version": "v0.0.1",
+  "plan_mode": "interactive",
+  "program_phase": "P4",
+  "fsm_state": "feature_graph_ack",
+  "lake_or_ocean": "海",
+  "p4_ack": true,
+  "p4_ack_ref": "user-confirmation-2026-07-27",
+  "next_action": "fill_and_freeze:delivery-bus-mvp",
+  "updated_at": "2026-07-27T13:45:00+00:00"
+}
