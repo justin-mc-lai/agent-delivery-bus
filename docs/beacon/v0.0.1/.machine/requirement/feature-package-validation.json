@@ -6,32 +6,37 @@
   "status": "pass",
   "blocked": false,
   "reason_code": "",
-  "generated_at": "2026-07-27T13:21:44.258205+00:00",
+  "generated_at": "2026-07-27T13:30:54.991599+00:00",
   "package_dir": "docs/beacon/v0.0.1/features/delivery-bus-mvp",
   "truth_frontmatter": {
     "slug": "delivery-bus-mvp",
     "version": "v0.0.1",
     "status": "draft",
+    "revision_id": "R1",
     "language": "zh",
-    "domain_required": "false",
+    "domain_required": "true",
+    "domain_kind": "business",
+    "package_maturity": "filled",
     "parser_contract": "beacon-feature-package-v2",
     "materials_status": "current",
     "truth_source_model": "intent_first",
+    "program_ref": "docs/beacon/v0.0.1/programs/agent-delivery-bus-v001/program-manifest.md",
+    "git_canonical_branch": "main",
     "canonical_refs": {
       "prd": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
       "user_story": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
       "test_case": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md"
     },
     "provenance": {
-      "- ac_id": "AC-008",
+      "- ac_id": "AC-ADB-010",
       "source_type": "user_intent",
-      "source_ref": "utterance_sentence_8: 不自动 release，不直接修改目标项目修复其 Beacon context，不读取 Hermes 内部 SQLite"
+      "source_ref": "不自动 release、不直接修目标项目、不读取 Hermes 内部 SQLite"
     }
   },
-  "ac_count": 8,
-  "test_count": 8,
-  "checkbox_count": 10,
-  "evidence_row_count": 1,
+  "ac_count": 10,
+  "test_count": 11,
+  "checkbox_count": 12,
+  "evidence_row_count": 8,
   "gate_authority": "canonical_surfaces_preserved",
   "checkbox_gate_bypass": false,
   "task_evidence_gate": {

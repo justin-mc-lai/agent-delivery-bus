@@ -1,14 +1,20 @@
-# Evidence: delivery-bus-mvp
+# Evidence Index: delivery-bus-mvp
 
 | Surface | Authority | Canonical Artifact | Status | Route |
 |---------|-----------|--------------------|--------|-------|
-| requirements | Beacon truth | `truth.md` | draft | truth review → freeze |
-| executable acceptance | Beacon tests contract | `tests.md` | planned | unittest + package exec TC |
-| implementation | source + per-AC receipts | `.beacon/evidence/implement/delivery-bus-mvp/` | pending | implement |
-| Hermes integration | public JSON CLI receipts | `.beacon/evidence/integration/hermes/` | pending | canary reconcile |
-| skill compliance | skill-creator validator | `.beacon/evidence/skill/quick-validate.json` | pending | quick_validate.py |
-| qa | Beacon QA verdict | `.beacon/evidence/qa/delivery-bus-mvp/` | pending | qa |
-| release | human-only | none | disabled | no automatic route in v0.0.1 |
+| requirements | requirement_truth | `truth.md` | linked | truth review → freeze |
+| executable acceptance | acceptance_truth | `tests.md` | linked | unittest + package exec TC |
+| test contract | test_truth | `tests.md` | linked | qa |
+| implementation receipts | support_advisory | `.beacon/evidence/implement/delivery-bus-mvp/` | indexed | implement |
+| Hermes integration receipts | support_advisory | `.beacon/evidence/integration/hermes/` | indexed | reconcile |
+| skill validation receipts | support_advisory | `.beacon/evidence/skill/quick-validate.json` | indexed | quick_validate.py |
+| qa | qa_verdict | `docs/beacon/v0.0.1/.machine/qa/delivery-bus-mvp.qa9-matrix.json` | linked | qa |
+| release | release_verdict | `docs/beacon/v0.0.1/release/` | disabled-by-scope | human-only |
+
+## Boundary
+
+`evidence.md` 只是索引/read model，不声明最终 gate 结论，也不替代 Beacon QA 或
+release authority。
 
 ## Required evidence before completion
 

@@ -155,7 +155,21 @@ scope_ack_ref: user-confirmation-2026-07-27
 | AC-ADB-009 | 提供 `skills/agent-delivery-bus`，SKILL frontmatter 仅含 name/description，包含 `agents/openai.yaml` 和最小契约参考；通过 skill-creator `quick_validate.py`，安装时安全创建 Codex/Hermes symlink 且不覆盖已有目标 |
 | AC-ADB-010 | MVP 不读取 Hermes SQLite、不直接修改目标 repo、不自动执行 Beacon 修复、不自动 release；release dispatch 即使有审批也返回 `stage_not_enabled` 和人工 release route |
 
-## Dispatch FSM 五元组
+## Domain FSM — Dispatch
+
+| State | From | Guard |
+|-------|------|-------|
+| draft | — | normalized request persisted |
+| awaiting_approval | draft | restricted stage and strict preflight passed |
+| queued | draft, awaiting_approval | open stage or matching approval reserved |
+| dispatched | queued, reconciling | Hermes task receipt recovered or created |
+| reconciling | queued, dispatched | external result unknown or worker succeeded |
+| blocked | draft, awaiting_approval, reconciling | required gate or closure evidence missing |
+| failed | queued, dispatched | terminal external failure |
+| completed | reconciling | stage closure verified |
+| cancelled | draft, awaiting_approval, queued, dispatched | cancellation completed before delivery closure |
+
+## FSM 五元组
 
 | State | Event | Guard | To | Action |
 |-------|-------|-------|-----|--------|
