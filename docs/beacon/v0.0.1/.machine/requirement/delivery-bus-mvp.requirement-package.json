@@ -5,7 +5,7 @@
   "truth_package_contract": "beacon-feature-package-v2",
   "machine_json_role": "generated_state_not_truth",
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-07-27T13:31:07.266207+00:00",
+  "generated_at": "2026-07-27T13:48:20.170724+00:00",
   "feature": "delivery-bus-mvp",
   "feature_slug": "delivery-bus-mvp",
   "version": "v0.0.1",
@@ -20,7 +20,7 @@
   "source_hashes": {
     "truth": "dd99b8a3ff473f54b171bd26201b03e4cf96b817fd5839ddac6bd110a38cffad",
     "tests": "d62408382c0d314b2c50d9b12fbed9db0785a929f11b8d7a2d128f54a7f9503d",
-    "tasks": "733dc6aeef5894baba221d125f8efda5ddcf8d6b102fc2f9908b76a3846415b3",
+    "tasks": "0ec8016c9157c866773c528fd5c7befa6f71a8424ccdff48832d798bf137a894",
     "evidence": "e7ce73688611ccde60c5073908e9214ccfbacd7fbdd0c9fdc070a39a7e550ebd"
   },
   "truth_frontmatter": {
@@ -195,57 +195,57 @@
     {
       "id": "TASK-001",
       "title": "Implement AC-ADB-001: `config/projects.json` 是唯一项目注册真值；CLI 能 list，并按 slug、唯一 alias 或 canoni... · ac=AC-ADB-001 · evidence=`.beacon/evidence/implement/delivery-bus-mvp/AC-ADB-001.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-002",
       "title": "Implement AC-ADB-002: `doctor` 和每次 dispatch 前执行只读 strict preflight：repo/git、docs root、声明 do... · ac=AC-ADB-002 · evidence=`.beacon/evidence/implement/delivery-bus-mvp/AC-ADB-002.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-003",
       "title": "Implement AC-ADB-003: implement/freeze/release scope 使用带 actor、project、stage、feature、expiry... · ac=AC-ADB-003 · evidence=`.beacon/evidence/implement/delivery-bus-mvp/AC-ADB-003.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-004",
       "title": "Implement AC-ADB-004: SQLite 原子持久化 projects snapshot、approvals、dispatches、dispatch_events；事... · ac=AC-ADB-004 · evidence=`.beacon/evidence/implement/delivery-bus-mvp/AC-ADB-004.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-005",
       "title": "Implement AC-ADB-005: dispatch 使用规范化请求生成稳定 SHA-256 idempotency key；相同请求返回同一 dispatch/Hermes... · ac=AC-ADB-005 · evidence=`.beacon/evidence/implement/delivery-bus-mvp/AC-ADB-005.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-006",
       "title": "Implement AC-ADB-006: Hermes adapter 仅通过公开 JSON CLI 创建项目 board 和 task；task 必须绑定 coding assi... · ac=AC-ADB-006 · evidence=`.beacon/evidence/implement/delivery-bus-mvp/AC-ADB-006.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-007",
       "title": "Implement AC-ADB-007: dispatch 状态机覆盖 draft、awaiting_approval、queued、dispatched、reconciling、... · ac=AC-ADB-007 · evidence=`.beacon/evidence/implement/delivery-bus-mvp/AC-ADB-007.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-008",
       "title": "Implement AC-ADB-008: `task show/list` 与 `reconcile` 合并本地 ledger、Hermes JSON 状态和 Beacon 阶段证... · ac=AC-ADB-008 · evidence=`.beacon/evidence/implement/delivery-bus-mvp/AC-ADB-008.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-009",
       "title": "Implement AC-ADB-009: 提供 `skills/agent-delivery-bus`，SKILL frontmatter 仅含 name/description，... · ac=AC-ADB-009 · evidence=`.beacon/evidence/implement/delivery-bus-mvp/AC-ADB-009.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-010",
       "title": "Implement AC-ADB-010: MVP 不读取 Hermes SQLite、不直接修改目标 repo、不自动执行 Beacon 修复、不自动 release；releas... · ac=AC-ADB-010 · evidence=`.beacon/evidence/implement/delivery-bus-mvp/AC-ADB-010.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-011",
       "title": "Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/delivery-bus-mvp/GATES.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-012",
