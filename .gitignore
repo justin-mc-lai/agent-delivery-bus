@@ -2,11 +2,15 @@
 .agents/
 .beacon/analysis/
 .beacon/debug/
+.beacon/evidence/auto-test/run-20*/
+.beacon/flaky-history.json
 .beacon/handoffs/
 .beacon/implement/
+.beacon/locks/
 .beacon/memory/
 .beacon/qa/
 .beacon/ralph/
+.beacon/raw-command-log.jsonl
 .beacon/runs/
 .beacon/state/
 .beacon/team/

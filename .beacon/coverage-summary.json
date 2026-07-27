@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "run_id": "run-20260727T215037974185",
+  "version": "v0.0.1",
+  "coverage_rate": 0.0,
+  "full_coverage": false,
+  "details": {
+    "version": "v0.0.1",
+    "feature": "",
+    "planned_story": 0,
+    "implemented_story": 0,
+    "story_coverage": 0.0,
+    "total_ac": 0,
+    "tested_ac": 0,
+    "ac_coverage": 0.0,
+    "total_tc": 0,
+    "executed_tc": 0,
+    "tc_coverage": 0.0,
+    "full_coverage": false,
+    "matrix_errors": []
+  }
+}

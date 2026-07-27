@@ -5,7 +5,7 @@
   "version": "v0.0.1",
   "current_revision_id": "R1",
   "lifecycle_status": "frozen",
-  "updated_at": "2026-07-27T13:49:57.094547+00:00",
+  "updated_at": "2026-07-27T13:50:39.934072+00:00",
   "revisions": [
     {
       "revision_id": "R1",
@@ -28,7 +28,7 @@
       "revision_id": "R1",
       "title": "delivery-bus-mvp",
       "priority": "medium",
-      "status": "implemented",
+      "status": "blocked",
       "items": [
         {
           "id": "AC-001",
@@ -61,9 +61,9 @@
           "kind": "test",
           "text": "Verify AC-001 — Acceptance criteria TBD",
           "required": true,
-          "status": "implemented",
+          "status": "failed",
           "implemented_by_run_id": "manual-d147978",
-          "verified_by_run_id": null,
+          "verified_by_run_id": "run-20260727T215037974185",
           "accepted_at": null,
           "changed_in_revision": "R1",
           "covers": [
@@ -92,6 +92,20 @@
         "tests",
         "skills/agent-delivery-bus",
         "README.md"
+      ],
+      "verification_evidence": [
+        ".beacon/qa/features/delivery-bus-mvp/matrix.qa9.json",
+        ".beacon/qa/status.json",
+        ".beacon/qa/current-session.json",
+        ".beacon/evidence/auto-test/run-20260727T215037974185/contract/command.txt",
+        ".beacon/evidence/auto-test/run-20260727T215037974185/contract/stdout.log",
+        ".beacon/evidence/auto-test/run-20260727T215037974185/contract/stderr.log",
+        ".beacon/evidence/auto-test/run-20260727T215037974185/contract/result.json",
+        ".beacon/evidence/auto-test/run-20260727T215037974185/qa9/tc-execution-map.json",
+        ".beacon/evidence/auto-test/run-20260727T215037974185/qa9/tc-results.json",
+        ".beacon/evidence/auto-test/run-20260727T215037974185/summary.json",
+        ".beacon/flaky-history.json",
+        ".beacon/evidence-signature-chain.json"
       ]
     }
   ]

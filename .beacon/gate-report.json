@@ -1,0 +1,15 @@
+{
+  "stage": "verify",
+  "mode": "strict",
+  "status": "Blocked",
+  "issues": [
+    {
+      "reason_code": "auto_test_layer_failed",
+      "message": "layer contract failed (exit_code=1)",
+      "blocked": true
+    }
+  ],
+  "run_id": "run-20260727T215037974185",
+  "version": "v0.0.1",
+  "updated_at": "2026-07-27T13:50:39.900938+00:00"
+}

@@ -2,31 +2,132 @@
   "schema_version": "1.0",
   "entries": [
     {
+      "path": ".beacon/auto-test-status.json",
+      "sha256": "3c82c6abb55b82ff4b3db10f4a447d4ba98a82edca1bd03fbee7348311105790",
+      "updated_at": "2026-07-27T13:50:40.540328+00:00"
+    },
+    {
+      "path": ".beacon/coverage-summary.json",
+      "sha256": "fbf5e6e2948228ea3b28088cec54128407f6c6a9881814670c4bce9db1463f0e",
+      "updated_at": "2026-07-27T13:50:40.540468+00:00"
+    },
+    {
+      "path": ".beacon/evidence-signature-chain.json",
+      "sha256": "75c2103e1d07e613d6867e0b7a3662cd828e8f96017eb628bd6fb80c9ce559e2",
+      "updated_at": "2026-07-27T13:50:40.538731+00:00"
+    },
+    {
+      "path": ".beacon/evidence/auto-test/run-20260727T215037974185/contract/command.txt",
+      "sha256": "e1d00379fe91b46aa52f4c34b572a20998c05a3396073aaa9c120dbc8fcbe22a",
+      "updated_at": "2026-07-27T13:50:40.538793+00:00"
+    },
+    {
+      "path": ".beacon/evidence/auto-test/run-20260727T215037974185/contract/result.json",
+      "sha256": "52af52b827d7798aaa83b33fb4aee3a0340644fe7ebb5ac5d73817592c5b2463",
+      "updated_at": "2026-07-27T13:50:40.538859+00:00"
+    },
+    {
+      "path": ".beacon/evidence/auto-test/run-20260727T215037974185/contract/stderr.log",
+      "sha256": "922b68b0221cdb1ced017e7c3e6d39166ea12310d904d2aecea7bac8e62b19ff",
+      "updated_at": "2026-07-27T13:50:40.538918+00:00"
+    },
+    {
+      "path": ".beacon/evidence/auto-test/run-20260727T215037974185/contract/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "updated_at": "2026-07-27T13:50:40.538971+00:00"
+    },
+    {
+      "path": ".beacon/evidence/auto-test/run-20260727T215037974185/qa9/tc-execution-map.json",
+      "sha256": "d74cc93851ce0149fd40db6b63f1386893bc4ae68dfb22a06e1bf98fc9f7e580",
+      "updated_at": "2026-07-27T13:50:40.539044+00:00"
+    },
+    {
+      "path": ".beacon/evidence/auto-test/run-20260727T215037974185/qa9/tc-results.json",
+      "sha256": "4a22c0223655d79b53cf436df8147b6d892c7c4da1dbc837fa68c82fd176228c",
+      "updated_at": "2026-07-27T13:50:40.539113+00:00"
+    },
+    {
+      "path": ".beacon/evidence/auto-test/run-20260727T215037974185/summary.json",
+      "sha256": "dc15982b7b445a9d828ecf07ed656ca2793f71302ba4eb8064eb9665e8f92aed",
+      "updated_at": "2026-07-27T13:50:40.539181+00:00"
+    },
+    {
+      "path": ".beacon/flaky-history.json",
+      "sha256": "714dbcfe9b175d56dc06fba65224fb9dbaba5ce7a42596e6de3dc4f6d50360b4",
+      "updated_at": "2026-07-27T13:50:40.539239+00:00"
+    },
+    {
+      "path": ".beacon/gate-report.json",
+      "sha256": "ee843d696e97110c8be87bc73ab1337eba87210ee26cd804e01b5a6e5af37cd6",
+      "updated_at": "2026-07-27T13:50:40.539297+00:00"
+    },
+    {
+      "path": ".beacon/qa/features/delivery-bus-mvp/ac-closure.json",
+      "sha256": "acacec59c75aa2653b605200ee6ddf443a6b6661aa975f20252d8e732f7a2e59",
+      "updated_at": "2026-07-27T13:50:40.540526+00:00"
+    },
+    {
+      "path": ".beacon/qa/features/delivery-bus-mvp/exhaustiveness-report.json",
+      "sha256": "6360010d73d842fb25ab1af982c07e4d027f44b95f42d6228a96fd1e68444262",
+      "updated_at": "2026-07-27T13:50:40.540952+00:00"
+    },
+    {
+      "path": ".beacon/qa/features/delivery-bus-mvp/matrix.qa9.json",
+      "sha256": "0c5498894d3f084ff74c9833c53087d9d7ab3c2837a32f2216858bd0f8735b40",
+      "updated_at": "2026-07-27T13:50:40.540903+00:00"
+    },
+    {
+      "path": ".beacon/qa/features/delivery-bus-mvp/plan.json",
+      "sha256": "a9a94c2b268de68479803afcebb7bd9d0d1e574d80deb506e311bab16cca13c9",
+      "updated_at": "2026-07-27T13:50:40.540849+00:00"
+    },
+    {
+      "path": ".beacon/qa/features/delivery-bus-mvp/scorecard.json",
+      "sha256": "023ea5a287e37dfe7764e1a6d5a22f8e7d8c7dd13bd91c949e3dec3f9330e86f",
+      "updated_at": "2026-07-27T13:50:40.540587+00:00"
+    },
+    {
+      "path": ".beacon/qa/features/delivery-bus-mvp/status.json",
+      "sha256": "b6dce4a99ff5c4f48ba885cdae1ca7b064a7fc7ec9f7fb5d428c9efdacff47a9",
+      "updated_at": "2026-07-27T13:50:40.540776+00:00"
+    },
+    {
+      "path": ".beacon/qa/status.json",
+      "sha256": "3c82c6abb55b82ff4b3db10f4a447d4ba98a82edca1bd03fbee7348311105790",
+      "updated_at": "2026-07-27T13:50:40.540419+00:00"
+    },
+    {
+      "path": ".beacon/release-gate-report.json",
+      "sha256": "69a07f1089966f39dca2f53eb0d506b1f50a2a837974018ebe316b6c1e8e9a48",
+      "updated_at": "2026-07-27T13:50:40.540636+00:00"
+    },
+    {
       "path": ".beacon/state/implementation-delivery-bus-mvp.json",
       "sha256": "1dfd88989dfb8d24bbb982aeb4499252de766d94503deb9d0aa012bd869499fc",
-      "updated_at": "2026-07-27T13:49:57.096450+00:00"
+      "updated_at": "2026-07-27T13:50:40.540001+00:00"
     },
     {
       "path": "README.md",
       "sha256": "43075064cc0c6e06d16e2ba3bbb8d98df6c6cabacacc26565a825ad14fa8a96a",
-      "updated_at": "2026-07-27T13:49:57.096659+00:00"
+      "updated_at": "2026-07-27T13:50:40.540050+00:00"
     },
     {
       "path": "docs/beacon/v0.0.1/.machine/execution/init-report.json",
       "sha256": "c0de568308a37b83bbf40a42a689e6c02a537c179c8fe5367eb4a27fa8564a6c",
-      "updated_at": "2026-07-27T13:49:57.096009+00:00"
+      "updated_at": "2026-07-27T13:50:40.540116+00:00"
     },
     {
       "path": "docs/beacon/v0.0.1/.machine/requirement/feature-package-validation.json",
       "sha256": "678bf5dda68aa1b709a326b8587bd8c5c4a1c6f6d2c312160a74170c640169dc",
-      "updated_at": "2026-07-27T13:49:57.096257+00:00"
+      "updated_at": "2026-07-27T13:50:40.540180+00:00"
     },
     {
       "path": "docs/beacon/v0.0.1/execution/init-report.md",
       "sha256": "8552a209a67ce3818b81b5fc7f9892a6d1f3e8d7b9be851c3b6638baace0a467",
-      "updated_at": "2026-07-27T13:49:57.096391+00:00"
+      "updated_at": "2026-07-27T13:50:40.540232+00:00"
     }
   ],
-  "updated_at": "2026-07-27T13:49:57.096701+00:00",
-  "version": "v0.0.1"
+  "updated_at": "2026-07-27T13:50:40.540961+00:00",
+  "version": "v0.0.1",
+  "run_id": "run-20260727T215037974185"
 }
