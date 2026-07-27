@@ -71,7 +71,7 @@
     "source_hashes": {
       "truth": "c4abb64d95be67fc29fe55b17a901b1f00ed8613f49069cb48f4c29598806d8d",
       "tests": "b4633497d6f0284e27a1d3c86c4a9076b17ee798adbfdfc18cc39be30d557947",
-      "tasks": "05de0d7757c96d25ad0cf4dc8e1d93138cd5275c77e1526d470a02823d23cc6f",
+      "tasks": "f3872d4a6a83f7abb378b9e90a6eefd969e9947c499a30099d0a02d87f4a0af6",
       "evidence": "e7ce73688611ccde60c5073908e9214ccfbacd7fbdd0c9fdc070a39a7e550ebd"
     },
     "surfaces": {
@@ -119,7 +119,7 @@
         "filename": "tasks.md",
         "path": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tasks.md",
         "exists": true,
-        "source_hash": "05de0d7757c96d25ad0cf4dc8e1d93138cd5275c77e1526d470a02823d23cc6f",
+        "source_hash": "f3872d4a6a83f7abb378b9e90a6eefd969e9947c499a30099d0a02d87f4a0af6",
         "authority": "markdown_feature_package",
         "json_authority": false
       },
@@ -395,7 +395,7 @@
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": "9a55564056f07f928a230826c47033962d7f4a63b5aa318c7090e0c73c30ba5e"
+        "source_hash": "ce6ed5df00331f04baadd229dacf3fe743bdc76ac93611867fafdbaf0f01d835"
       },
       "qa_status": {
         "schema_version": "1.0",
@@ -405,14 +405,14 @@
         "version": "v0.0.1",
         "surface": "qa_status",
         "path": ".beacon/qa/status.json",
-        "exists": false,
+        "exists": true,
         "required": false,
         "role": "generated_governance_state_not_truth",
         "authority": "generated_governance_state_not_truth",
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": ""
+        "source_hash": "138611a0b71dfeb9cb41ae6ef5b18c4c0233e44b29e29082772c2ea0e8111dfa"
       },
       "release_gate_report": {
         "schema_version": "1.0",
@@ -422,14 +422,14 @@
         "version": "v0.0.1",
         "surface": "release_gate_report",
         "path": ".beacon/release-gate-report.json",
-        "exists": false,
+        "exists": true,
         "required": false,
         "role": "generated_governance_state_not_truth",
         "authority": "generated_governance_state_not_truth",
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": ""
+        "source_hash": "fffc840452036d064d807d7b09aba66a6a4139fe5cdc5061147dd75d0ca7c8e7"
       }
     },
     "manifest_authority": false,
@@ -610,7 +610,7 @@
         "entrypoint_kind": "llm_skill_guidance",
         "classification": "resolver_guidance_required",
         "exception_kind": "",
-        "exists": true,
+        "exists": false,
         "truth_center_routed": true,
         "explicit_v151_exception": false,
         "fail_closed": true,
@@ -686,11 +686,16 @@
         "severity": "error",
         "code": "truth_entrypoint_inventory_missing",
         "path": "beacon/utils/acceptance_kit.py"
+      },
+      {
+        "severity": "error",
+        "code": "truth_entrypoint_inventory_missing",
+        "path": "skills/beacon/**/SKILL.md"
       }
     ]
   },
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-07-27T13:58:00.396354+00:00",
+  "generated_at": "2026-07-27T14:04:37.010833+00:00",
   "truth_authority": false,
   "source_paths": {
     "truth": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
@@ -701,7 +706,7 @@
   "source_hashes": {
     "truth": "c4abb64d95be67fc29fe55b17a901b1f00ed8613f49069cb48f4c29598806d8d",
     "tests": "b4633497d6f0284e27a1d3c86c4a9076b17ee798adbfdfc18cc39be30d557947",
-    "tasks": "05de0d7757c96d25ad0cf4dc8e1d93138cd5275c77e1526d470a02823d23cc6f",
+    "tasks": "f3872d4a6a83f7abb378b9e90a6eefd969e9947c499a30099d0a02d87f4a0af6",
     "evidence": "e7ce73688611ccde60c5073908e9214ccfbacd7fbdd0c9fdc070a39a7e550ebd"
   }
 }

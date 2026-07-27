@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0",
+  "ac_id": "AC-ADB-008",
+  "status": "pass",
+  "artifacts": ["src/agent_delivery_bus/service.py", "src/agent_delivery_bus/adapters/beacon.py", "src/agent_delivery_bus/adapters/hermes.py"],
+  "tests": ["python3 -m unittest tests.test_reconcile -v"],
+  "verified_at": "2026-07-27"
+}

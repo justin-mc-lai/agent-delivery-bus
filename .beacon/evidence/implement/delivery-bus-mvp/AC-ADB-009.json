@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0",
+  "ac_id": "AC-ADB-009",
+  "status": "pass",
+  "artifacts": ["skills/agent-delivery-bus/SKILL.md", "skills/agent-delivery-bus/agents/openai.yaml", "skills/agent-delivery-bus/references/contracts.md"],
+  "tests": ["python3 -m unittest tests.test_skill_contract -v", "skill-creator quick_validate.py"],
+  "verified_at": "2026-07-27"
+}

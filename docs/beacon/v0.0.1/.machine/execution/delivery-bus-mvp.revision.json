@@ -7,11 +7,24 @@
   "source_revision_id": "R1",
   "reason": "freeze",
   "doc_status": "frozen",
-  "delivery_status": "idle",
-  "lifecycle_status": "idle",
+  "delivery_status": "implemented",
+  "lifecycle_status": "implemented",
   "baseline_hash": "sha256:82feb0fc69392550992eef6d526f89eab382b04aa1cb58ec1808e5f3480b40bc",
   "superseded_by": "",
   "created_at": "2026-07-27T13:56:37.354528+00:00",
   "frozen_at": "2026-07-27T13:58:00.446636+00:00",
-  "accepted_at": ""
+  "accepted_at": "2026-07-27T14:02:19.062889+00:00",
+  "last_implementation_run_id": "run-20260727T140143Z-ff6d",
+  "changed_files": [
+    "README.md",
+    "pyproject.toml"
+  ],
+  "last_verification_run_id": "run-20260727T220214571539",
+  "verification_evidence": [
+    ".beacon/auto-test-status.json",
+    ".beacon/qa/status.json",
+    ".beacon/coverage-summary.json",
+    ".beacon/release-gate-report.json"
+  ],
+  "accepted_by": "qa"
 }

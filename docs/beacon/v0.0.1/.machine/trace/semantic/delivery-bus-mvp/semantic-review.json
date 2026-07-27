@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "feature": "delivery-bus-mvp",
+  "feature_slug": "delivery-bus-mvp",
+  "version": "v0.0.1",
+  "stage": "implement",
+  "generated_at": "2026-07-27T14:01:43.663722+00:00",
+  "overall_status": "ready",
+  "blockers": [],
+  "default_design_bridge": {
+    "repo": "https://github.com/Leonxlnx/taste-skill",
+    "skill_id": "taste-skill",
+    "entry": "",
+    "detected": false,
+    "kind": "external-default-bridge",
+    "supported_stages": [
+      "prototype",
+      "implement"
+    ],
+    "capabilities": [
+      "prototype",
+      "implement",
+      "taste-design",
+      "semantic-normalization"
+    ],
+    "install_hint": "npx skills add https://github.com/Leonxlnx/taste-skill --skill taste-skill"
+  },
+  "transaction_lineage": {
+    "current_transaction_id": "",
+    "projection_seq": "",
+    "source_hash": "",
+    "previous_transaction_id": "",
+    "recent_transaction_ids": [],
+    "attempt_seq": null,
+    "action": ""
+  }
+}

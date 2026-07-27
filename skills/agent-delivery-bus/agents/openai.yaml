@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Delivery Bus"
+  short_description: "Govern Beacon work through Hermes safely"
+  default_prompt: "Use $agent-delivery-bus to preflight and dispatch a Beacon task through Hermes."

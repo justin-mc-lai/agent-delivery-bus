@@ -5,7 +5,7 @@
   "version": "v0.0.1",
   "current_revision_id": "R2",
   "lifecycle_status": "frozen",
-  "updated_at": "2026-07-27T13:58:00.401806+00:00",
+  "updated_at": "2026-07-27T14:04:23.607832+00:00",
   "revisions": [
     {
       "revision_id": "R1",
@@ -50,11 +50,11 @@
           "theme": "general",
           "text": "Acceptance criteria TBD",
           "required": true,
-          "status": "draft",
-          "implemented_by_run_id": null,
+          "status": "implemented",
+          "implemented_by_run_id": "manual-d147978",
           "verified_by_run_id": null,
           "accepted_at": null,
-          "changed_in_revision": null,
+          "changed_in_revision": "R1",
           "story_id": "",
           "details": [],
           "source": "fallback"
@@ -64,22 +64,22 @@
           "kind": "task",
           "text": "Implement current frozen revision",
           "required": true,
-          "status": "draft",
-          "implemented_by_run_id": null,
+          "status": "implemented",
+          "implemented_by_run_id": "manual-d147978",
           "verified_by_run_id": null,
           "accepted_at": null,
-          "changed_in_revision": null
+          "changed_in_revision": "R1"
         },
         {
           "id": "TEST-001",
           "kind": "test",
           "text": "Verify AC-001 — Acceptance criteria TBD",
           "required": true,
-          "status": "draft",
-          "implemented_by_run_id": null,
-          "verified_by_run_id": null,
+          "status": "passed",
+          "implemented_by_run_id": "manual-d147978",
+          "verified_by_run_id": "run-20260727T215200834720",
           "accepted_at": null,
-          "changed_in_revision": null,
+          "changed_in_revision": "R1",
           "covers": [
             "AC-001"
           ],
@@ -103,7 +103,7 @@
       "revision_id": "R2",
       "title": "delivery-bus-mvp",
       "priority": "medium",
-      "status": "frozen",
+      "status": "implemented",
       "items": [
         {
           "id": "AC-001",
@@ -111,8 +111,8 @@
           "theme": "general",
           "text": "Acceptance criteria TBD",
           "required": true,
-          "status": "draft",
-          "implemented_by_run_id": null,
+          "status": "implemented",
+          "implemented_by_run_id": "run-20260727T140143Z-ff6d",
           "verified_by_run_id": null,
           "accepted_at": null,
           "changed_in_revision": "R2",
@@ -125,10 +125,10 @@
           "kind": "task",
           "text": "Implement current frozen revision",
           "required": true,
-          "status": "draft",
-          "implemented_by_run_id": null,
+          "status": "implemented",
+          "implemented_by_run_id": "run-20260727T140143Z-ff6d",
           "verified_by_run_id": null,
-          "accepted_at": null,
+          "accepted_at": "2026-07-27T14:02:19.062889+00:00",
           "changed_in_revision": "R2"
         },
         {
@@ -136,9 +136,9 @@
           "kind": "test",
           "text": "Verify AC-001 — Acceptance criteria TBD",
           "required": true,
-          "status": "draft",
-          "implemented_by_run_id": null,
-          "verified_by_run_id": null,
+          "status": "implemented",
+          "implemented_by_run_id": "run-20260727T140143Z-ff6d",
+          "verified_by_run_id": "run-20260727T220214571539",
           "accepted_at": null,
           "changed_in_revision": "R2",
           "covers": [
@@ -157,7 +157,22 @@
         "section_count": 0,
         "sections": {},
         "derived_items": []
-      }
+      },
+      "feature": "delivery-bus-mvp",
+      "feature_slug": "delivery-bus-mvp",
+      "version": "v0.0.1",
+      "last_changed_files": [
+        "README.md",
+        "pyproject.toml"
+      ],
+      "verification_evidence": [
+        ".beacon/auto-test-status.json",
+        ".beacon/qa/status.json",
+        ".beacon/coverage-summary.json",
+        ".beacon/release-gate-report.json"
+      ],
+      "accepted_at": "2026-07-27T14:02:19.062889+00:00",
+      "accepted_by": "qa"
     }
   ]
 }

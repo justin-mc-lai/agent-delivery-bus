@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0",
+  "updated": "2026-07-27",
+  "knowledge_source": {
+    "slug": "personal-brain",
+    "repo": "/Users/apple/Developer/Personal/personal-brain",
+    "registry_source": "org/project-registry.yaml"
+  },
+  "projects": [
+    {
+      "slug": "beacon",
+      "title": "Beacon",
+      "class": "platform",
+      "repo": "/Users/apple/Developer/Personal/products/beacon",
+      "beacon_docs_root": "/Users/apple/Developer/Personal/products/beacon/docs/beacon",
+      "current_docs_version": "v1.6.11",
+      "aliases": ["灯塔", "beacon-core", "beacon源码"],
+      "dispatchable": true
+    },
+    {
+      "slug": "selfmedia-sync-ai",
+      "title": "SidePilot / selfmedia-sync-ai",
+      "class": "managed",
+      "repo": "/Users/apple/Developer/Personal/products/selfmedia-sync-ai",
+      "beacon_docs_root": "/Users/apple/Developer/Personal/products/selfmedia-sync-ai/docs/beacon",
+      "current_docs_version": "v0.0.13",
+      "aliases": ["自媒体", "sidepilot", "pi", "灵感池产品"],
+      "dispatchable": true
+    },
+    {
+      "slug": "selfmedia-creator",
+      "title": "selfmedia-creator",
+      "class": "managed",
+      "repo": "/Users/apple/Developer/Personal/products/selfmedia-creator",
+      "beacon_docs_root": "/Users/apple/Developer/Personal/products/selfmedia-creator/docs/beacon",
+      "current_docs_version": "v0.0.4",
+      "aliases": ["创作器", "creator"],
+      "dispatchable": true
+    },
+    {
+      "slug": "shopxo_canada",
+      "title": "ShopXO Canada",
+      "class": "managed",
+      "repo": "/Users/apple/Developer/Personal/products/shopxo_canada",
+      "beacon_docs_root": "/Users/apple/Developer/Personal/products/shopxo_canada/docs/beacon",
+      "current_docs_version": "v1.0.0",
+      "aliases": ["shopxo", "加拿大店", "商城"],
+      "dispatchable": true
+    },
+    {
+      "slug": "rolo",
+      "title": "Rolo / 路乐 monorepo",
+      "class": "managed",
+      "repo": "/Users/apple/Developer/Company/rolo",
+      "beacon_docs_root": "/Users/apple/Developer/Company/rolo/docs/beacon",
+      "current_docs_version": "v2.3.4",
+      "aliases": ["罗罗", "路乐", "rolo-mono", "公司项目"],
+      "dispatchable": true
+    },
+    {
+      "slug": "tool-station-network",
+      "title": "Tool Station Network",
+      "class": "managed",
+      "repo": "/Users/apple/Developer/Personal/products/tool-station-network",
+      "beacon_docs_root": "/Users/apple/Developer/Personal/products/tool-station-network/docs/beacon",
+      "current_docs_version": "v1.0.0",
+      "aliases": ["工具站", "tool-station", "fehelper", "浏览器插件", "browser-extension", "站群"],
+      "dispatchable": true
+    }
+  ]
+}

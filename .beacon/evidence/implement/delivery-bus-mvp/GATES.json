@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "ac_id": "GATES",
+  "status": "pass",
+  "truth_review_gate": "pass",
+  "truth_revision": "R1",
+  "workspace_admission": "pass",
+  "branch": "beacon/v0.0.1/delivery-bus-mvp",
+  "verified_at": "2026-07-27"
+}

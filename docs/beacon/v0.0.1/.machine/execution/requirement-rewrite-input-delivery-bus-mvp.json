@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "feature": "delivery-bus-mvp",
+  "feature_slug": "delivery-bus-mvp",
+  "version": "v0.0.1",
+  "generated_at": "2026-07-27T14:01:43.719632+00:00",
+  "technical_archive_path": "docs/beacon/v0.0.1/.machine/execution/technical-implementation-delivery-bus-mvp.json",
+  "run_id": "run-20260727T140143Z-ff6d",
+  "modules_touched": [
+    "README.md",
+    "pyproject.toml"
+  ],
+  "changed_files": [
+    "README.md",
+    "pyproject.toml"
+  ],
+  "known_risks": [],
+  "rollback_notes": [],
+  "artifact_update_obligations": [
+    "review_quality",
+    "acceptance"
+  ],
+  "verification_commands": [
+    "beacon implement run --runner native-single"
+  ],
+  "rewrite_targets": {
+    "prd": [],
+    "test_case": [],
+    "version_research": [
+      "Open artifact writeback obligations: ['review_quality', 'acceptance']"
+    ]
+  },
+  "baseline_uplift_candidates": [
+    "artifact_updates.required items must become explicit follow-up obligations before closure."
+  ],
+  "benchmark_refs": [
+    "docs/beacon/v0.0.1/.machine/execution/technical-implementation-delivery-bus-mvp.json"
+  ]
+}
