@@ -1,0 +1,22 @@
+{
+  "passed": 3,
+  "total": 3,
+  "score": 1.0,
+  "results": [
+    {
+      "expectation": "mode_pln_source_or_review",
+      "pass": true,
+      "reason": "matched"
+    },
+    {
+      "expectation": "has_recommended_next",
+      "pass": true,
+      "reason": "matched"
+    },
+    {
+      "expectation": "no_implement",
+      "pass": true,
+      "reason": "matched"
+    }
+  ]
+}

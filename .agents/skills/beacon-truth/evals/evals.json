@@ -1,0 +1,50 @@
+{
+  "skill_name": "beacon-truth",
+  "evals": [
+    {
+      "id": "truth-00-surface-boundary",
+      "prompt": "Use $beacon-truth for a normal truth task. Stay inside HARD GATE.",
+      "expectations": [
+        "Selects an explicit mode_id",
+        "Does not perform out-of-harness work",
+        "Emits recommended_next_harness"
+      ]
+    },
+    {
+      "id": "truth-01-gen-truth",
+      "prompt": "Use $beacon-truth in mode `gen-truth` (authoritative truth package). Read references/modes/gen-truth.md first.",
+      "expectations": [
+        "Loads references/modes/gen-truth.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    },
+    {
+      "id": "truth-02-gen-truth-init",
+      "prompt": "Use $beacon-truth in mode `gen-truth-init` (init feature package). Read references/modes/gen-truth-init.md first.",
+      "expectations": [
+        "Loads references/modes/gen-truth-init.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    },
+    {
+      "id": "truth-03-gen-change",
+      "prompt": "Use $beacon-truth in mode `gen-change` (change log / delta). Read references/modes/gen-change.md first.",
+      "expectations": [
+        "Loads references/modes/gen-change.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    },
+    {
+      "id": "truth-04-gen-refreeze",
+      "prompt": "Use $beacon-truth in mode `gen-refreeze` (refreeze after change). Read references/modes/gen-refreeze.md first.",
+      "expectations": [
+        "Loads references/modes/gen-refreeze.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "skill_name": "beacon-implement",
+  "evals": [
+    {
+      "id": "implement-00-surface-boundary",
+      "prompt": "Use $beacon-implement for a normal implement task. Stay inside HARD GATE.",
+      "expectations": [
+        "Selects an explicit mode_id",
+        "Does not perform out-of-harness work",
+        "Emits recommended_next_harness"
+      ]
+    },
+    {
+      "id": "implement-01-gen-implement",
+      "prompt": "Use $beacon-implement in mode `gen-implement` (implement umbrella). Read references/modes/gen-implement.md first.",
+      "expectations": [
+        "Loads references/modes/gen-implement.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    },
+    {
+      "id": "implement-contract-admission",
+      "prompt": "Implement feature without workspace admit.",
+      "expectations": [
+        "Requires workspace admission before writes",
+        "Does not claim QA pass"
+      ]
+    }
+  ]
+}

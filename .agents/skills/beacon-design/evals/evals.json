@@ -1,0 +1,68 @@
+{
+  "skill_name": "beacon-design",
+  "evals": [
+    {
+      "id": "design-00-surface-boundary",
+      "prompt": "Use $beacon-design for a normal design task. Stay inside HARD GATE.",
+      "expectations": [
+        "Selects an explicit mode_id",
+        "Does not perform out-of-harness work",
+        "Emits recommended_next_harness"
+      ]
+    },
+    {
+      "id": "design-01-gen-design",
+      "prompt": "Use $beacon-design in mode `gen-design` (design delivery). Read references/modes/gen-design.md first.",
+      "expectations": [
+        "Loads references/modes/gen-design.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    },
+    {
+      "id": "design-02-gen-design-init",
+      "prompt": "Use $beacon-design in mode `gen-design-init` (design init). Read references/modes/gen-design-init.md first.",
+      "expectations": [
+        "Loads references/modes/gen-design-init.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    },
+    {
+      "id": "design-03-gen-design-system",
+      "prompt": "Use $beacon-design in mode `gen-design-system` (design system). Read references/modes/gen-design-system.md first.",
+      "expectations": [
+        "Loads references/modes/gen-design-system.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    },
+    {
+      "id": "design-04-gen-design-explore",
+      "prompt": "Use $beacon-design in mode `gen-design-explore` (explore variants). Read references/modes/gen-design-explore.md first.",
+      "expectations": [
+        "Loads references/modes/gen-design-explore.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    },
+    {
+      "id": "design-05-gen-design-polish",
+      "prompt": "Use $beacon-design in mode `gen-design-polish` (polish). Read references/modes/gen-design-polish.md first.",
+      "expectations": [
+        "Loads references/modes/gen-design-polish.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    },
+    {
+      "id": "design-06-gen-prototype",
+      "prompt": "Use $beacon-design in mode `gen-prototype` (prototype). Read references/modes/gen-prototype.md first.",
+      "expectations": [
+        "Loads references/modes/gen-prototype.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    }
+  ]
+}

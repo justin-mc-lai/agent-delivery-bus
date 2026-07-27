@@ -1,0 +1,4 @@
+interface:
+  display_name: "Beacon Implement"
+  short_description: "Guide for beacon implement workflows"
+  default_prompt: "Use $beacon-gen-implement to run the beacon implement workflow with the current Beacon context."

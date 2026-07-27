@@ -1,0 +1,4 @@
+interface:
+  display_name: "Beacon Review"
+  short_description: "Run planner-only multi-angle review for intent, parity, deferral, and state machines"
+  default_prompt: "Use $beacon-pln-review to review the current Beacon plan for intent fidelity, source parity, deferrals, and state-machine coverage."

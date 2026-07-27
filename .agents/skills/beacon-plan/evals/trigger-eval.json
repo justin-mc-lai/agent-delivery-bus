@@ -1,0 +1,34 @@
+[
+  {
+    "query": "对方案做全面审查，检查状态机与 source parity，不要 MVP",
+    "should_trigger": true
+  },
+  {
+    "query": "先 brainstorm 想清楚，先别写需求、先别冻",
+    "should_trigger": true
+  },
+  {
+    "query": "对着代码和现有接口调研需求，别瞎编",
+    "should_trigger": true
+  },
+  {
+    "query": "拆海做 program plan，多模块 OSS 全量复刻",
+    "should_trigger": true
+  },
+  {
+    "query": "帮我直接写代码实现登录并发布上线",
+    "should_trigger": false
+  },
+  {
+    "query": "跑 pytest 并给 release 放行",
+    "should_trigger": false
+  },
+  {
+    "query": "冻结 truth 并写 features/*/truth.md",
+    "should_trigger": false
+  },
+  {
+    "query": "规划一下下一步，海级需求先怎么拆",
+    "should_trigger": true
+  }
+]

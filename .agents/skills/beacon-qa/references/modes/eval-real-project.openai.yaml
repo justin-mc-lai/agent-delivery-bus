@@ -1,0 +1,4 @@
+interface:
+  display_name: "Beacon Real Project Validation"
+  short_description: "Validate Beacon on a real project"
+  default_prompt: "Use $beacon-eval-real-project to verify current-version real-project release proof on a real project root, and only switch to specialized board acceptance when the target capability is a board or projection feature."

@@ -1,0 +1,282 @@
+{
+  "skill": "beacon-plan",
+  "iteration": 1,
+  "kind": "with_skill_vs_baseline_behavioral",
+  "rows": [
+    {
+      "id": "plan-contract-hard-gate",
+      "arm": "with_skill",
+      "status": "ok",
+      "seconds": 72.43,
+      "score": 1.0,
+      "passed": 4,
+      "total": 4,
+      "results": [
+        {
+          "expectation": "refuses_truth_write",
+          "pass": true,
+          "reason": "matched"
+        },
+        {
+          "expectation": "refuses_implement",
+          "pass": true,
+          "reason": "matched"
+        },
+        {
+          "expectation": "stays_planner_only",
+          "pass": true,
+          "reason": "matched"
+        },
+        {
+          "expectation": "routes_to_other_harness",
+          "pass": true,
+          "reason": "matched"
+        }
+      ]
+    },
+    {
+      "id": "plan-contract-hard-gate",
+      "arm": "baseline",
+      "status": "ok",
+      "seconds": 110.91,
+      "score": 0.25,
+      "passed": 1,
+      "total": 4,
+      "results": [
+        {
+          "expectation": "refuses_truth_write",
+          "pass": false,
+          "reason": "no_evidence"
+        },
+        {
+          "expectation": "refuses_implement",
+          "pass": false,
+          "reason": "no_evidence"
+        },
+        {
+          "expectation": "stays_planner_only",
+          "pass": false,
+          "reason": "no_evidence"
+        },
+        {
+          "expectation": "routes_to_other_harness",
+          "pass": true,
+          "reason": "matched"
+        }
+      ]
+    },
+    {
+      "id": "plan-contract-review-parity",
+      "arm": "with_skill",
+      "status": "ok",
+      "seconds": 58.19,
+      "score": 0.2,
+      "passed": 1,
+      "total": 5,
+      "results": [
+        {
+          "expectation": "scope_full_parity_or_block",
+          "pass": false,
+          "reason": "no_evidence"
+        },
+        {
+          "expectation": "has_findings",
+          "pass": false,
+          "reason": "no_evidence"
+        },
+        {
+          "expectation": "has_severity",
+          "pass": false,
+          "reason": "no_evidence"
+        },
+        {
+          "expectation": "not_silent_implement_route",
+          "pass": true,
+          "reason": "matched"
+        },
+        {
+          "expectation": "has_parity_or_deferral",
+          "pass": false,
+          "reason": "no_evidence"
+        }
+      ]
+    },
+    {
+      "id": "plan-contract-review-parity",
+      "arm": "baseline",
+      "status": "ok",
+      "seconds": 55.58,
+      "score": 0.2,
+      "passed": 1,
+      "total": 5,
+      "results": [
+        {
+          "expectation": "scope_full_parity_or_block",
+          "pass": false,
+          "reason": "no_evidence"
+        },
+        {
+          "expectation": "has_findings",
+          "pass": false,
+          "reason": "no_evidence"
+        },
+        {
+          "expectation": "has_severity",
+          "pass": false,
+          "reason": "no_evidence"
+        },
+        {
+          "expectation": "not_silent_implement_route",
+          "pass": true,
+          "reason": "matched"
+        },
+        {
+          "expectation": "has_parity_or_deferral",
+          "pass": false,
+          "reason": "no_evidence"
+        }
+      ]
+    },
+    {
+      "id": "plan-contract-review-cli",
+      "arm": "with_skill",
+      "status": "ok",
+      "seconds": 82.12,
+      "score": 1.0,
+      "passed": 3,
+      "total": 3,
+      "results": [
+        {
+          "expectation": "mentions_planner_review_cli",
+          "pass": true,
+          "reason": "matched"
+        },
+        {
+          "expectation": "mentions_artifact_path",
+          "pass": true,
+          "reason": "matched"
+        },
+        {
+          "expectation": "no_fake_parallel_subagent",
+          "pass": true,
+          "reason": "matched"
+        }
+      ]
+    },
+    {
+      "id": "plan-contract-review-cli",
+      "arm": "baseline",
+      "status": "ok",
+      "seconds": 280.32,
+      "score": 1.0,
+      "passed": 3,
+      "total": 3,
+      "results": [
+        {
+          "expectation": "mentions_planner_review_cli",
+          "pass": true,
+          "reason": "matched"
+        },
+        {
+          "expectation": "mentions_artifact_path",
+          "pass": true,
+          "reason": "matched"
+        },
+        {
+          "expectation": "no_fake_parallel_subagent",
+          "pass": true,
+          "reason": "matched"
+        }
+      ]
+    },
+    {
+      "id": "plan-mode-selection-source",
+      "arm": "with_skill",
+      "status": "ok",
+      "seconds": 105.06,
+      "score": 1.0,
+      "passed": 3,
+      "total": 3,
+      "results": [
+        {
+          "expectation": "mode_pln_source_or_review",
+          "pass": true,
+          "reason": "matched"
+        },
+        {
+          "expectation": "has_recommended_next",
+          "pass": true,
+          "reason": "matched"
+        },
+        {
+          "expectation": "no_implement",
+          "pass": true,
+          "reason": "matched"
+        }
+      ]
+    },
+    {
+      "id": "plan-mode-selection-source",
+      "arm": "baseline",
+      "status": "ok",
+      "seconds": 127.68,
+      "score": 1.0,
+      "passed": 3,
+      "total": 3,
+      "results": [
+        {
+          "expectation": "mode_pln_source_or_review",
+          "pass": true,
+          "reason": "matched"
+        },
+        {
+          "expectation": "has_recommended_next",
+          "pass": true,
+          "reason": "matched"
+        },
+        {
+          "expectation": "no_implement",
+          "pass": true,
+          "reason": "matched"
+        }
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "id": "plan-contract-hard-gate",
+      "with_skill_score": 1.0,
+      "baseline_score": 0.25,
+      "delta": 0.75,
+      "with_skill_pass": "4/4",
+      "baseline_pass": "1/4"
+    },
+    {
+      "id": "plan-contract-review-parity",
+      "with_skill_score": 0.2,
+      "baseline_score": 0.2,
+      "delta": 0.0,
+      "with_skill_pass": "1/5",
+      "baseline_pass": "1/5"
+    },
+    {
+      "id": "plan-contract-review-cli",
+      "with_skill_score": 1.0,
+      "baseline_score": 1.0,
+      "delta": 0.0,
+      "with_skill_pass": "3/3",
+      "baseline_pass": "3/3"
+    },
+    {
+      "id": "plan-mode-selection-source",
+      "with_skill_score": 1.0,
+      "baseline_score": 1.0,
+      "delta": 0.0,
+      "with_skill_pass": "3/3",
+      "baseline_pass": "3/3"
+    }
+  ],
+  "mean_delta": 0.188,
+  "with_skill_mean": 0.8,
+  "baseline_mean": 0.613
+}

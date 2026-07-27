@@ -6,6 +6,7 @@ revision_id: R1
 language: zh
 domain_required: true
 domain_kind: business
+ux_required: false
 package_maturity: filled
 parser_contract: beacon-feature-package-v2
 materials_status: current

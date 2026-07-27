@@ -3,21 +3,35 @@
   "feature": "delivery-bus-mvp",
   "feature_slug": "delivery-bus-mvp",
   "version": "v0.0.1",
-  "current_revision_id": "R1",
+  "current_revision_id": "R2",
   "lifecycle_status": "frozen",
-  "updated_at": "2026-07-27T13:52:03.035485+00:00",
+  "updated_at": "2026-07-27T13:58:00.401806+00:00",
   "revisions": [
     {
       "revision_id": "R1",
       "feature_slug": "delivery-bus-mvp",
       "source_revision_id": null,
       "reason": "draft",
-      "doc_status": "frozen",
-      "delivery_status": "idle",
+      "doc_status": "superseded",
+      "delivery_status": "superseded",
       "baseline_hash": "sha256:011344e55de09cf161cba67bf978719fc70529ec8512b6e8a801cc05a0938981",
-      "superseded_by": null,
+      "superseded_by": "R2",
       "created_at": "2026-07-27T13:31:07.124451+00:00",
       "frozen_at": "2026-07-27T13:31:07.138807+00:00",
+      "accepted_at": null,
+      "accepted_by": null
+    },
+    {
+      "revision_id": "R2",
+      "feature_slug": "delivery-bus-mvp",
+      "source_revision_id": "R1",
+      "reason": "QA correction: mark CLI feature as non-UX and require JUnit-producing test commands",
+      "doc_status": "frozen",
+      "delivery_status": "idle",
+      "baseline_hash": "sha256:82feb0fc69392550992eef6d526f89eab382b04aa1cb58ec1808e5f3480b40bc",
+      "superseded_by": null,
+      "created_at": "2026-07-27T13:56:37.355037+00:00",
+      "frozen_at": "2026-07-27T13:58:00.446986+00:00",
       "accepted_at": null,
       "accepted_by": null
     }
@@ -28,7 +42,7 @@
       "revision_id": "R1",
       "title": "delivery-bus-mvp",
       "priority": "medium",
-      "status": "implemented",
+      "status": "superseded",
       "items": [
         {
           "id": "AC-001",
@@ -82,31 +96,68 @@
         "section_count": 0,
         "sections": {},
         "derived_items": []
-      },
-      "feature": "delivery-bus-mvp",
-      "feature_slug": "delivery-bus-mvp",
-      "version": "v0.0.1",
-      "last_changed_files": [
-        "config/projects.json",
-        "src/agent_delivery_bus",
-        "tests",
-        "skills/agent-delivery-bus",
-        "README.md"
+      }
+    },
+    {
+      "story_id": "US-001",
+      "revision_id": "R2",
+      "title": "delivery-bus-mvp",
+      "priority": "medium",
+      "status": "frozen",
+      "items": [
+        {
+          "id": "AC-001",
+          "kind": "ac",
+          "theme": "general",
+          "text": "Acceptance criteria TBD",
+          "required": true,
+          "status": "draft",
+          "implemented_by_run_id": null,
+          "verified_by_run_id": null,
+          "accepted_at": null,
+          "changed_in_revision": "R2",
+          "story_id": "",
+          "details": [],
+          "source": "fallback"
+        },
+        {
+          "id": "TASK-001",
+          "kind": "task",
+          "text": "Implement current frozen revision",
+          "required": true,
+          "status": "draft",
+          "implemented_by_run_id": null,
+          "verified_by_run_id": null,
+          "accepted_at": null,
+          "changed_in_revision": "R2"
+        },
+        {
+          "id": "TEST-001",
+          "kind": "test",
+          "text": "Verify AC-001 — Acceptance criteria TBD",
+          "required": true,
+          "status": "draft",
+          "implemented_by_run_id": null,
+          "verified_by_run_id": null,
+          "accepted_at": null,
+          "changed_in_revision": "R2",
+          "covers": [
+            "AC-001"
+          ],
+          "story_id": "",
+          "source": "fallback"
+        }
       ],
-      "verification_evidence": [
-        ".beacon/qa/features/delivery-bus-mvp/matrix.qa9.json",
-        ".beacon/qa/status.json",
-        ".beacon/qa/current-session.json",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/contract/command.txt",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/contract/stdout.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/contract/stderr.log",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/contract/result.json",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9/tc-execution-map.json",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/qa9/tc-results.json",
-        ".beacon/evidence/auto-test/run-20260727T215200834720/summary.json",
-        ".beacon/flaky-history.json",
-        ".beacon/evidence-signature-chain.json"
-      ]
+      "research_projection": {
+        "schema_version": "1.0",
+        "feature": "delivery-bus-mvp",
+        "version": "v0.0.1",
+        "source": "research:/Users/apple/Developer/Personal/products/agent-delivery-bus/docs/beacon/v0.0.1/research/delivery-bus-mvp.md",
+        "present": false,
+        "section_count": 0,
+        "sections": {},
+        "derived_items": []
+      }
     }
   ]
 }

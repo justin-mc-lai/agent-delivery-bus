@@ -1,0 +1,3010 @@
+{
+  "schema_version": "1.0",
+  "transaction_id": "tx-change-refreeze-delivery-bus-mvp-20260727t135800z",
+  "feature": "delivery-bus-mvp",
+  "feature_slug": "delivery-bus-mvp",
+  "version": "v0.0.1",
+  "change_reason": "QA correction: mark CLI feature as non-UX and require JUnit-producing test commands",
+  "touched_surfaces": [
+    "change",
+    "truth",
+    "tests",
+    "tasks",
+    "evidence",
+    "requirement_clarity",
+    "freeze",
+    "feature_package_validation"
+  ],
+  "surface_statuses": {
+    "change": {
+      "path": "docs/beacon/v0.0.1/change/delivery-bus-mvp.md",
+      "exists": false,
+      "status": "package_change_optional",
+      "required": false,
+      "authority": "change_record_not_requirement_truth"
+    },
+    "truth": {
+      "path": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+      "exists": true,
+      "status": "present",
+      "required": true,
+      "authority": "markdown_feature_package"
+    },
+    "tests": {
+      "path": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
+      "exists": true,
+      "status": "present",
+      "required": true,
+      "authority": "markdown_feature_package"
+    },
+    "tasks": {
+      "path": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tasks.md",
+      "exists": true,
+      "status": "present",
+      "required": true,
+      "authority": "markdown_feature_package"
+    },
+    "evidence": {
+      "path": "docs/beacon/v0.0.1/features/delivery-bus-mvp/evidence.md",
+      "exists": true,
+      "status": "present",
+      "required": true,
+      "authority": "markdown_feature_package"
+    },
+    "requirement_clarity": {
+      "path": "docs/beacon/v0.0.1/.machine/execution/requirement-clarity-delivery-bus-mvp.json",
+      "exists": true,
+      "status": "passed",
+      "required": true
+    },
+    "freeze": {
+      "path": "docs/beacon/v0.0.1/.machine/change/delivery-bus-mvp.refreeze-transaction.json",
+      "exists": true,
+      "status": "complete",
+      "required": true
+    },
+    "feature_package_validation": {
+      "path": "docs/beacon/v0.0.1/.machine/requirement/feature-package-validation.json",
+      "exists": true,
+      "status": "passed",
+      "required": true,
+      "diagnostics": []
+    }
+  },
+  "truth_revision_before": {
+    "revision_id": "R2",
+    "doc_status": "draft",
+    "lifecycle_status": "idle",
+    "baseline_hash": ""
+  },
+  "truth_revision_after": {
+    "revision_id": "R2",
+    "doc_status": "frozen",
+    "lifecycle_status": "frozen",
+    "baseline_hash": "sha256:82feb0fc69392550992eef6d526f89eab382b04aa1cb58ec1808e5f3480b40bc"
+  },
+  "refreeze_status": "complete",
+  "next_route": {
+    "target_surface": "beacon-implement",
+    "command": "beacon implement \"delivery-bus-mvp\" --project /Users/apple/Developer/Personal/products/agent-delivery-bus --version v0.0.1",
+    "why": "refreeze transaction completed; implementation may plan against the refreshed frozen truth"
+  },
+  "blocked_reason": "",
+  "delivery_execution": {
+    "implement_executed": false,
+    "qa_executed": false,
+    "release_executed": false
+  },
+  "created_at": "2026-07-27T13:58:00.156096+00:00",
+  "previous_revision": {
+    "revision_id": "R1",
+    "doc_status": "superseded",
+    "lifecycle_status": "superseded",
+    "baseline_hash": ""
+  },
+  "opened_revision": {
+    "revision_id": "R2",
+    "doc_status": "draft",
+    "lifecycle_status": "idle",
+    "baseline_hash": ""
+  },
+  "story_reopen": {
+    "current_revision_id": "R2",
+    "lifecycle_status": "draft"
+  },
+  "requirement_package": {
+    "schema_version": "1.0",
+    "project_root": "/Users/apple/Developer/Personal/products/agent-delivery-bus",
+    "version": "v0.0.1",
+    "feature": "delivery-bus-mvp",
+    "status": "synced",
+    "authority_state": "feature_package_authoritative",
+    "truth_authority": "markdown_feature_package",
+    "requirement_refs": {
+      "source_of_truth_root": "docs/beacon/v0.0.1/features/delivery-bus-mvp",
+      "prd": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+      "user_story": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+      "test_case": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
+      "truth": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+      "tests": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
+      "tasks": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tasks.md",
+      "evidence": "docs/beacon/v0.0.1/features/delivery-bus-mvp/evidence.md"
+    },
+    "story_path": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+    "qa_matrix_path": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
+    "qa9_matrix_path": "",
+    "story_scenario_map_path": "",
+    "machine_rebuild": {
+      "schema_version": "1.0",
+      "truth_map_contract": "beacon-truth-map-v1",
+      "truth_source_model": "feature_package_authoritative",
+      "truth_package_contract": "beacon-feature-package-v2",
+      "machine_json_role": "generated_state_not_truth",
+      "generated_by": "beacon.truth_map.resolver",
+      "feature": "delivery-bus-mvp",
+      "feature_slug": "delivery-bus-mvp",
+      "version": "v0.0.1",
+      "status": "rebuilt",
+      "blocked": false,
+      "validation_status": "pass",
+      "source_paths": {
+        "truth": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+        "tests": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
+        "tasks": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tasks.md",
+        "evidence": "docs/beacon/v0.0.1/features/delivery-bus-mvp/evidence.md"
+      },
+      "source_hashes": {
+        "truth": "c4abb64d95be67fc29fe55b17a901b1f00ed8613f49069cb48f4c29598806d8d",
+        "tests": "b4633497d6f0284e27a1d3c86c4a9076b17ee798adbfdfc18cc39be30d557947",
+        "tasks": "05de0d7757c96d25ad0cf4dc8e1d93138cd5275c77e1526d470a02823d23cc6f",
+        "evidence": "e7ce73688611ccde60c5073908e9214ccfbacd7fbdd0c9fdc070a39a7e550ebd"
+      },
+      "plan": {
+        "schema_version": "1.0",
+        "truth_map_contract": "beacon-truth-map-v1",
+        "truth_source_model": "feature_package_authoritative",
+        "truth_package_contract": "beacon-feature-package-v2",
+        "machine_json_role": "generated_state_not_truth",
+        "generated_by": "beacon.truth_map.resolver",
+        "feature": "delivery-bus-mvp",
+        "feature_slug": "delivery-bus-mvp",
+        "version": "v0.0.1",
+        "source_paths": {
+          "truth": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+          "tests": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
+          "tasks": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tasks.md",
+          "evidence": "docs/beacon/v0.0.1/features/delivery-bus-mvp/evidence.md"
+        },
+        "outputs": {
+          "truth_map_projection": "docs/beacon/v0.0.1/.machine/requirement/delivery-bus-mvp.truth-map.json",
+          "requirement_package_state": "docs/beacon/v0.0.1/.machine/requirement/delivery-bus-mvp.requirement-package.json",
+          "feature_package_validation": "docs/beacon/v0.0.1/.machine/requirement/feature-package-validation.json"
+        },
+        "runtime_json_exemption": {
+          "role": "runtime_process_record_not_requirement_truth",
+          "applies_to": [
+            ".beacon/runs/**",
+            ".beacon/qa/**",
+            "runtime/process execution records"
+          ],
+          "requires_markdown_twin": false,
+          "requirement_authority": false
+        },
+        "routes": {
+          "doctor_rebuild": {
+            "status": "legacy_output_only",
+            "command": "beacon truth-map rebuild-machine delivery-bus-mvp --version v0.0.1"
+          },
+          "change_absorb": {
+            "status": "package_truth_target_only",
+            "command": "beacon change delivery-bus-mvp --version v0.0.1 --reason absorb-legacy-truth-into-feature-package"
+          }
+        }
+      },
+      "written": [
+        "docs/beacon/v0.0.1/.machine/requirement/delivery-bus-mvp.truth-map.json",
+        "docs/beacon/v0.0.1/.machine/requirement/delivery-bus-mvp.requirement-package.json",
+        "docs/beacon/v0.0.1/.machine/requirement/feature-package-validation.json"
+      ]
+    },
+    "story_sync": {
+      "path": "docs/beacon/v0.0.1/.machine/user-story/delivery-bus-mvp.json",
+      "feature": "delivery-bus-mvp",
+      "version": "v0.0.1",
+      "revision_id": "R2",
+      "ac_count": 1,
+      "test_count": 1,
+      "story_ids": [
+        ""
+      ]
+    }
+  },
+  "requirement_clarity": {
+    "gate": {
+      "schema_version": "1.0",
+      "feature": "delivery-bus-mvp",
+      "feature_slug": "delivery-bus-mvp",
+      "version": "v0.0.1",
+      "runtime_version": "v1.6.11",
+      "runtime_capability_line": "v1.3.3",
+      "required": true,
+      "reason_code": "",
+      "blocked": false,
+      "status": "pass",
+      "findings": [],
+      "report_json_path": "docs/beacon/v0.0.1/.machine/execution/requirement-clarity-delivery-bus-mvp.json",
+      "report_markdown_path": "docs/beacon/v0.0.1/execution/requirement-clarity-delivery-bus-mvp.md",
+      "state_path": ".beacon/state/requirement-clarity-delivery-bus-mvp.json",
+      "diagram_truth": {
+        "schema_version": "1.0",
+        "version": "v0.0.1",
+        "supported": false,
+        "required": false,
+        "ready": false,
+        "diagram_types": [],
+        "state_axes": [],
+        "missing_diagram_types": [],
+        "missing_state_axes": false,
+        "complexity_signals": [],
+        "review_gates": [],
+        "qa_coverage_hints": [],
+        "evidence_lines": {},
+        "generated_at": "2026-07-27T13:58:00.406820+00:00",
+        "feature": "delivery-bus-mvp",
+        "feature_slug": "delivery-bus-mvp",
+        "prd_ref": "docs/beacon/v0.0.1/prd/delivery-bus-mvp.md",
+        "user_story_ref": "docs/beacon/v0.0.1/user-story/delivery-bus-mvp.md"
+      },
+      "domain_fsm_gate": {
+        "schema_version": "1.0",
+        "feature": "delivery-bus-mvp",
+        "feature_slug": "delivery-bus-mvp",
+        "version": "v0.0.1",
+        "truth_path": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+        "tests_path": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
+        "required": true,
+        "blocked": false,
+        "status": "pass",
+        "reason_code": "",
+        "findings": [],
+        "requirement": {
+          "required": true,
+          "reason": "explicit_domain_mark",
+          "explicit": true,
+          "partial": true,
+          "complexity": false,
+          "business_signal": false,
+          "version_supported": false
+        },
+        "projection": {
+          "schema_version": "1.0",
+          "domain_fsm_schema": "domain-fsm.v1",
+          "entity_precedence_schema": "entity-precedence.v1",
+          "frontmatter": {
+            "slug": "delivery-bus-mvp",
+            "version": "v0.0.1",
+            "status": "frozen",
+            "revision_id": "R1",
+            "language": "zh",
+            "domain_required": "true",
+            "domain_kind": "business",
+            "ux_required": "false",
+            "package_maturity": "filled",
+            "parser_contract": "beacon-feature-package-v2",
+            "materials_status": "current",
+            "truth_source_model": "intent_first",
+            "program_ref": "docs/beacon/v0.0.1/programs/agent-delivery-bus-v001/program-manifest.md",
+            "git_canonical_branch": "main",
+            "canonical_refs": {
+              "prd": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+              "user_story": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+              "test_case": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md"
+            },
+            "provenance": {
+              "- ac_id": "AC-ADB-010",
+              "source_type": "user_intent",
+              "source_ref": "不自动 release、不直接修目标项目、不读取 Hermes 内部 SQLite"
+            }
+          },
+          "frontmatter_errors": [],
+          "has_domain_model_section": true,
+          "has_domain_fsm_section": true,
+          "has_illegal_transition_section": true,
+          "entities": [
+            {
+              "entity": "Project",
+              "key": "slug, class, repo, docs_version, aliases, dispatchable",
+              "precedence": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path",
+              "requires": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path"
+            },
+            {
+              "entity": "PreflightResult",
+              "key": "project, stage, status, checks, reason_code, resume_action",
+              "precedence": "只读；任一 required check fail 则整体 blocked",
+              "requires": "只读；任一 required check fail 则整体 blocked"
+            },
+            {
+              "entity": "Approval",
+              "key": "id, token_hash, actor, project, stage, feature, expiry, state",
+              "precedence": "token 明文不落库；scope 精确匹配；一次性消费",
+              "requires": "token 明文不落库；scope 精确匹配；一次性消费"
+            },
+            {
+              "entity": "Dispatch",
+              "key": "id, idempotency_key, normalized_request, state, approval_id, hermes refs",
+              "precedence": "key 唯一；同 key 不同 payload 必须 conflict",
+              "requires": "key 唯一；同 key 不同 payload 必须 conflict"
+            },
+            {
+              "entity": "DispatchEvent",
+              "key": "dispatch_id, sequence, from, event, to, reason_code, payload",
+              "precedence": "只追加；同 dispatch sequence 单调递增",
+              "requires": "只追加；同 dispatch sequence 单调递增"
+            },
+            {
+              "entity": "HermesBinding",
+              "key": "project, board_slug, task_id, idempotency_key",
+              "precedence": "只能由 Hermes 公开 JSON 接口获得",
+              "requires": "只能由 Hermes 公开 JSON 接口获得"
+            },
+            {
+              "entity": "Reconciliation",
+              "key": "dispatch_id, hermes_status, beacon_status, evidence_refs",
+              "precedence": "Hermes success 不可单独产生 completed",
+              "requires": "Hermes success 不可单独产生 completed"
+            }
+          ],
+          "entity_precedence": [
+            {
+              "entity": "Project",
+              "key": "slug, class, repo, docs_version, aliases, dispatchable",
+              "precedence": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path",
+              "requires": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path"
+            },
+            {
+              "entity": "PreflightResult",
+              "key": "project, stage, status, checks, reason_code, resume_action",
+              "precedence": "只读；任一 required check fail 则整体 blocked",
+              "requires": "只读；任一 required check fail 则整体 blocked"
+            },
+            {
+              "entity": "Approval",
+              "key": "id, token_hash, actor, project, stage, feature, expiry, state",
+              "precedence": "token 明文不落库；scope 精确匹配；一次性消费",
+              "requires": "token 明文不落库；scope 精确匹配；一次性消费"
+            },
+            {
+              "entity": "Dispatch",
+              "key": "id, idempotency_key, normalized_request, state, approval_id, hermes refs",
+              "precedence": "key 唯一；同 key 不同 payload 必须 conflict",
+              "requires": "key 唯一；同 key 不同 payload 必须 conflict"
+            },
+            {
+              "entity": "DispatchEvent",
+              "key": "dispatch_id, sequence, from, event, to, reason_code, payload",
+              "precedence": "只追加；同 dispatch sequence 单调递增",
+              "requires": "只追加；同 dispatch sequence 单调递增"
+            },
+            {
+              "entity": "HermesBinding",
+              "key": "project, board_slug, task_id, idempotency_key",
+              "precedence": "只能由 Hermes 公开 JSON 接口获得",
+              "requires": "只能由 Hermes 公开 JSON 接口获得"
+            },
+            {
+              "entity": "Reconciliation",
+              "key": "dispatch_id, hermes_status, beacon_status, evidence_refs",
+              "precedence": "Hermes success 不可单独产生 completed",
+              "requires": "Hermes success 不可单独产生 completed"
+            }
+          ],
+          "aggregates": [
+            {
+              "name": "Dispatch",
+              "states": [
+                "awaiting_approval",
+                "blocked",
+                "cancelled",
+                "completed",
+                "dispatched",
+                "draft",
+                "failed",
+                "queued",
+                "reconciling"
+              ],
+              "transitions": [
+                {
+                  "from": "",
+                  "to": "draft",
+                  "guard": "normalized request persisted",
+                  "initial": "true"
+                },
+                {
+                  "from": "draft",
+                  "to": "awaiting_approval",
+                  "guard": "restricted stage and strict preflight passed"
+                },
+                {
+                  "from": "draft",
+                  "to": "queued",
+                  "guard": "open stage or matching approval reserved"
+                },
+                {
+                  "from": "awaiting_approval",
+                  "to": "queued",
+                  "guard": "open stage or matching approval reserved"
+                },
+                {
+                  "from": "queued",
+                  "to": "dispatched",
+                  "guard": "Hermes task receipt recovered or created"
+                },
+                {
+                  "from": "reconciling",
+                  "to": "dispatched",
+                  "guard": "Hermes task receipt recovered or created"
+                },
+                {
+                  "from": "queued",
+                  "to": "reconciling",
+                  "guard": "external result unknown or worker succeeded"
+                },
+                {
+                  "from": "dispatched",
+                  "to": "reconciling",
+                  "guard": "external result unknown or worker succeeded"
+                },
+                {
+                  "from": "draft",
+                  "to": "blocked",
+                  "guard": "required gate or closure evidence missing"
+                },
+                {
+                  "from": "awaiting_approval",
+                  "to": "blocked",
+                  "guard": "required gate or closure evidence missing"
+                },
+                {
+                  "from": "reconciling",
+                  "to": "blocked",
+                  "guard": "required gate or closure evidence missing"
+                },
+                {
+                  "from": "queued",
+                  "to": "failed",
+                  "guard": "terminal external failure"
+                },
+                {
+                  "from": "dispatched",
+                  "to": "failed",
+                  "guard": "terminal external failure"
+                },
+                {
+                  "from": "reconciling",
+                  "to": "completed",
+                  "guard": "stage closure verified"
+                },
+                {
+                  "from": "draft",
+                  "to": "cancelled",
+                  "guard": "cancellation completed before delivery closure"
+                },
+                {
+                  "from": "awaiting_approval",
+                  "to": "cancelled",
+                  "guard": "cancellation completed before delivery closure"
+                },
+                {
+                  "from": "queued",
+                  "to": "cancelled",
+                  "guard": "cancellation completed before delivery closure"
+                },
+                {
+                  "from": "dispatched",
+                  "to": "cancelled",
+                  "guard": "cancellation completed before delivery closure"
+                }
+              ]
+            }
+          ],
+          "illegal_transition_slots": [
+            {
+              "description": "awaiting_approval → queued without an atomically reserved matching token",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "completed/cancelled → any non-terminal state",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "queued → dispatched without a Hermes task id or idempotent existing-task receipt",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "Hermes completed → completed without stage closure verification",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "approval consumed twice or reserved by two dispatches",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "same idempotency key → two Hermes task bindings",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "preflight blocked → Hermes create",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "release stage → Hermes create in MVP",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "any preflight path → write target project",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "Hermes internal SQLite → read/write by Delivery Bus",
+              "aggregate": "",
+              "source": "truth"
+            }
+          ],
+          "acceptance_criteria": [
+            {
+              "ac_id": "AC-ADB-001",
+              "description": "`config/projects.json` 是唯一项目注册真值；CLI 能 list，并按 slug、唯一 alias 或 canonical repo path resolve Beacon 源码仓及 managed 项目；缺失、重复 slug、冲突 alias、非法 class 或不存在 repo 必须 fail-closed"
+            },
+            {
+              "ac_id": "AC-ADB-002",
+              "description": "`doctor` 和每次 dispatch 前执行只读 strict preflight：repo/git、docs root、声明 docs version、Beacon CLI、`beacon doctor verify-context --strict`、Hermes CLI/gateway/profile；输出逐项 status、稳定 reason_code 和人工 `resume_action`，不得自动修复"
+            },
+            {
+              "ac_id": "AC-ADB-003",
+              "description": "implement/freeze/release scope 使用带 actor、project、stage、feature、expiry 的随机一次性 token；仅存 hash；支持 issue→reserve→finalize，明确失败可 release reservation，过期/错 scope/重放/in-flight 均阻断"
+            },
+            {
+              "ac_id": "AC-ADB-004",
+              "description": "SQLite 原子持久化 projects snapshot、approvals、dispatches、dispatch_events；事件只追加且 sequence 单调，CLI 重启后仍可查询完整状态与最后失败原因"
+            },
+            {
+              "ac_id": "AC-ADB-005",
+              "description": "dispatch 使用规范化请求生成稳定 SHA-256 idempotency key；相同请求返回同一 dispatch/Hermes binding，不重复建 task；同 key 不同 payload 返回 `idempotency_conflict`"
+            },
+            {
+              "ac_id": "AC-ADB-006",
+              "description": "Hermes adapter 仅通过公开 JSON CLI 创建项目 board 和 task；task 必须绑定 coding assignee、`agent-delivery-bus` skill、2h runtime、2 retries、稳定 idempotency key；implement 使用 `worktree:<repo>`"
+            },
+            {
+              "ac_id": "AC-ADB-007",
+              "description": "dispatch 状态机覆盖 draft、awaiting_approval、queued、dispatched、reconciling、completed、blocked、failed、cancelled；所有转换写事件，非法转换 fail-closed"
+            },
+            {
+              "ac_id": "AC-ADB-008",
+              "description": "`task show/list` 与 `reconcile` 合并本地 ledger、Hermes JSON 状态和 Beacon 阶段证据；Hermes/worker success 只进入 reconciling，只有阶段 closure 条件满足才 completed"
+            },
+            {
+              "ac_id": "AC-ADB-009",
+              "description": "提供 `skills/agent-delivery-bus`，SKILL frontmatter 仅含 name/description，包含 `agents/openai.yaml` 和最小契约参考；通过 skill-creator `quick_validate.py`，安装时安全创建 Codex/Hermes symlink 且不覆盖已有目标"
+            },
+            {
+              "ac_id": "AC-ADB-010",
+              "description": "MVP 不读取 Hermes SQLite、不直接修改目标 repo、不自动执行 Beacon 修复、不自动 release；release dispatch 即使有审批也返回 `stage_not_enabled` 和人工 release route"
+            }
+          ],
+          "bound_ac_ids": [
+            "AC-ADB-001",
+            "AC-ADB-002",
+            "AC-ADB-003",
+            "AC-ADB-004",
+            "AC-ADB-005",
+            "AC-ADB-006",
+            "AC-ADB-007",
+            "AC-ADB-008",
+            "AC-ADB-009",
+            "AC-ADB-010"
+          ],
+          "orphan_ac_ids": [],
+          "aggregates_missing_illegal_slots": [],
+          "raw_section_titles": [
+            "人话",
+            "User Intent",
+            "User Intent Snapshot",
+            "用户旅程",
+            "失败旅程",
+            "First principles",
+            "Domain Model",
+            "Intent Coverage Matrix",
+            "Acceptance Criteria",
+            "Domain FSM — Dispatch",
+            "FSM 五元组",
+            "Illegal transitions",
+            "Stage Closure Contract",
+            "Public CLI Contract",
+            "Non-goals",
+            "Adversarial risks",
+            "Provenance",
+            "Freeze readiness",
+            "Source Excerpt"
+          ]
+        },
+        "validation": {
+          "schema_version": "1.0",
+          "required": true,
+          "blocked": false,
+          "status": "pass",
+          "reason_code": "",
+          "findings": [],
+          "projection": {
+            "schema_version": "1.0",
+            "domain_fsm_schema": "domain-fsm.v1",
+            "entity_precedence_schema": "entity-precedence.v1",
+            "frontmatter": {
+              "slug": "delivery-bus-mvp",
+              "version": "v0.0.1",
+              "status": "frozen",
+              "revision_id": "R1",
+              "language": "zh",
+              "domain_required": "true",
+              "domain_kind": "business",
+              "ux_required": "false",
+              "package_maturity": "filled",
+              "parser_contract": "beacon-feature-package-v2",
+              "materials_status": "current",
+              "truth_source_model": "intent_first",
+              "program_ref": "docs/beacon/v0.0.1/programs/agent-delivery-bus-v001/program-manifest.md",
+              "git_canonical_branch": "main",
+              "canonical_refs": {
+                "prd": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+                "user_story": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+                "test_case": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md"
+              },
+              "provenance": {
+                "- ac_id": "AC-ADB-010",
+                "source_type": "user_intent",
+                "source_ref": "不自动 release、不直接修目标项目、不读取 Hermes 内部 SQLite"
+              }
+            },
+            "frontmatter_errors": [],
+            "has_domain_model_section": true,
+            "has_domain_fsm_section": true,
+            "has_illegal_transition_section": true,
+            "entities": [
+              {
+                "entity": "Project",
+                "key": "slug, class, repo, docs_version, aliases, dispatchable",
+                "precedence": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path",
+                "requires": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path"
+              },
+              {
+                "entity": "PreflightResult",
+                "key": "project, stage, status, checks, reason_code, resume_action",
+                "precedence": "只读；任一 required check fail 则整体 blocked",
+                "requires": "只读；任一 required check fail 则整体 blocked"
+              },
+              {
+                "entity": "Approval",
+                "key": "id, token_hash, actor, project, stage, feature, expiry, state",
+                "precedence": "token 明文不落库；scope 精确匹配；一次性消费",
+                "requires": "token 明文不落库；scope 精确匹配；一次性消费"
+              },
+              {
+                "entity": "Dispatch",
+                "key": "id, idempotency_key, normalized_request, state, approval_id, hermes refs",
+                "precedence": "key 唯一；同 key 不同 payload 必须 conflict",
+                "requires": "key 唯一；同 key 不同 payload 必须 conflict"
+              },
+              {
+                "entity": "DispatchEvent",
+                "key": "dispatch_id, sequence, from, event, to, reason_code, payload",
+                "precedence": "只追加；同 dispatch sequence 单调递增",
+                "requires": "只追加；同 dispatch sequence 单调递增"
+              },
+              {
+                "entity": "HermesBinding",
+                "key": "project, board_slug, task_id, idempotency_key",
+                "precedence": "只能由 Hermes 公开 JSON 接口获得",
+                "requires": "只能由 Hermes 公开 JSON 接口获得"
+              },
+              {
+                "entity": "Reconciliation",
+                "key": "dispatch_id, hermes_status, beacon_status, evidence_refs",
+                "precedence": "Hermes success 不可单独产生 completed",
+                "requires": "Hermes success 不可单独产生 completed"
+              }
+            ],
+            "entity_precedence": [
+              {
+                "entity": "Project",
+                "key": "slug, class, repo, docs_version, aliases, dispatchable",
+                "precedence": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path",
+                "requires": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path"
+              },
+              {
+                "entity": "PreflightResult",
+                "key": "project, stage, status, checks, reason_code, resume_action",
+                "precedence": "只读；任一 required check fail 则整体 blocked",
+                "requires": "只读；任一 required check fail 则整体 blocked"
+              },
+              {
+                "entity": "Approval",
+                "key": "id, token_hash, actor, project, stage, feature, expiry, state",
+                "precedence": "token 明文不落库；scope 精确匹配；一次性消费",
+                "requires": "token 明文不落库；scope 精确匹配；一次性消费"
+              },
+              {
+                "entity": "Dispatch",
+                "key": "id, idempotency_key, normalized_request, state, approval_id, hermes refs",
+                "precedence": "key 唯一；同 key 不同 payload 必须 conflict",
+                "requires": "key 唯一；同 key 不同 payload 必须 conflict"
+              },
+              {
+                "entity": "DispatchEvent",
+                "key": "dispatch_id, sequence, from, event, to, reason_code, payload",
+                "precedence": "只追加；同 dispatch sequence 单调递增",
+                "requires": "只追加；同 dispatch sequence 单调递增"
+              },
+              {
+                "entity": "HermesBinding",
+                "key": "project, board_slug, task_id, idempotency_key",
+                "precedence": "只能由 Hermes 公开 JSON 接口获得",
+                "requires": "只能由 Hermes 公开 JSON 接口获得"
+              },
+              {
+                "entity": "Reconciliation",
+                "key": "dispatch_id, hermes_status, beacon_status, evidence_refs",
+                "precedence": "Hermes success 不可单独产生 completed",
+                "requires": "Hermes success 不可单独产生 completed"
+              }
+            ],
+            "aggregates": [
+              {
+                "name": "Dispatch",
+                "states": [
+                  "awaiting_approval",
+                  "blocked",
+                  "cancelled",
+                  "completed",
+                  "dispatched",
+                  "draft",
+                  "failed",
+                  "queued",
+                  "reconciling"
+                ],
+                "transitions": [
+                  {
+                    "from": "",
+                    "to": "draft",
+                    "guard": "normalized request persisted",
+                    "initial": "true"
+                  },
+                  {
+                    "from": "draft",
+                    "to": "awaiting_approval",
+                    "guard": "restricted stage and strict preflight passed"
+                  },
+                  {
+                    "from": "draft",
+                    "to": "queued",
+                    "guard": "open stage or matching approval reserved"
+                  },
+                  {
+                    "from": "awaiting_approval",
+                    "to": "queued",
+                    "guard": "open stage or matching approval reserved"
+                  },
+                  {
+                    "from": "queued",
+                    "to": "dispatched",
+                    "guard": "Hermes task receipt recovered or created"
+                  },
+                  {
+                    "from": "reconciling",
+                    "to": "dispatched",
+                    "guard": "Hermes task receipt recovered or created"
+                  },
+                  {
+                    "from": "queued",
+                    "to": "reconciling",
+                    "guard": "external result unknown or worker succeeded"
+                  },
+                  {
+                    "from": "dispatched",
+                    "to": "reconciling",
+                    "guard": "external result unknown or worker succeeded"
+                  },
+                  {
+                    "from": "draft",
+                    "to": "blocked",
+                    "guard": "required gate or closure evidence missing"
+                  },
+                  {
+                    "from": "awaiting_approval",
+                    "to": "blocked",
+                    "guard": "required gate or closure evidence missing"
+                  },
+                  {
+                    "from": "reconciling",
+                    "to": "blocked",
+                    "guard": "required gate or closure evidence missing"
+                  },
+                  {
+                    "from": "queued",
+                    "to": "failed",
+                    "guard": "terminal external failure"
+                  },
+                  {
+                    "from": "dispatched",
+                    "to": "failed",
+                    "guard": "terminal external failure"
+                  },
+                  {
+                    "from": "reconciling",
+                    "to": "completed",
+                    "guard": "stage closure verified"
+                  },
+                  {
+                    "from": "draft",
+                    "to": "cancelled",
+                    "guard": "cancellation completed before delivery closure"
+                  },
+                  {
+                    "from": "awaiting_approval",
+                    "to": "cancelled",
+                    "guard": "cancellation completed before delivery closure"
+                  },
+                  {
+                    "from": "queued",
+                    "to": "cancelled",
+                    "guard": "cancellation completed before delivery closure"
+                  },
+                  {
+                    "from": "dispatched",
+                    "to": "cancelled",
+                    "guard": "cancellation completed before delivery closure"
+                  }
+                ]
+              }
+            ],
+            "illegal_transition_slots": [
+              {
+                "description": "awaiting_approval → queued without an atomically reserved matching token",
+                "aggregate": "",
+                "source": "truth"
+              },
+              {
+                "description": "completed/cancelled → any non-terminal state",
+                "aggregate": "",
+                "source": "truth"
+              },
+              {
+                "description": "queued → dispatched without a Hermes task id or idempotent existing-task receipt",
+                "aggregate": "",
+                "source": "truth"
+              },
+              {
+                "description": "Hermes completed → completed without stage closure verification",
+                "aggregate": "",
+                "source": "truth"
+              },
+              {
+                "description": "approval consumed twice or reserved by two dispatches",
+                "aggregate": "",
+                "source": "truth"
+              },
+              {
+                "description": "same idempotency key → two Hermes task bindings",
+                "aggregate": "",
+                "source": "truth"
+              },
+              {
+                "description": "preflight blocked → Hermes create",
+                "aggregate": "",
+                "source": "truth"
+              },
+              {
+                "description": "release stage → Hermes create in MVP",
+                "aggregate": "",
+                "source": "truth"
+              },
+              {
+                "description": "any preflight path → write target project",
+                "aggregate": "",
+                "source": "truth"
+              },
+              {
+                "description": "Hermes internal SQLite → read/write by Delivery Bus",
+                "aggregate": "",
+                "source": "truth"
+              }
+            ],
+            "acceptance_criteria": [
+              {
+                "ac_id": "AC-ADB-001",
+                "description": "`config/projects.json` 是唯一项目注册真值；CLI 能 list，并按 slug、唯一 alias 或 canonical repo path resolve Beacon 源码仓及 managed 项目；缺失、重复 slug、冲突 alias、非法 class 或不存在 repo 必须 fail-closed"
+              },
+              {
+                "ac_id": "AC-ADB-002",
+                "description": "`doctor` 和每次 dispatch 前执行只读 strict preflight：repo/git、docs root、声明 docs version、Beacon CLI、`beacon doctor verify-context --strict`、Hermes CLI/gateway/profile；输出逐项 status、稳定 reason_code 和人工 `resume_action`，不得自动修复"
+              },
+              {
+                "ac_id": "AC-ADB-003",
+                "description": "implement/freeze/release scope 使用带 actor、project、stage、feature、expiry 的随机一次性 token；仅存 hash；支持 issue→reserve→finalize，明确失败可 release reservation，过期/错 scope/重放/in-flight 均阻断"
+              },
+              {
+                "ac_id": "AC-ADB-004",
+                "description": "SQLite 原子持久化 projects snapshot、approvals、dispatches、dispatch_events；事件只追加且 sequence 单调，CLI 重启后仍可查询完整状态与最后失败原因"
+              },
+              {
+                "ac_id": "AC-ADB-005",
+                "description": "dispatch 使用规范化请求生成稳定 SHA-256 idempotency key；相同请求返回同一 dispatch/Hermes binding，不重复建 task；同 key 不同 payload 返回 `idempotency_conflict`"
+              },
+              {
+                "ac_id": "AC-ADB-006",
+                "description": "Hermes adapter 仅通过公开 JSON CLI 创建项目 board 和 task；task 必须绑定 coding assignee、`agent-delivery-bus` skill、2h runtime、2 retries、稳定 idempotency key；implement 使用 `worktree:<repo>`"
+              },
+              {
+                "ac_id": "AC-ADB-007",
+                "description": "dispatch 状态机覆盖 draft、awaiting_approval、queued、dispatched、reconciling、completed、blocked、failed、cancelled；所有转换写事件，非法转换 fail-closed"
+              },
+              {
+                "ac_id": "AC-ADB-008",
+                "description": "`task show/list` 与 `reconcile` 合并本地 ledger、Hermes JSON 状态和 Beacon 阶段证据；Hermes/worker success 只进入 reconciling，只有阶段 closure 条件满足才 completed"
+              },
+              {
+                "ac_id": "AC-ADB-009",
+                "description": "提供 `skills/agent-delivery-bus`，SKILL frontmatter 仅含 name/description，包含 `agents/openai.yaml` 和最小契约参考；通过 skill-creator `quick_validate.py`，安装时安全创建 Codex/Hermes symlink 且不覆盖已有目标"
+              },
+              {
+                "ac_id": "AC-ADB-010",
+                "description": "MVP 不读取 Hermes SQLite、不直接修改目标 repo、不自动执行 Beacon 修复、不自动 release；release dispatch 即使有审批也返回 `stage_not_enabled` 和人工 release route"
+              }
+            ],
+            "bound_ac_ids": [
+              "AC-ADB-001",
+              "AC-ADB-002",
+              "AC-ADB-003",
+              "AC-ADB-004",
+              "AC-ADB-005",
+              "AC-ADB-006",
+              "AC-ADB-007",
+              "AC-ADB-008",
+              "AC-ADB-009",
+              "AC-ADB-010"
+            ],
+            "orphan_ac_ids": [],
+            "aggregates_missing_illegal_slots": [],
+            "raw_section_titles": [
+              "人话",
+              "User Intent",
+              "User Intent Snapshot",
+              "用户旅程",
+              "失败旅程",
+              "First principles",
+              "Domain Model",
+              "Intent Coverage Matrix",
+              "Acceptance Criteria",
+              "Domain FSM — Dispatch",
+              "FSM 五元组",
+              "Illegal transitions",
+              "Stage Closure Contract",
+              "Public CLI Contract",
+              "Non-goals",
+              "Adversarial risks",
+              "Provenance",
+              "Freeze readiness",
+              "Source Excerpt"
+            ]
+          },
+          "summary": {
+            "entity_count": 7,
+            "aggregate_count": 1,
+            "illegal_slot_count": 10,
+            "orphan_ac_count": 0,
+            "bound_ac_count": 10
+          }
+        },
+        "recommended_action": ""
+      },
+      "human_closure_contract": {
+        "required": false,
+        "research_path": "docs/beacon/v0.0.1/research/delivery-bus-mvp.md",
+        "research_exists": false,
+        "source_architecture_path": "docs/beacon/v0.0.1/source-architecture/delivery-bus-mvp.md",
+        "source_architecture_exists": false,
+        "required_sections": [
+          "architecture",
+          "business_flow"
+        ],
+        "missing_sections": [
+          "architecture",
+          "business_flow"
+        ],
+        "diagram_types": [],
+        "complexity_signals": []
+      },
+      "requirement_closure_contract": {
+        "required": true,
+        "chain_order": [
+          "research",
+          "prd",
+          "user_story",
+          "test_case",
+          "requirement_clarity",
+          "freeze"
+        ],
+        "human_closure_required": false,
+        "paths": {
+          "research": "docs/beacon/v0.0.1/research/delivery-bus-mvp.md",
+          "prd": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+          "user_story": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+          "test_case": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md"
+        },
+        "exists": {
+          "research": false,
+          "prd": true,
+          "user_story": true,
+          "test_case": true
+        },
+        "required_research_sections": [],
+        "missing_research_sections": [],
+        "ac_projection": {
+          "prd_ac_ids": [],
+          "user_story_ac_ids": [],
+          "test_case_ac_ids": [],
+          "upstream_ac_ids": [],
+          "missing_test_case_ac_ids": []
+        }
+      },
+      "version_projection_truth_contract": {
+        "required": false,
+        "supported": false,
+        "projection_types": [],
+        "research_path": "docs/beacon/v0.0.1/research/delivery-bus-mvp.md",
+        "research_exists": false,
+        "required_fields": [
+          "prd_refs",
+          "user_story_refs",
+          "test_case_refs",
+          "coverage_notes",
+          "out_of_scope_notes"
+        ],
+        "field_presence": {
+          "prd_refs": false,
+          "user_story_refs": false,
+          "test_case_refs": false,
+          "coverage_notes": false,
+          "out_of_scope_notes": false
+        },
+        "missing_fields": [],
+        "required_refs": {
+          "prd_refs": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+          "user_story_refs": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+          "test_case_refs": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md"
+        },
+        "missing_ref_targets": [],
+        "ready": false
+      },
+      "support_write_topology_contract": {
+        "schema_version": "1.0",
+        "supported": true,
+        "status": "pass",
+        "blocked": false,
+        "reason_code": "",
+        "diagnostics": []
+      },
+      "required_artifacts": [],
+      "scanned_files": [
+        "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+        "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
+        "docs/beacon/v0.0.1/features/delivery-bus-mvp/tasks.md",
+        "docs/beacon/v0.0.1/features/delivery-bus-mvp/evidence.md"
+      ]
+    },
+    "report": {
+      "json": "docs/beacon/v0.0.1/.machine/execution/requirement-clarity-delivery-bus-mvp.json",
+      "markdown": "docs/beacon/v0.0.1/execution/requirement-clarity-delivery-bus-mvp.md"
+    },
+    "writeback": {
+      "schema_version": "1.0",
+      "feature": "delivery-bus-mvp",
+      "feature_slug": "delivery-bus-mvp",
+      "version": "v0.0.1",
+      "status": "pass",
+      "blocked": false,
+      "reason_code": "",
+      "report_json_path": "docs/beacon/v0.0.1/.machine/execution/requirement-clarity-delivery-bus-mvp.json",
+      "report_markdown_path": "docs/beacon/v0.0.1/execution/requirement-clarity-delivery-bus-mvp.md",
+      "finding_count": 0,
+      "run_id": "",
+      "source": "change.refreeze-chain",
+      "written_at": "2026-07-27T13:58:00.417512+00:00",
+      "state_path": ".beacon/state/requirement-clarity-delivery-bus-mvp.json"
+    }
+  },
+  "truth_integrity_gate": {
+    "schema_version": "1.0",
+    "feature": "delivery-bus-mvp",
+    "feature_slug": "delivery-bus-mvp",
+    "version": "v0.0.1",
+    "mode": "block",
+    "truth_status": "frozen",
+    "status": "pass",
+    "blocked": false,
+    "reason_code": "",
+    "findings": [],
+    "finding_count": 0,
+    "requirement_clarity": {
+      "schema_version": "1.0",
+      "feature": "delivery-bus-mvp",
+      "feature_slug": "delivery-bus-mvp",
+      "version": "v0.0.1",
+      "runtime_version": "v1.6.11",
+      "runtime_capability_line": "v1.3.3",
+      "required": true,
+      "reason_code": "",
+      "blocked": false,
+      "status": "pass",
+      "findings": [],
+      "report_json_path": "docs/beacon/v0.0.1/.machine/execution/requirement-clarity-delivery-bus-mvp.json",
+      "report_markdown_path": "docs/beacon/v0.0.1/execution/requirement-clarity-delivery-bus-mvp.md",
+      "state_path": ".beacon/state/requirement-clarity-delivery-bus-mvp.json",
+      "diagram_truth": {
+        "schema_version": "1.0",
+        "version": "v0.0.1",
+        "supported": false,
+        "required": false,
+        "ready": false,
+        "diagram_types": [],
+        "state_axes": [],
+        "missing_diagram_types": [],
+        "missing_state_axes": false,
+        "complexity_signals": [],
+        "review_gates": [],
+        "qa_coverage_hints": [],
+        "evidence_lines": {},
+        "generated_at": "2026-07-27T13:58:00.421328+00:00",
+        "feature": "delivery-bus-mvp",
+        "feature_slug": "delivery-bus-mvp",
+        "prd_ref": "docs/beacon/v0.0.1/prd/delivery-bus-mvp.md",
+        "user_story_ref": "docs/beacon/v0.0.1/user-story/delivery-bus-mvp.md"
+      },
+      "domain_fsm_gate": {
+        "schema_version": "1.0",
+        "feature": "delivery-bus-mvp",
+        "feature_slug": "delivery-bus-mvp",
+        "version": "v0.0.1",
+        "truth_path": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+        "tests_path": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
+        "required": true,
+        "blocked": false,
+        "status": "pass",
+        "reason_code": "",
+        "findings": [],
+        "requirement": {
+          "required": true,
+          "reason": "explicit_domain_mark",
+          "explicit": true,
+          "partial": true,
+          "complexity": false,
+          "business_signal": false,
+          "version_supported": false
+        },
+        "projection": {
+          "schema_version": "1.0",
+          "domain_fsm_schema": "domain-fsm.v1",
+          "entity_precedence_schema": "entity-precedence.v1",
+          "frontmatter": {
+            "slug": "delivery-bus-mvp",
+            "version": "v0.0.1",
+            "status": "frozen",
+            "revision_id": "R1",
+            "language": "zh",
+            "domain_required": "true",
+            "domain_kind": "business",
+            "ux_required": "false",
+            "package_maturity": "filled",
+            "parser_contract": "beacon-feature-package-v2",
+            "materials_status": "current",
+            "truth_source_model": "intent_first",
+            "program_ref": "docs/beacon/v0.0.1/programs/agent-delivery-bus-v001/program-manifest.md",
+            "git_canonical_branch": "main",
+            "canonical_refs": {
+              "prd": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+              "user_story": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+              "test_case": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md"
+            },
+            "provenance": {
+              "- ac_id": "AC-ADB-010",
+              "source_type": "user_intent",
+              "source_ref": "不自动 release、不直接修目标项目、不读取 Hermes 内部 SQLite"
+            }
+          },
+          "frontmatter_errors": [],
+          "has_domain_model_section": true,
+          "has_domain_fsm_section": true,
+          "has_illegal_transition_section": true,
+          "entities": [
+            {
+              "entity": "Project",
+              "key": "slug, class, repo, docs_version, aliases, dispatchable",
+              "precedence": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path",
+              "requires": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path"
+            },
+            {
+              "entity": "PreflightResult",
+              "key": "project, stage, status, checks, reason_code, resume_action",
+              "precedence": "只读；任一 required check fail 则整体 blocked",
+              "requires": "只读；任一 required check fail 则整体 blocked"
+            },
+            {
+              "entity": "Approval",
+              "key": "id, token_hash, actor, project, stage, feature, expiry, state",
+              "precedence": "token 明文不落库；scope 精确匹配；一次性消费",
+              "requires": "token 明文不落库；scope 精确匹配；一次性消费"
+            },
+            {
+              "entity": "Dispatch",
+              "key": "id, idempotency_key, normalized_request, state, approval_id, hermes refs",
+              "precedence": "key 唯一；同 key 不同 payload 必须 conflict",
+              "requires": "key 唯一；同 key 不同 payload 必须 conflict"
+            },
+            {
+              "entity": "DispatchEvent",
+              "key": "dispatch_id, sequence, from, event, to, reason_code, payload",
+              "precedence": "只追加；同 dispatch sequence 单调递增",
+              "requires": "只追加；同 dispatch sequence 单调递增"
+            },
+            {
+              "entity": "HermesBinding",
+              "key": "project, board_slug, task_id, idempotency_key",
+              "precedence": "只能由 Hermes 公开 JSON 接口获得",
+              "requires": "只能由 Hermes 公开 JSON 接口获得"
+            },
+            {
+              "entity": "Reconciliation",
+              "key": "dispatch_id, hermes_status, beacon_status, evidence_refs",
+              "precedence": "Hermes success 不可单独产生 completed",
+              "requires": "Hermes success 不可单独产生 completed"
+            }
+          ],
+          "entity_precedence": [
+            {
+              "entity": "Project",
+              "key": "slug, class, repo, docs_version, aliases, dispatchable",
+              "precedence": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path",
+              "requires": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path"
+            },
+            {
+              "entity": "PreflightResult",
+              "key": "project, stage, status, checks, reason_code, resume_action",
+              "precedence": "只读；任一 required check fail 则整体 blocked",
+              "requires": "只读；任一 required check fail 则整体 blocked"
+            },
+            {
+              "entity": "Approval",
+              "key": "id, token_hash, actor, project, stage, feature, expiry, state",
+              "precedence": "token 明文不落库；scope 精确匹配；一次性消费",
+              "requires": "token 明文不落库；scope 精确匹配；一次性消费"
+            },
+            {
+              "entity": "Dispatch",
+              "key": "id, idempotency_key, normalized_request, state, approval_id, hermes refs",
+              "precedence": "key 唯一；同 key 不同 payload 必须 conflict",
+              "requires": "key 唯一；同 key 不同 payload 必须 conflict"
+            },
+            {
+              "entity": "DispatchEvent",
+              "key": "dispatch_id, sequence, from, event, to, reason_code, payload",
+              "precedence": "只追加；同 dispatch sequence 单调递增",
+              "requires": "只追加；同 dispatch sequence 单调递增"
+            },
+            {
+              "entity": "HermesBinding",
+              "key": "project, board_slug, task_id, idempotency_key",
+              "precedence": "只能由 Hermes 公开 JSON 接口获得",
+              "requires": "只能由 Hermes 公开 JSON 接口获得"
+            },
+            {
+              "entity": "Reconciliation",
+              "key": "dispatch_id, hermes_status, beacon_status, evidence_refs",
+              "precedence": "Hermes success 不可单独产生 completed",
+              "requires": "Hermes success 不可单独产生 completed"
+            }
+          ],
+          "aggregates": [
+            {
+              "name": "Dispatch",
+              "states": [
+                "awaiting_approval",
+                "blocked",
+                "cancelled",
+                "completed",
+                "dispatched",
+                "draft",
+                "failed",
+                "queued",
+                "reconciling"
+              ],
+              "transitions": [
+                {
+                  "from": "",
+                  "to": "draft",
+                  "guard": "normalized request persisted",
+                  "initial": "true"
+                },
+                {
+                  "from": "draft",
+                  "to": "awaiting_approval",
+                  "guard": "restricted stage and strict preflight passed"
+                },
+                {
+                  "from": "draft",
+                  "to": "queued",
+                  "guard": "open stage or matching approval reserved"
+                },
+                {
+                  "from": "awaiting_approval",
+                  "to": "queued",
+                  "guard": "open stage or matching approval reserved"
+                },
+                {
+                  "from": "queued",
+                  "to": "dispatched",
+                  "guard": "Hermes task receipt recovered or created"
+                },
+                {
+                  "from": "reconciling",
+                  "to": "dispatched",
+                  "guard": "Hermes task receipt recovered or created"
+                },
+                {
+                  "from": "queued",
+                  "to": "reconciling",
+                  "guard": "external result unknown or worker succeeded"
+                },
+                {
+                  "from": "dispatched",
+                  "to": "reconciling",
+                  "guard": "external result unknown or worker succeeded"
+                },
+                {
+                  "from": "draft",
+                  "to": "blocked",
+                  "guard": "required gate or closure evidence missing"
+                },
+                {
+                  "from": "awaiting_approval",
+                  "to": "blocked",
+                  "guard": "required gate or closure evidence missing"
+                },
+                {
+                  "from": "reconciling",
+                  "to": "blocked",
+                  "guard": "required gate or closure evidence missing"
+                },
+                {
+                  "from": "queued",
+                  "to": "failed",
+                  "guard": "terminal external failure"
+                },
+                {
+                  "from": "dispatched",
+                  "to": "failed",
+                  "guard": "terminal external failure"
+                },
+                {
+                  "from": "reconciling",
+                  "to": "completed",
+                  "guard": "stage closure verified"
+                },
+                {
+                  "from": "draft",
+                  "to": "cancelled",
+                  "guard": "cancellation completed before delivery closure"
+                },
+                {
+                  "from": "awaiting_approval",
+                  "to": "cancelled",
+                  "guard": "cancellation completed before delivery closure"
+                },
+                {
+                  "from": "queued",
+                  "to": "cancelled",
+                  "guard": "cancellation completed before delivery closure"
+                },
+                {
+                  "from": "dispatched",
+                  "to": "cancelled",
+                  "guard": "cancellation completed before delivery closure"
+                }
+              ]
+            }
+          ],
+          "illegal_transition_slots": [
+            {
+              "description": "awaiting_approval → queued without an atomically reserved matching token",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "completed/cancelled → any non-terminal state",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "queued → dispatched without a Hermes task id or idempotent existing-task receipt",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "Hermes completed → completed without stage closure verification",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "approval consumed twice or reserved by two dispatches",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "same idempotency key → two Hermes task bindings",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "preflight blocked → Hermes create",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "release stage → Hermes create in MVP",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "any preflight path → write target project",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "Hermes internal SQLite → read/write by Delivery Bus",
+              "aggregate": "",
+              "source": "truth"
+            }
+          ],
+          "acceptance_criteria": [
+            {
+              "ac_id": "AC-ADB-001",
+              "description": "`config/projects.json` 是唯一项目注册真值；CLI 能 list，并按 slug、唯一 alias 或 canonical repo path resolve Beacon 源码仓及 managed 项目；缺失、重复 slug、冲突 alias、非法 class 或不存在 repo 必须 fail-closed"
+            },
+            {
+              "ac_id": "AC-ADB-002",
+              "description": "`doctor` 和每次 dispatch 前执行只读 strict preflight：repo/git、docs root、声明 docs version、Beacon CLI、`beacon doctor verify-context --strict`、Hermes CLI/gateway/profile；输出逐项 status、稳定 reason_code 和人工 `resume_action`，不得自动修复"
+            },
+            {
+              "ac_id": "AC-ADB-003",
+              "description": "implement/freeze/release scope 使用带 actor、project、stage、feature、expiry 的随机一次性 token；仅存 hash；支持 issue→reserve→finalize，明确失败可 release reservation，过期/错 scope/重放/in-flight 均阻断"
+            },
+            {
+              "ac_id": "AC-ADB-004",
+              "description": "SQLite 原子持久化 projects snapshot、approvals、dispatches、dispatch_events；事件只追加且 sequence 单调，CLI 重启后仍可查询完整状态与最后失败原因"
+            },
+            {
+              "ac_id": "AC-ADB-005",
+              "description": "dispatch 使用规范化请求生成稳定 SHA-256 idempotency key；相同请求返回同一 dispatch/Hermes binding，不重复建 task；同 key 不同 payload 返回 `idempotency_conflict`"
+            },
+            {
+              "ac_id": "AC-ADB-006",
+              "description": "Hermes adapter 仅通过公开 JSON CLI 创建项目 board 和 task；task 必须绑定 coding assignee、`agent-delivery-bus` skill、2h runtime、2 retries、稳定 idempotency key；implement 使用 `worktree:<repo>`"
+            },
+            {
+              "ac_id": "AC-ADB-007",
+              "description": "dispatch 状态机覆盖 draft、awaiting_approval、queued、dispatched、reconciling、completed、blocked、failed、cancelled；所有转换写事件，非法转换 fail-closed"
+            },
+            {
+              "ac_id": "AC-ADB-008",
+              "description": "`task show/list` 与 `reconcile` 合并本地 ledger、Hermes JSON 状态和 Beacon 阶段证据；Hermes/worker success 只进入 reconciling，只有阶段 closure 条件满足才 completed"
+            },
+            {
+              "ac_id": "AC-ADB-009",
+              "description": "提供 `skills/agent-delivery-bus`，SKILL frontmatter 仅含 name/description，包含 `agents/openai.yaml` 和最小契约参考；通过 skill-creator `quick_validate.py`，安装时安全创建 Codex/Hermes symlink 且不覆盖已有目标"
+            },
+            {
+              "ac_id": "AC-ADB-010",
+              "description": "MVP 不读取 Hermes SQLite、不直接修改目标 repo、不自动执行 Beacon 修复、不自动 release；release dispatch 即使有审批也返回 `stage_not_enabled` 和人工 release route"
+            }
+          ],
+          "bound_ac_ids": [
+            "AC-ADB-001",
+            "AC-ADB-002",
+            "AC-ADB-003",
+            "AC-ADB-004",
+            "AC-ADB-005",
+            "AC-ADB-006",
+            "AC-ADB-007",
+            "AC-ADB-008",
+            "AC-ADB-009",
+            "AC-ADB-010"
+          ],
+          "orphan_ac_ids": [],
+          "aggregates_missing_illegal_slots": [],
+          "raw_section_titles": [
+            "人话",
+            "User Intent",
+            "User Intent Snapshot",
+            "用户旅程",
+            "失败旅程",
+            "First principles",
+            "Domain Model",
+            "Intent Coverage Matrix",
+            "Acceptance Criteria",
+            "Domain FSM — Dispatch",
+            "FSM 五元组",
+            "Illegal transitions",
+            "Stage Closure Contract",
+            "Public CLI Contract",
+            "Non-goals",
+            "Adversarial risks",
+            "Provenance",
+            "Freeze readiness",
+            "Source Excerpt"
+          ]
+        },
+        "validation": {
+          "schema_version": "1.0",
+          "required": true,
+          "blocked": false,
+          "status": "pass",
+          "reason_code": "",
+          "findings": [],
+          "projection": {
+            "schema_version": "1.0",
+            "domain_fsm_schema": "domain-fsm.v1",
+            "entity_precedence_schema": "entity-precedence.v1",
+            "frontmatter": {
+              "slug": "delivery-bus-mvp",
+              "version": "v0.0.1",
+              "status": "frozen",
+              "revision_id": "R1",
+              "language": "zh",
+              "domain_required": "true",
+              "domain_kind": "business",
+              "ux_required": "false",
+              "package_maturity": "filled",
+              "parser_contract": "beacon-feature-package-v2",
+              "materials_status": "current",
+              "truth_source_model": "intent_first",
+              "program_ref": "docs/beacon/v0.0.1/programs/agent-delivery-bus-v001/program-manifest.md",
+              "git_canonical_branch": "main",
+              "canonical_refs": {
+                "prd": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+                "user_story": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+                "test_case": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md"
+              },
+              "provenance": {
+                "- ac_id": "AC-ADB-010",
+                "source_type": "user_intent",
+                "source_ref": "不自动 release、不直接修目标项目、不读取 Hermes 内部 SQLite"
+              }
+            },
+            "frontmatter_errors": [],
+            "has_domain_model_section": true,
+            "has_domain_fsm_section": true,
+            "has_illegal_transition_section": true,
+            "entities": [
+              {
+                "entity": "Project",
+                "key": "slug, class, repo, docs_version, aliases, dispatchable",
+                "precedence": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path",
+                "requires": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path"
+              },
+              {
+                "entity": "PreflightResult",
+                "key": "project, stage, status, checks, reason_code, resume_action",
+                "precedence": "只读；任一 required check fail 则整体 blocked",
+                "requires": "只读；任一 required check fail 则整体 blocked"
+              },
+              {
+                "entity": "Approval",
+                "key": "id, token_hash, actor, project, stage, feature, expiry, state",
+                "precedence": "token 明文不落库；scope 精确匹配；一次性消费",
+                "requires": "token 明文不落库；scope 精确匹配；一次性消费"
+              },
+              {
+                "entity": "Dispatch",
+                "key": "id, idempotency_key, normalized_request, state, approval_id, hermes refs",
+                "precedence": "key 唯一；同 key 不同 payload 必须 conflict",
+                "requires": "key 唯一；同 key 不同 payload 必须 conflict"
+              },
+              {
+                "entity": "DispatchEvent",
+                "key": "dispatch_id, sequence, from, event, to, reason_code, payload",
+                "precedence": "只追加；同 dispatch sequence 单调递增",
+                "requires": "只追加；同 dispatch sequence 单调递增"
+              },
+              {
+                "entity": "HermesBinding",
+                "key": "project, board_slug, task_id, idempotency_key",
+                "precedence": "只能由 Hermes 公开 JSON 接口获得",
+                "requires": "只能由 Hermes 公开 JSON 接口获得"
+              },
+              {
+                "entity": "Reconciliation",
+                "key": "dispatch_id, hermes_status, beacon_status, evidence_refs",
+                "precedence": "Hermes success 不可单独产生 completed",
+                "requires": "Hermes success 不可单独产生 completed"
+              }
+            ],
+            "entity_precedence": [
+              {
+                "entity": "Project",
+                "key": "slug, class, repo, docs_version, aliases, dispatchable",
+                "precedence": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path",
+                "requires": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path"
+              },
+              {
+                "entity": "PreflightResult",
+                "key": "project, stage, status, checks, reason_code, resume_action",
+                "precedence": "只读；任一 required check fail 则整体 blocked",
+                "requires": "只读；任一 required check fail 则整体 blocked"
+              },
+              {
+                "entity": "Approval",
+                "key": "id, token_hash, actor, project, stage, feature, expiry, state",
+                "precedence": "token 明文不落库；scope 精确匹配；一次性消费",
+                "requires": "token 明文不落库；scope 精确匹配；一次性消费"
+              },
+              {
+                "entity": "Dispatch",
+                "key": "id, idempotency_key, normalized_request, state, approval_id, hermes refs",
+                "precedence": "key 唯一；同 key 不同 payload 必须 conflict",
+                "requires": "key 唯一；同 key 不同 payload 必须 conflict"
+              },
+              {
+                "entity": "DispatchEvent",
+                "key": "dispatch_id, sequence, from, event, to, reason_code, payload",
+                "precedence": "只追加；同 dispatch sequence 单调递增",
+                "requires": "只追加；同 dispatch sequence 单调递增"
+              },
+              {
+                "entity": "HermesBinding",
+                "key": "project, board_slug, task_id, idempotency_key",
+                "precedence": "只能由 Hermes 公开 JSON 接口获得",
+                "requires": "只能由 Hermes 公开 JSON 接口获得"
+              },
+              {
+                "entity": "Reconciliation",
+                "key": "dispatch_id, hermes_status, beacon_status, evidence_refs",
+                "precedence": "Hermes success 不可单独产生 completed",
+                "requires": "Hermes success 不可单独产生 completed"
+              }
+            ],
+            "aggregates": [
+              {
+                "name": "Dispatch",
+                "states": [
+                  "awaiting_approval",
+                  "blocked",
+                  "cancelled",
+                  "completed",
+                  "dispatched",
+                  "draft",
+                  "failed",
+                  "queued",
+                  "reconciling"
+                ],
+                "transitions": [
+                  {
+                    "from": "",
+                    "to": "draft",
+                    "guard": "normalized request persisted",
+                    "initial": "true"
+                  },
+                  {
+                    "from": "draft",
+                    "to": "awaiting_approval",
+                    "guard": "restricted stage and strict preflight passed"
+                  },
+                  {
+                    "from": "draft",
+                    "to": "queued",
+                    "guard": "open stage or matching approval reserved"
+                  },
+                  {
+                    "from": "awaiting_approval",
+                    "to": "queued",
+                    "guard": "open stage or matching approval reserved"
+                  },
+                  {
+                    "from": "queued",
+                    "to": "dispatched",
+                    "guard": "Hermes task receipt recovered or created"
+                  },
+                  {
+                    "from": "reconciling",
+                    "to": "dispatched",
+                    "guard": "Hermes task receipt recovered or created"
+                  },
+                  {
+                    "from": "queued",
+                    "to": "reconciling",
+                    "guard": "external result unknown or worker succeeded"
+                  },
+                  {
+                    "from": "dispatched",
+                    "to": "reconciling",
+                    "guard": "external result unknown or worker succeeded"
+                  },
+                  {
+                    "from": "draft",
+                    "to": "blocked",
+                    "guard": "required gate or closure evidence missing"
+                  },
+                  {
+                    "from": "awaiting_approval",
+                    "to": "blocked",
+                    "guard": "required gate or closure evidence missing"
+                  },
+                  {
+                    "from": "reconciling",
+                    "to": "blocked",
+                    "guard": "required gate or closure evidence missing"
+                  },
+                  {
+                    "from": "queued",
+                    "to": "failed",
+                    "guard": "terminal external failure"
+                  },
+                  {
+                    "from": "dispatched",
+                    "to": "failed",
+                    "guard": "terminal external failure"
+                  },
+                  {
+                    "from": "reconciling",
+                    "to": "completed",
+                    "guard": "stage closure verified"
+                  },
+                  {
+                    "from": "draft",
+                    "to": "cancelled",
+                    "guard": "cancellation completed before delivery closure"
+                  },
+                  {
+                    "from": "awaiting_approval",
+                    "to": "cancelled",
+                    "guard": "cancellation completed before delivery closure"
+                  },
+                  {
+                    "from": "queued",
+                    "to": "cancelled",
+                    "guard": "cancellation completed before delivery closure"
+                  },
+                  {
+                    "from": "dispatched",
+                    "to": "cancelled",
+                    "guard": "cancellation completed before delivery closure"
+                  }
+                ]
+              }
+            ],
+            "illegal_transition_slots": [
+              {
+                "description": "awaiting_approval → queued without an atomically reserved matching token",
+                "aggregate": "",
+                "source": "truth"
+              },
+              {
+                "description": "completed/cancelled → any non-terminal state",
+                "aggregate": "",
+                "source": "truth"
+              },
+              {
+                "description": "queued → dispatched without a Hermes task id or idempotent existing-task receipt",
+                "aggregate": "",
+                "source": "truth"
+              },
+              {
+                "description": "Hermes completed → completed without stage closure verification",
+                "aggregate": "",
+                "source": "truth"
+              },
+              {
+                "description": "approval consumed twice or reserved by two dispatches",
+                "aggregate": "",
+                "source": "truth"
+              },
+              {
+                "description": "same idempotency key → two Hermes task bindings",
+                "aggregate": "",
+                "source": "truth"
+              },
+              {
+                "description": "preflight blocked → Hermes create",
+                "aggregate": "",
+                "source": "truth"
+              },
+              {
+                "description": "release stage → Hermes create in MVP",
+                "aggregate": "",
+                "source": "truth"
+              },
+              {
+                "description": "any preflight path → write target project",
+                "aggregate": "",
+                "source": "truth"
+              },
+              {
+                "description": "Hermes internal SQLite → read/write by Delivery Bus",
+                "aggregate": "",
+                "source": "truth"
+              }
+            ],
+            "acceptance_criteria": [
+              {
+                "ac_id": "AC-ADB-001",
+                "description": "`config/projects.json` 是唯一项目注册真值；CLI 能 list，并按 slug、唯一 alias 或 canonical repo path resolve Beacon 源码仓及 managed 项目；缺失、重复 slug、冲突 alias、非法 class 或不存在 repo 必须 fail-closed"
+              },
+              {
+                "ac_id": "AC-ADB-002",
+                "description": "`doctor` 和每次 dispatch 前执行只读 strict preflight：repo/git、docs root、声明 docs version、Beacon CLI、`beacon doctor verify-context --strict`、Hermes CLI/gateway/profile；输出逐项 status、稳定 reason_code 和人工 `resume_action`，不得自动修复"
+              },
+              {
+                "ac_id": "AC-ADB-003",
+                "description": "implement/freeze/release scope 使用带 actor、project、stage、feature、expiry 的随机一次性 token；仅存 hash；支持 issue→reserve→finalize，明确失败可 release reservation，过期/错 scope/重放/in-flight 均阻断"
+              },
+              {
+                "ac_id": "AC-ADB-004",
+                "description": "SQLite 原子持久化 projects snapshot、approvals、dispatches、dispatch_events；事件只追加且 sequence 单调，CLI 重启后仍可查询完整状态与最后失败原因"
+              },
+              {
+                "ac_id": "AC-ADB-005",
+                "description": "dispatch 使用规范化请求生成稳定 SHA-256 idempotency key；相同请求返回同一 dispatch/Hermes binding，不重复建 task；同 key 不同 payload 返回 `idempotency_conflict`"
+              },
+              {
+                "ac_id": "AC-ADB-006",
+                "description": "Hermes adapter 仅通过公开 JSON CLI 创建项目 board 和 task；task 必须绑定 coding assignee、`agent-delivery-bus` skill、2h runtime、2 retries、稳定 idempotency key；implement 使用 `worktree:<repo>`"
+              },
+              {
+                "ac_id": "AC-ADB-007",
+                "description": "dispatch 状态机覆盖 draft、awaiting_approval、queued、dispatched、reconciling、completed、blocked、failed、cancelled；所有转换写事件，非法转换 fail-closed"
+              },
+              {
+                "ac_id": "AC-ADB-008",
+                "description": "`task show/list` 与 `reconcile` 合并本地 ledger、Hermes JSON 状态和 Beacon 阶段证据；Hermes/worker success 只进入 reconciling，只有阶段 closure 条件满足才 completed"
+              },
+              {
+                "ac_id": "AC-ADB-009",
+                "description": "提供 `skills/agent-delivery-bus`，SKILL frontmatter 仅含 name/description，包含 `agents/openai.yaml` 和最小契约参考；通过 skill-creator `quick_validate.py`，安装时安全创建 Codex/Hermes symlink 且不覆盖已有目标"
+              },
+              {
+                "ac_id": "AC-ADB-010",
+                "description": "MVP 不读取 Hermes SQLite、不直接修改目标 repo、不自动执行 Beacon 修复、不自动 release；release dispatch 即使有审批也返回 `stage_not_enabled` 和人工 release route"
+              }
+            ],
+            "bound_ac_ids": [
+              "AC-ADB-001",
+              "AC-ADB-002",
+              "AC-ADB-003",
+              "AC-ADB-004",
+              "AC-ADB-005",
+              "AC-ADB-006",
+              "AC-ADB-007",
+              "AC-ADB-008",
+              "AC-ADB-009",
+              "AC-ADB-010"
+            ],
+            "orphan_ac_ids": [],
+            "aggregates_missing_illegal_slots": [],
+            "raw_section_titles": [
+              "人话",
+              "User Intent",
+              "User Intent Snapshot",
+              "用户旅程",
+              "失败旅程",
+              "First principles",
+              "Domain Model",
+              "Intent Coverage Matrix",
+              "Acceptance Criteria",
+              "Domain FSM — Dispatch",
+              "FSM 五元组",
+              "Illegal transitions",
+              "Stage Closure Contract",
+              "Public CLI Contract",
+              "Non-goals",
+              "Adversarial risks",
+              "Provenance",
+              "Freeze readiness",
+              "Source Excerpt"
+            ]
+          },
+          "summary": {
+            "entity_count": 7,
+            "aggregate_count": 1,
+            "illegal_slot_count": 10,
+            "orphan_ac_count": 0,
+            "bound_ac_count": 10
+          }
+        },
+        "recommended_action": ""
+      },
+      "human_closure_contract": {
+        "required": false,
+        "research_path": "docs/beacon/v0.0.1/research/delivery-bus-mvp.md",
+        "research_exists": false,
+        "source_architecture_path": "docs/beacon/v0.0.1/source-architecture/delivery-bus-mvp.md",
+        "source_architecture_exists": false,
+        "required_sections": [
+          "architecture",
+          "business_flow"
+        ],
+        "missing_sections": [
+          "architecture",
+          "business_flow"
+        ],
+        "diagram_types": [],
+        "complexity_signals": []
+      },
+      "requirement_closure_contract": {
+        "required": true,
+        "chain_order": [
+          "research",
+          "prd",
+          "user_story",
+          "test_case",
+          "requirement_clarity",
+          "freeze"
+        ],
+        "human_closure_required": false,
+        "paths": {
+          "research": "docs/beacon/v0.0.1/research/delivery-bus-mvp.md",
+          "prd": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+          "user_story": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+          "test_case": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md"
+        },
+        "exists": {
+          "research": false,
+          "prd": true,
+          "user_story": true,
+          "test_case": true
+        },
+        "required_research_sections": [],
+        "missing_research_sections": [],
+        "ac_projection": {
+          "prd_ac_ids": [],
+          "user_story_ac_ids": [],
+          "test_case_ac_ids": [],
+          "upstream_ac_ids": [],
+          "missing_test_case_ac_ids": []
+        }
+      },
+      "version_projection_truth_contract": {
+        "required": false,
+        "supported": false,
+        "projection_types": [],
+        "research_path": "docs/beacon/v0.0.1/research/delivery-bus-mvp.md",
+        "research_exists": false,
+        "required_fields": [
+          "prd_refs",
+          "user_story_refs",
+          "test_case_refs",
+          "coverage_notes",
+          "out_of_scope_notes"
+        ],
+        "field_presence": {
+          "prd_refs": false,
+          "user_story_refs": false,
+          "test_case_refs": false,
+          "coverage_notes": false,
+          "out_of_scope_notes": false
+        },
+        "missing_fields": [],
+        "required_refs": {
+          "prd_refs": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+          "user_story_refs": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+          "test_case_refs": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md"
+        },
+        "missing_ref_targets": [],
+        "ready": false
+      },
+      "support_write_topology_contract": {
+        "schema_version": "1.0",
+        "supported": true,
+        "status": "pass",
+        "blocked": false,
+        "reason_code": "",
+        "diagnostics": []
+      },
+      "required_artifacts": [],
+      "scanned_files": [
+        "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+        "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
+        "docs/beacon/v0.0.1/features/delivery-bus-mvp/tasks.md",
+        "docs/beacon/v0.0.1/features/delivery-bus-mvp/evidence.md"
+      ]
+    },
+    "domain_fsm": {
+      "schema_version": "1.0",
+      "feature": "delivery-bus-mvp",
+      "feature_slug": "delivery-bus-mvp",
+      "version": "v0.0.1",
+      "truth_path": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+      "tests_path": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
+      "required": true,
+      "blocked": false,
+      "status": "pass",
+      "reason_code": "",
+      "findings": [],
+      "requirement": {
+        "required": true,
+        "reason": "explicit_domain_mark",
+        "explicit": true,
+        "partial": true,
+        "complexity": false,
+        "business_signal": false,
+        "version_supported": false
+      },
+      "projection": {
+        "schema_version": "1.0",
+        "domain_fsm_schema": "domain-fsm.v1",
+        "entity_precedence_schema": "entity-precedence.v1",
+        "frontmatter": {
+          "slug": "delivery-bus-mvp",
+          "version": "v0.0.1",
+          "status": "frozen",
+          "revision_id": "R1",
+          "language": "zh",
+          "domain_required": "true",
+          "domain_kind": "business",
+          "ux_required": "false",
+          "package_maturity": "filled",
+          "parser_contract": "beacon-feature-package-v2",
+          "materials_status": "current",
+          "truth_source_model": "intent_first",
+          "program_ref": "docs/beacon/v0.0.1/programs/agent-delivery-bus-v001/program-manifest.md",
+          "git_canonical_branch": "main",
+          "canonical_refs": {
+            "prd": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+            "user_story": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+            "test_case": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md"
+          },
+          "provenance": {
+            "- ac_id": "AC-ADB-010",
+            "source_type": "user_intent",
+            "source_ref": "不自动 release、不直接修目标项目、不读取 Hermes 内部 SQLite"
+          }
+        },
+        "frontmatter_errors": [],
+        "has_domain_model_section": true,
+        "has_domain_fsm_section": true,
+        "has_illegal_transition_section": true,
+        "entities": [
+          {
+            "entity": "Project",
+            "key": "slug, class, repo, docs_version, aliases, dispatchable",
+            "precedence": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path",
+            "requires": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path"
+          },
+          {
+            "entity": "PreflightResult",
+            "key": "project, stage, status, checks, reason_code, resume_action",
+            "precedence": "只读；任一 required check fail 则整体 blocked",
+            "requires": "只读；任一 required check fail 则整体 blocked"
+          },
+          {
+            "entity": "Approval",
+            "key": "id, token_hash, actor, project, stage, feature, expiry, state",
+            "precedence": "token 明文不落库；scope 精确匹配；一次性消费",
+            "requires": "token 明文不落库；scope 精确匹配；一次性消费"
+          },
+          {
+            "entity": "Dispatch",
+            "key": "id, idempotency_key, normalized_request, state, approval_id, hermes refs",
+            "precedence": "key 唯一；同 key 不同 payload 必须 conflict",
+            "requires": "key 唯一；同 key 不同 payload 必须 conflict"
+          },
+          {
+            "entity": "DispatchEvent",
+            "key": "dispatch_id, sequence, from, event, to, reason_code, payload",
+            "precedence": "只追加；同 dispatch sequence 单调递增",
+            "requires": "只追加；同 dispatch sequence 单调递增"
+          },
+          {
+            "entity": "HermesBinding",
+            "key": "project, board_slug, task_id, idempotency_key",
+            "precedence": "只能由 Hermes 公开 JSON 接口获得",
+            "requires": "只能由 Hermes 公开 JSON 接口获得"
+          },
+          {
+            "entity": "Reconciliation",
+            "key": "dispatch_id, hermes_status, beacon_status, evidence_refs",
+            "precedence": "Hermes success 不可单独产生 completed",
+            "requires": "Hermes success 不可单独产生 completed"
+          }
+        ],
+        "entity_precedence": [
+          {
+            "entity": "Project",
+            "key": "slug, class, repo, docs_version, aliases, dispatchable",
+            "precedence": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path",
+            "requires": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path"
+          },
+          {
+            "entity": "PreflightResult",
+            "key": "project, stage, status, checks, reason_code, resume_action",
+            "precedence": "只读；任一 required check fail 则整体 blocked",
+            "requires": "只读；任一 required check fail 则整体 blocked"
+          },
+          {
+            "entity": "Approval",
+            "key": "id, token_hash, actor, project, stage, feature, expiry, state",
+            "precedence": "token 明文不落库；scope 精确匹配；一次性消费",
+            "requires": "token 明文不落库；scope 精确匹配；一次性消费"
+          },
+          {
+            "entity": "Dispatch",
+            "key": "id, idempotency_key, normalized_request, state, approval_id, hermes refs",
+            "precedence": "key 唯一；同 key 不同 payload 必须 conflict",
+            "requires": "key 唯一；同 key 不同 payload 必须 conflict"
+          },
+          {
+            "entity": "DispatchEvent",
+            "key": "dispatch_id, sequence, from, event, to, reason_code, payload",
+            "precedence": "只追加；同 dispatch sequence 单调递增",
+            "requires": "只追加；同 dispatch sequence 单调递增"
+          },
+          {
+            "entity": "HermesBinding",
+            "key": "project, board_slug, task_id, idempotency_key",
+            "precedence": "只能由 Hermes 公开 JSON 接口获得",
+            "requires": "只能由 Hermes 公开 JSON 接口获得"
+          },
+          {
+            "entity": "Reconciliation",
+            "key": "dispatch_id, hermes_status, beacon_status, evidence_refs",
+            "precedence": "Hermes success 不可单独产生 completed",
+            "requires": "Hermes success 不可单独产生 completed"
+          }
+        ],
+        "aggregates": [
+          {
+            "name": "Dispatch",
+            "states": [
+              "awaiting_approval",
+              "blocked",
+              "cancelled",
+              "completed",
+              "dispatched",
+              "draft",
+              "failed",
+              "queued",
+              "reconciling"
+            ],
+            "transitions": [
+              {
+                "from": "",
+                "to": "draft",
+                "guard": "normalized request persisted",
+                "initial": "true"
+              },
+              {
+                "from": "draft",
+                "to": "awaiting_approval",
+                "guard": "restricted stage and strict preflight passed"
+              },
+              {
+                "from": "draft",
+                "to": "queued",
+                "guard": "open stage or matching approval reserved"
+              },
+              {
+                "from": "awaiting_approval",
+                "to": "queued",
+                "guard": "open stage or matching approval reserved"
+              },
+              {
+                "from": "queued",
+                "to": "dispatched",
+                "guard": "Hermes task receipt recovered or created"
+              },
+              {
+                "from": "reconciling",
+                "to": "dispatched",
+                "guard": "Hermes task receipt recovered or created"
+              },
+              {
+                "from": "queued",
+                "to": "reconciling",
+                "guard": "external result unknown or worker succeeded"
+              },
+              {
+                "from": "dispatched",
+                "to": "reconciling",
+                "guard": "external result unknown or worker succeeded"
+              },
+              {
+                "from": "draft",
+                "to": "blocked",
+                "guard": "required gate or closure evidence missing"
+              },
+              {
+                "from": "awaiting_approval",
+                "to": "blocked",
+                "guard": "required gate or closure evidence missing"
+              },
+              {
+                "from": "reconciling",
+                "to": "blocked",
+                "guard": "required gate or closure evidence missing"
+              },
+              {
+                "from": "queued",
+                "to": "failed",
+                "guard": "terminal external failure"
+              },
+              {
+                "from": "dispatched",
+                "to": "failed",
+                "guard": "terminal external failure"
+              },
+              {
+                "from": "reconciling",
+                "to": "completed",
+                "guard": "stage closure verified"
+              },
+              {
+                "from": "draft",
+                "to": "cancelled",
+                "guard": "cancellation completed before delivery closure"
+              },
+              {
+                "from": "awaiting_approval",
+                "to": "cancelled",
+                "guard": "cancellation completed before delivery closure"
+              },
+              {
+                "from": "queued",
+                "to": "cancelled",
+                "guard": "cancellation completed before delivery closure"
+              },
+              {
+                "from": "dispatched",
+                "to": "cancelled",
+                "guard": "cancellation completed before delivery closure"
+              }
+            ]
+          }
+        ],
+        "illegal_transition_slots": [
+          {
+            "description": "awaiting_approval → queued without an atomically reserved matching token",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "completed/cancelled → any non-terminal state",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "queued → dispatched without a Hermes task id or idempotent existing-task receipt",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "Hermes completed → completed without stage closure verification",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "approval consumed twice or reserved by two dispatches",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "same idempotency key → two Hermes task bindings",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "preflight blocked → Hermes create",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "release stage → Hermes create in MVP",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "any preflight path → write target project",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "Hermes internal SQLite → read/write by Delivery Bus",
+            "aggregate": "",
+            "source": "truth"
+          }
+        ],
+        "acceptance_criteria": [
+          {
+            "ac_id": "AC-ADB-001",
+            "description": "`config/projects.json` 是唯一项目注册真值；CLI 能 list，并按 slug、唯一 alias 或 canonical repo path resolve Beacon 源码仓及 managed 项目；缺失、重复 slug、冲突 alias、非法 class 或不存在 repo 必须 fail-closed"
+          },
+          {
+            "ac_id": "AC-ADB-002",
+            "description": "`doctor` 和每次 dispatch 前执行只读 strict preflight：repo/git、docs root、声明 docs version、Beacon CLI、`beacon doctor verify-context --strict`、Hermes CLI/gateway/profile；输出逐项 status、稳定 reason_code 和人工 `resume_action`，不得自动修复"
+          },
+          {
+            "ac_id": "AC-ADB-003",
+            "description": "implement/freeze/release scope 使用带 actor、project、stage、feature、expiry 的随机一次性 token；仅存 hash；支持 issue→reserve→finalize，明确失败可 release reservation，过期/错 scope/重放/in-flight 均阻断"
+          },
+          {
+            "ac_id": "AC-ADB-004",
+            "description": "SQLite 原子持久化 projects snapshot、approvals、dispatches、dispatch_events；事件只追加且 sequence 单调，CLI 重启后仍可查询完整状态与最后失败原因"
+          },
+          {
+            "ac_id": "AC-ADB-005",
+            "description": "dispatch 使用规范化请求生成稳定 SHA-256 idempotency key；相同请求返回同一 dispatch/Hermes binding，不重复建 task；同 key 不同 payload 返回 `idempotency_conflict`"
+          },
+          {
+            "ac_id": "AC-ADB-006",
+            "description": "Hermes adapter 仅通过公开 JSON CLI 创建项目 board 和 task；task 必须绑定 coding assignee、`agent-delivery-bus` skill、2h runtime、2 retries、稳定 idempotency key；implement 使用 `worktree:<repo>`"
+          },
+          {
+            "ac_id": "AC-ADB-007",
+            "description": "dispatch 状态机覆盖 draft、awaiting_approval、queued、dispatched、reconciling、completed、blocked、failed、cancelled；所有转换写事件，非法转换 fail-closed"
+          },
+          {
+            "ac_id": "AC-ADB-008",
+            "description": "`task show/list` 与 `reconcile` 合并本地 ledger、Hermes JSON 状态和 Beacon 阶段证据；Hermes/worker success 只进入 reconciling，只有阶段 closure 条件满足才 completed"
+          },
+          {
+            "ac_id": "AC-ADB-009",
+            "description": "提供 `skills/agent-delivery-bus`，SKILL frontmatter 仅含 name/description，包含 `agents/openai.yaml` 和最小契约参考；通过 skill-creator `quick_validate.py`，安装时安全创建 Codex/Hermes symlink 且不覆盖已有目标"
+          },
+          {
+            "ac_id": "AC-ADB-010",
+            "description": "MVP 不读取 Hermes SQLite、不直接修改目标 repo、不自动执行 Beacon 修复、不自动 release；release dispatch 即使有审批也返回 `stage_not_enabled` 和人工 release route"
+          }
+        ],
+        "bound_ac_ids": [
+          "AC-ADB-001",
+          "AC-ADB-002",
+          "AC-ADB-003",
+          "AC-ADB-004",
+          "AC-ADB-005",
+          "AC-ADB-006",
+          "AC-ADB-007",
+          "AC-ADB-008",
+          "AC-ADB-009",
+          "AC-ADB-010"
+        ],
+        "orphan_ac_ids": [],
+        "aggregates_missing_illegal_slots": [],
+        "raw_section_titles": [
+          "人话",
+          "User Intent",
+          "User Intent Snapshot",
+          "用户旅程",
+          "失败旅程",
+          "First principles",
+          "Domain Model",
+          "Intent Coverage Matrix",
+          "Acceptance Criteria",
+          "Domain FSM — Dispatch",
+          "FSM 五元组",
+          "Illegal transitions",
+          "Stage Closure Contract",
+          "Public CLI Contract",
+          "Non-goals",
+          "Adversarial risks",
+          "Provenance",
+          "Freeze readiness",
+          "Source Excerpt"
+        ]
+      },
+      "validation": {
+        "schema_version": "1.0",
+        "required": true,
+        "blocked": false,
+        "status": "pass",
+        "reason_code": "",
+        "findings": [],
+        "projection": {
+          "schema_version": "1.0",
+          "domain_fsm_schema": "domain-fsm.v1",
+          "entity_precedence_schema": "entity-precedence.v1",
+          "frontmatter": {
+            "slug": "delivery-bus-mvp",
+            "version": "v0.0.1",
+            "status": "frozen",
+            "revision_id": "R1",
+            "language": "zh",
+            "domain_required": "true",
+            "domain_kind": "business",
+            "ux_required": "false",
+            "package_maturity": "filled",
+            "parser_contract": "beacon-feature-package-v2",
+            "materials_status": "current",
+            "truth_source_model": "intent_first",
+            "program_ref": "docs/beacon/v0.0.1/programs/agent-delivery-bus-v001/program-manifest.md",
+            "git_canonical_branch": "main",
+            "canonical_refs": {
+              "prd": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+              "user_story": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+              "test_case": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md"
+            },
+            "provenance": {
+              "- ac_id": "AC-ADB-010",
+              "source_type": "user_intent",
+              "source_ref": "不自动 release、不直接修目标项目、不读取 Hermes 内部 SQLite"
+            }
+          },
+          "frontmatter_errors": [],
+          "has_domain_model_section": true,
+          "has_domain_fsm_section": true,
+          "has_illegal_transition_section": true,
+          "entities": [
+            {
+              "entity": "Project",
+              "key": "slug, class, repo, docs_version, aliases, dispatchable",
+              "precedence": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path",
+              "requires": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path"
+            },
+            {
+              "entity": "PreflightResult",
+              "key": "project, stage, status, checks, reason_code, resume_action",
+              "precedence": "只读；任一 required check fail 则整体 blocked",
+              "requires": "只读；任一 required check fail 则整体 blocked"
+            },
+            {
+              "entity": "Approval",
+              "key": "id, token_hash, actor, project, stage, feature, expiry, state",
+              "precedence": "token 明文不落库；scope 精确匹配；一次性消费",
+              "requires": "token 明文不落库；scope 精确匹配；一次性消费"
+            },
+            {
+              "entity": "Dispatch",
+              "key": "id, idempotency_key, normalized_request, state, approval_id, hermes refs",
+              "precedence": "key 唯一；同 key 不同 payload 必须 conflict",
+              "requires": "key 唯一；同 key 不同 payload 必须 conflict"
+            },
+            {
+              "entity": "DispatchEvent",
+              "key": "dispatch_id, sequence, from, event, to, reason_code, payload",
+              "precedence": "只追加；同 dispatch sequence 单调递增",
+              "requires": "只追加；同 dispatch sequence 单调递增"
+            },
+            {
+              "entity": "HermesBinding",
+              "key": "project, board_slug, task_id, idempotency_key",
+              "precedence": "只能由 Hermes 公开 JSON 接口获得",
+              "requires": "只能由 Hermes 公开 JSON 接口获得"
+            },
+            {
+              "entity": "Reconciliation",
+              "key": "dispatch_id, hermes_status, beacon_status, evidence_refs",
+              "precedence": "Hermes success 不可单独产生 completed",
+              "requires": "Hermes success 不可单独产生 completed"
+            }
+          ],
+          "entity_precedence": [
+            {
+              "entity": "Project",
+              "key": "slug, class, repo, docs_version, aliases, dispatchable",
+              "precedence": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path",
+              "requires": "slug 唯一；alias 不得跨项目冲突；repo 使用 canonical absolute path"
+            },
+            {
+              "entity": "PreflightResult",
+              "key": "project, stage, status, checks, reason_code, resume_action",
+              "precedence": "只读；任一 required check fail 则整体 blocked",
+              "requires": "只读；任一 required check fail 则整体 blocked"
+            },
+            {
+              "entity": "Approval",
+              "key": "id, token_hash, actor, project, stage, feature, expiry, state",
+              "precedence": "token 明文不落库；scope 精确匹配；一次性消费",
+              "requires": "token 明文不落库；scope 精确匹配；一次性消费"
+            },
+            {
+              "entity": "Dispatch",
+              "key": "id, idempotency_key, normalized_request, state, approval_id, hermes refs",
+              "precedence": "key 唯一；同 key 不同 payload 必须 conflict",
+              "requires": "key 唯一；同 key 不同 payload 必须 conflict"
+            },
+            {
+              "entity": "DispatchEvent",
+              "key": "dispatch_id, sequence, from, event, to, reason_code, payload",
+              "precedence": "只追加；同 dispatch sequence 单调递增",
+              "requires": "只追加；同 dispatch sequence 单调递增"
+            },
+            {
+              "entity": "HermesBinding",
+              "key": "project, board_slug, task_id, idempotency_key",
+              "precedence": "只能由 Hermes 公开 JSON 接口获得",
+              "requires": "只能由 Hermes 公开 JSON 接口获得"
+            },
+            {
+              "entity": "Reconciliation",
+              "key": "dispatch_id, hermes_status, beacon_status, evidence_refs",
+              "precedence": "Hermes success 不可单独产生 completed",
+              "requires": "Hermes success 不可单独产生 completed"
+            }
+          ],
+          "aggregates": [
+            {
+              "name": "Dispatch",
+              "states": [
+                "awaiting_approval",
+                "blocked",
+                "cancelled",
+                "completed",
+                "dispatched",
+                "draft",
+                "failed",
+                "queued",
+                "reconciling"
+              ],
+              "transitions": [
+                {
+                  "from": "",
+                  "to": "draft",
+                  "guard": "normalized request persisted",
+                  "initial": "true"
+                },
+                {
+                  "from": "draft",
+                  "to": "awaiting_approval",
+                  "guard": "restricted stage and strict preflight passed"
+                },
+                {
+                  "from": "draft",
+                  "to": "queued",
+                  "guard": "open stage or matching approval reserved"
+                },
+                {
+                  "from": "awaiting_approval",
+                  "to": "queued",
+                  "guard": "open stage or matching approval reserved"
+                },
+                {
+                  "from": "queued",
+                  "to": "dispatched",
+                  "guard": "Hermes task receipt recovered or created"
+                },
+                {
+                  "from": "reconciling",
+                  "to": "dispatched",
+                  "guard": "Hermes task receipt recovered or created"
+                },
+                {
+                  "from": "queued",
+                  "to": "reconciling",
+                  "guard": "external result unknown or worker succeeded"
+                },
+                {
+                  "from": "dispatched",
+                  "to": "reconciling",
+                  "guard": "external result unknown or worker succeeded"
+                },
+                {
+                  "from": "draft",
+                  "to": "blocked",
+                  "guard": "required gate or closure evidence missing"
+                },
+                {
+                  "from": "awaiting_approval",
+                  "to": "blocked",
+                  "guard": "required gate or closure evidence missing"
+                },
+                {
+                  "from": "reconciling",
+                  "to": "blocked",
+                  "guard": "required gate or closure evidence missing"
+                },
+                {
+                  "from": "queued",
+                  "to": "failed",
+                  "guard": "terminal external failure"
+                },
+                {
+                  "from": "dispatched",
+                  "to": "failed",
+                  "guard": "terminal external failure"
+                },
+                {
+                  "from": "reconciling",
+                  "to": "completed",
+                  "guard": "stage closure verified"
+                },
+                {
+                  "from": "draft",
+                  "to": "cancelled",
+                  "guard": "cancellation completed before delivery closure"
+                },
+                {
+                  "from": "awaiting_approval",
+                  "to": "cancelled",
+                  "guard": "cancellation completed before delivery closure"
+                },
+                {
+                  "from": "queued",
+                  "to": "cancelled",
+                  "guard": "cancellation completed before delivery closure"
+                },
+                {
+                  "from": "dispatched",
+                  "to": "cancelled",
+                  "guard": "cancellation completed before delivery closure"
+                }
+              ]
+            }
+          ],
+          "illegal_transition_slots": [
+            {
+              "description": "awaiting_approval → queued without an atomically reserved matching token",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "completed/cancelled → any non-terminal state",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "queued → dispatched without a Hermes task id or idempotent existing-task receipt",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "Hermes completed → completed without stage closure verification",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "approval consumed twice or reserved by two dispatches",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "same idempotency key → two Hermes task bindings",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "preflight blocked → Hermes create",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "release stage → Hermes create in MVP",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "any preflight path → write target project",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "Hermes internal SQLite → read/write by Delivery Bus",
+              "aggregate": "",
+              "source": "truth"
+            }
+          ],
+          "acceptance_criteria": [
+            {
+              "ac_id": "AC-ADB-001",
+              "description": "`config/projects.json` 是唯一项目注册真值；CLI 能 list，并按 slug、唯一 alias 或 canonical repo path resolve Beacon 源码仓及 managed 项目；缺失、重复 slug、冲突 alias、非法 class 或不存在 repo 必须 fail-closed"
+            },
+            {
+              "ac_id": "AC-ADB-002",
+              "description": "`doctor` 和每次 dispatch 前执行只读 strict preflight：repo/git、docs root、声明 docs version、Beacon CLI、`beacon doctor verify-context --strict`、Hermes CLI/gateway/profile；输出逐项 status、稳定 reason_code 和人工 `resume_action`，不得自动修复"
+            },
+            {
+              "ac_id": "AC-ADB-003",
+              "description": "implement/freeze/release scope 使用带 actor、project、stage、feature、expiry 的随机一次性 token；仅存 hash；支持 issue→reserve→finalize，明确失败可 release reservation，过期/错 scope/重放/in-flight 均阻断"
+            },
+            {
+              "ac_id": "AC-ADB-004",
+              "description": "SQLite 原子持久化 projects snapshot、approvals、dispatches、dispatch_events；事件只追加且 sequence 单调，CLI 重启后仍可查询完整状态与最后失败原因"
+            },
+            {
+              "ac_id": "AC-ADB-005",
+              "description": "dispatch 使用规范化请求生成稳定 SHA-256 idempotency key；相同请求返回同一 dispatch/Hermes binding，不重复建 task；同 key 不同 payload 返回 `idempotency_conflict`"
+            },
+            {
+              "ac_id": "AC-ADB-006",
+              "description": "Hermes adapter 仅通过公开 JSON CLI 创建项目 board 和 task；task 必须绑定 coding assignee、`agent-delivery-bus` skill、2h runtime、2 retries、稳定 idempotency key；implement 使用 `worktree:<repo>`"
+            },
+            {
+              "ac_id": "AC-ADB-007",
+              "description": "dispatch 状态机覆盖 draft、awaiting_approval、queued、dispatched、reconciling、completed、blocked、failed、cancelled；所有转换写事件，非法转换 fail-closed"
+            },
+            {
+              "ac_id": "AC-ADB-008",
+              "description": "`task show/list` 与 `reconcile` 合并本地 ledger、Hermes JSON 状态和 Beacon 阶段证据；Hermes/worker success 只进入 reconciling，只有阶段 closure 条件满足才 completed"
+            },
+            {
+              "ac_id": "AC-ADB-009",
+              "description": "提供 `skills/agent-delivery-bus`，SKILL frontmatter 仅含 name/description，包含 `agents/openai.yaml` 和最小契约参考；通过 skill-creator `quick_validate.py`，安装时安全创建 Codex/Hermes symlink 且不覆盖已有目标"
+            },
+            {
+              "ac_id": "AC-ADB-010",
+              "description": "MVP 不读取 Hermes SQLite、不直接修改目标 repo、不自动执行 Beacon 修复、不自动 release；release dispatch 即使有审批也返回 `stage_not_enabled` 和人工 release route"
+            }
+          ],
+          "bound_ac_ids": [
+            "AC-ADB-001",
+            "AC-ADB-002",
+            "AC-ADB-003",
+            "AC-ADB-004",
+            "AC-ADB-005",
+            "AC-ADB-006",
+            "AC-ADB-007",
+            "AC-ADB-008",
+            "AC-ADB-009",
+            "AC-ADB-010"
+          ],
+          "orphan_ac_ids": [],
+          "aggregates_missing_illegal_slots": [],
+          "raw_section_titles": [
+            "人话",
+            "User Intent",
+            "User Intent Snapshot",
+            "用户旅程",
+            "失败旅程",
+            "First principles",
+            "Domain Model",
+            "Intent Coverage Matrix",
+            "Acceptance Criteria",
+            "Domain FSM — Dispatch",
+            "FSM 五元组",
+            "Illegal transitions",
+            "Stage Closure Contract",
+            "Public CLI Contract",
+            "Non-goals",
+            "Adversarial risks",
+            "Provenance",
+            "Freeze readiness",
+            "Source Excerpt"
+          ]
+        },
+        "summary": {
+          "entity_count": 7,
+          "aggregate_count": 1,
+          "illegal_slot_count": 10,
+          "orphan_ac_count": 0,
+          "bound_ac_count": 10
+        }
+      },
+      "recommended_action": ""
+    },
+    "fake_delivery": {
+      "schema_version": "1.0",
+      "status": "pass",
+      "ok": true,
+      "closure_allowed": true,
+      "detected": [],
+      "policy_terms": [
+        "placeholder implementation",
+        "docs-only completion",
+        "fake runner evidence",
+        "zero assertions",
+        "placeholder evidence"
+      ],
+      "reason_code": ""
+    },
+    "feature_package_validation": {
+      "schema_version": "1.0",
+      "feature": "delivery-bus-mvp",
+      "feature_slug": "delivery-bus-mvp",
+      "version": "v0.0.1",
+      "status": "pass",
+      "blocked": false,
+      "reason_code": "",
+      "generated_at": "2026-07-27T13:58:00.444815+00:00",
+      "package_dir": "docs/beacon/v0.0.1/features/delivery-bus-mvp",
+      "truth_frontmatter": {
+        "slug": "delivery-bus-mvp",
+        "version": "v0.0.1",
+        "status": "frozen",
+        "revision_id": "R1",
+        "language": "zh",
+        "domain_required": "true",
+        "domain_kind": "business",
+        "ux_required": "false",
+        "package_maturity": "filled",
+        "parser_contract": "beacon-feature-package-v2",
+        "materials_status": "current",
+        "truth_source_model": "intent_first",
+        "program_ref": "docs/beacon/v0.0.1/programs/agent-delivery-bus-v001/program-manifest.md",
+        "git_canonical_branch": "main",
+        "canonical_refs": {
+          "prd": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+          "user_story": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+          "test_case": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md"
+        },
+        "provenance": {
+          "- ac_id": "AC-ADB-010",
+          "source_type": "user_intent",
+          "source_ref": "不自动 release、不直接修目标项目、不读取 Hermes 内部 SQLite"
+        }
+      },
+      "ac_count": 10,
+      "test_count": 11,
+      "checkbox_count": 12,
+      "evidence_row_count": 8,
+      "gate_authority": "canonical_surfaces_preserved",
+      "checkbox_gate_bypass": false,
+      "task_evidence_gate": {
+        "pass": true,
+        "checked_ok": 0,
+        "checked_bad": 0,
+        "unbound": 0,
+        "findings": [],
+        "reason_code": ""
+      },
+      "evidence_gate_truth": false,
+      "diagnostics": [],
+      "report_path": "docs/beacon/v0.0.1/.machine/requirement/feature-package-validation.json"
+    },
+    "determinism_check": {
+      "placeholder_count": 0,
+      "hollow_template_count": 0
+    },
+    "closure_contract": {
+      "closure_allowed": true,
+      "detected": []
+    },
+    "recommended_action": ""
+  },
+  "truth_frontmatter_sync": {
+    "updated": false,
+    "status": "frozen",
+    "path": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md"
+  },
+  "revision_delta": {
+    "schema_version": "1.0",
+    "feature": "delivery-bus-mvp",
+    "feature_slug": "delivery-bus-mvp",
+    "version": "v0.0.1",
+    "revision_id": "R2",
+    "source_revision_id": "R1",
+    "status": "not_applicable",
+    "cleanup_required": false,
+    "removed_requirement_count": 0,
+    "added_requirement_count": 0,
+    "retained_requirement_count": 0,
+    "removed_requirement_surfaces": [],
+    "added_requirement_surfaces": [],
+    "retained_requirement_surfaces": [],
+    "current_baseline_hash": "sha256:82feb0fc69392550992eef6d526f89eab382b04aa1cb58ec1808e5f3480b40bc",
+    "source_baseline_hash": "",
+    "story_state_ref": "docs/beacon/v0.0.1/.machine/user-story/delivery-bus-mvp.json",
+    "generated_at": "2026-07-27T13:58:00.448488+00:00",
+    "json_ref": "docs/beacon/v0.0.1/.machine/execution/revision-delta-delivery-bus-mvp.json",
+    "markdown_ref": "docs/beacon/v0.0.1/execution/revision-delta-delivery-bus-mvp.md"
+  },
+  "release_projection_sync": {
+    "status": "pass",
+    "truth_authority": false,
+    "lifecycle_stage": false,
+    "release_publish_action": false,
+    "feature_projection": {
+      "schema_version": "1.0",
+      "status": "pass",
+      "feature": "delivery-bus-mvp",
+      "feature_slug": "delivery-bus-mvp",
+      "version": "v0.0.1",
+      "json_path": "docs/beacon/v0.0.1/.machine/change/delivery-bus-mvp.json",
+      "markdown_path": "docs/beacon/v0.0.1/change/delivery-bus-mvp.md",
+      "json_written": true,
+      "markdown_exists": true,
+      "projection_role": {
+        "artifact_role": "version_aggregate_projection",
+        "truth_source": false,
+        "gate_source": false,
+        "lifecycle_stage": false,
+        "release_publish_action": false
+      },
+      "payload": {
+        "schema_version": "1.0",
+        "version": "v0.0.1",
+        "feature": "delivery-bus-mvp",
+        "feature_slug": "delivery-bus-mvp",
+        "summary": "Maintains release-facing version aggregate projection guards so QA accepted features are included in version change scope before release check.",
+        "status": "generated",
+        "accepted_at": "",
+        "revision_id": "R2",
+        "projection_role": {
+          "artifact_role": "version_aggregate_projection",
+          "truth_source": false,
+          "gate_source": false,
+          "lifecycle_stage": false,
+          "release_publish_action": false
+        },
+        "truth_authority": false,
+        "lifecycle_stage": false,
+        "added": [
+          "Feature-level release projection input for QA accepted current feature",
+          "Version aggregate projection inclusion guard and repair metadata",
+          "Repair-only projection rebuild path for release preflight artifacts"
+        ],
+        "removed": [
+          "Manual-only version aggregate projection repair before release check"
+        ],
+        "fixed": [
+          "Release check can route missing current feature projection to an actionable repair path",
+          "Version aggregate projection remains a read model instead of requirement truth"
+        ],
+        "traceability_refs": [
+          "docs/beacon/v0.0.1/change/delivery-bus-mvp.md",
+          "docs/beacon/v0.0.1/prd/delivery-bus-mvp.md",
+          "docs/beacon/v0.0.1/user-story/delivery-bus-mvp.md",
+          "docs/beacon/v0.0.1/qa/test-cases/delivery-bus-mvp.md",
+          "docs/beacon/v0.0.1/.machine/execution/delivery-bus-mvp.revision.json"
+        ],
+        "generated_at": "2026-07-27T13:58:00.448873+00:00"
+      }
+    },
+    "version_aggregate_projection": {
+      "schema_version": "1.0",
+      "status": "pass",
+      "version": "v0.0.1",
+      "markdown_path": "docs/beacon/v0.0.1/change/v0.0.1.md",
+      "json_path": "docs/beacon/v0.0.1/.machine/change/v0.0.1.json",
+      "feature_count": 1,
+      "feature_slugs": [
+        "delivery-bus-mvp"
+      ],
+      "projection_role": {
+        "artifact_role": "version_aggregate_projection",
+        "truth_source": false,
+        "gate_source": false,
+        "lifecycle_stage": false,
+        "release_publish_action": false
+      },
+      "truth_authority": false,
+      "lifecycle_stage": false,
+      "release_publish_action": false,
+      "implementation_order": {
+        "status": "analyzed",
+        "feature_count": 1,
+        "ordered_feature_slugs": [
+          "delivery-bus-mvp"
+        ],
+        "waves": [
+          {
+            "wave": 1,
+            "parallelizable": false,
+            "features": [
+              {
+                "feature": "delivery-bus-mvp",
+                "feature_slug": "delivery-bus-mvp",
+                "depends_on_features": [],
+                "direct_delivery_services": [],
+                "writable_services": [],
+                "parallelizable": true,
+                "reason_code": "parallel_no_conflict"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

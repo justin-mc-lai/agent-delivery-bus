@@ -1,0 +1,4 @@
+interface:
+  display_name: "Beacon QA"
+  short_description: "Guide for beacon qa workflows"
+  default_prompt: "Use $beacon-eval-qa to run the beacon qa workflow with the current Beacon context."

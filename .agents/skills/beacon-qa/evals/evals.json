@@ -1,0 +1,58 @@
+{
+  "skill_name": "beacon-qa",
+  "evals": [
+    {
+      "id": "qa-00-surface-boundary",
+      "prompt": "Use $beacon-qa for a normal qa task. Stay inside HARD GATE.",
+      "expectations": [
+        "Selects an explicit mode_id",
+        "Does not perform out-of-harness work",
+        "Emits recommended_next_harness"
+      ]
+    },
+    {
+      "id": "qa-01-eval-qa",
+      "prompt": "Use $beacon-qa in mode `eval-qa` (standard QA). Read references/modes/eval-qa.md first.",
+      "expectations": [
+        "Loads references/modes/eval-qa.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    },
+    {
+      "id": "qa-02-eval-qa-deep",
+      "prompt": "Use $beacon-qa in mode `eval-qa-deep` (deep QA). Read references/modes/eval-qa-deep.md first.",
+      "expectations": [
+        "Loads references/modes/eval-qa-deep.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    },
+    {
+      "id": "qa-03-eval-real-project",
+      "prompt": "Use $beacon-qa in mode `eval-real-project` (real-project eval). Read references/modes/eval-real-project.md first.",
+      "expectations": [
+        "Loads references/modes/eval-real-project.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    },
+    {
+      "id": "qa-04-eval-agent",
+      "prompt": "Use $beacon-qa in mode `eval-agent` (agent eval). Read references/modes/eval-agent.md first.",
+      "expectations": [
+        "Loads references/modes/eval-agent.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    },
+    {
+      "id": "qa-contract-no-truth-rewrite",
+      "prompt": "QA fails; agent wants to edit truth to make AC pass.",
+      "expectations": [
+        "Does not rewrite truth as QA verdict",
+        "Routes fix to implement/truth as appropriate"
+      ]
+    }
+  ]
+}

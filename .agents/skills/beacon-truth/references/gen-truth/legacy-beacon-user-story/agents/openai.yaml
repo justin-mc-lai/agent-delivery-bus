@@ -1,0 +1,4 @@
+interface:
+  display_name: "Beacon User Story"
+  short_description: "Guide for beacon user story workflows"
+  default_prompt: "Use $beacon-user-story to run the beacon user story workflow with the current Beacon context."

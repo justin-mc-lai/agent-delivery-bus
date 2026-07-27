@@ -1,0 +1,23 @@
+{
+  "skill_name": "beacon-goal",
+  "evals": [
+    {
+      "id": "goal-00-surface-boundary",
+      "prompt": "Use $beacon-goal for a normal goal task. Stay inside HARD GATE.",
+      "expectations": [
+        "Selects an explicit mode_id",
+        "Does not perform out-of-harness work",
+        "Emits recommended_next_harness"
+      ]
+    },
+    {
+      "id": "goal-01-loop-goal",
+      "prompt": "Use $beacon-goal in mode `loop-goal` (cross-harness loop orchestration). Read references/modes/loop-goal.md first.",
+      "expectations": [
+        "Loads references/modes/loop-goal.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    }
+  ]
+}

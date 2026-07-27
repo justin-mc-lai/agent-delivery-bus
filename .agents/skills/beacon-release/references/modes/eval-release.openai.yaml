@@ -1,0 +1,4 @@
+interface:
+  display_name: "Beacon Release"
+  short_description: "Guide for beacon release workflows"
+  default_prompt: "Use $beacon-eval-release to run the beacon release workflow with the current Beacon context."
