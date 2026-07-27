@@ -1,0 +1,22 @@
+{
+  "passed": 3,
+  "total": 3,
+  "score": 1.0,
+  "results": [
+    {
+      "expectation": "mentions_planner_review_cli",
+      "pass": true,
+      "reason": "matched"
+    },
+    {
+      "expectation": "mentions_artifact_path",
+      "pass": true,
+      "reason": "matched"
+    },
+    {
+      "expectation": "no_fake_parallel_subagent",
+      "pass": true,
+      "reason": "matched"
+    }
+  ]
+}

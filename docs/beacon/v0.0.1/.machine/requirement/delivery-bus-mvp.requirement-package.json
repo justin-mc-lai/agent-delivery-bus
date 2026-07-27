@@ -5,7 +5,7 @@
   "truth_package_contract": "beacon-feature-package-v2",
   "machine_json_role": "generated_state_not_truth",
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-07-27T13:31:07.266207+00:00",
+  "generated_at": "2026-07-27T13:58:00.397429+00:00",
   "feature": "delivery-bus-mvp",
   "feature_slug": "delivery-bus-mvp",
   "version": "v0.0.1",
@@ -18,9 +18,9 @@
     "evidence": "docs/beacon/v0.0.1/features/delivery-bus-mvp/evidence.md"
   },
   "source_hashes": {
-    "truth": "dd99b8a3ff473f54b171bd26201b03e4cf96b817fd5839ddac6bd110a38cffad",
-    "tests": "d62408382c0d314b2c50d9b12fbed9db0785a929f11b8d7a2d128f54a7f9503d",
-    "tasks": "733dc6aeef5894baba221d125f8efda5ddcf8d6b102fc2f9908b76a3846415b3",
+    "truth": "c4abb64d95be67fc29fe55b17a901b1f00ed8613f49069cb48f4c29598806d8d",
+    "tests": "b4633497d6f0284e27a1d3c86c4a9076b17ee798adbfdfc18cc39be30d557947",
+    "tasks": "05de0d7757c96d25ad0cf4dc8e1d93138cd5275c77e1526d470a02823d23cc6f",
     "evidence": "e7ce73688611ccde60c5073908e9214ccfbacd7fbdd0c9fdc070a39a7e550ebd"
   },
   "truth_frontmatter": {
@@ -31,6 +31,7 @@
     "language": "zh",
     "domain_required": "true",
     "domain_kind": "business",
+    "ux_required": "false",
     "package_maturity": "filled",
     "parser_contract": "beacon-feature-package-v2",
     "materials_status": "current",
@@ -106,7 +107,7 @@
       "ac_id": "AC-ADB-001",
       "tc_id": "TC-ADB-001",
       "layer": "",
-      "command": "`python3 -m unittest tests.test_registry -v`",
+      "command": "`python3 -m pytest -q tests/test_registry.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
       "assertion": "exit_code==0；覆盖 list、slug/alias/path resolve、重复 slug、alias 冲突和 repo 缺失",
       "evidence_path": ""
     },
@@ -114,7 +115,7 @@
       "ac_id": "AC-ADB-002",
       "tc_id": "TC-ADB-002",
       "layer": "",
-      "command": "`python3 -m unittest tests.test_preflight -v`",
+      "command": "`python3 -m pytest -q tests/test_preflight.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
       "assertion": "exit_code==0；strict check 失败返回稳定 reason_code/resume_action 且无写目标仓命令",
       "evidence_path": ""
     },
@@ -122,7 +123,7 @@
       "ac_id": "AC-ADB-003",
       "tc_id": "TC-ADB-003",
       "layer": "",
-      "command": "`python3 -m unittest tests.test_approvals -v`",
+      "command": "`python3 -m pytest -q tests/test_approvals.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
       "assertion": "exit_code==0；覆盖 hash-only、expiry、scope、reserve/finalize/release、重放与并发 reservation",
       "evidence_path": ""
     },
@@ -130,7 +131,7 @@
       "ac_id": "AC-ADB-004",
       "tc_id": "TC-ADB-004",
       "layer": "",
-      "command": "`python3 -m unittest tests.test_storage -v`",
+      "command": "`python3 -m pytest -q tests/test_storage.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
       "assertion": "exit_code==0；事务回滚、重启恢复、事件 append-only 与 sequence 单调成立",
       "evidence_path": ""
     },
@@ -138,7 +139,7 @@
       "ac_id": "AC-ADB-005",
       "tc_id": "TC-ADB-005",
       "layer": "",
-      "command": "`python3 -m unittest tests.test_service.DispatchIdempotencyTests -v`",
+      "command": "`python3 -m pytest -q tests/test_service.py::DispatchIdempotencyTests --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
       "assertion": "exit_code==0；重复请求复用 binding，payload 冲突阻断且 Hermes create 仅一次",
       "evidence_path": ""
     },
@@ -146,7 +147,7 @@
       "ac_id": "AC-ADB-006",
       "tc_id": "TC-ADB-006",
       "layer": "",
-      "command": "`python3 -m unittest tests.test_adapters.HermesAdapterTests -v`",
+      "command": "`python3 -m pytest -q tests/test_adapters.py::HermesAdapterTests --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
       "assertion": "exit_code==0；JSON CLI argv 含 board/worktree/skill/runtime/retry/idempotency 且不访问 Hermes DB",
       "evidence_path": ""
     },
@@ -154,7 +155,7 @@
       "ac_id": "AC-ADB-007",
       "tc_id": "TC-ADB-007",
       "layer": "",
-      "command": "`python3 -m unittest tests.test_service.DispatchStateMachineTests -v`",
+      "command": "`python3 -m pytest -q tests/test_service.py::DispatchStateMachineTests --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
       "assertion": "exit_code==0；合法转换留事件，非法转换返回 `invalid_transition`",
       "evidence_path": ""
     },
@@ -162,7 +163,7 @@
       "ac_id": "AC-ADB-008",
       "tc_id": "TC-ADB-008",
       "layer": "",
-      "command": "`python3 -m unittest tests.test_reconcile -v`",
+      "command": "`python3 -m pytest -q tests/test_reconcile.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
       "assertion": "exit_code==0；worker success 仅进入 reconciling，Beacon closure pass 后才 completed",
       "evidence_path": ""
     },
@@ -170,7 +171,7 @@
       "ac_id": "AC-ADB-009",
       "tc_id": "TC-ADB-009",
       "layer": "",
-      "command": "`python3 -m unittest tests.test_skill_contract -v`",
+      "command": "`python3 -m pytest -q tests/test_skill_contract.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
       "assertion": "exit_code==0；frontmatter/openai.yaml/symlink 安装契约及 quick_validate 全部通过",
       "evidence_path": ""
     },
@@ -178,7 +179,7 @@
       "ac_id": "AC-ADB-010",
       "tc_id": "TC-ADB-010",
       "layer": "",
-      "command": "`python3 -m unittest tests.test_boundaries -v`",
+      "command": "`python3 -m pytest -q tests/test_boundaries.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
       "assertion": "exit_code==0；release、target mutation、Hermes DB 和自动修复路径均 fail-closed",
       "evidence_path": ""
     },

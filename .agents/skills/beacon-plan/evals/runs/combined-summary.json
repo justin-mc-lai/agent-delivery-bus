@@ -1,0 +1,41 @@
+{
+  "skill": "beacon-plan",
+  "kind": "combined_iter1_plus_iter2_parity_refresh",
+  "deltas": [
+    {
+      "id": "plan-contract-hard-gate",
+      "with_skill_score": 1.0,
+      "baseline_score": 0.25,
+      "delta": 0.75,
+      "with_skill_pass": "4/4",
+      "baseline_pass": "1/4"
+    },
+    {
+      "id": "plan-contract-review-parity",
+      "with_skill_score": 1.0,
+      "baseline_score": 0.8,
+      "delta": 0.2,
+      "with_skill_pass": "5/5",
+      "baseline_pass": "4/5"
+    },
+    {
+      "id": "plan-contract-review-cli",
+      "with_skill_score": 1.0,
+      "baseline_score": 1.0,
+      "delta": 0.0,
+      "with_skill_pass": "3/3",
+      "baseline_pass": "3/3"
+    },
+    {
+      "id": "plan-mode-selection-source",
+      "with_skill_score": 1.0,
+      "baseline_score": 1.0,
+      "delta": 0.0,
+      "with_skill_pass": "3/3",
+      "baseline_pass": "3/3"
+    }
+  ],
+  "mean_delta": 0.237,
+  "with_skill_mean": 1.0,
+  "baseline_mean": 0.762
+}

@@ -1,7 +1,7 @@
 ---
 slug: delivery-bus-mvp
 version: v0.0.1
-materials_status: current
+materials_status: stale
 task_source: acceptance_criteria
 ---
 

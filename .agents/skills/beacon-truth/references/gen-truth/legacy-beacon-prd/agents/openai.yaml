@@ -1,0 +1,4 @@
+interface:
+  display_name: "Beacon PRD"
+  short_description: "Guide for beacon prd workflows"
+  default_prompt: "Use $beacon-prd to run the beacon prd workflow with the current Beacon context."

@@ -1,0 +1,32 @@
+{
+  "passed": 1,
+  "total": 5,
+  "score": 0.2,
+  "results": [
+    {
+      "expectation": "scope_full_parity_or_block",
+      "pass": false,
+      "reason": "no_evidence"
+    },
+    {
+      "expectation": "has_findings",
+      "pass": false,
+      "reason": "no_evidence"
+    },
+    {
+      "expectation": "has_severity",
+      "pass": false,
+      "reason": "no_evidence"
+    },
+    {
+      "expectation": "not_silent_implement_route",
+      "pass": true,
+      "reason": "matched"
+    },
+    {
+      "expectation": "has_parity_or_deferral",
+      "pass": false,
+      "reason": "no_evidence"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+interface:
+  display_name: "beacon-implement"
+  short_description: "beacon 1+6 public implement core — modes in-package"
+  default_prompt: |
+    ${beacon-implement}
+    Surface: implement
+    Project: .
+    Version: auto
+    1) Pick mode_id from references/modes/INDEX.md
+    2) Read that mode file fully
+    3) Follow HARD GATE; emit mode_id + recommended_next_harness

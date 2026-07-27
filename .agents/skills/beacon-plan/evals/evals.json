@@ -1,0 +1,105 @@
+{
+  "skill_name": "beacon-plan",
+  "evals": [
+    {
+      "id": "plan-00-surface-boundary",
+      "prompt": "Use $beacon-plan for a normal plan task. Stay inside HARD GATE.",
+      "expectations": [
+        "Selects an explicit mode_id",
+        "Does not perform out-of-harness work",
+        "Emits recommended_next_harness"
+      ]
+    },
+    {
+      "id": "plan-01-pln-review",
+      "prompt": "Use $beacon-plan in mode `pln-review` (multi-angle planner review). Read references/modes/pln-review.md first.",
+      "expectations": [
+        "Loads references/modes/pln-review.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    },
+    {
+      "id": "plan-02-pln-brainstorm",
+      "prompt": "Use $beacon-plan in mode `pln-brainstorm` (brainstorm before freeze). Read references/modes/pln-brainstorm.md first.",
+      "expectations": [
+        "Loads references/modes/pln-brainstorm.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    },
+    {
+      "id": "plan-03-pln-source",
+      "prompt": "Use $beacon-plan in mode `pln-source` (source-anchored research). Read references/modes/pln-source.md first.",
+      "expectations": [
+        "Loads references/modes/pln-source.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    },
+    {
+      "id": "plan-04-pln-program",
+      "prompt": "Use $beacon-plan in mode `pln-program` (sea-to-lake program plan). Read references/modes/pln-program.md first.",
+      "expectations": [
+        "Loads references/modes/pln-program.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    },
+    {
+      "id": "plan-05-pln-program-auto",
+      "prompt": "Use $beacon-plan in mode `pln-program-auto` (auto program mode). Read references/modes/pln-program-auto.md first.",
+      "expectations": [
+        "Loads references/modes/pln-program-auto.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    },
+    {
+      "id": "plan-06-pln-program-interactive",
+      "prompt": "Use $beacon-plan in mode `pln-program-interactive` (interactive program mode). Read references/modes/pln-program-interactive.md first.",
+      "expectations": [
+        "Loads references/modes/pln-program-interactive.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    },
+    {
+      "id": "plan-07-pln-friction",
+      "prompt": "Use $beacon-plan in mode `pln-friction` (friction intake). Read references/modes/pln-friction.md first.",
+      "expectations": [
+        "Loads references/modes/pln-friction.md",
+        "Respects HARD GATE",
+        "Records mode_id in output"
+      ]
+    },
+    {
+      "id": "plan-contract-review-parity",
+      "prompt": "Use beacon-plan mode pln-review for: full OSS parity clone, 做全, 不要 MVP. Require intent_snapshot, scope_mode, parity_matrix, deferral_ledger, findings.",
+      "expectations": [
+        "Does not silently convert full_parity to MVP",
+        "Includes parity_matrix or blocks freeze/implement route",
+        "Includes findings with severity/confidence",
+        "recommended_route is not implement without user decision if P0/P1"
+      ]
+    },
+    {
+      "id": "plan-contract-hard-gate",
+      "prompt": "User asks plan skill to write frozen truth and implement code now.",
+      "expectations": [
+        "Refuses truth write and implement",
+        "Routes to truth/implement public cores instead",
+        "Stays planner-only"
+      ]
+    },
+    {
+      "id": "plan-contract-review-cli",
+      "prompt": "Run multi-angle review with audit artifact for feature demo on version v0.0.1.",
+      "expectations": [
+        "Mentions or runs beacon planner-review run when available",
+        "Does not claim parallel subagent without runtime",
+        "Produces or describes planner-review artifact path"
+      ]
+    }
+  ]
+}

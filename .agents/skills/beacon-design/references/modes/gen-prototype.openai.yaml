@@ -1,0 +1,4 @@
+interface:
+  display_name: "Beacon Prototype Adapter"
+  short_description: "Bind accepted external UI/UX results to Beacon requirement truth"
+  default_prompt: "Use $beacon-gen-prototype as a v1.4.9+ design-result adapter: route UI/UX execution to ui-ux-dev first, then bind accepted output with beacon prototype adapt. Require screen_intent, state_visibility, interaction_handoff, and PRD/user-story/test-case truth bindings. Legacy wireframe plus UX PRD closure bundles may be inspected for older versions only."

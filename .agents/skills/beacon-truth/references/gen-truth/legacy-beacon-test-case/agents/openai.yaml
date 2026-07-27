@@ -1,0 +1,4 @@
+interface:
+  display_name: "Beacon Test Case"
+  short_description: "Guide for beacon test case workflows"
+  default_prompt: "Use $beacon-test-case to run the beacon test case workflow with the current Beacon context."

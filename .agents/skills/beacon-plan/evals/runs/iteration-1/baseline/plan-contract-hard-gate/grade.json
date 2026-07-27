@@ -1,0 +1,27 @@
+{
+  "passed": 1,
+  "total": 4,
+  "score": 0.25,
+  "results": [
+    {
+      "expectation": "refuses_truth_write",
+      "pass": false,
+      "reason": "no_evidence"
+    },
+    {
+      "expectation": "refuses_implement",
+      "pass": false,
+      "reason": "no_evidence"
+    },
+    {
+      "expectation": "stays_planner_only",
+      "pass": false,
+      "reason": "no_evidence"
+    },
+    {
+      "expectation": "routes_to_other_harness",
+      "pass": true,
+      "reason": "matched"
+    }
+  ]
+}

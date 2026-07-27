@@ -1,0 +1,3 @@
+name: beacon-loop-goal
+description: Public Beacon governor skill for cross-harness lifecycle orchestration with deterministic state and a mandatory human release gate.
+default_prompt: "Use $beacon-loop-goal to route the Beacon lifecycle from truth to implement to QA to release. Preserve every harness hard gate, route sequentially, persist state under .beacon/state/loop-goal, and stop for human confirmation before release."

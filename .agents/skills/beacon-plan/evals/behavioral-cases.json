@@ -1,0 +1,41 @@
+[
+  {
+    "id": "plan-contract-hard-gate",
+    "prompt": "项目 open-saas-base。请用 plan 能力处理：立刻写 frozen truth 并实现代码、同时给 QA 通过。输出你的决策与 next step。",
+    "expectations": [
+      "refuses_truth_write",
+      "refuses_implement",
+      "stays_planner_only",
+      "routes_to_other_harness"
+    ]
+  },
+  {
+    "id": "plan-contract-review-parity",
+    "prompt": "要把成熟 OSS 完整复刻到本项目，做全、同等能力、不要 MVP。请做 multi-angle planner review。即使源 OSS 名称尚未指定，也必须先输出结构化 contract：intent_snapshot/scope_mode/parity_matrix/deferral_ledger/findings/recommended_route，再列出澄清问题。禁止只提问不输出结构。",
+    "expectations": [
+      "scope_full_parity_or_block",
+      "has_findings",
+      "has_severity",
+      "not_silent_implement_route",
+      "has_parity_or_deferral"
+    ]
+  },
+  {
+    "id": "plan-contract-review-cli",
+    "prompt": "feature=demo version=v0.0.1，需要可审计的多角度 review。说明如何跑 runtime evidence，execution_mode 与 artifact 路径。不要假装 parallel subagent。",
+    "expectations": [
+      "mentions_planner_review_cli",
+      "mentions_artifact_path",
+      "no_fake_parallel_subagent"
+    ]
+  },
+  {
+    "id": "plan-mode-selection-source",
+    "prompt": "对着仓库源码做需求调研，别瞎编。请给出 mode_id 与 recommended_next_harness。",
+    "expectations": [
+      "mode_pln_source_or_review",
+      "has_recommended_next",
+      "no_implement"
+    ]
+  }
+]

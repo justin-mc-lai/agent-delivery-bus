@@ -1,0 +1,13 @@
+[
+  {
+    "id": "plan-contract-review-parity",
+    "prompt": "要把成熟 OSS 完整复刻到本项目，做全、同等能力、不要 MVP。请做 multi-angle planner review。即使源 OSS 名称尚未指定，也必须先输出结构化 contract：intent_snapshot/scope_mode/parity_matrix/deferral_ledger/findings/recommended_route，再列出澄清问题。禁止只提问不输出结构。",
+    "expectations": [
+      "scope_full_parity_or_block",
+      "has_findings",
+      "has_severity",
+      "not_silent_implement_route",
+      "has_parity_or_deferral"
+    ]
+  }
+]
