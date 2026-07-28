@@ -17,7 +17,9 @@ from .storage import Storage
 
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_CONFIG = ROOT / "config" / "projects.json"
+_LOCAL_CONFIG = ROOT / "config" / "projects.local.json"
+_EXAMPLE_CONFIG = ROOT / "config" / "projects.json"
+DEFAULT_CONFIG = _LOCAL_CONFIG if _LOCAL_CONFIG.is_file() else _EXAMPLE_CONFIG
 DEFAULT_DB = ROOT / "data" / "agent-delivery-bus.sqlite3"
 
 
