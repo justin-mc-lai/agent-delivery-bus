@@ -47,6 +47,8 @@ bin/adb approve --actor <actor> --project <slug> --stage <implement|freeze|relea
 bin/adb dispatch --project <slug> --stage <stage> --feature <feature> --approval-token <token> --json
 bin/adb task show <dispatch-id> --json
 bin/adb reconcile <dispatch-id> --json
+bin/adb fleet --json
+bin/adb fleet --project <slug> --json
 ```
 
 Read [references/contracts.md](references/contracts.md) before performing a real

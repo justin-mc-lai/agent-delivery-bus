@@ -69,6 +69,8 @@ bin/adb doctor --project demo-app --json
 bin/adb dispatch --project demo-app --stage plan --feature example --dry-run --json
 bin/adb dispatch --project demo-app --stage plan --feature example --json
 bin/adb reconcile --json
+bin/adb fleet
+bin/adb fleet --json
 ```
 
 Restricted stage still needs approval:
@@ -191,6 +193,8 @@ bin/adb doctor --project demo-app --json
 bin/adb dispatch --project demo-app --stage plan --feature example --dry-run --json
 bin/adb dispatch --project demo-app --stage plan --feature example --json
 bin/adb reconcile --json
+bin/adb fleet
+bin/adb fleet --json
 ```
 
 ### 真实交付适配器

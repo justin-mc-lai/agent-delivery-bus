@@ -45,3 +45,20 @@ Fresh clones default to:
 2. implement `TruthGateAdapter`
 3. register both in `adapters/factory.py`
 4. set `adapters.executor` / `adapters.truth_gate` in registry JSON
+
+
+## Fleet status
+
+```bash
+bin/adb fleet
+bin/adb fleet --project <slug> --json
+bin/adb fleet --sync-boards
+```
+
+`fleet` aggregates:
+
+- registered projects
+- board existence
+- local dispatch counts/states
+- executor/kanban task counts/states
+- health: `active` | `idle` | `attention` | `error`

@@ -44,10 +44,14 @@ def envelope(
 def emit(payload: dict[str, Any], *, as_json: bool) -> None:
     if as_json:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
-    else:
-        print(f"{payload['status']}: {payload.get('reason_code') or 'ok'}")
-        if payload.get("data") is not None:
-            print(json.dumps(payload["data"], ensure_ascii=False, indent=2))
+        return
+    print(f"{payload['status']}: {payload.get('reason_code') or 'ok'}")
+    data = payload.get("data")
+    if isinstance(data, dict) and isinstance(data.get("text"), str):
+        print(data["text"])
+        return
+    if data is not None:
+        print(json.dumps(data, ensure_ascii=False, indent=2))
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -77,6 +81,11 @@ def build_parser() -> argparse.ArgumentParser:
     boards_sync = boards_sub.add_parser("sync")
     boards_sync.add_argument("--project")
     boards_sync.add_argument("--json", action="store_true")
+
+    fleet = sub.add_parser("fleet", help="multi-project kanban + dispatch fleet status")
+    fleet.add_argument("--project")
+    fleet.add_argument("--json", action="store_true")
+    fleet.add_argument("--sync-boards", action="store_true", help="ensure boards exist before summarizing")
 
     approve = sub.add_parser("approve")
     approve.add_argument("--actor", required=True)
@@ -111,6 +120,118 @@ def build_parser() -> argparse.ArgumentParser:
     install.add_argument("--dry-run", action="store_true")
     install.add_argument("--json", action="store_true")
     return parser
+
+
+
+def _count_by(items, key="state"):
+    counts = {}
+    for item in items:
+        value = str(item.get(key) or item.get("status") or "unknown").lower() or "unknown"
+        counts[value] = counts.get(value, 0) + 1
+    return counts
+
+
+def _summarize_project(*, project, dispatches, executor, sync_boards: bool = False) -> dict:
+    board_slug = ""
+    board_exists = False
+    board_error = ""
+    task_counts = {}
+    task_total = 0
+    try:
+        board_slug = executor.board_for(project)
+        if sync_boards:
+            board = executor.ensure_board(project)
+            board_slug = str(board.get("slug") or board_slug)
+            board_exists = True
+        else:
+            # Prefer non-mutating discovery when adapter supports list_boards.
+            if hasattr(executor, "list_boards"):
+                boards = executor.list_boards()
+                board_exists = any(
+                    isinstance(item, dict)
+                    and str(item.get("slug") or "") == board_slug
+                    and not item.get("archived")
+                    for item in boards
+                )
+            else:
+                # Null/demo adapters keep boards in memory; treat as present once named.
+                board_exists = True
+        if board_exists and hasattr(executor, "list_tasks"):
+            tasks = executor.list_tasks(board_slug)
+            task_total = len(tasks)
+            task_counts = _count_by(tasks, key="status")
+            if not task_counts:
+                task_counts = _count_by(tasks, key="state")
+    except Exception as exc:  # noqa: BLE001 - fleet must stay partial-success
+        board_error = str(exc)
+
+    local_counts = _count_by(dispatches, key="state")
+    blocked = [d for d in dispatches if d.get("state") in {"blocked", "failed", "reconciling"}]
+    latest_blocked = ""
+    if blocked:
+        latest = sorted(blocked, key=lambda row: str(row.get("updated_at") or ""), reverse=True)[0]
+        latest_blocked = str(latest.get("last_reason_code") or latest.get("state") or "")
+
+    active_local = sum(local_counts.get(k, 0) for k in ("draft", "awaiting_approval", "queued", "dispatched", "reconciling"))
+    active_remote = sum(
+        v for k, v in task_counts.items()
+        if k not in {"done", "completed", "success", "succeeded", "cancelled", "archived"}
+    )
+    if board_error:
+        health = "error"
+    elif local_counts.get("blocked", 0) or local_counts.get("failed", 0) or task_counts.get("blocked", 0) or task_counts.get("failed", 0):
+        health = "attention"
+    elif active_local or active_remote:
+        health = "active"
+    else:
+        health = "idle"
+
+    return {
+        "slug": project.slug,
+        "title": project.title,
+        "class": project.project_class,
+        "repo": project.repo,
+        "docs_version": project.docs_version,
+        "dispatchable": project.dispatchable,
+        "board": board_slug,
+        "board_exists": board_exists,
+        "board_error": board_error,
+        "local": {
+            "total": len(dispatches),
+            "counts": local_counts,
+            "active": active_local,
+            "latest_blocked_reason": latest_blocked,
+        },
+        "kanban": {
+            "total": task_total,
+            "counts": task_counts,
+            "active": active_remote,
+        },
+        "health": health,
+    }
+
+
+def render_fleet_text(payload: dict[str, Any]) -> str:
+    lines = [
+        f"adapters: executor={payload.get('executor')} truth_gate={payload.get('truth_gate')}",
+        f"projects: {payload.get('project_count')}  active={payload.get('active_projects')}  attention={payload.get('attention_projects')}  idle={payload.get('idle_projects')}",
+        "",
+        f"{'PROJECT':<22} {'HEALTH':<10} {'BOARD':<18} {'LOCAL':<16} {'KANBAN':<16} BLOCKED",
+        f"{'-'*22} {'-'*10} {'-'*18} {'-'*16} {'-'*16} {'-'*24}",
+    ]
+    for row in payload.get("projects", []):
+        local = row.get("local") or {}
+        kanban = row.get("kanban") or {}
+        local_txt = f"{local.get('active', 0)}/{local.get('total', 0)}"
+        kanban_txt = f"{kanban.get('active', 0)}/{kanban.get('total', 0)}"
+        board = str(row.get("board") or "-")
+        if not row.get("board_exists"):
+            board = f"{board}!"
+        blocked = str((local.get("latest_blocked_reason") or row.get("board_error") or "-"))[:24]
+        lines.append(
+            f"{str(row.get('slug') or ''):<22} {str(row.get('health') or ''):<10} {board:<18} {local_txt:<16} {kanban_txt:<16} {blocked}"
+        )
+    return "\n".join(lines)
 
 
 def execute(args: argparse.Namespace) -> dict[str, Any]:
@@ -155,6 +276,39 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                 resume_action=next((item["resume_action"] for item in results if item["blocked"]), ""),
                 data={"results": results},
             )
+
+
+        if args.command == "fleet":
+            projects = (
+                [registry.resolve(slug=args.project)]
+                if args.project
+                else registry.list(dispatchable_only=True)
+            )
+            rows = []
+            for project in projects:
+                dispatches = storage.list_dispatches(project_slug=project.slug)
+                rows.append(
+                    _summarize_project(
+                        project=project,
+                        dispatches=dispatches,
+                        executor=executor,
+                        sync_boards=bool(getattr(args, "sync_boards", False)),
+                    )
+                )
+            health_counts = _count_by(rows, key="health")
+            payload = {
+                "executor": wired["executor_name"],
+                "truth_gate": wired["truth_gate_name"],
+                "project_count": len(rows),
+                "active_projects": health_counts.get("active", 0),
+                "attention_projects": health_counts.get("attention", 0) + health_counts.get("error", 0),
+                "idle_projects": health_counts.get("idle", 0),
+                "projects": rows,
+            }
+            if not bool(getattr(args, "json", False)):
+                # Human-readable summary still travels in envelope data.
+                payload["text"] = render_fleet_text(payload)
+            return envelope(status="pass", data=payload)
 
         if args.command == "boards":
             projects = [registry.resolve(slug=args.project)] if args.project else registry.list(dispatchable_only=True)
