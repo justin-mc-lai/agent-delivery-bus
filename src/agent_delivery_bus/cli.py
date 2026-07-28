@@ -81,6 +81,11 @@ def build_parser() -> argparse.ArgumentParser:
     boards_sync = boards_sub.add_parser("sync")
     boards_sync.add_argument("--project")
     boards_sync.add_argument("--json", action="store_true")
+    boards_status = boards_sub.add_parser("status", help="expand Hermes/kanban columns for one or more projects")
+    boards_status.add_argument("--project")
+    boards_status.add_argument("--json", action="store_true")
+    boards_status.add_argument("--limit", type=int, default=8, help="max tasks shown per column in text mode")
+    boards_status.add_argument("--sync-board", action="store_true", help="ensure board exists before reading")
 
     fleet = sub.add_parser("fleet", help="multi-project kanban + dispatch fleet status")
     fleet.add_argument("--project")
@@ -234,6 +239,232 @@ def render_fleet_text(payload: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+
+HERMES_COLUMNS = (
+    "triage",
+    "todo",
+    "ready",
+    "scheduled",
+    "running",
+    "review",
+    "blocked",
+    "done",
+    "archived",
+)
+
+SIMPLIFIED_BUCKETS = {
+    "todo": ("triage", "todo"),
+    "doing": ("ready", "scheduled", "running", "review"),
+    "blocked": ("blocked",),
+    "done": ("done", "archived", "completed", "success", "succeeded"),
+}
+
+
+def _task_status(task: dict[str, Any]) -> str:
+    return str(task.get("status") or task.get("state") or "unknown").lower() or "unknown"
+
+
+def _task_title(task: dict[str, Any]) -> str:
+    return str(
+        task.get("title")
+        or task.get("name")
+        or task.get("summary")
+        or task.get("id")
+        or task.get("task_id")
+        or "(untitled)"
+    )
+
+
+def _task_id(task: dict[str, Any]) -> str:
+    return str(task.get("id") or task.get("task_id") or "")
+
+
+def build_board_status(
+    *,
+    project,
+    executor,
+    dispatches: list[dict[str, Any]] | None = None,
+    sync_board: bool = False,
+    limit: int = 8,
+) -> dict[str, Any]:
+    board_slug = executor.board_for(project)
+    board_meta: dict[str, Any] = {"slug": board_slug}
+    error = ""
+    tasks: list[dict[str, Any]] = []
+    stats_payload: dict[str, Any] = {}
+    try:
+        if sync_board:
+            board_meta = dict(executor.ensure_board(project))
+            board_slug = str(board_meta.get("slug") or board_slug)
+        elif hasattr(executor, "list_boards"):
+            boards = executor.list_boards()
+            matched = next(
+                (
+                    item
+                    for item in boards
+                    if isinstance(item, dict)
+                    and str(item.get("slug") or "") == board_slug
+                    and not item.get("archived")
+                ),
+                None,
+            )
+            if matched:
+                board_meta = dict(matched)
+            else:
+                error = f"board not found: {board_slug}"
+        if not error and hasattr(executor, "list_tasks"):
+            tasks = list(executor.list_tasks(board_slug) or [])
+        if not error and hasattr(executor, "stats"):
+            try:
+                stats_payload = dict(executor.stats(board_slug) or {})
+            except Exception as exc:  # noqa: BLE001
+                stats_payload = {"error": str(exc)}
+    except Exception as exc:  # noqa: BLE001
+        error = str(exc)
+
+    columns: dict[str, list[dict[str, Any]]] = {name: [] for name in HERMES_COLUMNS}
+    extra_columns: dict[str, list[dict[str, Any]]] = {}
+    for task in tasks:
+        status = _task_status(task)
+        item = {
+            "id": _task_id(task),
+            "title": _task_title(task),
+            "status": status,
+            "assignee": task.get("assignee") or task.get("owner") or "",
+            "updated_at": task.get("updated_at") or task.get("updated") or "",
+        }
+        if status in columns:
+            columns[status].append(item)
+        else:
+            extra_columns.setdefault(status, []).append(item)
+
+    # Prefer hermes stats counts when present; fall back to listed tasks.
+    raw_counts = {}
+    if isinstance(stats_payload.get("by_status"), dict):
+        raw_counts = {
+            str(k).lower(): int(v)
+            for k, v in stats_payload.get("by_status", {}).items()
+        }
+    if not raw_counts:
+        raw_counts = {name: len(items) for name, items in columns.items() if items}
+        raw_counts.update({name: len(items) for name, items in extra_columns.items()})
+
+    column_counts = {name: int(raw_counts.get(name, 0)) for name in HERMES_COLUMNS}
+    for name, value in raw_counts.items():
+        if name not in column_counts:
+            column_counts[name] = int(value)
+
+    simplified = {
+        bucket: sum(column_counts.get(status, 0) for status in statuses)
+        for bucket, statuses in SIMPLIFIED_BUCKETS.items()
+    }
+    unknown = sum(
+        count
+        for status, count in column_counts.items()
+        if status not in HERMES_COLUMNS
+        and status not in {"completed", "success", "succeeded"}
+    )
+    # completed aliases fold into done already via simplified mapping when present in raw counts
+    simplified["done"] = simplified.get("done", 0) + sum(
+        int(column_counts.get(alias, 0))
+        for alias in ("completed", "success", "succeeded")
+        if alias in column_counts and alias not in HERMES_COLUMNS
+    )
+
+    local = dispatches or []
+    local_counts = _count_by(local, key="state")
+    return {
+        "project": project.slug,
+        "title": project.title,
+        "repo": project.repo,
+        "board": board_slug,
+        "board_meta": board_meta,
+        "error": error,
+        "total_tasks": sum(column_counts.values()) if column_counts else len(tasks),
+        "simplified": simplified,
+        "columns": {
+            name: {
+                "count": column_counts.get(name, 0),
+                "tasks": columns.get(name, [])[: max(limit, 0) if limit else None],
+            }
+            for name in HERMES_COLUMNS
+        },
+        "extra_columns": {
+            name: {
+                "count": column_counts.get(name, len(items)),
+                "tasks": items[: max(limit, 0) if limit else None],
+            }
+            for name, items in extra_columns.items()
+        },
+        "stats": stats_payload,
+        "local_dispatches": {
+            "total": len(local),
+            "counts": local_counts,
+        },
+        "unknown_count": unknown,
+    }
+
+
+def render_board_status_text(payload: dict[str, Any]) -> str:
+    rows = payload.get("boards") or []
+    lines = [
+        f"adapters: executor={payload.get('executor')} truth_gate={payload.get('truth_gate')}",
+        f"boards: {len(rows)}",
+        "",
+    ]
+    for row in rows:
+        simplified = row.get("simplified") or {}
+        lines.append(
+            f"## {row.get('project')}  board={row.get('board')}  total={row.get('total_tasks', 0)}"
+        )
+        if row.get("error"):
+            lines.append(f"error: {row.get('error')}")
+        lines.append(
+            "summary: "
+            f"todo={simplified.get('todo', 0)}  "
+            f"doing={simplified.get('doing', 0)}  "
+            f"blocked={simplified.get('blocked', 0)}  "
+            f"done={simplified.get('done', 0)}"
+        )
+        # compact column strip
+        cols = row.get("columns") or {}
+        strip = " | ".join(
+            f"{name}:{((cols.get(name) or {}).get('count') or 0)}"
+            for name in HERMES_COLUMNS
+        )
+        lines.append(f"columns: {strip}")
+        for name in HERMES_COLUMNS:
+            bucket = cols.get(name) or {}
+            tasks = bucket.get("tasks") or []
+            count = int(bucket.get("count") or 0)
+            if count <= 0 and not tasks:
+                continue
+            lines.append(f"  [{name}] {count}")
+            for task in tasks:
+                title = str(task.get("title") or "")[:72]
+                tid = str(task.get("id") or "")
+                assignee = str(task.get("assignee") or "")
+                suffix = f" @{assignee}" if assignee else ""
+                lines.append(f"    - {tid}: {title}{suffix}".rstrip())
+        extra = row.get("extra_columns") or {}
+        for name, bucket in extra.items():
+            count = int(bucket.get("count") or 0)
+            tasks = bucket.get("tasks") or []
+            if count <= 0 and not tasks:
+                continue
+            lines.append(f"  [{name}] {count}")
+            for task in tasks:
+                lines.append(
+                    f"    - {task.get('id')}: {str(task.get('title') or '')[:72]}"
+                )
+        local = row.get("local_dispatches") or {}
+        lines.append(
+            f"local_dispatches: total={local.get('total', 0)} counts={local.get('counts') or {}}"
+        )
+        lines.append("")
+    return "\n".join(lines).rstrip() + "\n"
+
+
 def execute(args: argparse.Namespace) -> dict[str, Any]:
     if args.command == "install-skills":
         skill = ROOT / "skills" / "agent-delivery-bus"
@@ -311,9 +542,43 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
             return envelope(status="pass", data=payload)
 
         if args.command == "boards":
-            projects = [registry.resolve(slug=args.project)] if args.project else registry.list(dispatchable_only=True)
-            boards = [executor.ensure_board(project) for project in projects]
-            return envelope(status="pass", data={"boards": boards})
+            if args.boards_command == "sync":
+                projects = [registry.resolve(slug=args.project)] if args.project else registry.list(dispatchable_only=True)
+                boards = [executor.ensure_board(project) for project in projects]
+                return envelope(status="pass", data={"boards": boards})
+            if args.boards_command == "status":
+                projects = (
+                    [registry.resolve(slug=args.project)]
+                    if args.project
+                    else registry.list(dispatchable_only=True)
+                )
+                rows = []
+                for project in projects:
+                    rows.append(
+                        build_board_status(
+                            project=project,
+                            executor=executor,
+                            dispatches=storage.list_dispatches(project_slug=project.slug),
+                            sync_board=bool(getattr(args, "sync_board", False)),
+                            limit=int(getattr(args, "limit", 8) or 0),
+                        )
+                    )
+                payload = {
+                    "executor": wired["executor_name"],
+                    "truth_gate": wired["truth_gate_name"],
+                    "boards": rows,
+                }
+                if not bool(getattr(args, "json", False)):
+                    payload["text"] = render_board_status_text(payload)
+                blocked = any(bool(row.get("error")) for row in rows)
+                return envelope(
+                    status="blocked" if blocked else "pass",
+                    blocked=blocked,
+                    reason_code="board_status_partial" if blocked else "",
+                    resume_action="inspect board_error fields, then rerun with --sync-board if needed" if blocked else "",
+                    data=payload,
+                )
+            raise DeliveryBusError("boards_command_invalid", f"Unknown boards command: {args.boards_command}")
 
         if args.command == "approve":
             issued = approvals.issue(

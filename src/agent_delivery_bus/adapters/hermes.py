@@ -193,7 +193,22 @@ class HermesAdapter:
             )
         return {"board": slug, "task_id": task_id, "payload": payload}
 
+    def stats(self, board: str) -> dict[str, Any]:
+        result = self.runner.run(
+            ["hermes", "kanban", "--board", board, "stats", "--json"],
+            timeout=30,
+        )
+        if result.returncode != 0:
+            raise CommandFailed(
+                "hermes_board_stats_failed",
+                f"Failed to read Hermes stats for board {board}",
+                data={"stderr": result.stderr[-2000:]},
+            )
+        payload = result.json()
+        return payload if isinstance(payload, dict) else {"raw": payload}
+
     def list_tasks(self, board: str) -> list[dict[str, Any]]:
+
         result = self.runner.run(
             ["hermes", "kanban", "--board", board, "list", "--json"],
             timeout=30,

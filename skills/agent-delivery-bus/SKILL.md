@@ -49,6 +49,8 @@ bin/adb task show <dispatch-id> --json
 bin/adb reconcile <dispatch-id> --json
 bin/adb fleet --json
 bin/adb fleet --project <slug> --json
+bin/adb boards status --project <slug>
+bin/adb boards status --project <slug> --json
 ```
 
 Read [references/contracts.md](references/contracts.md) before performing a real

@@ -125,7 +125,16 @@ class NullExecutor:
     def list_boards(self) -> list[dict[str, Any]]:
         return [dict(board) for board in self.boards.values()]
 
+    def stats(self, board: str) -> dict[str, Any]:
+        tasks = self.list_tasks(board)
+        by_status: dict[str, int] = {}
+        for task in tasks:
+            status = str(task.get("status") or task.get("state") or "unknown").lower() or "unknown"
+            by_status[status] = by_status.get(status, 0) + 1
+        return {"by_status": by_status, "by_assignee": {}, "total": len(tasks)}
+
     def list_tasks(self, board: str) -> list[dict[str, Any]]:
+
         return [dict(task) for task in self.tasks.values() if task.get("board") == board]
 
     def show_task(self, board: str, task_id: str) -> dict[str, Any]:
