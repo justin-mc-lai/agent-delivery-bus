@@ -19,16 +19,20 @@ def make_project(root: Path, *, slug: str = "demo") -> Project:
         title=slug.title(),
         project_class="managed",
         repo=str(repo.resolve()),
-        beacon_docs_root=str(docs.resolve()),
-        current_docs_version="v1.0.0",
         aliases=(f"{slug}-alias",),
         dispatchable=True,
+        docs_root=str(docs.resolve()),
+        docs_version="v1.0.0",
     )
 
 
 def write_registry(path: Path, projects: list[Project]) -> Path:
     payload = {
         "schema_version": "1.0",
+        "adapters": {
+            "executor": "hermes",
+            "truth_gate": "beacon",
+        },
         "projects": [project.to_dict() for project in projects],
     }
     path.write_text(json.dumps(payload), encoding="utf-8")
@@ -61,14 +65,24 @@ class PassingPreflight:
         }
 
 
-class FakeHermes:
+class FakeExecutor:
     def __init__(self, *, remote_status: str = "running"):
+        self.name = "fake-executor"
         self.create_count = 0
         self.remote_status = remote_status
         self.tasks: dict[str, dict[str, Any]] = {}
 
+    def preflight_checks(self, project: Project, *, stage: str):
+        return []
+
+    def board_for(self, project: Project) -> str:
+        return f"adb-{project.slug}"
+
+    def workspace_for(self, project: Project, *, stage: str) -> str:
+        return f"worktree:{project.repo}" if stage == "implement" else f"dir:{project.repo}"
+
     def ensure_board(self, project: Project) -> dict[str, Any]:
-        return {"slug": f"adb-{project.slug}"}
+        return {"slug": self.board_for(project)}
 
     def create_task(self, project: Project, *, stage: str, feature: str, body: str, idempotency_key: str):
         self.create_count += 1
@@ -79,7 +93,7 @@ class FakeHermes:
             "idempotency_key": idempotency_key,
         }
         self.tasks[task_id] = task
-        return {"board": f"adb-{project.slug}", "task_id": task_id, "payload": task}
+        return {"board": self.board_for(project), "task_id": task_id, "payload": task}
 
     def show_task(self, board: str, task_id: str):
         task = dict(self.tasks[task_id])
@@ -90,9 +104,20 @@ class FakeHermes:
         return next((task for task in self.tasks.values() if task["idempotency_key"] == key), None)
 
 
-class FakeBeacon:
+# Backward-compatible alias used by older tests.
+FakeHermes = FakeExecutor
+
+
+class FakeTruthGate:
     def __init__(self, closure_pass: bool = False):
+        self.name = "fake-truth"
         self.closure_pass = closure_pass
+
+    def preflight_checks(self, project: Project, *, stage: str):
+        return []
 
     def closure(self, project: Project, *, stage: str, feature: str):
         return {"pass": self.closure_pass, "evidence": ["fixture"] if self.closure_pass else []}
+
+
+FakeBeacon = FakeTruthGate

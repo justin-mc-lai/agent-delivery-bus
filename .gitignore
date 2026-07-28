@@ -101,3 +101,10 @@ __pycache__/
 .coverage
 data/
 .tmp/
+
+# Local machine registry overrides
+config/projects.local.json
+*.sqlite3
+
+*.egg-info/
+src/*.egg-info/

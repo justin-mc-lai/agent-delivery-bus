@@ -1,7 +1,9 @@
+"""Project registry: the only routing authority for Delivery Bus."""
+
 from __future__ import annotations
 
 import json
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -17,21 +19,46 @@ class Project:
     title: str
     project_class: str
     repo: str
-    beacon_docs_root: str
-    current_docs_version: str
     aliases: tuple[str, ...]
     dispatchable: bool
+    docs_root: str = ""
+    docs_version: str = ""
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    # Backward-compatible aliases used by older local configs and tests.
+    @property
+    def beacon_docs_root(self) -> str:
+        return self.docs_root
+
+    @property
+    def current_docs_version(self) -> str:
+        return self.docs_version
 
     def to_dict(self) -> dict[str, Any]:
-        payload = asdict(self)
-        payload["class"] = payload.pop("project_class")
-        payload["aliases"] = list(self.aliases)
+        payload = {
+            "slug": self.slug,
+            "title": self.title,
+            "class": self.project_class,
+            "repo": self.repo,
+            "aliases": list(self.aliases),
+            "dispatchable": self.dispatchable,
+            "docs_root": self.docs_root,
+            "docs_version": self.docs_version,
+        }
+        # Keep legacy keys for older consumers and example Beacon adapters.
+        if self.docs_root:
+            payload["beacon_docs_root"] = self.docs_root
+        if self.docs_version:
+            payload["current_docs_version"] = self.docs_version
+        if self.metadata:
+            payload["metadata"] = dict(self.metadata)
         return payload
 
 
 class ProjectRegistry:
-    def __init__(self, projects: list[Project], *, source: Path):
+    def __init__(self, projects: list[Project], *, source: Path, raw: dict[str, Any] | None = None):
         self.source = source
+        self.raw = raw or {}
         self._projects = {project.slug: project for project in projects}
         self._aliases: dict[str, str] = {}
         self._paths: dict[str, str] = {}
@@ -43,7 +70,7 @@ class ProjectRegistry:
                     raise DeliveryBusError(
                         "project_alias_ambiguous",
                         f"Alias {alias!r} maps to both {existing!r} and {project.slug!r}",
-                        resume_action="remove or rename the conflicting alias in config/projects.json",
+                        resume_action="remove or rename the conflicting alias in the project registry",
                     )
                 self._aliases[key] = project.slug
             canonical = str(Path(project.repo).expanduser().resolve())
@@ -63,7 +90,7 @@ class ProjectRegistry:
             raise DeliveryBusError(
                 "registry_missing",
                 f"Project registry not found: {source}",
-                resume_action="create config/projects.json or pass --config",
+                resume_action="copy config/projects.example.json to config/projects.json or pass --config",
             )
         try:
             raw = json.loads(source.read_text(encoding="utf-8"))
@@ -81,8 +108,16 @@ class ProjectRegistry:
             slug = str(row.get("slug") or "").strip()
             project_class = str(row.get("class") or "").strip()
             repo = str(row.get("repo") or "").strip()
-            docs_root = str(row.get("beacon_docs_root") or "").strip()
-            version = str(row.get("current_docs_version") or "").strip()
+            docs_root = str(
+                row.get("docs_root")
+                or row.get("beacon_docs_root")
+                or ""
+            ).strip()
+            version = str(
+                row.get("docs_version")
+                or row.get("current_docs_version")
+                or ""
+            ).strip()
             if not slug or slug in seen:
                 raise DeliveryBusError("project_slug_duplicate", f"Missing or duplicate project slug: {slug!r}")
             if project_class not in ALLOWED_CLASSES:
@@ -99,14 +134,10 @@ class ProjectRegistry:
                     f"Project repository does not exist: {canonical_repo}",
                     resume_action=f"restore the repository or mark {slug} non-dispatchable",
                 )
-            if bool(row.get("dispatchable", True)) and (not docs_root or not version):
-                raise DeliveryBusError(
-                    "project_beacon_metadata_missing",
-                    f"Dispatchable project {slug!r} must declare beacon_docs_root and current_docs_version",
-                )
             aliases = row.get("aliases") or []
             if not isinstance(aliases, list) or not all(isinstance(item, str) for item in aliases):
                 raise DeliveryBusError("project_aliases_invalid", f"Project {slug!r} aliases must be strings")
+            metadata = row.get("metadata") if isinstance(row.get("metadata"), dict) else {}
             seen.add(slug)
             projects.append(
                 Project(
@@ -114,13 +145,14 @@ class ProjectRegistry:
                     title=str(row.get("title") or slug),
                     project_class=project_class,
                     repo=str(canonical_repo),
-                    beacon_docs_root=str(Path(docs_root).expanduser().resolve()) if docs_root else "",
-                    current_docs_version=version,
                     aliases=tuple(item.strip() for item in aliases if item.strip()),
                     dispatchable=bool(row.get("dispatchable", True)),
+                    docs_root=str(Path(docs_root).expanduser().resolve()) if docs_root else "",
+                    docs_version=version,
+                    metadata=dict(metadata),
                 )
             )
-        return cls(projects, source=source)
+        return cls(projects, source=source, raw=raw if isinstance(raw, dict) else {})
 
     def list(self, *, dispatchable_only: bool = False) -> list[Project]:
         projects = sorted(self._projects.values(), key=lambda item: item.slug)

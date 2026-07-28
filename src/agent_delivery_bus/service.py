@@ -1,11 +1,12 @@
+"""Delivery service: approval, idempotent dispatch, and evidence reconciliation."""
+
 from __future__ import annotations
 
 import hashlib
 import json
 from typing import Any
 
-from .adapters.beacon import BeaconAdapter
-from .adapters.hermes import HermesAdapter, board_slug
+from .adapters.spi import ExecutorAdapter, TruthGateAdapter
 from .approvals import ApprovalService, RESTRICTED_STAGES
 from .errors import CommandTimedOut, DeliveryBusError
 from .preflight import Preflight
@@ -14,8 +15,8 @@ from .storage import Storage
 
 
 ENABLED_STAGES = {"plan", "implement", "qa", "freeze"}
-TERMINAL_HERMES_SUCCESS = {"done", "completed", "success", "succeeded"}
-TERMINAL_HERMES_FAILURE = {"blocked", "failed", "cancelled", "archived"}
+TERMINAL_EXECUTOR_SUCCESS = {"done", "completed", "success", "succeeded"}
+TERMINAL_EXECUTOR_FAILURE = {"blocked", "failed", "cancelled", "archived"}
 
 
 def normalized_request(project: Project, *, stage: str, feature: str) -> dict[str, Any]:
@@ -23,7 +24,7 @@ def normalized_request(project: Project, *, stage: str, feature: str) -> dict[st
         "schema_version": "1.0",
         "project_slug": project.slug,
         "canonical_repo": project.repo,
-        "docs_version": project.current_docs_version,
+        "docs_version": project.docs_version,
         "stage": stage.strip().lower(),
         "feature": feature.strip(),
     }
@@ -35,19 +36,23 @@ def request_digest(request: dict[str, Any]) -> str:
 
 
 def task_body(project: Project, *, stage: str, feature: str) -> str:
-    approval_note = "A matching one-time approval was reserved by Agent Delivery Bus." if stage in RESTRICTED_STAGES else "This stage is not approval-gated."
+    approval_note = (
+        "A matching one-time approval was reserved by Agent Delivery Bus."
+        if stage in RESTRICTED_STAGES
+        else "This stage is not approval-gated."
+    )
     return "\n".join(
         [
             f"Project: {project.slug}",
             f"Repository: {project.repo}",
-            f"Beacon docs version: {project.current_docs_version}",
+            f"Docs version: {project.docs_version or '(none)'}",
             f"Stage: {stage}",
             f"Feature: {feature}",
             "",
             approval_note,
-            "Run the project Beacon workflow for this stage and preserve Beacon gates.",
-            "Do not release, merge, push, or repair Beacon context unless a separate human instruction explicitly authorizes it.",
-            "Worker success is an execution receipt only; Agent Delivery Bus will reconcile Beacon evidence separately.",
+            "Run the project's governed workflow for this stage and preserve its delivery gates.",
+            "Do not release, merge, push, or repair project context unless a separate human instruction explicitly authorizes it.",
+            "Worker success is an execution receipt only; Agent Delivery Bus will reconcile truth-gate evidence separately.",
         ]
     )
 
@@ -59,14 +64,22 @@ class DeliveryService:
         storage: Storage,
         *,
         preflight: Preflight | None = None,
-        hermes: HermesAdapter | None = None,
-        beacon: BeaconAdapter | None = None,
+        executor: ExecutorAdapter | None = None,
+        truth_gate: TruthGateAdapter | None = None,
+        # Backward-compatible aliases
+        hermes: ExecutorAdapter | None = None,
+        beacon: TruthGateAdapter | None = None,
     ):
         self.registry = registry
         self.storage = storage
-        self.hermes = hermes or HermesAdapter()
-        self.beacon = beacon or BeaconAdapter()
-        self.preflight = preflight or Preflight(self.beacon, self.hermes)
+        self.executor = executor or hermes
+        self.truth_gate = truth_gate or beacon
+        if self.executor is None or self.truth_gate is None:
+            raise ValueError("DeliveryService requires executor and truth_gate adapters")
+        # Compatibility attributes for older call sites/tests.
+        self.hermes = self.executor
+        self.beacon = self.truth_gate
+        self.preflight = preflight or Preflight(self.truth_gate, self.executor)
         self.approvals = ApprovalService(storage)
 
     def dispatch(
@@ -89,8 +102,8 @@ class DeliveryService:
         if stage == "release":
             raise DeliveryBusError(
                 "stage_not_enabled",
-                "Automatic release dispatch is disabled in v0.0.1",
-                resume_action=f"run Beacon release manually in {project.repo} after reviewing evidence",
+                "Automatic release dispatch is disabled in v0.1.0",
+                resume_action=f"run release manually in {project.repo} after reviewing evidence",
             )
         if stage not in ENABLED_STAGES:
             raise DeliveryBusError("stage_invalid", f"Unsupported stage: {stage}")
@@ -108,8 +121,8 @@ class DeliveryService:
                 "dry_run": True,
                 "request": request,
                 "idempotency_key": idempotency_key,
-                "board": board_slug(project.slug),
-                "workspace": f"worktree:{project.repo}" if stage == "implement" else f"dir:{project.repo}",
+                "board": self.executor.board_for(project),
+                "workspace": self.executor.workspace_for(project, stage=stage),
                 "preflight": preflight,
             }
 
@@ -235,8 +248,8 @@ class DeliveryService:
             )
 
         try:
-            self.hermes.ensure_board(project)
-            receipt = self.hermes.create_task(
+            self.executor.ensure_board(project)
+            receipt = self.executor.create_task(
                 project,
                 stage=stage,
                 feature=feature,
@@ -247,10 +260,10 @@ class DeliveryService:
                 dispatch_id,
                 expected_from="queued",
                 to_state="dispatched",
-                event_type="hermes_created",
+                event_type="executor_created",
                 approval_id=approval_id,
-                hermes_board=str(receipt["board"]),
-                hermes_task_id=str(receipt["task_id"]),
+                executor_board=str(receipt["board"]),
+                executor_task_id=str(receipt["task_id"]),
                 payload={"receipt": receipt},
             )
             if approval_id:
@@ -261,7 +274,7 @@ class DeliveryService:
                 dispatch_id,
                 expected_from="queued",
                 to_state="reconciling",
-                event_type="hermes_unknown",
+                event_type="executor_unknown",
                 reason_code="reconciliation_required",
                 resume_action="run `adb reconcile` before retrying",
                 payload={"error": str(exc), "data": exc.data or {}},
@@ -280,7 +293,7 @@ class DeliveryService:
                 dispatch_id,
                 expected_from="queued",
                 to_state="failed",
-                event_type="hermes_failed",
+                event_type="executor_failed",
                 reason_code=exc.reason_code,
                 resume_action=exc.resume_action,
                 payload={"error": str(exc), "data": exc.data or {}},
@@ -296,16 +309,16 @@ class DeliveryService:
     def reconcile(self, dispatch_id: str) -> dict[str, Any]:
         dispatch = self.storage.get_dispatch(dispatch_id)
         project = self.registry.resolve(slug=dispatch["project_slug"])
-        board = dispatch.get("hermes_board") or board_slug(project.slug)
-        task_id = dispatch.get("hermes_task_id")
+        board = dispatch.get("executor_board") or self.executor.board_for(project)
+        task_id = dispatch.get("executor_task_id")
         if not task_id:
-            task = self.hermes.find_by_idempotency(board, dispatch["idempotency_key"])
+            task = self.executor.find_by_idempotency(board, dispatch["idempotency_key"])
             if task is None:
                 return {
                     "status": "reconciling",
                     "blocked": True,
-                    "reason_code": "hermes_task_not_found",
-                    "resume_action": "inspect the Hermes board before retrying dispatch",
+                    "reason_code": "executor_task_not_found",
+                    "resume_action": "inspect the executor board before retrying dispatch",
                     "dispatch": dispatch,
                 }
             task_id = str(task.get("id") or task.get("task_id") or "")
@@ -314,26 +327,31 @@ class DeliveryService:
                 expected_from="reconciling",
                 to_state="dispatched",
                 event_type="external_task_found",
-                hermes_board=board,
-                hermes_task_id=task_id,
+                executor_board=board,
+                executor_task_id=task_id,
                 payload={"task": task},
             )
             if dispatch.get("approval_id"):
                 self.approvals.finalize(dispatch["approval_id"], dispatch_id=dispatch_id)
-        task = self.hermes.show_task(board, task_id)
+        task = self.executor.show_task(board, task_id)
         status = str(task.get("status") or task.get("state") or "").lower()
-        if status in TERMINAL_HERMES_FAILURE:
+        if status in TERMINAL_EXECUTOR_FAILURE:
             if dispatch["state"] == "dispatched":
                 dispatch = self.storage.transition(
                     dispatch_id,
                     expected_from="dispatched",
                     to_state="failed",
                     event_type="worker_failed",
-                    reason_code="hermes_terminal_failure",
+                    reason_code="executor_terminal_failure",
                     payload={"task": task},
                 )
-            return {"status": "failed", "blocked": True, "reason_code": "hermes_terminal_failure", "dispatch": dispatch}
-        if status not in TERMINAL_HERMES_SUCCESS:
+            return {
+                "status": "failed",
+                "blocked": True,
+                "reason_code": "executor_terminal_failure",
+                "dispatch": dispatch,
+            }
+        if status not in TERMINAL_EXECUTOR_SUCCESS:
             return {"status": dispatch["state"], "blocked": False, "remote_status": status, "dispatch": dispatch}
         if dispatch["state"] == "dispatched":
             dispatch = self.storage.transition(
@@ -343,7 +361,7 @@ class DeliveryService:
                 event_type="worker_succeeded",
                 payload={"task": task},
             )
-        closure = self.beacon.closure(
+        closure = self.truth_gate.closure(
             project,
             stage=dispatch["stage"],
             feature=dispatch["feature"],
@@ -352,8 +370,8 @@ class DeliveryService:
             return {
                 "status": "reconciling",
                 "blocked": True,
-                "reason_code": "beacon_evidence_incomplete",
-                "resume_action": "complete the stage-specific Beacon gate/evidence, then reconcile again",
+                "reason_code": "truth_evidence_incomplete",
+                "resume_action": "complete the stage-specific truth-gate evidence, then reconcile again",
                 "closure": closure,
                 "dispatch": dispatch,
             }

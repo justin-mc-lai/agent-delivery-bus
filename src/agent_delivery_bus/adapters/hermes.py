@@ -1,12 +1,20 @@
+"""Example ExecutorAdapter backed by the Hermes Kanban public CLI.
+
+This is an optional reference integration, not part of the scheduling core.
+Delivery Bus never opens Hermes private databases.
+"""
+
 from __future__ import annotations
 
 import json
 import re
+from shutil import which
 from typing import Any
 
 from ..errors import CommandFailed
 from ..process import CommandRunner
 from ..registry import Project
+from .spi import as_check
 
 
 def board_slug(project_slug: str) -> str:
@@ -15,8 +23,48 @@ def board_slug(project_slug: str) -> str:
 
 
 class HermesAdapter:
-    def __init__(self, runner: CommandRunner | None = None):
+    name = "hermes"
+
+    def __init__(self, runner: CommandRunner | None = None, which_command=None):
         self.runner = runner or CommandRunner()
+        self.which_command = which_command or which
+
+    def preflight_checks(self, project: Project, *, stage: str) -> list[dict[str, Any]]:
+        del project, stage
+        checks: list[dict[str, Any]] = []
+        cli_ok = bool(self.which_command("hermes"))
+        checks.append(
+            as_check(
+                "hermes_cli",
+                cli_ok,
+                reason_code="hermes_cli_unavailable",
+                resume_action="install or repair the Hermes CLI, then rerun preflight",
+            )
+        )
+        health = self.health(profile="coding") if cli_ok else {
+            "gateway_pass": False,
+            "profile_pass": False,
+            "profiles": [],
+        }
+        checks.append(
+            as_check(
+                "hermes_gateway",
+                bool(health.get("gateway_pass")),
+                reason_code="hermes_gateway_unavailable",
+                resume_action="run `hermes gateway status` and start/restart the gateway",
+                detail=health,
+            )
+        )
+        checks.append(
+            as_check(
+                "hermes_profile",
+                bool(health.get("profile_pass")),
+                reason_code="hermes_profile_missing",
+                resume_action="create or restore the Hermes `coding` profile",
+                detail={"profiles": health.get("profiles", [])},
+            )
+        )
+        return checks
 
     def health(self, *, profile: str = "coding") -> dict[str, Any]:
         gateway = self.runner.run(["hermes", "gateway", "status"], timeout=30)
@@ -36,6 +84,14 @@ class HermesAdapter:
             "gateway_output": gateway.stdout + gateway.stderr,
         }
 
+    def board_for(self, project: Project) -> str:
+        return board_slug(project.slug)
+
+    def workspace_for(self, project: Project, *, stage: str) -> str:
+        if stage == "implement":
+            return f"worktree:{project.repo}"
+        return f"dir:{project.repo}"
+
     def list_boards(self) -> list[dict[str, Any]]:
         result = self.runner.run(["hermes", "kanban", "boards", "list", "--json"], timeout=30)
         if result.returncode != 0:
@@ -48,7 +104,7 @@ class HermesAdapter:
         return payload if isinstance(payload, list) else []
 
     def ensure_board(self, project: Project) -> dict[str, Any]:
-        slug = board_slug(project.slug)
+        slug = self.board_for(project)
         for item in self.list_boards():
             if item.get("slug") == slug and not item.get("archived"):
                 return item
@@ -85,8 +141,8 @@ class HermesAdapter:
         body: str,
         idempotency_key: str,
     ) -> dict[str, Any]:
-        slug = board_slug(project.slug)
-        workspace = f"worktree:{project.repo}" if stage == "implement" else f"dir:{project.repo}"
+        slug = self.board_for(project)
+        workspace = self.workspace_for(project, stage=stage)
         result = self.runner.run(
             [
                 "hermes",

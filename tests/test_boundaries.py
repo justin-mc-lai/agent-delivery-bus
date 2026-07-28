@@ -24,8 +24,8 @@ class BoundaryTests(unittest.TestCase):
                 registry,
                 storage,
                 preflight=PassingPreflight(),
-                hermes=hermes,
-                beacon=FakeBeacon(),
+                executor=hermes,
+                truth_gate=FakeBeacon(),
             )
             with self.assertRaises(DeliveryBusError) as raised:
                 service.dispatch(project_slug="demo", stage="release", feature="feature")

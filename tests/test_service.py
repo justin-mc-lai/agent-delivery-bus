@@ -24,8 +24,8 @@ class DispatchIdempotencyTests(unittest.TestCase):
                 registry,
                 storage,
                 preflight=PassingPreflight(),
-                hermes=hermes,
-                beacon=FakeBeacon(),
+                executor=hermes,
+                truth_gate=FakeBeacon(),
             )
             first = service.dispatch(project_slug="demo", stage="plan", feature="feature")
             second = service.dispatch(project_slug="demo", stage="plan", feature="feature")
@@ -43,8 +43,8 @@ class DispatchIdempotencyTests(unittest.TestCase):
                 registry,
                 storage,
                 preflight=PassingPreflight(),
-                hermes=FakeHermes(),
-                beacon=FakeBeacon(),
+                executor=FakeHermes(),
+                truth_gate=FakeBeacon(),
             )
             service.dispatch(
                 project_slug="demo",
@@ -75,8 +75,8 @@ class DispatchStateMachineTests(unittest.TestCase):
                 registry,
                 storage,
                 preflight=PassingPreflight(),
-                hermes=hermes,
-                beacon=FakeBeacon(),
+                executor=hermes,
+                truth_gate=FakeBeacon(),
             )
             waiting = service.dispatch(project_slug="demo", stage="implement", feature="feature")
             self.assertEqual(waiting["status"], "awaiting_approval")
@@ -141,8 +141,8 @@ class DispatchStateMachineTests(unittest.TestCase):
                 registry,
                 storage,
                 preflight=preflight,
-                hermes=hermes,
-                beacon=FakeBeacon(),
+                executor=hermes,
+                truth_gate=FakeBeacon(),
             )
             blocked = service.dispatch(project_slug="demo", stage="plan", feature="feature")
             preflight.blocked = False

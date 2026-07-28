@@ -1,0 +1,4 @@
+interface:
+  display_name: "Collaboration Rules Template"
+  short_description: "Keep AI work governed across four folders"
+  default_prompt: "Use $collaboration-rules-template to set decision boundaries for AI collaboration without turning the knowledge base into a wiki."

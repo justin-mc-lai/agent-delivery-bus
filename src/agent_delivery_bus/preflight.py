@@ -1,12 +1,12 @@
+"""Read-only preflight orchestration over core checks + adapter checks."""
+
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from shutil import which
 from typing import Any
 
-from .adapters.beacon import BeaconAdapter
-from .adapters.hermes import HermesAdapter
+from .adapters.spi import ExecutorAdapter, TruthGateAdapter, as_check
 from .process import CommandRunner
 from .registry import Project
 
@@ -23,28 +23,46 @@ class Check:
         return asdict(self)
 
 
+def _from_dict(item: dict[str, Any]) -> Check:
+    return Check(
+        name=str(item.get("name") or "check"),
+        passed=bool(item.get("passed")),
+        reason_code=str(item.get("reason_code") or ""),
+        resume_action=str(item.get("resume_action") or ""),
+        detail=item.get("detail") if isinstance(item.get("detail"), dict) else {},
+    )
+
+
 class Preflight:
     def __init__(
         self,
-        beacon: BeaconAdapter | None = None,
-        hermes: HermesAdapter | None = None,
+        truth_gate: TruthGateAdapter | None = None,
+        executor: ExecutorAdapter | None = None,
         runner: CommandRunner | None = None,
+        *,
+        # Backward-compatible constructor aliases used by older tests/call sites.
+        beacon: TruthGateAdapter | None = None,
+        hermes: ExecutorAdapter | None = None,
         which_command=None,
     ):
+        del which_command  # CLI availability is owned by adapters now.
         self.runner = runner or CommandRunner()
-        self.beacon = beacon or BeaconAdapter(self.runner)
-        self.hermes = hermes or HermesAdapter(self.runner)
-        self.which_command = which_command or which
+        self.truth_gate = truth_gate or beacon
+        self.executor = executor or hermes
+        if self.truth_gate is None or self.executor is None:
+            raise ValueError("Preflight requires both truth_gate and executor adapters")
 
     def run(self, project: Project, *, stage: str) -> dict[str, Any]:
         checks: list[Check] = []
         repo = Path(project.repo)
         checks.append(
-            Check(
-                "repo_exists",
-                repo.is_dir(),
-                "" if repo.is_dir() else "repo_missing",
-                f"restore or correct the registered repo path for {project.slug}",
+            _from_dict(
+                as_check(
+                    "repo_exists",
+                    repo.is_dir(),
+                    reason_code="repo_missing",
+                    resume_action=f"restore or correct the registered repo path for {project.slug}",
+                )
             )
         )
         git_ok = False
@@ -65,101 +83,12 @@ class Preflight:
                 git_detail,
             )
         )
-        docs_root = Path(project.beacon_docs_root)
-        docs_ok = docs_root.is_dir()
-        checks.append(
-            Check(
-                "beacon_docs_root",
-                docs_ok,
-                "" if docs_ok else "beacon_docs_missing",
-                "restore Beacon docs or re-register the project",
-            )
-        )
-        version_path = docs_root / project.current_docs_version
-        version_ok = version_path.is_dir()
-        checks.append(
-            Check(
-                "beacon_docs_version",
-                version_ok,
-                "" if version_ok else "beacon_version_mismatch",
-                f"confirm current_docs_version={project.current_docs_version} in config/projects.json",
-            )
-        )
-        beacon_cli_ok = bool(self.which_command("beacon"))
-        checks.append(
-            Check(
-                "beacon_cli",
-                beacon_cli_ok,
-                "" if beacon_cli_ok else "beacon_cli_unavailable",
-                "install or repair the Beacon CLI, then rerun preflight",
-            )
-        )
-        context = (
-            self.beacon.verify_context(project)
-            if repo.is_dir() and beacon_cli_ok
-            else {"pass": False, "payload": {}}
-        )
-        actual_docs_version = str(
-            ((context.get("payload") or {}).get("docs_version") if isinstance(context, dict) else "")
-            or ""
-        )
-        declared_version_ok = not actual_docs_version or actual_docs_version == project.current_docs_version
-        checks.append(
-            Check(
-                "beacon_declared_version",
-                declared_version_ok,
-                "" if declared_version_ok else "beacon_version_mismatch",
-                (
-                    f"update config/projects.json from {project.current_docs_version} "
-                    f"to the project-reported {actual_docs_version}"
-                ),
-                {
-                    "registered": project.current_docs_version,
-                    "project_reported": actual_docs_version,
-                },
-            )
-        )
-        checks.append(
-            Check(
-                "beacon_context_strict",
-                bool(context.get("pass")),
-                "" if context.get("pass") else "beacon_context_invalid",
-                f"run `beacon doctor setup-context --project-root {project.repo}` and verify manually",
-                context,
-            )
-        )
-        hermes_cli_ok = bool(self.which_command("hermes"))
-        checks.append(
-            Check(
-                "hermes_cli",
-                hermes_cli_ok,
-                "" if hermes_cli_ok else "hermes_cli_unavailable",
-                "install or repair the Hermes CLI, then rerun preflight",
-            )
-        )
-        health = (
-            self.hermes.health(profile="coding")
-            if hermes_cli_ok
-            else {"gateway_pass": False, "profile_pass": False, "profiles": []}
-        )
-        checks.append(
-            Check(
-                "hermes_gateway",
-                bool(health.get("gateway_pass")),
-                "" if health.get("gateway_pass") else "hermes_gateway_unavailable",
-                "run `hermes gateway status` and start/restart the gateway",
-                health,
-            )
-        )
-        checks.append(
-            Check(
-                "hermes_profile",
-                bool(health.get("profile_pass")),
-                "" if health.get("profile_pass") else "hermes_profile_missing",
-                "create or restore the Hermes `coding` profile",
-                {"profiles": health.get("profiles", [])},
-            )
-        )
+
+        for item in self.truth_gate.preflight_checks(project, stage=stage):
+            checks.append(_from_dict(item))
+        for item in self.executor.preflight_checks(project, stage=stage):
+            checks.append(_from_dict(item))
+
         failed = next((item for item in checks if not item.passed), None)
         return {
             "status": "pass" if failed is None else "blocked",

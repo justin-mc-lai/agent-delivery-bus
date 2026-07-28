@@ -24,13 +24,13 @@ class ReconcileTests(unittest.TestCase):
                 registry,
                 storage,
                 preflight=PassingPreflight(),
-                hermes=hermes,
-                beacon=beacon,
+                executor=hermes,
+                truth_gate=beacon,
             )
             dispatched = service.dispatch(project_slug="demo", stage="plan", feature="feature")
             first = service.reconcile(dispatched["dispatch"]["dispatch_id"])
             self.assertEqual(first["status"], "reconciling")
-            self.assertEqual(first["reason_code"], "beacon_evidence_incomplete")
+            self.assertEqual(first["reason_code"], "truth_evidence_incomplete")
             beacon.closure_pass = True
             second = service.reconcile(dispatched["dispatch"]["dispatch_id"])
             self.assertEqual(second["status"], "completed")

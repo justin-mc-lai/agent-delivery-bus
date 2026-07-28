@@ -1,3 +1,5 @@
+"""SQLite ledger for approvals, dispatches, and audit events."""
+
 from __future__ import annotations
 
 import json
@@ -72,8 +74,8 @@ class Storage:
                 feature TEXT NOT NULL,
                 state TEXT NOT NULL,
                 approval_id TEXT,
-                hermes_board TEXT,
-                hermes_task_id TEXT,
+                executor_board TEXT,
+                executor_task_id TEXT,
                 last_reason_code TEXT NOT NULL DEFAULT '',
                 resume_action TEXT NOT NULL DEFAULT '',
                 created_at TEXT NOT NULL,
@@ -93,6 +95,25 @@ class Storage:
             );
             """
         )
+        self._migrate_legacy_columns()
+
+    def _migrate_legacy_columns(self) -> None:
+        columns = {
+            row["name"]
+            for row in self.conn.execute("PRAGMA table_info(dispatches)").fetchall()
+        }
+        if "hermes_board" in columns and "executor_board" not in columns:
+            self.conn.execute("ALTER TABLE dispatches RENAME COLUMN hermes_board TO executor_board")
+            columns.discard("hermes_board")
+            columns.add("executor_board")
+        if "hermes_task_id" in columns and "executor_task_id" not in columns:
+            self.conn.execute("ALTER TABLE dispatches RENAME COLUMN hermes_task_id TO executor_task_id")
+            columns.discard("hermes_task_id")
+            columns.add("executor_task_id")
+        if "executor_board" not in columns:
+            self.conn.execute("ALTER TABLE dispatches ADD COLUMN executor_board TEXT")
+        if "executor_task_id" not in columns:
+            self.conn.execute("ALTER TABLE dispatches ADD COLUMN executor_task_id TEXT")
 
     def snapshot_project(self, slug: str, payload: dict[str, Any]) -> None:
         self.conn.execute(
@@ -202,9 +223,16 @@ class Storage:
         resume_action: str = "",
         payload: dict[str, Any] | None = None,
         approval_id: str | None = None,
+        executor_board: str | None = None,
+        executor_task_id: str | None = None,
+        # Backward-compatible aliases
         hermes_board: str | None = None,
         hermes_task_id: str | None = None,
     ) -> dict[str, Any]:
+        if executor_board is None:
+            executor_board = hermes_board
+        if executor_task_id is None:
+            executor_task_id = hermes_task_id
         allowed = (expected_from,) if isinstance(expected_from, str) else expected_from
         with self.transaction():
             row = self.conn.execute(
@@ -229,8 +257,8 @@ class Storage:
             values: list[Any] = [to_state, reason_code, resume_action, now_iso()]
             for column, value in (
                 ("approval_id", approval_id),
-                ("hermes_board", hermes_board),
-                ("hermes_task_id", hermes_task_id),
+                ("executor_board", executor_board),
+                ("executor_task_id", executor_task_id),
             ):
                 if value is not None:
                     fields.append(f"{column}=?")
@@ -259,6 +287,9 @@ class Storage:
             raise DeliveryBusError("dispatch_not_found", f"Dispatch not found: {dispatch_id}")
         payload = dict(row)
         payload["request"] = json.loads(payload.pop("request_json"))
+        # Compatibility mirrors for older skill/docs consumers.
+        payload["hermes_board"] = payload.get("executor_board")
+        payload["hermes_task_id"] = payload.get("executor_task_id")
         events = self.conn.execute(
             "SELECT * FROM dispatch_events WHERE dispatch_id=? ORDER BY sequence",
             (dispatch_id,),
