@@ -228,7 +228,7 @@
     "source_kind": "default"
   },
   "project_mode": "greenfield",
-  "project_root": "/Users/apple/Developer/Personal/products/agent-delivery-bus",
+  "project_root": ".",
   "dry_run": false,
   "force": false,
   "with_context_guidance": true,

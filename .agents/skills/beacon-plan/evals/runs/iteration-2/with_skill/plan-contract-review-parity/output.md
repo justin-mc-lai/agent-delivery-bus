@@ -46,7 +46,7 @@ strong_intent_signals:
 
 named_source_project: UNKNOWN (blocked)
 source_url: UNKNOWN (blocked)
-target_project: UNKNOWN (ambiguous — working directory is /Users/apple/Developer/Personal/products/)
+target_project: UNKNOWN (ambiguous — working directory is <workspace>/)
 non_negotiable_boundaries:
   - Must be full parity, NOT MVP
   - Must be multi-angle review (not single-pass)
@@ -75,7 +75,7 @@ reason: >
 base_ref: UNKNOWN
 status: >
   No diff scope available. Source OSS project not identified.
-  Target project within /Users/apple/Developer/Personal/products/ not specified.
+  Target project within <workspace>/ not specified.
   No code changes exist to review.
 scope_confidence: 0
 ```
@@ -184,7 +184,7 @@ authority_level: user_quote
 issue: >
   User demanded full parity (做全/同等能力/不要 MVP) for OSS replication,
   but neither the source OSS project name, URL, version, nor the target
-  project within /Users/apple/Developer/Personal/products/ has been specified.
+  project within <workspace>/ has been specified.
   Scope mode is locked to full_parity per user intent, but no capabilities
   can be inventoried, no parity matrix can be built, and no truth can
   be frozen without the source reference.
@@ -423,7 +423,7 @@ reason: >
 
 ### Q2: 目标项目是哪一个？
 
-`/Users/apple/Developer/Personal/products/` 下有 40+ 个子项目，你希望在哪个项目中复刻？
+`<workspace>/` 下有 40+ 个子项目，你希望在哪个项目中复刻？
 - `beacon/` — Beacon 产品本身？
 - `open-saas-base/` — 开放 SaaS 基础？
 - `selfmedia-sync-ai/` — 自媒体同步工具？

@@ -1,5 +1,10 @@
 # Agent Delivery Bus
 
+[![Release](https://img.shields.io/github/v/release/justin-mc-lai/agent-delivery-bus?display_name=tag)](https://github.com/justin-mc-lai/agent-delivery-bus/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![Tests](https://img.shields.io/badge/tests-pytest-green.svg)](#development--开发)
+
 [English](#english) | [中文](#中文)
 
 Governed local control plane for multi-project agent delivery.
@@ -14,97 +19,73 @@ It answers one hard question safely:
 
 ## English
 
-### Why this exists
+### Architecture
 
-AI coding agents fail in predictable ways:
+```mermaid
+flowchart TD
+  A["Human / Knowledge OS intent"] --> B["Agent Delivery Bus Core"]
+  B --> C["Registry<br/>projects.json"]
+  B --> D["Preflight"]
+  B --> E["One-time Approval"]
+  B --> F["Idempotent Dispatch Ledger<br/>SQLite"]
+  B --> G["Reconcile"]
+  D --> H["TruthGateAdapter<br/>null | beacon"]
+  D --> I["ExecutorAdapter<br/>null | hermes"]
+  F --> I
+  G --> H
+  G --> I
+  J["Collaboration rules<br/>four working folders"] -. policy only .-> A
+  J -. not stored in core .-> B
+```
 
-- they guess the wrong repository
-- they retry and create duplicate work
-- they treat "worker said done" as "product is done"
-- they rewrite freely when collaboration rules are missing
-
-Agent Delivery Bus (ADB) is a thin control plane that separates four authorities:
+Authority split:
 
 | Authority | Owner |
 |-----------|-------|
 | Project routing | Registry (`config/projects.json`) |
-| Execution lifecycle | Executor adapter (example: Hermes Kanban) |
-| Delivery verdict | Truth-gate adapter (example: Beacon) |
+| Execution lifecycle | Executor adapter (`null` demo / `hermes` example) |
+| Delivery verdict | Truth-gate adapter (`null` demo / `beacon` example) |
 | Approval + idempotency + audit | ADB SQLite ledger |
+| Inspiration / methods / notes | External Knowledge OS |
 
-Knowledge belongs elsewhere. A personal knowledge OS can feed intent into ADB, but ADB does not store inspiration, methods, or notes.
+### Open-source shape
 
-### Core architecture
-
-```text
-Human / Knowledge OS intent
-            |
-            v
-   Agent Delivery Bus Core
- registry -> preflight -> approval -> idempotent dispatch -> reconcile
-     |           |                          |                   |
-     |           +-- TruthGateAdapter       |                   +-- evidence
-     |           +-- ExecutorAdapter        v
-     +-- projects.json                 example: Hermes
-```
-
-#### Open-source shape
-
-- **Core**: registry, preflight orchestration, one-time approvals, SQLite ledger, dispatch FSM, reconcile loop
+- **Core**: registry, preflight, one-time approvals, SQLite ledger, dispatch FSM, reconcile
 - **Adapter SPI**: `TruthGateAdapter` + `ExecutorAdapter`
-- **Example adapters**: Beacon (truth gate), Hermes (executor)
-- **Skill**: `skills/agent-delivery-bus`
-- **Collaboration rules template**: `skills/collaboration-rules-template`
+- **Demo adapters**: `null` (no external deps)
+- **Example adapters**: Beacon, Hermes
+- **Skills**: control-plane skill + collaboration-rules template
 - **Runtime deps**: none (Python stdlib + SQLite)
 
-### What it does
-
-- resolve projects by slug / alias / path (no fuzzy guessing)
-- run read-only strict preflight before real side effects
-- require one-time scoped approval for `implement` / `freeze`
-- create idempotent executor tasks
-- reconcile worker success against truth-gate evidence
-- return stable `reason_code` + `resume_action` on every block
-
-### What it deliberately does not do
-
-- auto-release / auto-merge / auto-deploy
-- auto-repair broken project context
-- read an executor's private database
-- replace your knowledge base
-- become a distributed cluster scheduler
-- treat inbox notes as software truth
-
-### Quick start
+### Quick start (no Hermes required)
 
 ```bash
 python3 -m pip install -e '.[test]'
 cp config/projects.example.json config/projects.json
-# edit repo paths in config/projects.json
+# default adapters are null/null
 
 bin/adb projects list --json
-bin/adb doctor --project demo-platform --json
-bin/adb dispatch --project demo-platform --stage plan --feature example --dry-run --json
+bin/adb doctor --project demo-app --json
+bin/adb dispatch --project demo-app --stage plan --feature example --dry-run --json
+bin/adb dispatch --project demo-app --stage plan --feature example --json
+bin/adb reconcile --json
 ```
 
-Restricted stage flow:
+Restricted stage still needs approval:
 
 ```bash
 bin/adb approve --actor you --project demo-app --stage implement --feature example --json
 bin/adb dispatch --project demo-app --stage implement --feature example --approval-token <token> --json
-bin/adb reconcile <dispatch-id> --json
 ```
 
-### Configure adapters
+### Real delivery adapters
 
 ```json
 {
-  "schema_version": "1.0",
   "adapters": {
     "executor": "hermes",
     "truth_gate": "beacon"
-  },
-  "projects": []
+  }
 }
 ```
 
@@ -113,16 +94,36 @@ Implement your own backends against:
 - `agent_delivery_bus.adapters.spi.ExecutorAdapter`
 - `agent_delivery_bus.adapters.spi.TruthGateAdapter`
 
+### What it does / does not do
+
+**Does**
+
+- exact project resolve by slug / alias / path
+- read-only strict preflight
+- one-time scoped approval for `implement` / `freeze`
+- idempotent dispatch
+- evidence reconciliation
+- stable `reason_code` + `resume_action`
+
+**Does not**
+
+- auto-release / auto-merge / auto-deploy
+- auto-repair project context
+- read executor private databases
+- replace your knowledge base
+- become a cluster scheduler
+- treat inbox notes as software truth
+
 ### Knowledge OS boundary
 
-If you keep a second brain, use four working folders **outside** ADB:
+Keep these four folders **outside** ADB:
 
-1. **Projects** — active goals, progress, decisions, todos
-2. **Knowledge assets** — refined methods, cases, templates
-3. **Inspiration inbox** — raw captures
-4. **Collaboration rules** — how AI must cooperate
+1. Projects
+2. Knowledge assets
+3. Inspiration inbox
+4. Collaboration rules
 
-ADB is only the governed handoff from “approved project work” to “executor + evidence”.
+ADB only governs the handoff from approved project work to executor + evidence.
 
 See `skills/collaboration-rules-template/`.
 
@@ -133,130 +134,86 @@ python3 -m pip install -e '.[test]'
 python3 -m pytest -q
 ```
 
-### Status
+### License
 
-`v0.1.0` open-source extraction:
-
-- core/control-plane stabilized
-- Beacon/Hermes demoted to example adapters
-- bilingual docs
-- collaboration-rules skill template included
+MIT
 
 ---
 
 ## 中文
 
-### 为什么做这个
+### 架构
 
-AI 写代码常见翻车点很固定：
+```mermaid
+flowchart TD
+  A["人 / 知识系统意图"] --> B["Agent Delivery Bus Core"]
+  B --> C["注册表<br/>projects.json"]
+  B --> D["预检"]
+  B --> E["一次性审批"]
+  B --> F["幂等派工账本<br/>SQLite"]
+  B --> G["对账"]
+  D --> H["TruthGateAdapter<br/>null | beacon"]
+  D --> I["ExecutorAdapter<br/>null | hermes"]
+  F --> I
+  G --> H
+  G --> I
+  J["协作规则<br/>四个工作文件夹"] -. 只提供策略 .-> A
+  J -. 不进入核心存储 .-> B
+```
 
-- 猜错仓库
-- 重试造成重复派工
-- 把 worker 自报完成当成交付完成
-- 没有协作规则时越改越乱
-
-Agent Delivery Bus（ADB）是一个很薄的本地控制面，把四种权威拆开：
+权威拆分：
 
 | 权威 | 归属 |
 |------|------|
-| 项目路由 | 注册表（`config/projects.json`） |
-| 执行生命周期 | Executor 适配器（示例：Hermes Kanban） |
-| 交付判定 | Truth-gate 适配器（示例：Beacon） |
-| 审批 + 幂等 + 审计 | ADB SQLite 账本 |
+| 项目路由 | 注册表 |
+| 执行生命周期 | Executor（`null` 演示 / `hermes` 示例） |
+| 交付判定 | Truth-gate（`null` 演示 / `beacon` 示例） |
+| 审批 + 幂等 + 审计 | ADB SQLite |
+| 灵感 / 方法 / 笔记 | 外部知识系统 |
 
-知识不放在这里。个人知识库可以给 ADB 提供意图，但 ADB 不存灵感、方法论或笔记正文。
+### 开源形态
 
-### 核心架构
-
-```text
-人 / 知识系统意图
-            |
-            v
-   Agent Delivery Bus Core
- 注册表 -> 预检 -> 审批 -> 幂等派工 -> 对账
-     |        |               |          |
-     |        +-- TruthGate   |          +-- 证据
-     |        +-- Executor    v
-     +-- projects.json   示例：Hermes
-```
-
-#### 开源形态
-
-- **Core**：注册表、预检编排、一次性审批、SQLite 账本、派工状态机、对账
+- **Core**：注册表、预检、一次性审批、SQLite 账本、派工状态机、对账
 - **Adapter SPI**：`TruthGateAdapter` + `ExecutorAdapter`
-- **示例适配器**：Beacon（真值门）、Hermes（执行器）
-- **Skill**：`skills/agent-delivery-bus`
-- **协作规则模板**：`skills/collaboration-rules-template`
-- **运行时依赖**：无（Python 标准库 + SQLite）
+- **演示适配器**：`null`（零外部依赖）
+- **示例适配器**：Beacon、Hermes
+- **Skill**：控制面 skill + 协作规则模板
+- **运行时依赖**：无
 
-### 能做什么
-
-- 用 slug / alias / path 精确解析项目（禁止模糊猜测）
-- 真实副作用前做只读严格预检
-- `implement` / `freeze` 需要一次性、带 scope 的审批
-- 创建可幂等的执行器任务
-- 用真值门证据对账 worker 成功
-- 任何阻断都返回稳定 `reason_code` + `resume_action`
-
-### 明确不做
-
-- 自动 release / merge / 部署
-- 自动修复目标项目 context
-- 读取执行器私有数据库
-- 替代你的知识库
-- 变成分布式集群调度器
-- 把灵感箱内容直接写成软件 truth
-
-### 快速开始
+### 快速开始（不需要 Hermes）
 
 ```bash
 python3 -m pip install -e '.[test]'
 cp config/projects.example.json config/projects.json
-# 编辑 config/projects.json 中的仓库路径
 
 bin/adb projects list --json
-bin/adb doctor --project demo-platform --json
-bin/adb dispatch --project demo-platform --stage plan --feature example --dry-run --json
+bin/adb doctor --project demo-app --json
+bin/adb dispatch --project demo-app --stage plan --feature example --dry-run --json
+bin/adb dispatch --project demo-app --stage plan --feature example --json
+bin/adb reconcile --json
 ```
 
-受限阶段：
-
-```bash
-bin/adb approve --actor you --project demo-app --stage implement --feature example --json
-bin/adb dispatch --project demo-app --stage implement --feature example --approval-token <token> --json
-bin/adb reconcile <dispatch-id> --json
-```
-
-### 适配器配置
+### 真实交付适配器
 
 ```json
 {
-  "schema_version": "1.0",
   "adapters": {
     "executor": "hermes",
     "truth_gate": "beacon"
-  },
-  "projects": []
+  }
 }
 ```
 
-自定义后端请实现：
-
-- `agent_delivery_bus.adapters.spi.ExecutorAdapter`
-- `agent_delivery_bus.adapters.spi.TruthGateAdapter`
-
 ### 知识库边界
 
-如果你有第二大脑，请把这四个可执行文件夹放在 **ADB 之外**：
+四个可执行文件夹放在 ADB **之外**：
 
-1. **项目**：正在推进的目标、进度、决策、待办
-2. **知识资产**：已加工方法、案例、模板
-3. **灵感收集**：未加工原料
-4. **协作规则**：AI 如何配合你（最重要）
+1. 项目
+2. 知识资产
+3. 灵感收集
+4. 协作规则
 
 ADB 只负责把“已批准的项目工作”安全交接给“执行器 + 证据闭环”。
-
-详见 `skills/collaboration-rules-template/`。
 
 ### 开发
 
@@ -264,15 +221,6 @@ ADB 只负责把“已批准的项目工作”安全交接给“执行器 + 证�
 python3 -m pip install -e '.[test]'
 python3 -m pytest -q
 ```
-
-### 状态
-
-`v0.1.0` 开源抽取版：
-
-- 控制面核心稳定
-- Beacon/Hermes 降为示例适配器
-- 中英双语说明
-- 附带协作规则 skill 模板
 
 ### License
 

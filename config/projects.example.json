@@ -2,32 +2,26 @@
   "schema_version": "1.0",
   "updated": "2026-07-28",
   "adapters": {
-    "executor": "hermes",
-    "truth_gate": "beacon"
+    "executor": "null",
+    "truth_gate": "null"
   },
   "notes": {
     "knowledge_os": "Keep inspiration/knowledge/collaboration-rule folders outside this registry. Register only software delivery targets here.",
-    "local_config": "Copy this file to config/projects.json and point repo/docs paths at your machines."
+    "local_config": "Copy this file to config/projects.json and point repo/docs paths at your machine. Use executor/truth_gate hermes+beacon for real delivery.",
+    "null_demo": "null adapters let you exercise approve/dispatch/reconcile without Hermes or Beacon installed."
   },
   "projects": [
-    {
-      "slug": "demo-platform",
-      "title": "Demo Platform",
-      "class": "platform",
-      "repo": "/absolute/path/to/your/platform-repo",
-      "docs_root": "/absolute/path/to/your/platform-repo/docs/beacon",
-      "docs_version": "v0.1.0",
-      "aliases": ["platform", "core"],
-      "dispatchable": true
-    },
     {
       "slug": "demo-app",
       "title": "Demo App",
       "class": "managed",
-      "repo": "/absolute/path/to/your/app-repo",
-      "docs_root": "/absolute/path/to/your/app-repo/docs/beacon",
-      "docs_version": "v0.1.0",
-      "aliases": ["app"],
+      "repo": ".",
+      "docs_root": "docs/beacon",
+      "docs_version": "v0.0.1",
+      "aliases": [
+        "demo",
+        "app"
+      ],
       "dispatchable": true
     }
   ]

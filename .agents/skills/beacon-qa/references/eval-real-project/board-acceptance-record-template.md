@@ -20,10 +20,10 @@
 
 ### Projects
 
-1. `rolo` -> `/Users/apple/Developer/Company/rolo`
-2. `slow_uni_bmtop` -> `/Users/apple/Developer/Personal/products/slow_uni_bmtop`
-3. `shopxo_canada` -> `/Users/apple/Developer/Personal/products/shopxo_canada`
-4. `beacon` -> `/Users/apple/Developer/Personal/products/beacon`
+1. `rolo` -> `<company-workspace>/rolo`
+2. `slow_uni_bmtop` -> `<workspace>/slow_uni_bmtop`
+3. `shopxo_canada` -> `<workspace>/shopxo_canada`
+4. `beacon` -> `<workspace>/beacon`
 
 ### Truth / Projection Boundary
 

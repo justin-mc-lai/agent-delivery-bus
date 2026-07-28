@@ -38,8 +38,8 @@ Examples:
     --output-dir .beacon/validation/real-project-board/v1.3.4-sample
 
   bash skills/beacon/beacon-eval-real-project/scripts/run_real_project_board_validation.sh \
-    --target "rolo|/Users/apple/Developer/Company/rolo||auto" \
-    --target "beacon|/Users/apple/Developer/Personal/products/beacon|beacon-v1.3.4-global-runtime-projection-and-pocketbase-control-plane|v1.3.4"
+    --target "rolo|<company-workspace>/rolo||auto" \
+    --target "beacon|<workspace>/beacon|beacon-v1.3.4-global-runtime-projection-and-pocketbase-control-plane|v1.3.4"
 EOF
 }
 
@@ -70,10 +70,10 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ ${#TARGETS[@]} -eq 0 ]]; then
-  TARGETS+=("rolo|/Users/apple/Developer/Company/rolo||auto")
-  TARGETS+=("slow_uni_bmtop|/Users/apple/Developer/Personal/products/slow_uni_bmtop||auto")
-  TARGETS+=("shopxo_canada|/Users/apple/Developer/Personal/products/shopxo_canada||auto")
-  TARGETS+=("beacon|/Users/apple/Developer/Personal/products/beacon|beacon-v1.3.4-global-runtime-projection-and-pocketbase-control-plane|v1.3.4")
+  TARGETS+=("rolo|<company-workspace>/rolo||auto")
+  TARGETS+=("slow_uni_bmtop|<workspace>/slow_uni_bmtop||auto")
+  TARGETS+=("shopxo_canada|<workspace>/shopxo_canada||auto")
+  TARGETS+=("beacon|<workspace>/beacon|beacon-v1.3.4-global-runtime-projection-and-pocketbase-control-plane|v1.3.4")
 fi
 
 mkdir -p "${OUTPUT_DIR}"

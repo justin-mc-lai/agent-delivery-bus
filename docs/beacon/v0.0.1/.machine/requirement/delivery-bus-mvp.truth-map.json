@@ -203,7 +203,7 @@
       "canonical_role": "version_governance_truth",
       "sqlite_projection_surface": "project_governance_sqlite_projection",
       "sqlite_projection_role": "generated_governance_state_not_truth",
-      "sqlite_ledger_path": "/Users/apple/.beacon/runtime-ledger/runtime-ledger.sqlite3",
+      "sqlite_ledger_path": "<home>/.beacon/runtime-ledger/runtime-ledger.sqlite3",
       "deprecated_legacy_json": ".beacon/metadata/project-version-metadata.json",
       "write_direction": "governance_md_to_sqlite_only"
     },
@@ -370,7 +370,7 @@
         "resolver_mode": "resolver_first",
         "version": "v0.0.1",
         "surface": "project_governance_sqlite_projection",
-        "path": "/Users/apple/.beacon/runtime-ledger/runtime-ledger.sqlite3",
+        "path": "<home>/.beacon/runtime-ledger/runtime-ledger.sqlite3",
         "exists": true,
         "required": false,
         "role": "generated_governance_state_not_truth",

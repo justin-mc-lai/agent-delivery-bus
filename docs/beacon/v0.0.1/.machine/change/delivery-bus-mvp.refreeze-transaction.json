@@ -86,7 +86,7 @@
   "refreeze_status": "complete",
   "next_route": {
     "target_surface": "beacon-implement",
-    "command": "beacon implement \"delivery-bus-mvp\" --project /Users/apple/Developer/Personal/products/agent-delivery-bus --version v0.0.1",
+    "command": "beacon implement \"delivery-bus-mvp\" --project . --version v0.0.1",
     "why": "refreeze transaction completed; implementation may plan against the refreshed frozen truth"
   },
   "blocked_reason": "",
@@ -114,7 +114,7 @@
   },
   "requirement_package": {
     "schema_version": "1.0",
-    "project_root": "/Users/apple/Developer/Personal/products/agent-delivery-bus",
+    "project_root": ".",
     "version": "v0.0.1",
     "feature": "delivery-bus-mvp",
     "status": "synced",

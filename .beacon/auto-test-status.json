@@ -1,7 +1,7 @@
 {
   "scope": "qa9",
   "timestamp": "2026-07-27T22:02:14.572144",
-  "project": "/Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.1/delivery-bus-mvp",
+  "project": "./.beacon/worktrees/v0.0.1/delivery-bus-mvp",
   "version": "v0.0.1",
   "run_id": "run-20260727T220214571539",
   "spec_fingerprint_hash": "12372bf884d6484378c88ff3d84c65041bf431b67de7ecaaf8d996c889d807a7",
@@ -52,7 +52,7 @@
     "ui_action_evidence": {},
     "matrix_report": {
       "status": "ok",
-      "matrix_path": "/Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.1/delivery-bus-mvp/.beacon/qa/features/delivery-bus-mvp/matrix.qa9.json",
+      "matrix_path": "./.beacon/worktrees/v0.0.1/delivery-bus-mvp/.beacon/qa/features/delivery-bus-mvp/matrix.qa9.json",
       "evidence_generated": 11,
       "entry_count": 11,
       "freshness_violations": []
@@ -77,7 +77,7 @@
     "qa_types": [
       "contract"
     ],
-    "qa_matrix_path": "/Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.1/delivery-bus-mvp/.beacon/qa/features/delivery-bus-mvp/matrix.qa9.json",
+    "qa_matrix_path": "./.beacon/worktrees/v0.0.1/delivery-bus-mvp/.beacon/qa/features/delivery-bus-mvp/matrix.qa9.json",
     "ui_runner": "playwright",
     "quality_requirements": {
       "require_junit": true,
@@ -538,7 +538,7 @@
     "reconciliation_artifact_path": "",
     "reconciliation_reprojection_targets": [],
     "repair_action": "qa-repair",
-    "repair_command": "beacon help --project-root /Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.1/delivery-bus-mvp --version v0.0.1 --feature \"delivery-bus-mvp\""
+    "repair_command": "beacon help --project-root ./.beacon/worktrees/v0.0.1/delivery-bus-mvp --version v0.0.1 --feature \"delivery-bus-mvp\""
   },
   "qa_status_source": "canonical",
   "governance_state_role": "generated_governance_state_not_truth",
@@ -1791,11 +1791,11 @@
     "continue_decision": "ready_for_release",
     "stop_reasons": [],
     "test_case_backfill_required": false,
-    "resume_command": "beacon help --project-root /Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.1/delivery-bus-mvp --version v0.0.1 --feature \"delivery-bus-mvp\"",
+    "resume_command": "beacon help --project-root ./.beacon/worktrees/v0.0.1/delivery-bus-mvp --version v0.0.1 --feature \"delivery-bus-mvp\"",
     "repair_handoff": {
       "action": "qa-repair",
       "reason": "qa_round_incomplete",
-      "command": "beacon help --project-root /Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.1/delivery-bus-mvp --version v0.0.1 --feature \"delivery-bus-mvp\""
+      "command": "beacon help --project-root ./.beacon/worktrees/v0.0.1/delivery-bus-mvp --version v0.0.1 --feature \"delivery-bus-mvp\""
     },
     "release_ready": true,
     "domain_fsm_coverage": {

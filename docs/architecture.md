@@ -14,25 +14,34 @@
    - `adapters/spi.py`
    - `adapters/factory.py`
 
-3. **Example adapters**
-   - `adapters/hermes.py` (executor)
-   - `adapters/beacon.py` (truth gate)
+3. **Adapters**
+   - `adapters/null.py` — zero-dependency demo backend
+   - `adapters/hermes.py` — example executor
+   - `adapters/beacon.py` — example truth gate
 
 4. **Skills**
-   - `skills/agent-delivery-bus` (control-plane skill)
-   - `skills/collaboration-rules-template` (policy template; not a scheduler)
+   - `skills/agent-delivery-bus`
+   - `skills/collaboration-rules-template`
 
-## Non-goals permanently owned elsewhere
+## Default demo path
 
-- Knowledge prose / inspiration / methods: Knowledge OS
-- Worker claim/retry internals: Executor backend
-- Requirement freeze/QA/release verdict: Truth-gate backend
+Fresh clones default to:
+
+```json
+{
+  "adapters": {
+    "executor": "null",
+    "truth_gate": "null"
+  }
+}
+```
+
+`NullExecutor` writes local evidence under `.adb/evidence/<stage>/<feature>.json`.
+`NullTruthGate` reconciles that evidence. No Hermes/Beacon install required.
 
 ## Extension point
-
-To support another stack:
 
 1. implement `ExecutorAdapter`
 2. implement `TruthGateAdapter`
 3. register both in `adapters/factory.py`
-4. set `adapters.executor` / `adapters.truth_gate` in the registry JSON
+4. set `adapters.executor` / `adapters.truth_gate` in registry JSON

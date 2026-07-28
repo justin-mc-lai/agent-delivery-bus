@@ -1,6 +1,6 @@
 ---
 schema_version: "1.0"
-project_root: "/Users/apple/Developer/Personal/products/agent-delivery-bus"
+project_root: "."
 topology_kind: "single_repo"
 default_execution_service: "agent-delivery-bus"
 transaction_id: "tx-project-governance-6bfd1a252ca2bf2e"
@@ -12,12 +12,12 @@ parser_contract: "beacon-project-governance-v1"
 
 # Project Version Governance
 
-- project_root: `/Users/apple/Developer/Personal/products/agent-delivery-bus`
+- project_root: `.`
 - topology_kind: `single_repo`
 - default_execution_service: `agent-delivery-bus`
 
 ## Service Bindings
-- `agent-delivery-bus` repo=`/Users/apple/Developer/Personal/products/agent-delivery-bus` role=`control-plane` writable=`true` worktree_policy=`follow-repo-root`
+- `agent-delivery-bus` repo=`.` role=`control-plane` writable=`true` worktree_policy=`follow-repo-root`
 
 ## Version Contracts
 

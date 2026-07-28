@@ -171,19 +171,19 @@ The capture pack now writes an isolated ledger under the output directory and em
 
 Default targets:
 
-- `/Users/apple/Developer/Company/rolo`
-- `/Users/apple/Developer/Personal/products/slow_uni_bmtop`
-- `/Users/apple/Developer/Personal/products/shopxo_canada`
-- `/Users/apple/Developer/Personal/products/beacon`
+- `<company-workspace>/rolo`
+- `<workspace>/slow_uni_bmtop`
+- `<workspace>/shopxo_canada`
+- `<workspace>/beacon`
 
 ### Optional Explicit Targets
 
 ```bash
 bash skills/beacon/beacon-eval-real-project/scripts/run_real_project_board_validation.sh \
-  --target "rolo|/Users/apple/Developer/Company/rolo||auto" \
-  --target "slow_uni_bmtop|/Users/apple/Developer/Personal/products/slow_uni_bmtop||auto" \
-  --target "shopxo_canada|/Users/apple/Developer/Personal/products/shopxo_canada||auto" \
-  --target "beacon|/Users/apple/Developer/Personal/products/beacon|beacon-v1.3.4-global-runtime-projection-and-pocketbase-control-plane|v1.3.4"
+  --target "rolo|<company-workspace>/rolo||auto" \
+  --target "slow_uni_bmtop|<workspace>/slow_uni_bmtop||auto" \
+  --target "shopxo_canada|<workspace>/shopxo_canada||auto" \
+  --target "beacon|<workspace>/beacon|beacon-v1.3.4-global-runtime-projection-and-pocketbase-control-plane|v1.3.4"
 ```
 
 Target format:

@@ -10,7 +10,7 @@
 ## 稳定用法（推荐）
 
 ```bash
-cd /Users/apple/Developer/Personal/products/selfmedia-sync-ai
+cd <workspace>/selfmedia-sync-ai
 set -a; source .beacon/goal-durable.env; set +a
 
 # 一句话目标 + 本 run 挂 supervisor + driver（arming）

@@ -187,7 +187,7 @@ AC-L2-001: payment_succeeded 从 none→active
 ```bash
 # === EXECUTION MODE ===
 # All commands are OFFLINE-FIRST (no live CF/Stripe keys needed)
-# Working directory: /Users/apple/Developer/Personal/products/open-saas-base
+# Working directory: <workspace>/open-saas-base
 
 # ---- CORE EVIDENCE (single command) ----
 pnpm test

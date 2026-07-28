@@ -5,8 +5,8 @@
 | Concern | Authority |
 |---------|-----------|
 | Project slug, aliases, repo and docs version | Project registry (`config/projects.json`) |
-| Requirement truth, freeze, QA and release gates | TruthGateAdapter (example: Beacon) |
-| Persistent task lifecycle, worker claim and retries | ExecutorAdapter (example: Hermes Kanban) |
+| Requirement truth, freeze, QA and release gates | TruthGateAdapter (demo: null, example: Beacon) |
+| Persistent task lifecycle, worker claim and retries | ExecutorAdapter (demo: null, example: Hermes Kanban) |
 | Approval, idempotency, local dispatch state and audit events | Agent Delivery Bus SQLite |
 | Inspiration, knowledge notes, templates, collaboration prose | External Knowledge OS (not part of core) |
 

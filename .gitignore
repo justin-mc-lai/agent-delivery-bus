@@ -108,3 +108,8 @@ config/projects.local.json
 
 *.egg-info/
 src/*.egg-info/
+# Local demo evidence written by NullExecutor
+.adb/
+# Machine-local registry
+# Python packaging
+# Vendored host skills and runtime scratch should stay local

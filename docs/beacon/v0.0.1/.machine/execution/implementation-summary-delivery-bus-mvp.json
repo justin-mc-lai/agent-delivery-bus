@@ -35,15 +35,15 @@
     "use_git_worktree": true,
     "require_clean_worktree_for_switch": true,
     "service_directories": [
-      "/Users/apple/Developer/Personal/products/agent-delivery-bus"
+      "."
     ],
     "direct_delivery_services": [
       "agent-delivery-bus"
     ],
     "git_roots": [
-      "/Users/apple/Developer/Personal/products/agent-delivery-bus"
+      "."
     ],
-    "worktree_root": "/Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.1/delivery-bus-mvp",
+    "worktree_root": "./.beacon/worktrees/v0.0.1/delivery-bus-mvp",
     "implementation_preflight": [
       "Before implementation, verify the target service belongs to: ..",
       "Before implementation, verify every direct delivery service is on beacon/v0.0.1.",
@@ -54,7 +54,7 @@
     "service_branch_map": {
       "agent-delivery-bus": "main"
     },
-    "worktree_path": "/Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.1/delivery-bus-mvp",
+    "worktree_path": "./.beacon/worktrees/v0.0.1/delivery-bus-mvp",
     "branch_governance": {
       "schema_version": "1.0",
       "tool_name": "beacon-toolkit-branch-governance",
@@ -63,13 +63,13 @@
       "template_name": "standard-feature",
       "template_source": "project_metadata",
       "service_key": "agent-delivery-bus",
-      "repo_root": "/Users/apple/Developer/Personal/products/agent-delivery-bus",
+      "repo_root": ".",
       "base_branch": "main",
       "current_branch": "beacon/v0.0.1/delivery-bus-mvp",
       "target_branch": "beacon/v0.0.1",
       "worktree_mode": "dedicated-worktree",
-      "worktree_path": "/Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.1/delivery-bus-mvp",
-      "current_worktree_path": "/Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.1/delivery-bus-mvp",
+      "worktree_path": "./.beacon/worktrees/v0.0.1/delivery-bus-mvp",
+      "current_worktree_path": "./.beacon/worktrees/v0.0.1/delivery-bus-mvp",
       "previous_version_baseline_branch": "main",
       "next_version_feature_branch": "beacon/v0.0.1/<feature-slug>",
       "hotfix_branch_naming_rule": "",
@@ -93,7 +93,7 @@
       "recommended_action": "",
       "missing_evidence_fields": [],
       "evidence_contract_status": "pass",
-      "human_markdown": "## Branch Governance\n\n- toolkit: `beacon-toolkit-branch-governance`\n- template_name: `standard-feature`\n- template_source: `project_metadata`\n- service_key: `agent-delivery-bus`\n- repo_root: `/Users/apple/Developer/Personal/products/agent-delivery-bus`\n- base_branch: `main`\n- current_branch: `beacon/v0.0.1/delivery-bus-mvp`\n- target_branch: `beacon/v0.0.1`\n- worktree_mode: `dedicated-worktree`\n- worktree_path: `/Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.1/delivery-bus-mvp`\n- evidence_contract_status: `pass`\n- blocked_reason: ``\n- recommended_action: ``\n\n### Flow Diagram\n```text\nmain\n    -> beacon/v0.0.1\n    -> uat\n```\n\n### Allowed Paths\n- `master->main`\n- `main->uat`\n\n### Forbidden Paths\n- `uat->main`\n- `uat_as_feature_base`\n\n### Evidence Contract\n- none\n"
+      "human_markdown": "## Branch Governance\n\n- toolkit: `beacon-toolkit-branch-governance`\n- template_name: `standard-feature`\n- template_source: `project_metadata`\n- service_key: `agent-delivery-bus`\n- repo_root: `.`\n- base_branch: `main`\n- current_branch: `beacon/v0.0.1/delivery-bus-mvp`\n- target_branch: `beacon/v0.0.1`\n- worktree_mode: `dedicated-worktree`\n- worktree_path: `./.beacon/worktrees/v0.0.1/delivery-bus-mvp`\n- evidence_contract_status: `pass`\n- blocked_reason: ``\n- recommended_action: ``\n\n### Flow Diagram\n```text\nmain\n    -> beacon/v0.0.1\n    -> uat\n```\n\n### Allowed Paths\n- `master->main`\n- `main->uat`\n\n### Forbidden Paths\n- `uat->main`\n- `uat_as_feature_base`\n\n### Evidence Contract\n- none\n"
     }
   },
   "generated_at": "2026-07-27T14:01:43.698843+00:00",
@@ -349,7 +349,7 @@
     "reason_codes": [],
     "expected_branch": "beacon/v0.0.1/delivery-bus-mvp",
     "current_branch": "beacon/v0.0.1/delivery-bus-mvp",
-    "worktree_path": "/Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.1/delivery-bus-mvp",
+    "worktree_path": "./.beacon/worktrees/v0.0.1/delivery-bus-mvp",
     "git_workflow": {
       "schema_version": "1.0",
       "feature": "delivery-bus-mvp",
@@ -362,15 +362,15 @@
       "use_git_worktree": true,
       "require_clean_worktree_for_switch": true,
       "service_directories": [
-        "/Users/apple/Developer/Personal/products/agent-delivery-bus"
+        "."
       ],
       "direct_delivery_services": [
         "agent-delivery-bus"
       ],
       "git_roots": [
-        "/Users/apple/Developer/Personal/products/agent-delivery-bus"
+        "."
       ],
-      "worktree_root": "/Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.1/delivery-bus-mvp",
+      "worktree_root": "./.beacon/worktrees/v0.0.1/delivery-bus-mvp",
       "implementation_preflight": [
         "Before implementation, verify the target service belongs to: ..",
         "Before implementation, verify every direct delivery service is on beacon/v0.0.1.",
@@ -381,7 +381,7 @@
       "service_branch_map": {
         "agent-delivery-bus": "main"
       },
-      "worktree_path": "/Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.1/delivery-bus-mvp",
+      "worktree_path": "./.beacon/worktrees/v0.0.1/delivery-bus-mvp",
       "branch_governance": {
         "schema_version": "1.0",
         "tool_name": "beacon-toolkit-branch-governance",
@@ -390,13 +390,13 @@
         "template_name": "standard-feature",
         "template_source": "project_metadata",
         "service_key": "agent-delivery-bus",
-        "repo_root": "/Users/apple/Developer/Personal/products/agent-delivery-bus",
+        "repo_root": ".",
         "base_branch": "main",
         "current_branch": "beacon/v0.0.1/delivery-bus-mvp",
         "target_branch": "beacon/v0.0.1",
         "worktree_mode": "dedicated-worktree",
-        "worktree_path": "/Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.1/delivery-bus-mvp",
-        "current_worktree_path": "/Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.1/delivery-bus-mvp",
+        "worktree_path": "./.beacon/worktrees/v0.0.1/delivery-bus-mvp",
+        "current_worktree_path": "./.beacon/worktrees/v0.0.1/delivery-bus-mvp",
         "previous_version_baseline_branch": "main",
         "next_version_feature_branch": "beacon/v0.0.1/<feature-slug>",
         "hotfix_branch_naming_rule": "",
@@ -420,7 +420,7 @@
         "recommended_action": "",
         "missing_evidence_fields": [],
         "evidence_contract_status": "pass",
-        "human_markdown": "## Branch Governance\n\n- toolkit: `beacon-toolkit-branch-governance`\n- template_name: `standard-feature`\n- template_source: `project_metadata`\n- service_key: `agent-delivery-bus`\n- repo_root: `/Users/apple/Developer/Personal/products/agent-delivery-bus`\n- base_branch: `main`\n- current_branch: `beacon/v0.0.1/delivery-bus-mvp`\n- target_branch: `beacon/v0.0.1`\n- worktree_mode: `dedicated-worktree`\n- worktree_path: `/Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.1/delivery-bus-mvp`\n- evidence_contract_status: `pass`\n- blocked_reason: ``\n- recommended_action: ``\n\n### Flow Diagram\n```text\nmain\n    -> beacon/v0.0.1\n    -> uat\n```\n\n### Allowed Paths\n- `master->main`\n- `main->uat`\n\n### Forbidden Paths\n- `uat->main`\n- `uat_as_feature_base`\n\n### Evidence Contract\n- none\n"
+        "human_markdown": "## Branch Governance\n\n- toolkit: `beacon-toolkit-branch-governance`\n- template_name: `standard-feature`\n- template_source: `project_metadata`\n- service_key: `agent-delivery-bus`\n- repo_root: `.`\n- base_branch: `main`\n- current_branch: `beacon/v0.0.1/delivery-bus-mvp`\n- target_branch: `beacon/v0.0.1`\n- worktree_mode: `dedicated-worktree`\n- worktree_path: `./.beacon/worktrees/v0.0.1/delivery-bus-mvp`\n- evidence_contract_status: `pass`\n- blocked_reason: ``\n- recommended_action: ``\n\n### Flow Diagram\n```text\nmain\n    -> beacon/v0.0.1\n    -> uat\n```\n\n### Allowed Paths\n- `master->main`\n- `main->uat`\n\n### Forbidden Paths\n- `uat->main`\n- `uat_as_feature_base`\n\n### Evidence Contract\n- none\n"
       }
     },
     "branch_preflight_path": ".beacon/implement/run-20260727T140143Z-ff6d/branch-preflight.json"

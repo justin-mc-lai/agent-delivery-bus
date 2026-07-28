@@ -12,7 +12,7 @@
   "transaction_id": "tx-qa-acceptance-delivery-bus-mvp-1f65f1aa139a",
   "source_hash": "sha256:1f65f1aa139aef72d617c39624c82240e16a68559c0323b0802494e39d87cea3",
   "projection_seq": 1,
-  "source_command": "beacon qa run \"delivery-bus-mvp\" --project-root /Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.1/delivery-bus-mvp --version v0.0.1",
+  "source_command": "beacon qa run \"delivery-bus-mvp\" --project-root ./.beacon/worktrees/v0.0.1/delivery-bus-mvp --version v0.0.1",
   "requirement_refs": [
     "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
     "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",

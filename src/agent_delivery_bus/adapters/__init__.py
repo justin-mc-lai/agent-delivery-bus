@@ -7,12 +7,15 @@ package are examples and may be swapped through the factory.
 from .beacon import BeaconAdapter
 from .factory import adapters_from_config, create_executor, create_truth_gate
 from .hermes import HermesAdapter, board_slug
+from .null import NullExecutor, NullTruthGate
 from .spi import ExecutorAdapter, TruthGateAdapter, as_check
 
 __all__ = [
     "BeaconAdapter",
     "ExecutorAdapter",
     "HermesAdapter",
+    "NullExecutor",
+    "NullTruthGate",
     "TruthGateAdapter",
     "adapters_from_config",
     "as_check",
