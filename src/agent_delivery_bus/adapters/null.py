@@ -122,7 +122,14 @@ class NullExecutor:
 
         return {"board": task["board"], "task_id": task_id, "payload": dict(task)}
 
+    def list_boards(self) -> list[dict[str, Any]]:
+        return [dict(board) for board in self.boards.values()]
+
+    def list_tasks(self, board: str) -> list[dict[str, Any]]:
+        return [dict(task) for task in self.tasks.values() if task.get("board") == board]
+
     def show_task(self, board: str, task_id: str) -> dict[str, Any]:
+
         task = self.tasks.get(task_id)
         if task is None or task.get("board") != board:
             return {"id": task_id, "board": board, "status": "missing"}
