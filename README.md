@@ -71,6 +71,7 @@ bin/adb dispatch --project demo-app --stage plan --feature example --json
 bin/adb reconcile --json
 bin/adb fleet
 bin/adb fleet --json
+bin/adb boards status --project demo-app
 ```
 
 Restricted stage still needs approval:

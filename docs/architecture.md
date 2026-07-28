@@ -55,6 +55,13 @@ bin/adb fleet --project <slug> --json
 bin/adb fleet --sync-boards
 ```
 
+`boards status` expands one project board into Hermes columns:
+
+```bash
+bin/adb boards status --project <slug>
+bin/adb boards status --project <slug> --json
+```
+
 `fleet` aggregates:
 
 - registered projects
