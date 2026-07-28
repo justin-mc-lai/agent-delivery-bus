@@ -1,0 +1,667 @@
+{
+  "schema_version": "1.0",
+  "feature": "delivery-bus-mvp",
+  "feature_slug": "delivery-bus-mvp",
+  "version": "v0.0.1",
+  "generated_at": "2026-07-27T13:49:21.082740+00:00",
+  "expansion_profile": "pua-web",
+  "scenario_depth": "standard",
+  "families_required": [
+    "happy",
+    "negative",
+    "boundary",
+    "recovery",
+    "compatibility"
+  ],
+  "stories": [
+    {
+      "ac_id": "AC-001",
+      "theme": "general",
+      "text": "Acceptance criteria TBD",
+      "scenario_ids": [],
+      "scenario_families": [],
+      "required_families": [],
+      "scenarios": []
+    },
+    {
+      "ac_id": "AC-ADB-001",
+      "theme": "",
+      "text": "exit_code==0；覆盖 list、slug/alias/path resolve、重复 slug、alias 冲突和 repo 缺失",
+      "scenario_ids": [
+        "SC-AUTO-TC-ADB-001"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-ADB-001",
+          "source_tc_id": "TC-ADB-001",
+          "tc_id": "TC-ADB-001-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-ADB-002",
+      "theme": "",
+      "text": "exit_code==0；strict check 失败返回稳定 reason_code/resume_action 且无写目标仓命令",
+      "scenario_ids": [
+        "SC-AUTO-TC-ADB-002"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-ADB-002",
+          "source_tc_id": "TC-ADB-002",
+          "tc_id": "TC-ADB-002-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-ADB-003",
+      "theme": "",
+      "text": "exit_code==0；覆盖 hash-only、expiry、scope、reserve/finalize/release、重放与并发 reservation",
+      "scenario_ids": [
+        "SC-AUTO-TC-ADB-003"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-ADB-003",
+          "source_tc_id": "TC-ADB-003",
+          "tc_id": "TC-ADB-003-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-ADB-004",
+      "theme": "",
+      "text": "exit_code==0；事务回滚、重启恢复、事件 append-only 与 sequence 单调成立",
+      "scenario_ids": [
+        "SC-AUTO-TC-ADB-004"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-ADB-004",
+          "source_tc_id": "TC-ADB-004",
+          "tc_id": "TC-ADB-004-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-ADB-005",
+      "theme": "",
+      "text": "exit_code==0；重复请求复用 binding，payload 冲突阻断且 Hermes create 仅一次",
+      "scenario_ids": [
+        "SC-AUTO-TC-ADB-005"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-ADB-005",
+          "source_tc_id": "TC-ADB-005",
+          "tc_id": "TC-ADB-005-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-ADB-006",
+      "theme": "",
+      "text": "exit_code==0；JSON CLI argv 含 board/worktree/skill/runtime/retry/idempotency 且不访问 Hermes DB",
+      "scenario_ids": [
+        "SC-AUTO-TC-ADB-006"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-ADB-006",
+          "source_tc_id": "TC-ADB-006",
+          "tc_id": "TC-ADB-006-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-ADB-007",
+      "theme": "",
+      "text": "exit_code==0；合法转换留事件，非法转换返回 `invalid_transition`",
+      "scenario_ids": [
+        "SC-AUTO-TC-ADB-007"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-ADB-007",
+          "source_tc_id": "TC-ADB-007",
+          "tc_id": "TC-ADB-007-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-ADB-008",
+      "theme": "",
+      "text": "exit_code==0；worker success 仅进入 reconciling，Beacon closure pass 后才 completed",
+      "scenario_ids": [
+        "SC-AUTO-TC-ADB-008"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-ADB-008",
+          "source_tc_id": "TC-ADB-008",
+          "tc_id": "TC-ADB-008-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-ADB-009",
+      "theme": "",
+      "text": "exit_code==0；frontmatter/openai.yaml/symlink 安装契约及 quick_validate 全部通过",
+      "scenario_ids": [
+        "SC-AUTO-TC-ADB-009"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-ADB-009",
+          "source_tc_id": "TC-ADB-009",
+          "tc_id": "TC-ADB-009-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-ADB-010",
+      "theme": "",
+      "text": "exit_code==0；release、target mutation、Hermes DB 和自动修复路径均 fail-closed",
+      "scenario_ids": [
+        "SC-AUTO-TC-ADB-010"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-ADB-010",
+          "source_tc_id": "TC-ADB-010",
+          "tc_id": "TC-ADB-010-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-ADB-001, AC-ADB-002, AC-ADB-004",
+      "theme": "",
+      "text": "exit_code==0；输出合法 JSON，包含 Beacon 源码仓和全部 dispatchable managed 项目",
+      "scenario_ids": [
+        "SC-AUTO-TC-ADB-CLI"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-ADB-CLI",
+          "source_tc_id": "TC-ADB-CLI",
+          "tc_id": "TC-ADB-CLI-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario_id": "SC-AUTO-TC-ADB-001",
+      "source_tc_id": "TC-ADB-001",
+      "tc_id": "TC-ADB-001-PRIMARY",
+      "ac_id": "AC-ADB-001",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；覆盖 list、slug/alias/path resolve、重复 slug、alias 冲突和 repo 缺失",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_registry.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；覆盖 list、slug/alias/path resolve、重复 slug、alias 冲突和 repo 缺失",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-001/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-ADB-002",
+      "source_tc_id": "TC-ADB-002",
+      "tc_id": "TC-ADB-002-PRIMARY",
+      "ac_id": "AC-ADB-002",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；strict check 失败返回稳定 reason_code/resume_action 且无写目标仓命令",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_preflight.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；strict check 失败返回稳定 reason_code/resume_action 且无写目标仓命令",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-002/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-ADB-003",
+      "source_tc_id": "TC-ADB-003",
+      "tc_id": "TC-ADB-003-PRIMARY",
+      "ac_id": "AC-ADB-003",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；覆盖 hash-only、expiry、scope、reserve/finalize/release、重放与并发 reservation",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_approvals.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；覆盖 hash-only、expiry、scope、reserve/finalize/release、重放与并发 reservation",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-003/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-ADB-004",
+      "source_tc_id": "TC-ADB-004",
+      "tc_id": "TC-ADB-004-PRIMARY",
+      "ac_id": "AC-ADB-004",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；事务回滚、重启恢复、事件 append-only 与 sequence 单调成立",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_storage.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；事务回滚、重启恢复、事件 append-only 与 sequence 单调成立",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-004/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-ADB-005",
+      "source_tc_id": "TC-ADB-005",
+      "tc_id": "TC-ADB-005-PRIMARY",
+      "ac_id": "AC-ADB-005",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；重复请求复用 binding，payload 冲突阻断且 Hermes create 仅一次",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_service.py::DispatchIdempotencyTests --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；重复请求复用 binding，payload 冲突阻断且 Hermes create 仅一次",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-005/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-ADB-006",
+      "source_tc_id": "TC-ADB-006",
+      "tc_id": "TC-ADB-006-PRIMARY",
+      "ac_id": "AC-ADB-006",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；JSON CLI argv 含 board/worktree/skill/runtime/retry/idempotency 且不访问 Hermes DB",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_adapters.py::HermesAdapterTests --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；JSON CLI argv 含 board/worktree/skill/runtime/retry/idempotency 且不访问 Hermes DB",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-006/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-ADB-007",
+      "source_tc_id": "TC-ADB-007",
+      "tc_id": "TC-ADB-007-PRIMARY",
+      "ac_id": "AC-ADB-007",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；合法转换留事件，非法转换返回 `invalid_transition`",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_service.py::DispatchStateMachineTests --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；合法转换留事件，非法转换返回 `invalid_transition`",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-007/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-ADB-008",
+      "source_tc_id": "TC-ADB-008",
+      "tc_id": "TC-ADB-008-PRIMARY",
+      "ac_id": "AC-ADB-008",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；worker success 仅进入 reconciling，Beacon closure pass 后才 completed",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_reconcile.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；worker success 仅进入 reconciling，Beacon closure pass 后才 completed",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-008/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-ADB-009",
+      "source_tc_id": "TC-ADB-009",
+      "tc_id": "TC-ADB-009-PRIMARY",
+      "ac_id": "AC-ADB-009",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；frontmatter/openai.yaml/symlink 安装契约及 quick_validate 全部通过",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_skill_contract.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；frontmatter/openai.yaml/symlink 安装契约及 quick_validate 全部通过",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-009/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-ADB-010",
+      "source_tc_id": "TC-ADB-010",
+      "tc_id": "TC-ADB-010-PRIMARY",
+      "ac_id": "AC-ADB-010",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；release、target mutation、Hermes DB 和自动修复路径均 fail-closed",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_boundaries.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；release、target mutation、Hermes DB 和自动修复路径均 fail-closed",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-010/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-ADB-CLI",
+      "source_tc_id": "TC-ADB-CLI",
+      "tc_id": "TC-ADB-CLI-PRIMARY",
+      "ac_id": "AC-ADB-001, AC-ADB-002, AC-ADB-004",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；输出合法 JSON，包含 Beacon 源码仓和全部 dispatchable managed 项目",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "PYTHONPATH=src python3 -m agent_delivery_bus.cli --config config/projects.json --db :memory: projects list --json",
+      "assertion": "exit_code==0；输出合法 JSON，包含 Beacon 源码仓和全部 dispatchable managed 项目",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/delivery-bus-mvp/tc-adb-cli/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    }
+  ]
+}

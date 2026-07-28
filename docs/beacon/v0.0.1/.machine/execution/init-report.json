@@ -1,0 +1,372 @@
+{
+  "schema_version": "1.0",
+  "command": "beacon init",
+  "docs_version": "v0.0.1",
+  "version": "v0.0.1",
+  "runtime_version": "v1.6.10",
+  "version_context": {
+    "docs_version": "v0.0.1",
+    "docs_version_source": "explicit",
+    "runtime_version": "v1.6.10",
+    "runtime_version_source": "explicit",
+    "runtime_capability_lines": [
+      "v1.2.1",
+      "v1.3.4",
+      "v1.6.0",
+      "v1.6.1",
+      "v1.6.2",
+      "v1.6.3",
+      "v1.6.4",
+      "v1.6.5",
+      "v1.6.6",
+      "v1.6.7",
+      "v1.6.8",
+      "v1.6.9",
+      "v1.6.10",
+      "v1.6.11"
+    ],
+    "runtime_truth_runtime_version": "v1.6.11",
+    "runtime_truth_current_release_line": "v1.6.11",
+    "onboarding_docs_version": "v0.0.1",
+    "onboarding_runtime_version": "v1.6.10",
+    "context_versions": {
+      "AGENTS.md": "v1.6.10",
+      "CLAUDE.md": "v1.6.10"
+    },
+    "context_docs_versions": {
+      "AGENTS.md": "v1.6.10",
+      "CLAUDE.md": "v1.6.10"
+    },
+    "context_managed_version": "v1.6.10",
+    "context_docs_version": "v1.6.10",
+    "context_version_consistent": true,
+    "context_docs_version_consistent": true,
+    "available_docs_versions": [
+      "v0.0.1"
+    ],
+    "latest_scanned_docs_version": "v0.0.1",
+    "package_version": "",
+    "docs_default_line": "v0.0.1",
+    "current_runtime_release_line": "v0.0.1",
+    "planning_lines": [],
+    "partial_runtime_supplement_lines": [],
+    "release_truth_status": "current_runtime_release",
+    "version_truth_source": "",
+    "version_truth_source_kind": "inferred",
+    "version_truth": {
+      "schema_version": "1.0",
+      "package_version": "",
+      "runtime_version": "v0.0.1",
+      "docs_default_line": "v0.0.1",
+      "current_runtime_release_line": "v0.0.1",
+      "planning_lines": [],
+      "partial_runtime_supplement_lines": [],
+      "lines": {
+        "v0.0.1": {
+          "status": "current_runtime_release"
+        }
+      },
+      "source_kind": "inferred",
+      "source_path": ""
+    },
+    "version_semantics_source": "",
+    "version_semantics_source_kind": "default",
+    "version_semantics": {
+      "schema_version": "1.0",
+      "artifact": "beacon-version-semantics",
+      "description": "Canonical version semantics contract for Beacon. Consumers must resolve version meaning through beacon.utils.versioning rather than command-local interpretation.",
+      "fields": {
+        "package_version": {
+          "kind": "package",
+          "meaning": "Installed Beacon package version.",
+          "example": "1.2.0"
+        },
+        "runtime_version": {
+          "kind": "runtime",
+          "meaning": "Active Beacon runtime/toolkit line used by the CLI and managed context.",
+          "example": "v1.2.0"
+        },
+        "docs_default_line": {
+          "kind": "docs",
+          "meaning": "Default docs line for docs-oriented commands when the caller uses auto/latest.",
+          "example": "v1.2.0"
+        },
+        "current_runtime_release_line": {
+          "kind": "release_truth",
+          "meaning": "Beacon runtime line currently considered the formal runtime release truth.",
+          "example": "v1.2.0"
+        },
+        "planning_lines": {
+          "kind": "planning",
+          "meaning": "Future docs lines opened for planning and not yet promoted to the current runtime release.",
+          "example": [
+            "v1.3.0"
+          ]
+        },
+        "partial_runtime_supplement_lines": {
+          "kind": "supplement",
+          "meaning": "Planning lines with bounded runtime supplements that still do not replace the current runtime release.",
+          "example": [
+            "v1.2.1"
+          ]
+        }
+      },
+      "status_values": {
+        "historical_release": "A historical released line that is not the current runtime release.",
+        "planning_only": "A planning line with docs/package planning but no accepted runtime promotion.",
+        "planning_with_partial_runtime_supplement": "A planning line with bounded runtime supplements that still does not replace the current runtime release.",
+        "current_runtime_release": "The current Beacon runtime release line."
+      },
+      "resolver_contract": {
+        "docs_target": "resolve_docs_version()",
+        "runtime_target": "resolve_runtime_version()",
+        "version_context": "describe_project_version_context()",
+        "release_truth_status": "release_truth_status()"
+      },
+      "consumer_surfaces": [
+        "ask",
+        "help",
+        "status",
+        "doctor",
+        "init",
+        "version"
+      ],
+      "rules": [
+        "Do not conflate docs-target resolution with runtime-target resolution.",
+        "Do not add overlapping aliases for existing version fields without updating this contract.",
+        "Commands should expose version_context and version_semantics rather than reinterpreting raw fields."
+      ],
+      "source_path": "",
+      "source_kind": "default"
+    },
+    "context_version_guard": {
+      "schema_version": "1.0",
+      "requested_version": "v0.0.1",
+      "resolved_version": "v0.0.1",
+      "docs_source": "explicit",
+      "status": "pass",
+      "reason_code": "",
+      "message": "",
+      "recommended_version": "v0.0.1",
+      "signals": {
+        "context_marker": "",
+        "context_docs_marker": "v1.6.10",
+        "onboarding_docs": "v0.0.1",
+        "git_branch": ""
+      },
+      "git_branch": "",
+      "override_enabled": false,
+      "override_env": "BEACON_ALLOW_CONTEXT_VERSION_DRIFT"
+    }
+  },
+  "version_semantics": {
+    "schema_version": "1.0",
+    "artifact": "beacon-version-semantics",
+    "description": "Canonical version semantics contract for Beacon. Consumers must resolve version meaning through beacon.utils.versioning rather than command-local interpretation.",
+    "fields": {
+      "package_version": {
+        "kind": "package",
+        "meaning": "Installed Beacon package version.",
+        "example": "1.2.0"
+      },
+      "runtime_version": {
+        "kind": "runtime",
+        "meaning": "Active Beacon runtime/toolkit line used by the CLI and managed context.",
+        "example": "v1.2.0"
+      },
+      "docs_default_line": {
+        "kind": "docs",
+        "meaning": "Default docs line for docs-oriented commands when the caller uses auto/latest.",
+        "example": "v1.2.0"
+      },
+      "current_runtime_release_line": {
+        "kind": "release_truth",
+        "meaning": "Beacon runtime line currently considered the formal runtime release truth.",
+        "example": "v1.2.0"
+      },
+      "planning_lines": {
+        "kind": "planning",
+        "meaning": "Future docs lines opened for planning and not yet promoted to the current runtime release.",
+        "example": [
+          "v1.3.0"
+        ]
+      },
+      "partial_runtime_supplement_lines": {
+        "kind": "supplement",
+        "meaning": "Planning lines with bounded runtime supplements that still do not replace the current runtime release.",
+        "example": [
+          "v1.2.1"
+        ]
+      }
+    },
+    "status_values": {
+      "historical_release": "A historical released line that is not the current runtime release.",
+      "planning_only": "A planning line with docs/package planning but no accepted runtime promotion.",
+      "planning_with_partial_runtime_supplement": "A planning line with bounded runtime supplements that still does not replace the current runtime release.",
+      "current_runtime_release": "The current Beacon runtime release line."
+    },
+    "resolver_contract": {
+      "docs_target": "resolve_docs_version()",
+      "runtime_target": "resolve_runtime_version()",
+      "version_context": "describe_project_version_context()",
+      "release_truth_status": "release_truth_status()"
+    },
+    "consumer_surfaces": [
+      "ask",
+      "help",
+      "status",
+      "doctor",
+      "init",
+      "version"
+    ],
+    "rules": [
+      "Do not conflate docs-target resolution with runtime-target resolution.",
+      "Do not add overlapping aliases for existing version fields without updating this contract.",
+      "Commands should expose version_context and version_semantics rather than reinterpreting raw fields."
+    ],
+    "source_path": "",
+    "source_kind": "default"
+  },
+  "project_mode": "greenfield",
+  "project_root": ".",
+  "dry_run": false,
+  "force": false,
+  "with_context_guidance": true,
+  "status": "completed",
+  "started_at": "2026-07-27T13:20:29.246013+00:00",
+  "ended_at": "2026-07-27T13:20:29.246033+00:00",
+  "actions": [
+    {
+      "scope": "docs",
+      "action": "created",
+      "path": "docs/beacon/v0.0.1"
+    },
+    {
+      "scope": "docs",
+      "action": "created",
+      "path": "docs/beacon/v0.0.1/execution"
+    },
+    {
+      "scope": "docs",
+      "action": "created",
+      "path": "docs/beacon/global-boundaries.md"
+    },
+    {
+      "scope": "context",
+      "action": "created",
+      "path": "CLAUDE.md",
+      "context_setup": "true",
+      "target_file": "CLAUDE.md",
+      "file": "CLAUDE.md",
+      "force": "False",
+      "merge_mode": "created",
+      "changed": "True",
+      "backup_path": "None"
+    },
+    {
+      "scope": "context",
+      "action": "created",
+      "path": "AGENTS.md",
+      "context_setup": "true",
+      "target_file": "AGENTS.md",
+      "file": "AGENTS.md",
+      "force": "False",
+      "merge_mode": "created",
+      "changed": "True",
+      "backup_path": "None"
+    },
+    {
+      "scope": "context",
+      "action": "unchanged",
+      "path": "docs/beacon/global-boundaries.md",
+      "context_setup": "true",
+      "target_file": "global-boundaries.md",
+      "file": "global-boundaries.md",
+      "force": "False",
+      "merge_mode": "copied",
+      "changed": "False",
+      "backup_path": "None"
+    },
+    {
+      "scope": "docs",
+      "action": "created",
+      "path": "docs/beacon/v0.0.1/SUMMARY.md"
+    },
+    {
+      "scope": "docs",
+      "action": "created",
+      "path": "docs/beacon/v0.0.1/execution/boundaries.md"
+    },
+    {
+      "scope": "docs",
+      "action": "created",
+      "path": "docs/beacon/v0.0.1/execution/index.md"
+    },
+    {
+      "scope": "docs",
+      "action": "created",
+      "path": "docs/beacon/v0.0.1/execution/architecture-blueprint.md"
+    },
+    {
+      "scope": "docs",
+      "action": "created",
+      "path": "docs/beacon/v0.0.1/execution/version-evolution-blueprint.md"
+    },
+    {
+      "scope": "docs",
+      "action": "created",
+      "path": "docs/beacon/v0.0.1/execution/implementation-archive-index.md"
+    },
+    {
+      "scope": "docs",
+      "action": "created",
+      "path": "docs/beacon/v0.0.1/execution/project-lifecycle-onboarding.md"
+    },
+    {
+      "scope": "docs",
+      "action": "created",
+      "path": "docs/beacon/v0.0.1/release/v0.0.1.md"
+    },
+    {
+      "scope": "state",
+      "action": "written",
+      "path": ".beacon/state/eval-lab/experiments"
+    },
+    {
+      "scope": "state",
+      "action": "written",
+      "path": ".beacon/state/eval-lab/scores"
+    },
+    {
+      "scope": "state",
+      "action": "written",
+      "path": ".beacon/state/eval-lab/drift-audit"
+    },
+    {
+      "scope": "state",
+      "action": "written",
+      "path": ".beacon/state/eval-lab/benchmark-surface.json"
+    },
+    {
+      "scope": "state",
+      "action": "written",
+      "path": ".beacon/state/eval-lab/editable-surface.json"
+    },
+    {
+      "scope": "state",
+      "action": "written",
+      "path": ".beacon/state/eval-lab/policy.json"
+    },
+    {
+      "scope": "state",
+      "action": "written",
+      "path": ".beacon/state/eval-lab/keep-discard-log.jsonl"
+    },
+    {
+      "scope": "state",
+      "action": "created",
+      "path": ".beacon/state/project-onboarding.json"
+    }
+  ],
+  "conflicts": []
+}

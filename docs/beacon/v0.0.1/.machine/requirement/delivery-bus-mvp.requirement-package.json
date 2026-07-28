@@ -1,0 +1,316 @@
+{
+  "schema_version": "1.0",
+  "truth_map_contract": "beacon-truth-map-v1",
+  "truth_source_model": "feature_package_authoritative",
+  "truth_package_contract": "beacon-feature-package-v2",
+  "machine_json_role": "generated_state_not_truth",
+  "generated_by": "beacon.truth_map.resolver",
+  "generated_at": "2026-07-27T14:04:37.011998+00:00",
+  "feature": "delivery-bus-mvp",
+  "feature_slug": "delivery-bus-mvp",
+  "version": "v0.0.1",
+  "truth_authority": false,
+  "json_authority": false,
+  "source_paths": {
+    "truth": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+    "tests": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
+    "tasks": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tasks.md",
+    "evidence": "docs/beacon/v0.0.1/features/delivery-bus-mvp/evidence.md"
+  },
+  "source_hashes": {
+    "truth": "c4abb64d95be67fc29fe55b17a901b1f00ed8613f49069cb48f4c29598806d8d",
+    "tests": "b4633497d6f0284e27a1d3c86c4a9076b17ee798adbfdfc18cc39be30d557947",
+    "tasks": "f3872d4a6a83f7abb378b9e90a6eefd969e9947c499a30099d0a02d87f4a0af6",
+    "evidence": "e7ce73688611ccde60c5073908e9214ccfbacd7fbdd0c9fdc070a39a7e550ebd"
+  },
+  "truth_frontmatter": {
+    "slug": "delivery-bus-mvp",
+    "version": "v0.0.1",
+    "status": "frozen",
+    "revision_id": "R1",
+    "language": "zh",
+    "domain_required": "true",
+    "domain_kind": "business",
+    "ux_required": "false",
+    "package_maturity": "filled",
+    "parser_contract": "beacon-feature-package-v2",
+    "materials_status": "current",
+    "truth_source_model": "intent_first",
+    "program_ref": "docs/beacon/v0.0.1/programs/agent-delivery-bus-v001/program-manifest.md",
+    "git_canonical_branch": "main",
+    "canonical_refs": {
+      "prd": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+      "user_story": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+      "test_case": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md"
+    },
+    "provenance": {
+      "- ac_id": "AC-ADB-010",
+      "source_type": "user_intent",
+      "source_ref": "不自动 release、不直接修目标项目、不读取 Hermes 内部 SQLite"
+    }
+  },
+  "frontmatter_errors": [],
+  "acceptance_criteria": [
+    {
+      "ac_id": "AC-ADB-001",
+      "theme": "`config/projects.json` 是唯一项目注册真值；CLI 能 list，并按 slug、唯一 alias 或 canonical repo path resolve Beacon 源码仓及 managed 项目；缺失、重复 slug、冲突 alias、非法 class 或不存在 repo 必须 fail-closed",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-ADB-002",
+      "theme": "`doctor` 和每次 dispatch 前执行只读 strict preflight：repo/git、docs root、声明 docs version、Beacon CLI、`beacon doctor verify-context --strict`、Hermes CLI/gateway/profile；输出逐项 status、稳定 reason_code 和人工 `resume_action`，不得自动修复",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-ADB-003",
+      "theme": "implement/freeze/release scope 使用带 actor、project、stage、feature、expiry 的随机一次性 token；仅存 hash；支持 issue→reserve→finalize，明确失败可 release reservation，过期/错 scope/重放/in-flight 均阻断",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-ADB-004",
+      "theme": "SQLite 原子持久化 projects snapshot、approvals、dispatches、dispatch_events；事件只追加且 sequence 单调，CLI 重启后仍可查询完整状态与最后失败原因",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-ADB-005",
+      "theme": "dispatch 使用规范化请求生成稳定 SHA-256 idempotency key；相同请求返回同一 dispatch/Hermes binding，不重复建 task；同 key 不同 payload 返回 `idempotency_conflict`",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-ADB-006",
+      "theme": "Hermes adapter 仅通过公开 JSON CLI 创建项目 board 和 task；task 必须绑定 coding assignee、`agent-delivery-bus` skill、2h runtime、2 retries、稳定 idempotency key；implement 使用 `worktree:<repo>`",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-ADB-007",
+      "theme": "dispatch 状态机覆盖 draft、awaiting_approval、queued、dispatched、reconciling、completed、blocked、failed、cancelled；所有转换写事件，非法转换 fail-closed",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-ADB-008",
+      "theme": "`task show/list` 与 `reconcile` 合并本地 ledger、Hermes JSON 状态和 Beacon 阶段证据；Hermes/worker success 只进入 reconciling，只有阶段 closure 条件满足才 completed",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-ADB-009",
+      "theme": "提供 `skills/agent-delivery-bus`，SKILL frontmatter 仅含 name/description，包含 `agents/openai.yaml` 和最小契约参考；通过 skill-creator `quick_validate.py`，安装时安全创建 Codex/Hermes symlink 且不覆盖已有目标",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-ADB-010",
+      "theme": "MVP 不读取 Hermes SQLite、不直接修改目标 repo、不自动执行 Beacon 修复、不自动 release；release dispatch 即使有审批也返回 `stage_not_enabled` 和人工 release route",
+      "description": ""
+    }
+  ],
+  "test_rows": [
+    {
+      "ac_id": "AC-ADB-001",
+      "tc_id": "TC-ADB-001",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_registry.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；覆盖 list、slug/alias/path resolve、重复 slug、alias 冲突和 repo 缺失",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-ADB-002",
+      "tc_id": "TC-ADB-002",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_preflight.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；strict check 失败返回稳定 reason_code/resume_action 且无写目标仓命令",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-ADB-003",
+      "tc_id": "TC-ADB-003",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_approvals.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；覆盖 hash-only、expiry、scope、reserve/finalize/release、重放与并发 reservation",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-ADB-004",
+      "tc_id": "TC-ADB-004",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_storage.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；事务回滚、重启恢复、事件 append-only 与 sequence 单调成立",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-ADB-005",
+      "tc_id": "TC-ADB-005",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_service.py::DispatchIdempotencyTests --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；重复请求复用 binding，payload 冲突阻断且 Hermes create 仅一次",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-ADB-006",
+      "tc_id": "TC-ADB-006",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_adapters.py::HermesAdapterTests --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；JSON CLI argv 含 board/worktree/skill/runtime/retry/idempotency 且不访问 Hermes DB",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-ADB-007",
+      "tc_id": "TC-ADB-007",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_service.py::DispatchStateMachineTests --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；合法转换留事件，非法转换返回 `invalid_transition`",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-ADB-008",
+      "tc_id": "TC-ADB-008",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_reconcile.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；worker success 仅进入 reconciling，Beacon closure pass 后才 completed",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-ADB-009",
+      "tc_id": "TC-ADB-009",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_skill_contract.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；frontmatter/openai.yaml/symlink 安装契约及 quick_validate 全部通过",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-ADB-010",
+      "tc_id": "TC-ADB-010",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_boundaries.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；release、target mutation、Hermes DB 和自动修复路径均 fail-closed",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-ADB-001, AC-ADB-002, AC-ADB-004",
+      "tc_id": "TC-ADB-CLI",
+      "layer": "",
+      "command": "`PYTHONPATH=src python3 -m agent_delivery_bus.cli --config config/projects.json --db :memory: projects list --json`",
+      "assertion": "exit_code==0；输出合法 JSON，包含 Beacon 源码仓和全部 dispatchable managed 项目",
+      "evidence_path": ""
+    }
+  ],
+  "task_rows": [
+    {
+      "id": "TASK-001",
+      "title": "Implement AC-ADB-001: `config/projects.json` 是唯一项目注册真值；CLI 能 list，并按 slug、唯一 alias 或 canoni... · ac=AC-ADB-001 · evidence=`.beacon/evidence/implement/delivery-bus-mvp/AC-ADB-001.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-002",
+      "title": "Implement AC-ADB-002: `doctor` 和每次 dispatch 前执行只读 strict preflight：repo/git、docs root、声明 do... · ac=AC-ADB-002 · evidence=`.beacon/evidence/implement/delivery-bus-mvp/AC-ADB-002.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-003",
+      "title": "Implement AC-ADB-003: implement/freeze/release scope 使用带 actor、project、stage、feature、expiry... · ac=AC-ADB-003 · evidence=`.beacon/evidence/implement/delivery-bus-mvp/AC-ADB-003.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-004",
+      "title": "Implement AC-ADB-004: SQLite 原子持久化 projects snapshot、approvals、dispatches、dispatch_events；事... · ac=AC-ADB-004 · evidence=`.beacon/evidence/implement/delivery-bus-mvp/AC-ADB-004.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-005",
+      "title": "Implement AC-ADB-005: dispatch 使用规范化请求生成稳定 SHA-256 idempotency key；相同请求返回同一 dispatch/Hermes... · ac=AC-ADB-005 · evidence=`.beacon/evidence/implement/delivery-bus-mvp/AC-ADB-005.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-006",
+      "title": "Implement AC-ADB-006: Hermes adapter 仅通过公开 JSON CLI 创建项目 board 和 task；task 必须绑定 coding assi... · ac=AC-ADB-006 · evidence=`.beacon/evidence/implement/delivery-bus-mvp/AC-ADB-006.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-007",
+      "title": "Implement AC-ADB-007: dispatch 状态机覆盖 draft、awaiting_approval、queued、dispatched、reconciling、... · ac=AC-ADB-007 · evidence=`.beacon/evidence/implement/delivery-bus-mvp/AC-ADB-007.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-008",
+      "title": "Implement AC-ADB-008: `task show/list` 与 `reconcile` 合并本地 ledger、Hermes JSON 状态和 Beacon 阶段证... · ac=AC-ADB-008 · evidence=`.beacon/evidence/implement/delivery-bus-mvp/AC-ADB-008.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-009",
+      "title": "Implement AC-ADB-009: 提供 `skills/agent-delivery-bus`，SKILL frontmatter 仅含 name/description，... · ac=AC-ADB-009 · evidence=`.beacon/evidence/implement/delivery-bus-mvp/AC-ADB-009.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-010",
+      "title": "Implement AC-ADB-010: MVP 不读取 Hermes SQLite、不直接修改目标 repo、不自动执行 Beacon 修复、不自动 release；releas... · ac=AC-ADB-010 · evidence=`.beacon/evidence/implement/delivery-bus-mvp/AC-ADB-010.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-011",
+      "title": "Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/delivery-bus-mvp/GATES.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-012",
+      "title": "Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/delivery-bus-mvp/QA-MATRIX.json`",
+      "status": "checked"
+    }
+  ],
+  "checkbox_errors": [],
+  "evidence_rows": [
+    {
+      "surface": "requirements",
+      "authority": "requirement_truth",
+      "canonical_artifact": "`truth.md`",
+      "status": "linked",
+      "route": "truth review → freeze"
+    },
+    {
+      "surface": "executable acceptance",
+      "authority": "acceptance_truth",
+      "canonical_artifact": "`tests.md`",
+      "status": "linked",
+      "route": "unittest + package exec TC"
+    },
+    {
+      "surface": "test contract",
+      "authority": "test_truth",
+      "canonical_artifact": "`tests.md`",
+      "status": "linked",
+      "route": "qa"
+    },
+    {
+      "surface": "implementation receipts",
+      "authority": "support_advisory",
+      "canonical_artifact": "`.beacon/evidence/implement/delivery-bus-mvp/`",
+      "status": "indexed",
+      "route": "implement"
+    },
+    {
+      "surface": "Hermes integration receipts",
+      "authority": "support_advisory",
+      "canonical_artifact": "`.beacon/evidence/integration/hermes/`",
+      "status": "indexed",
+      "route": "reconcile"
+    },
+    {
+      "surface": "skill validation receipts",
+      "authority": "support_advisory",
+      "canonical_artifact": "`.beacon/evidence/skill/quick-validate.json`",
+      "status": "indexed",
+      "route": "quick_validate.py"
+    },
+    {
+      "surface": "qa",
+      "authority": "qa_verdict",
+      "canonical_artifact": "`docs/beacon/v0.0.1/.machine/qa/delivery-bus-mvp.qa9-matrix.json`",
+      "status": "linked",
+      "route": "qa"
+    },
+    {
+      "surface": "release",
+      "authority": "release_verdict",
+      "canonical_artifact": "`docs/beacon/v0.0.1/release/`",
+      "status": "disabled-by-scope",
+      "route": "human-only"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+---
+name: agent-delivery-bus
+description: Govern local multi-project agent delivery through strict preflight, scoped approval, idempotent executor dispatch, and truth-gate evidence reconciliation. Use when listing or resolving registered projects, checking dispatch readiness, approving implement/freeze work, creating or inspecting executor tasks, or reconciling worker results with delivery evidence.
+---
+
+# Agent Delivery Bus
+
+Use the repository CLI as the control plane. Treat project routing, authorization,
+execution, and delivery verdicts as separate authorities.
+
+## Architecture
+
+```text
+Human / Knowledge OS intent
+        |
+        v
+ Agent Delivery Bus Core
+ registry -> preflight -> approval -> idempotent dispatch -> reconcile
+   |            |                         |                    |
+   |            +-- TruthGateAdapter      |                    +-- evidence
+   |            +-- ExecutorAdapter       v
+   +-- projects.json                 example: Hermes
+```
+
+Knowledge folders (projects / assets / inspiration / collaboration rules) stay
+outside this control plane. They may produce intent, but they never become the
+scheduler, the worker, or the delivery gate.
+
+## Decision boundaries
+
+- Resolve the project from the registry; never infer a target from a similar name.
+- Run strict preflight before proposing a real dispatch.
+- Require a matching one-time approval for `implement` and `freeze`.
+- Treat `release` as disabled even when an approval exists.
+- Reuse the same normalized request for retries so executor idempotency remains stable.
+- Treat worker completion as an execution receipt, then reconcile truth-gate evidence.
+- Stop on blocked results and report `reason_code` plus `resume_action`; do not run the repair.
+
+## Minimal tool surface
+
+```bash
+bin/adb projects list --json
+bin/adb projects resolve --slug <slug> --json
+bin/adb doctor --project <slug> --json
+bin/adb dispatch --project <slug> --stage <plan|implement|qa|freeze> --feature <feature> --dry-run --json
+bin/adb approve --actor <actor> --project <slug> --stage <implement|freeze|release> --feature <feature> --json
+bin/adb dispatch --project <slug> --stage <stage> --feature <feature> --approval-token <token> --json
+bin/adb task show <dispatch-id> --json
+bin/adb reconcile <dispatch-id> --json
+```
+
+Read [references/contracts.md](references/contracts.md) before performing a real
+dispatch or interpreting reconciliation.
+
+## Required reporting
+
+Return the resolved project, stage, feature, dry-run/real mode, preflight result,
+dispatch id, executor task id when present, current state, reason code, and next
+safe action.
+
+Never include approval tokens in logs, task bodies, or later status responses.

@@ -1,0 +1,21 @@
+{
+  "program_slug": "agent-delivery-bus-v001",
+  "version": "v0.0.1",
+  "scope_mode": "full_parity",
+  "lakes": [
+    {
+      "slug": "delivery-bus-mvp",
+      "depends_on": [],
+      "parity_subset": [
+        "project-registry",
+        "strict-preflight",
+        "scoped-approval",
+        "idempotent-dispatch",
+        "hermes-kanban",
+        "beacon-reconciliation",
+        "skill-compliance"
+      ],
+      "status": "planned"
+    }
+  ]
+}

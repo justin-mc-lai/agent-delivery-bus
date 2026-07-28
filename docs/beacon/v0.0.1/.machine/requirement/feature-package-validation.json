@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "feature": "delivery-bus-mvp",
+  "feature_slug": "delivery-bus-mvp",
+  "version": "v0.0.1",
+  "status": "pass",
+  "blocked": false,
+  "reason_code": "",
+  "generated_at": "2026-07-27T14:04:36.773946+00:00",
+  "package_dir": "docs/beacon/v0.0.1/features/delivery-bus-mvp",
+  "truth_frontmatter": {
+    "slug": "delivery-bus-mvp",
+    "version": "v0.0.1",
+    "status": "frozen",
+    "revision_id": "R1",
+    "language": "zh",
+    "domain_required": "true",
+    "domain_kind": "business",
+    "ux_required": "false",
+    "package_maturity": "filled",
+    "parser_contract": "beacon-feature-package-v2",
+    "materials_status": "current",
+    "truth_source_model": "intent_first",
+    "program_ref": "docs/beacon/v0.0.1/programs/agent-delivery-bus-v001/program-manifest.md",
+    "git_canonical_branch": "main",
+    "canonical_refs": {
+      "prd": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+      "user_story": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+      "test_case": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md"
+    },
+    "provenance": {
+      "- ac_id": "AC-ADB-010",
+      "source_type": "user_intent",
+      "source_ref": "不自动 release、不直接修目标项目、不读取 Hermes 内部 SQLite"
+    }
+  },
+  "ac_count": 10,
+  "test_count": 11,
+  "checkbox_count": 12,
+  "evidence_row_count": 8,
+  "gate_authority": "canonical_surfaces_preserved",
+  "checkbox_gate_bypass": false,
+  "task_evidence_gate": {
+    "pass": true,
+    "checked_ok": 12,
+    "checked_bad": 0,
+    "unbound": 0,
+    "findings": [],
+    "reason_code": ""
+  },
+  "evidence_gate_truth": false,
+  "diagnostics": []
+}

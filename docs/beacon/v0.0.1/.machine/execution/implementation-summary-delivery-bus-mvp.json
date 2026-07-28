@@ -1,0 +1,512 @@
+{
+  "schema_version": "1.0",
+  "run_id": "run-20260727T140143Z-ff6d",
+  "feature": "delivery-bus-mvp",
+  "feature_slug": "delivery-bus-mvp",
+  "version": "v0.0.1",
+  "mode": "single",
+  "host_runtime": "codex",
+  "runner": "native-single",
+  "adapter_type": "native",
+  "request_path": ".beacon/implement/run-20260727T140143Z-ff6d/request.json",
+  "result_path": ".beacon/implement/run-20260727T140143Z-ff6d/result.json",
+  "branch_preflight_path": ".beacon/implement/run-20260727T140143Z-ff6d/branch-preflight.json",
+  "plan_preflight_path": ".beacon/implement/run-20260727T140143Z-ff6d/plan-preflight.json",
+  "program_next_action_admission": {
+    "status": "pass",
+    "blocked": false,
+    "reason_code": "",
+    "feature_slug": "delivery-bus-mvp",
+    "version": "v0.0.1",
+    "schema_version": "1.0",
+    "program_admission_required": false,
+    "reason_codes": []
+  },
+  "revision_delta": {},
+  "git_workflow": {
+    "schema_version": "1.0",
+    "feature": "delivery-bus-mvp",
+    "feature_slug": "delivery-bus-mvp",
+    "version": "v0.0.1",
+    "mode": "workspace",
+    "expected_branch": "beacon/v0.0.1",
+    "branch_prefix": "beacon/",
+    "base_branch": "main",
+    "use_git_worktree": true,
+    "require_clean_worktree_for_switch": true,
+    "service_directories": [
+      "."
+    ],
+    "direct_delivery_services": [
+      "agent-delivery-bus"
+    ],
+    "git_roots": [
+      "."
+    ],
+    "worktree_root": "./.beacon/worktrees/v0.0.1/delivery-bus-mvp",
+    "implementation_preflight": [
+      "Before implementation, verify the target service belongs to: ..",
+      "Before implementation, verify every direct delivery service is on beacon/v0.0.1.",
+      "If a branch switch is needed and the worktree is dirty, stop and clean or stash first."
+    ],
+    "source": "version_governance",
+    "generated_at": "2026-07-27T14:01:43.394847+00:00",
+    "service_branch_map": {
+      "agent-delivery-bus": "main"
+    },
+    "worktree_path": "./.beacon/worktrees/v0.0.1/delivery-bus-mvp",
+    "branch_governance": {
+      "schema_version": "1.0",
+      "tool_name": "beacon-toolkit-branch-governance",
+      "feature": "delivery-bus-mvp",
+      "version": "v0.0.1",
+      "template_name": "standard-feature",
+      "template_source": "project_metadata",
+      "service_key": "agent-delivery-bus",
+      "repo_root": ".",
+      "base_branch": "main",
+      "current_branch": "beacon/v0.0.1/delivery-bus-mvp",
+      "target_branch": "beacon/v0.0.1",
+      "worktree_mode": "dedicated-worktree",
+      "worktree_path": "./.beacon/worktrees/v0.0.1/delivery-bus-mvp",
+      "current_worktree_path": "./.beacon/worktrees/v0.0.1/delivery-bus-mvp",
+      "previous_version_baseline_branch": "main",
+      "next_version_feature_branch": "beacon/v0.0.1/<feature-slug>",
+      "hotfix_branch_naming_rule": "",
+      "allow_worktree_when_feature_dirty": false,
+      "merge_direction_policy": [
+        "master->main",
+        "main->uat"
+      ],
+      "forbidden_directions": [
+        "uat->main",
+        "uat_as_feature_base"
+      ],
+      "evidence_contract": [],
+      "evidence": {},
+      "status": "pass",
+      "blocked": false,
+      "reason_codes": [
+        "branch_governance_branch_mismatch"
+      ],
+      "blocked_reason": "",
+      "recommended_action": "",
+      "missing_evidence_fields": [],
+      "evidence_contract_status": "pass",
+      "human_markdown": "## Branch Governance\n\n- toolkit: `beacon-toolkit-branch-governance`\n- template_name: `standard-feature`\n- template_source: `project_metadata`\n- service_key: `agent-delivery-bus`\n- repo_root: `.`\n- base_branch: `main`\n- current_branch: `beacon/v0.0.1/delivery-bus-mvp`\n- target_branch: `beacon/v0.0.1`\n- worktree_mode: `dedicated-worktree`\n- worktree_path: `./.beacon/worktrees/v0.0.1/delivery-bus-mvp`\n- evidence_contract_status: `pass`\n- blocked_reason: ``\n- recommended_action: ``\n\n### Flow Diagram\n```text\nmain\n    -> beacon/v0.0.1\n    -> uat\n```\n\n### Allowed Paths\n- `master->main`\n- `main->uat`\n\n### Forbidden Paths\n- `uat->main`\n- `uat_as_feature_base`\n\n### Evidence Contract\n- none\n"
+    }
+  },
+  "generated_at": "2026-07-27T14:01:43.698843+00:00",
+  "status": "completed",
+  "subagent_prechecks": {
+    "required": false,
+    "host_runtime": "codex",
+    "runtime_readiness": {},
+    "delegation_readiness": {}
+  },
+  "semantic_layer": {
+    "artifacts": {
+      "semantic_contract": "docs/beacon/v0.0.1/.machine/trace/semantic/delivery-bus-mvp/semantic-contract.json",
+      "semantic_dictionary": "docs/beacon/v0.0.1/.machine/trace/semantic/delivery-bus-mvp/semantic-dictionary.md",
+      "semantic_usage_guidelines": "docs/beacon/v0.0.1/.machine/trace/semantic/delivery-bus-mvp/semantic-usage-guidelines.md",
+      "semantic_review": "docs/beacon/v0.0.1/.machine/trace/semantic/delivery-bus-mvp/semantic-review.json"
+    },
+    "default_design_bridge": {
+      "repo": "https://github.com/Leonxlnx/taste-skill",
+      "skill_id": "taste-skill",
+      "entry": "",
+      "detected": false,
+      "kind": "external-default-bridge",
+      "supported_stages": [
+        "prototype",
+        "implement"
+      ],
+      "capabilities": [
+        "prototype",
+        "implement",
+        "taste-design",
+        "semantic-normalization"
+      ],
+      "install_hint": "npx skills add https://github.com/Leonxlnx/taste-skill --skill taste-skill"
+    }
+  },
+  "design_truth": {
+    "schema_version": "1.0",
+    "status": "not_applicable",
+    "feature": "delivery-bus-mvp",
+    "feature_slug": "delivery-bus-mvp",
+    "version": "v0.0.1",
+    "docs_version": "v0.0.1",
+    "runtime_version": "v1.6.11",
+    "source_surface": "prototype-adapter",
+    "consumption_surface": "implement",
+    "mode": "design-result-adapter",
+    "required": false,
+    "allowed_inputs": [],
+    "blocked_human_inputs": [],
+    "refs": {},
+    "missing_refs": [],
+    "design_preset": "",
+    "canonical_design_preset": "",
+    "preset_source": "",
+    "preset_family": "",
+    "template_catalog_count": 0,
+    "anti_ai_ui_contract": {},
+    "template_layout_rules": [],
+    "interaction_discipline_rules": []
+  },
+  "skill_admission": {},
+  "delivery_contract": {
+    "schema_version": "1.0",
+    "feature": "delivery-bus-mvp",
+    "version": "v0.0.1",
+    "requested_mode": "single",
+    "effective_mode": "single",
+    "generator_mode": "single",
+    "execution_mode": "single",
+    "runner_mode": "native-single",
+    "host_runtime": "codex",
+    "fallback_reason": "",
+    "capability_snapshot": {
+      "skill_admission_status": "",
+      "skill_admission_mode": "",
+      "skill_id": "",
+      "skill_surface_kind": "",
+      "skill_non_code_supported": false,
+      "schema_version": "1.0",
+      "host_runtime": "codex",
+      "subagent_required": false,
+      "subagent_runtime_status": "",
+      "subagent_delegation_status": "",
+      "host_semantic_ready": false,
+      "provider_available": false
+    },
+    "subagent_prechecks": {
+      "required": false,
+      "host_runtime": "codex",
+      "runtime_readiness": {},
+      "delegation_readiness": {}
+    },
+    "requirement_binding": {
+      "source_of_truth_root": "docs/beacon/v0.0.1/features/delivery-bus-mvp",
+      "prd": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+      "user_story": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+      "test_case": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
+      "ac_matrix": "docs/beacon/v0.0.1/.machine/qa/delivery-bus-mvp.ac-test-matrix.json",
+      "requirement_completeness_ref": "",
+      "requirement_completeness_verdict": "",
+      "revision_id": "R2",
+      "implemented_item_ids": [
+        "AC-001",
+        "TASK-001"
+      ],
+      "implemented_task_ids": [],
+      "verified_task_ids": []
+    },
+    "traceability_refs": [
+      "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+      "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
+      "docs/beacon/v0.0.1/.machine/qa/delivery-bus-mvp.ac-test-matrix.json",
+      ".beacon/implement/run-20260727T140143Z-ff6d/request.json",
+      ".beacon/implement/run-20260727T140143Z-ff6d/result.json"
+    ],
+    "runner": "native-single",
+    "adapter_type": "native",
+    "execution_surface": "native-single",
+    "team_mode": false,
+    "qa_status": "",
+    "gate_status": "",
+    "release_ready": false,
+    "risk_flags": []
+  },
+  "host_native_delivery": {
+    "schema_version": "1.0",
+    "feature": "delivery-bus-mvp",
+    "version": "v0.0.1",
+    "requested_mode": "single",
+    "effective_mode": "single",
+    "generator_mode": "single",
+    "execution_mode": "single",
+    "runner_mode": "native-single",
+    "host_runtime": "codex",
+    "fallback_reason": "",
+    "capability_snapshot": {
+      "skill_admission_status": "",
+      "skill_admission_mode": "",
+      "skill_id": "",
+      "skill_surface_kind": "",
+      "skill_non_code_supported": false,
+      "schema_version": "1.0",
+      "host_runtime": "codex",
+      "subagent_required": false,
+      "subagent_runtime_status": "",
+      "subagent_delegation_status": "",
+      "host_semantic_ready": false,
+      "provider_available": false
+    },
+    "subagent_prechecks": {
+      "required": false,
+      "host_runtime": "codex",
+      "runtime_readiness": {},
+      "delegation_readiness": {}
+    },
+    "requirement_binding": {
+      "source_of_truth_root": "docs/beacon/v0.0.1/features/delivery-bus-mvp",
+      "prd": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+      "user_story": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+      "test_case": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
+      "ac_matrix": "docs/beacon/v0.0.1/.machine/qa/delivery-bus-mvp.ac-test-matrix.json",
+      "requirement_completeness_ref": "",
+      "requirement_completeness_verdict": "",
+      "revision_id": "R2",
+      "implemented_item_ids": [
+        "AC-001",
+        "TASK-001"
+      ],
+      "implemented_task_ids": [],
+      "verified_task_ids": []
+    },
+    "traceability_refs": [
+      "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+      "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
+      "docs/beacon/v0.0.1/.machine/qa/delivery-bus-mvp.ac-test-matrix.json",
+      ".beacon/implement/run-20260727T140143Z-ff6d/request.json",
+      ".beacon/implement/run-20260727T140143Z-ff6d/result.json"
+    ],
+    "runner": "native-single",
+    "adapter_type": "native",
+    "execution_surface": "native-single",
+    "team_mode": false,
+    "qa_status": "",
+    "gate_status": "",
+    "release_ready": false,
+    "risk_flags": []
+  },
+  "prompt_boundary": {
+    "schema_version": "1.0",
+    "feature": "delivery-bus-mvp",
+    "feature_slug": "delivery-bus-mvp",
+    "version": "v0.0.1",
+    "required": false,
+    "prompt": "Implement the scoped Beacon feature.\nFeature: delivery-bus-mvp\nVersion: v0.0.1\nRead Beacon source of truth:\n- docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md\n- docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md\n- docs/beacon/v0.0.1/features/delivery-bus-mvp/tasks.md\n- docs/beacon/v0.0.1/features/delivery-bus-mvp/evidence.md\nReuse Beacon semantic layer:\n- docs/beacon/v0.0.1/.machine/trace/semantic/delivery-bus-mvp/semantic-contract.json\n- docs/beacon/v0.0.1/.machine/trace/semantic/delivery-bus-mvp/semantic-dictionary.md\n- docs/beacon/v0.0.1/.machine/trace/semantic/delivery-bus-mvp/semantic-usage-guidelines.md\nDefault design bridge (augmentation only): taste-skill @ https://github.com/Leonxlnx/taste-skill\nFollow Beacon boundary defaults:\n- Record explicit assumptions and ambiguity tradeoffs instead of silently picking one interpretation.\n- Prefer the smallest correct change; avoid speculative abstraction or future-facing config unless required.\n- Keep changes surgical; only touch files in the current scope and only clean up orphan artifacts you introduce.\n- Bind work to verification signals; include acceptance/test mapping or concrete evidence for non-trivial tasks.\n- For obvious typo or single-line copy fixes, stay lightweight but do not expand scope or touch unrelated files.\nImplement only against the frozen PRD, user-story, and test-case truth above.\nAlso align with project-level PRODUCT.md / DESIGN.md truth when those files are listed above.\nIf UX/visual delivery is claimed in truth (ux_required / UI pages) and DESIGN.md is missing, STOP freestyle UI: run `beacon design baseline --project . --version <version> --surface auto --write` first, then implement strictly against DESIGN.md + feature ui-state-matrix.\nDo not invent new user stories, acceptance criteria, or test scope.\nIf the work would require requirement change or conflicts with frozen truth, stop and route to beacon-change/refreeze instead of coding around it.\nStructured result should include: assumptions, simplicity_notes, scope_guard, ac_coverage_matrix, verification.\nBefore QA handoff, AC coverage matrix must list every frozen AC with status pass | partial | blocked and evidence or blocking_note.\nFor changed revisions with cleanup obligation, structured result must also include: cleanup_review_completed, removed_surfaces, retained_legacy_surfaces, cleanup_rationale.\nRun relevant verification.\nWrite structured result to .beacon/implement/run-20260727T140143Z-ff6d/result.json",
+    "classification": "",
+    "blocked": false,
+    "status": "not_required",
+    "reason_code": "",
+    "next_action": "",
+    "recommended_command": "",
+    "matched_signals": [],
+    "frozen_refs": [
+      "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+      "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
+      "docs/beacon/v0.0.1/features/delivery-bus-mvp/tasks.md",
+      "docs/beacon/v0.0.1/features/delivery-bus-mvp/evidence.md"
+    ],
+    "surface": "task_prompt"
+  },
+  "skill": "",
+  "summary": "native-single implementation completed",
+  "changed_files": [
+    "README.md",
+    "pyproject.toml"
+  ],
+  "verification": [
+    {
+      "command": "beacon implement run --runner native-single",
+      "status": "passed"
+    }
+  ],
+  "implemented_task_ids": [],
+  "verified_task_ids": [],
+  "blocked_task_ids": [],
+  "failed_task_ids": [],
+  "artifact_updates": {
+    "user_story": {
+      "required": false,
+      "reason": "story machine state writeback recorded"
+    },
+    "review_quality": {
+      "required": true,
+      "reason": "run quality review after native implementation"
+    },
+    "acceptance": {
+      "required": true,
+      "reason": "acceptance remains a formal post-verify action"
+    }
+  },
+  "branch_preflight": {
+    "run_id": "run-20260727T140143Z-ff6d",
+    "feature": "delivery-bus-mvp",
+    "feature_slug": "delivery-bus-mvp",
+    "generated_at": "2026-07-27T14:01:43.637590+00:00",
+    "workspace_admission_branch_guard": true,
+    "artifact_path": ".beacon/state/workspace-admission/v0.0.1/delivery-bus-mvp.json",
+    "admission_invalidation": "dirty_only",
+    "schema_version": "1.0",
+    "status": "pass",
+    "blocked": false,
+    "summary": "branch preflight satisfied via valid workspace admission artifact",
+    "reason_codes": [],
+    "expected_branch": "beacon/v0.0.1/delivery-bus-mvp",
+    "current_branch": "beacon/v0.0.1/delivery-bus-mvp",
+    "worktree_path": "./.beacon/worktrees/v0.0.1/delivery-bus-mvp",
+    "git_workflow": {
+      "schema_version": "1.0",
+      "feature": "delivery-bus-mvp",
+      "feature_slug": "delivery-bus-mvp",
+      "version": "v0.0.1",
+      "mode": "workspace",
+      "expected_branch": "beacon/v0.0.1",
+      "branch_prefix": "beacon/",
+      "base_branch": "main",
+      "use_git_worktree": true,
+      "require_clean_worktree_for_switch": true,
+      "service_directories": [
+        "."
+      ],
+      "direct_delivery_services": [
+        "agent-delivery-bus"
+      ],
+      "git_roots": [
+        "."
+      ],
+      "worktree_root": "./.beacon/worktrees/v0.0.1/delivery-bus-mvp",
+      "implementation_preflight": [
+        "Before implementation, verify the target service belongs to: ..",
+        "Before implementation, verify every direct delivery service is on beacon/v0.0.1.",
+        "If a branch switch is needed and the worktree is dirty, stop and clean or stash first."
+      ],
+      "source": "version_governance",
+      "generated_at": "2026-07-27T14:01:43.394847+00:00",
+      "service_branch_map": {
+        "agent-delivery-bus": "main"
+      },
+      "worktree_path": "./.beacon/worktrees/v0.0.1/delivery-bus-mvp",
+      "branch_governance": {
+        "schema_version": "1.0",
+        "tool_name": "beacon-toolkit-branch-governance",
+        "feature": "delivery-bus-mvp",
+        "version": "v0.0.1",
+        "template_name": "standard-feature",
+        "template_source": "project_metadata",
+        "service_key": "agent-delivery-bus",
+        "repo_root": ".",
+        "base_branch": "main",
+        "current_branch": "beacon/v0.0.1/delivery-bus-mvp",
+        "target_branch": "beacon/v0.0.1",
+        "worktree_mode": "dedicated-worktree",
+        "worktree_path": "./.beacon/worktrees/v0.0.1/delivery-bus-mvp",
+        "current_worktree_path": "./.beacon/worktrees/v0.0.1/delivery-bus-mvp",
+        "previous_version_baseline_branch": "main",
+        "next_version_feature_branch": "beacon/v0.0.1/<feature-slug>",
+        "hotfix_branch_naming_rule": "",
+        "allow_worktree_when_feature_dirty": false,
+        "merge_direction_policy": [
+          "master->main",
+          "main->uat"
+        ],
+        "forbidden_directions": [
+          "uat->main",
+          "uat_as_feature_base"
+        ],
+        "evidence_contract": [],
+        "evidence": {},
+        "status": "pass",
+        "blocked": false,
+        "reason_codes": [
+          "branch_governance_branch_mismatch"
+        ],
+        "blocked_reason": "",
+        "recommended_action": "",
+        "missing_evidence_fields": [],
+        "evidence_contract_status": "pass",
+        "human_markdown": "## Branch Governance\n\n- toolkit: `beacon-toolkit-branch-governance`\n- template_name: `standard-feature`\n- template_source: `project_metadata`\n- service_key: `agent-delivery-bus`\n- repo_root: `.`\n- base_branch: `main`\n- current_branch: `beacon/v0.0.1/delivery-bus-mvp`\n- target_branch: `beacon/v0.0.1`\n- worktree_mode: `dedicated-worktree`\n- worktree_path: `./.beacon/worktrees/v0.0.1/delivery-bus-mvp`\n- evidence_contract_status: `pass`\n- blocked_reason: ``\n- recommended_action: ``\n\n### Flow Diagram\n```text\nmain\n    -> beacon/v0.0.1\n    -> uat\n```\n\n### Allowed Paths\n- `master->main`\n- `main->uat`\n\n### Forbidden Paths\n- `uat->main`\n- `uat_as_feature_base`\n\n### Evidence Contract\n- none\n"
+      }
+    },
+    "branch_preflight_path": ".beacon/implement/run-20260727T140143Z-ff6d/branch-preflight.json"
+  },
+  "plan_preflight": {},
+  "implementation_marker": ".beacon/state/implementation-delivery-bus-mvp.json",
+  "technical_archive": {
+    "json": "docs/beacon/v0.0.1/.machine/execution/technical-implementation-delivery-bus-mvp.json",
+    "md": "docs/beacon/v0.0.1/.machine/trace/implementation/delivery-bus-mvp/technical-implementation-delivery-bus-mvp.md"
+  },
+  "implementation_plan": "",
+  "implementation_plan_progress": {
+    "schema_version": "1.0",
+    "plan_id": "",
+    "feature": "",
+    "version": "",
+    "revision_id": "",
+    "plan_path": "docs/beacon/v0.0.1/.machine/execution/implementation-plan-delivery-bus-mvp.json",
+    "progress_path": "docs/beacon/v0.0.1/.machine/execution/implementation-plan-delivery-bus-mvp.progress.json",
+    "task_ledger_path": "docs/beacon/v0.0.1/execution/tasks-delivery-bus-mvp.md",
+    "status": "draft",
+    "counts": {
+      "total": 0,
+      "draft": 0,
+      "planned": 0,
+      "in_progress": 0,
+      "blocked": 0,
+      "completed": 0
+    },
+    "blocked_task_ids": [],
+    "blocked_task_titles": [],
+    "completed_task_ids": [],
+    "next_task_id": "",
+    "next_task_title": "",
+    "updated_at": "",
+    "task_states": []
+  },
+  "implementation_order": {},
+  "requirement_traceability": {
+    "source_of_truth_root": "docs/beacon/v0.0.1/features/delivery-bus-mvp",
+    "prd": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+    "user_story": "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+    "test_case": "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
+    "ac_matrix": "docs/beacon/v0.0.1/.machine/qa/delivery-bus-mvp.ac-test-matrix.json",
+    "requirement_completeness_ref": "",
+    "requirement_completeness_verdict": "",
+    "revision_id": "R2",
+    "implemented_item_ids": [
+      "AC-001",
+      "TASK-001"
+    ],
+    "implemented_task_ids": [],
+    "verified_task_ids": []
+  },
+  "delivery_surfaces": {
+    "runtime_mode": "single",
+    "shipped_surfaces": [],
+    "partial_surfaces": [],
+    "deferred_surfaces": [],
+    "downgrade_rationale": ""
+  },
+  "revision_cleanup": {},
+  "traceability_refs": [
+    "docs/beacon/v0.0.1/features/delivery-bus-mvp/truth.md",
+    "docs/beacon/v0.0.1/features/delivery-bus-mvp/tests.md",
+    "docs/beacon/v0.0.1/.machine/qa/delivery-bus-mvp.ac-test-matrix.json",
+    ".beacon/implement/run-20260727T140143Z-ff6d/request.json",
+    ".beacon/implement/run-20260727T140143Z-ff6d/result.json"
+  ],
+  "implemented_items": [
+    "AC-001",
+    "TASK-001"
+  ],
+  "verified_items": [],
+  "blocked_items": [],
+  "runner_mode": "single",
+  "revision_id": "R2",
+  "artifact_writeback_obligations": ".beacon/state/artifact-update-obligations/delivery-bus-mvp.json",
+  "artifact_writeback_open_count": 2,
+  "requirement_rewrite_input": "docs/beacon/v0.0.1/.machine/execution/requirement-rewrite-input-delivery-bus-mvp.json",
+  "implement_to_qa_handoff": ".beacon/handoffs/implement-to-qa/delivery-bus-mvp/run-20260727T140143Z-ff6d.json",
+  "auto_qa": {
+    "enabled": false,
+    "triggered": false,
+    "args": [],
+    "follow_handoff": false,
+    "max_rounds": 2
+  }
+}
