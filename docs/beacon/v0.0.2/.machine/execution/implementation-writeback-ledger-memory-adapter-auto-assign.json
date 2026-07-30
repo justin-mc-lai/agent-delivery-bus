@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "artifact": "implementation_writeback_ledger",
+  "feature": "memory-adapter-auto-assign",
+  "feature_slug": "memory-adapter-auto-assign",
+  "version": "v0.0.2",
+  "entries": [
+    {
+      "recorded_at": "2026-07-30T04:47:38.522589+00:00",
+      "revision_id": "R1",
+      "run_id": "run-20260730T044738Z-63a4",
+      "implemented_item_ids": [
+        "AC-001",
+        "TEST-001",
+        "TASK-001"
+      ],
+      "changed_files": [
+        "src/agent_delivery_bus/adapters/spi.py",
+        "src/agent_delivery_bus/adapters/memory.py",
+        "src/agent_delivery_bus/assign.py",
+        "src/agent_delivery_bus/pending.py",
+        "src/agent_delivery_bus/service.py",
+        "src/agent_delivery_bus/cli.py"
+      ]
+    }
+  ],
+  "last_recorded_at": "2026-07-30T04:47:38.522589+00:00"
+}

@@ -1,0 +1,277 @@
+{
+  "schema_version": "1.0",
+  "truth_map_contract": "beacon-truth-map-v1",
+  "truth_source_model": "feature_package_authoritative",
+  "truth_package_contract": "beacon-feature-package-v2",
+  "machine_json_role": "generated_state_not_truth",
+  "generated_by": "beacon.truth_map.resolver",
+  "generated_at": "2026-07-30T04:48:24.788115+00:00",
+  "feature": "memory-adapter-auto-assign",
+  "feature_slug": "memory-adapter-auto-assign",
+  "version": "v0.0.2",
+  "truth_authority": false,
+  "json_authority": false,
+  "source_paths": {
+    "truth": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/truth.md",
+    "tests": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/tests.md",
+    "tasks": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/tasks.md",
+    "evidence": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/evidence.md"
+  },
+  "source_hashes": {
+    "truth": "79521cf5b56d1d941cd70c0ef551e2908c691299b78c677ee9e2dae90355f2c6",
+    "tests": "4a9b9a2c09a2235100ee6c61b4d2ff619596a39fbdfd2a00e3250cd76e3e6a7e",
+    "tasks": "f516e2f581262edab3d43215b75d3b780808a4a35dddb227b9c43181eb6c977f",
+    "evidence": "44aa24950ab6095857dee3130911e4fcca68f1b6e34e8a1101f8c018c21bc3c4"
+  },
+  "truth_frontmatter": {
+    "slug": "memory-adapter-auto-assign",
+    "version": "v0.0.2",
+    "status": "frozen",
+    "revision_id": "R2",
+    "language": "zh",
+    "domain_required": "true",
+    "domain_kind": "business",
+    "ux_required": "false",
+    "package_maturity": "filled",
+    "parser_contract": "beacon-feature-package-v2",
+    "materials_status": "current",
+    "truth_source_model": "intent_first",
+    "git_canonical_branch": "main",
+    "canonical_refs": {
+      "prd": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/truth.md",
+      "user_story": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/truth.md",
+      "test_case": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/tests.md"
+    },
+    "provenance": {
+      "- ac_id": "AC-MEM-007",
+      "source_type": "user_intent",
+      "source_ref": "拍板通过后允许项目内 agent 调度"
+    }
+  },
+  "frontmatter_errors": [],
+  "acceptance_criteria": [
+    {
+      "ac_id": "AC-MEM-001",
+      "theme": "提供位于 ADB 核心外的 MemoryAdapter SPI；dispatch 前按 project_slug 做 scoped recall，并将摘要注入 task body/上下文，不把 agentmemory 客户端嵌进 registry/storage/approvals 核心模块",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-MEM-002",
+      "theme": "reconcile 进入 completed/blocked 终态后调用 MemoryAdapter.writeback，写入含 project_slug/stage/feature/dispatch_id/reason_code 的证据记忆；写回失败不得抹掉 reconcile 主结果",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-MEM-003",
+      "theme": "跨项目 ACL：以项目 B scope 召回不得返回项目 A 写入的记忆；越权命中必须 fail-closed 并有可执行测试断言",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-MEM-004",
+      "theme": "自动分配：规则+评分器仅产出 dispatch candidates（含 score/reason），不得直接创建 executor task 或消费 approve 令牌",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-MEM-005",
+      "theme": "受限阶段派工仍必须经现有 ApprovalService.issue/reserve/finalize；候选转派工路径只能消费有效 approve token",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-MEM-006",
+      "theme": "提供 awaiting_approval / 待拍板列表（CLI/JSON），并可经 Hermes 飞书通道渲染待拍板事项（项目/阶段/feature/过期时间/actor 需求）",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-MEM-007",
+      "theme": "拍板签发有效令牌后，允许对该 project/stage/feature 执行 in-project agent dispatch；无令牌时保持 approval_required 阻断",
+      "description": ""
+    }
+  ],
+  "test_rows": [
+    {
+      "ac_id": "AC-MEM-001",
+      "tc_id": "TC-MEM-001",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_memory_adapter.py -k recall_before_dispatch --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；dispatch 前调用 scoped recall，且 adapter 不在 core 模块内硬编码 agentmemory",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-MEM-002",
+      "tc_id": "TC-MEM-002",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_memory_adapter.py -k writeback_after_reconcile --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；reconcile 后写回含 project/stage/feature/dispatch_id；写回失败不改变 reconcile status",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-MEM-003",
+      "tc_id": "TC-MEM-003",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_memory_acl.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；项目 B scope 召回不含项目 A 记忆；越权 fail-closed",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-MEM-004",
+      "tc_id": "TC-MEM-004",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_auto_assign.py -k candidates_only --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；评分器只产出 candidates，不创建 executor task",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-MEM-005",
+      "tc_id": "TC-MEM-005",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_auto_assign.py -k approve_still_required --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；受限阶段无 token 仍 approval_required；有 token 才可 dispatch",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-MEM-006",
+      "tc_id": "TC-MEM-006",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_pending_approvals.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；待拍板列表含 project/stage/feature/expires；可渲染飞书/文本通道载荷",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-MEM-007",
+      "tc_id": "TC-MEM-007",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_pending_approvals.py -k post_approve_dispatch --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；approve 后允许项目内 agent dispatch",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-MEM-004, AC-MEM-005",
+      "tc_id": "TC-MEM-ILL-001",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_auto_assign.py -k illegal_skip_approve --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；candidates_ready→dispatched 与 score→consume_token 等 illegal 路径 fail-closed",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-MEM-003, AC-MEM-002",
+      "tc_id": "TC-MEM-ILL-002",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_memory_acl.py -k illegal_cross_project --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；cross_project→recall_success 与 writeback_failure→erase_reconcile 均为 illegal 并被阻断",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-MEM-004, AC-MEM-006",
+      "tc_id": "TC-MEM-CLI",
+      "layer": "",
+      "command": "`PYTHONPATH=src python3 -m agent_delivery_bus.cli --config config/projects.json --db :memory: assign candidates --json`",
+      "assertion": "exit_code==0；输出 candidates JSON 数组且不含 task_id",
+      "evidence_path": ""
+    }
+  ],
+  "task_rows": [
+    {
+      "id": "TASK-001",
+      "title": "Implement AC-MEM-001: 提供位于 ADB 核心外的 MemoryAdapter SPI；dispatch 前按 project_slug 做 scoped rec... · ac=AC-MEM-001 · evidence=`.beacon/evidence/implement/memory-adapter-auto-assign/AC-MEM-001.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-002",
+      "title": "Implement AC-MEM-002: reconcile 进入 completed/blocked 终态后调用 MemoryAdapter.writeback，写入含 proj... · ac=AC-MEM-002 · evidence=`.beacon/evidence/implement/memory-adapter-auto-assign/AC-MEM-002.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-003",
+      "title": "Implement AC-MEM-003: 跨项目 ACL：以项目 B scope 召回不得返回项目 A 写入的记忆；越权命中必须 fail-closed 并有可执行测试断言 · ac=AC-MEM-003 · evidence=`.beacon/evidence/implement/memory-adapter-auto-assign/AC-MEM-003.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-004",
+      "title": "Implement AC-MEM-004: 自动分配：规则+评分器仅产出 dispatch candidates（含 score/reason），不得直接创建 executor ta... · ac=AC-MEM-004 · evidence=`.beacon/evidence/implement/memory-adapter-auto-assign/AC-MEM-004.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-005",
+      "title": "Implement AC-MEM-005: 受限阶段派工仍必须经现有 ApprovalService.issue/reserve/finalize；候选转派工路径只能消费有效 app... · ac=AC-MEM-005 · evidence=`.beacon/evidence/implement/memory-adapter-auto-assign/AC-MEM-005.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-006",
+      "title": "Implement AC-MEM-006: 提供 awaiting_approval / 待拍板列表（CLI/JSON），并可经 Hermes 飞书通道渲染待拍板事项（项目/阶段/f... · ac=AC-MEM-006 · evidence=`.beacon/evidence/implement/memory-adapter-auto-assign/AC-MEM-006.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-007",
+      "title": "Implement AC-MEM-007: 拍板签发有效令牌后，允许对该 project/stage/feature 执行 in-project agent dispatch；无令牌... · ac=AC-MEM-007 · evidence=`.beacon/evidence/implement/memory-adapter-auto-assign/AC-MEM-007.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-008",
+      "title": "Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/memory-adapter-auto-assign/GATES.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-009",
+      "title": "Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/memory-adapter-auto-assign/QA-MATRIX.json`",
+      "status": "unchecked"
+    }
+  ],
+  "checkbox_errors": [],
+  "evidence_rows": [
+    {
+      "surface": "truth",
+      "authority": "requirement_truth",
+      "canonical_artifact": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/truth.md",
+      "status": "frozen R2",
+      "route": "truth"
+    },
+    {
+      "surface": "tests",
+      "authority": "test_truth",
+      "canonical_artifact": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/tests.md",
+      "status": "current",
+      "route": "qa"
+    },
+    {
+      "surface": "memory",
+      "authority": "support_advisory",
+      "canonical_artifact": "src/agent_delivery_bus/adapters/memory.py (+ SPI)",
+      "status": "implemented",
+      "route": "implement"
+    },
+    {
+      "surface": "approvals",
+      "authority": "support_advisory",
+      "canonical_artifact": "ApprovalService + `adb approvals awaiting`",
+      "status": "implemented",
+      "route": "implement"
+    },
+    {
+      "surface": "feishu",
+      "authority": "support_advisory",
+      "canonical_artifact": "pending.render_pending_channel(channel=feishu)",
+      "status": "implemented",
+      "route": "implement"
+    },
+    {
+      "surface": "assign",
+      "authority": "support_advisory",
+      "canonical_artifact": "src/agent_delivery_bus/assign.py + `adb assign candidates`",
+      "status": "implemented",
+      "route": "implement"
+    },
+    {
+      "surface": "implement",
+      "authority": "support_advisory",
+      "canonical_artifact": ".beacon/evidence/implement/memory-adapter-auto-assign/",
+      "status": "present",
+      "route": "implement"
+    },
+    {
+      "surface": "qa",
+      "authority": "qa_verdict",
+      "canonical_artifact": ".beacon/evidence/qa-feature/memory-adapter-auto-assign/",
+      "status": "planned",
+      "route": "qa"
+    }
+  ]
+}

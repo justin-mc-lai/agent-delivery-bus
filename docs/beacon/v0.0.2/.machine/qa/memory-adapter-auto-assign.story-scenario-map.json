@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "feature": "memory-adapter-auto-assign",
+  "feature_slug": "memory-adapter-auto-assign",
+  "version": "v0.0.2",
+  "generated_at": "2026-07-30T04:48:42.799925+00:00",
+  "expansion_profile": "pua-web",
+  "scenario_depth": "standard",
+  "families_required": [
+    "happy",
+    "negative",
+    "boundary",
+    "recovery",
+    "compatibility"
+  ],
+  "stories": [
+    {
+      "ac_id": "AC-001",
+      "theme": "general",
+      "text": "Acceptance criteria TBD",
+      "scenario_ids": [],
+      "scenario_families": [],
+      "required_families": [],
+      "scenarios": []
+    }
+  ],
+  "scenarios": []
+}

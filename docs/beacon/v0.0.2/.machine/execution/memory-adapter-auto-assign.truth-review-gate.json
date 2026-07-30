@@ -1,0 +1,189 @@
+{
+  "schema": "truth-review-gate.v1",
+  "schema_version": "1.0",
+  "feature": "memory-adapter-auto-assign",
+  "version": "v0.0.2",
+  "pass": true,
+  "blocked": false,
+  "review_gate_pass": true,
+  "abc_pass": true,
+  "reason_code": "",
+  "domain_required": true,
+  "checks": {
+    "A_intent_coverage": {
+      "pass": true,
+      "check": "A",
+      "name": "intent_coverage",
+      "required": true,
+      "matrix_rows": 7,
+      "missing_must": [],
+      "reason": "",
+      "findings": [],
+      "matrix": [
+        {
+          "intent_id": "INT-001",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-MEM-001",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-002",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-MEM-002",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-003",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-MEM-003",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-004",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-MEM-004",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-005",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-MEM-005",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-006",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-MEM-006",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-007",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-MEM-007",
+          "status": "covered"
+        }
+      ]
+    },
+    "B_fsm_audit": {
+      "pass": true,
+      "check": "B",
+      "name": "fsm_audit",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "fsm": {
+        "transition_count": 9,
+        "from_states": [
+          "awaiting_human_approve",
+          "candidates_ready",
+          "dispatch_authorized",
+          "dispatched",
+          "idle",
+          "recalling",
+          "writing_back"
+        ],
+        "hanging_states": [],
+        "terminals": [
+          "blocked",
+          "completed"
+        ],
+        "illegal_present": true,
+        "five_tuple_present": true
+      }
+    },
+    "C_testability": {
+      "pass": true,
+      "check": "C",
+      "name": "testability",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "ac_count": 7,
+      "tc_count": 10,
+      "missing_ac": [],
+      "covered": {
+        "AC-MEM-001": [
+          "TC-MEM-001"
+        ],
+        "AC-MEM-002": [
+          "TC-MEM-002",
+          "TC-MEM-ILL-002"
+        ],
+        "AC-MEM-003": [
+          "TC-MEM-003",
+          "TC-MEM-ILL-002"
+        ],
+        "AC-MEM-004": [
+          "TC-MEM-004",
+          "TC-MEM-ILL-001",
+          "TC-MEM-CLI"
+        ],
+        "AC-MEM-005": [
+          "TC-MEM-005",
+          "TC-MEM-ILL-001"
+        ],
+        "AC-MEM-006": [
+          "TC-MEM-006",
+          "TC-MEM-CLI"
+        ],
+        "AC-MEM-007": [
+          "TC-MEM-007"
+        ]
+      }
+    },
+    "C_domain_exec_layer": {
+      "pass": true,
+      "check": "C_exec",
+      "name": "domain_exec_layer",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "exec_tc_count": 10,
+      "exec_tc_ids": [
+        "TC-MEM-001",
+        "TC-MEM-002",
+        "TC-MEM-003",
+        "TC-MEM-004",
+        "TC-MEM-005",
+        "TC-MEM-006",
+        "TC-MEM-007",
+        "TC-MEM-ILL-001",
+        "TC-MEM-ILL-002",
+        "TC-MEM-CLI"
+      ],
+      "domain_kind": "business"
+    },
+    "D_fill_depth": {
+      "pass": true,
+      "check": "D",
+      "name": "fill_depth",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "package_maturity": "filled",
+      "domain_kind": "business",
+      "business_domain": true
+    }
+  },
+  "findings": [],
+  "humanizer": {
+    "rule": "humanizer_only_after_abc_pass_before_freeze",
+    "abc_pass": true,
+    "allowed_now": true,
+    "fill_depth_pass": true,
+    "note": "Polish L0/narrative only after A/B/C; preserve_machine_fields=true; freeze needs D+exec too"
+  },
+  "evaluated_at": "2026-07-30T04:48:42.115621+00:00",
+  "paths": {
+    "truth": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/truth.md",
+    "tests": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/tests.md",
+    "report": "docs/beacon/v0.0.2/.machine/execution/memory-adapter-auto-assign.truth-review-gate.json"
+  }
+}
