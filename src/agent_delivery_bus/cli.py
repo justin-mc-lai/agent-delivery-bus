@@ -11,6 +11,7 @@ from .approvals import ApprovalService
 from .assign import AssignmentScorer
 from .errors import DeliveryBusError
 from .install import install_skill
+from .intent import IntentParser
 from .pending import pending_approval_views, render_pending_channel
 from .preflight import Preflight
 from .registry import ProjectRegistry
@@ -116,6 +117,13 @@ def build_parser() -> argparse.ArgumentParser:
     assign_candidates.add_argument("--stage", default="implement")
     assign_candidates.add_argument("--feature", default="memory-adapter-auto-assign")
     assign_candidates.add_argument("--json", action="store_true")
+
+    intent = sub.add_parser("intent", help="natural-language intent envelope (parse only; no dispatch)")
+    intent_sub = intent.add_subparsers(dest="intent_command", required=True)
+    intent_parse = intent_sub.add_parser("parse", help="parse utterance into IntentEnvelope JSON")
+    intent_parse.add_argument("--utterance", required=True)
+    intent_parse.add_argument("--project", default="", help="optional forced project slug")
+    intent_parse.add_argument("--json", action="store_true")
 
     dispatch = sub.add_parser("dispatch")
     dispatch.add_argument("--project", required=True)
@@ -626,6 +634,22 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                 scorer.assert_candidates_only(rows)
                 return envelope(status="pass", data={"candidates": rows})
             raise DeliveryBusError("assign_command_invalid", f"Unknown assign command: {args.assign_command}")
+
+        if args.command == "intent":
+            if args.intent_command == "parse":
+                parser = IntentParser(registry)
+                parsed = parser.parse(
+                    args.utterance,
+                    project=(args.project or None),
+                )
+                return envelope(
+                    status=str(parsed.get("status") or "pass"),
+                    blocked=bool(parsed.get("blocked")),
+                    reason_code=str(parsed.get("reason_code") or ""),
+                    resume_action=str(parsed.get("resume_action") or ""),
+                    data=parsed.get("data"),
+                )
+            raise DeliveryBusError("intent_command_invalid", f"Unknown intent command: {args.intent_command}")
 
         if args.command == "dispatch":
             result = service.dispatch(
