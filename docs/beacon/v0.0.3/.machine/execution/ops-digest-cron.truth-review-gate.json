@@ -1,0 +1,155 @@
+{
+  "schema": "truth-review-gate.v1",
+  "schema_version": "1.0",
+  "feature": "ops-digest-cron",
+  "version": "v0.0.3",
+  "pass": true,
+  "blocked": false,
+  "review_gate_pass": true,
+  "abc_pass": true,
+  "reason_code": "",
+  "domain_required": true,
+  "checks": {
+    "A_intent_coverage": {
+      "pass": true,
+      "check": "A",
+      "name": "intent_coverage",
+      "required": true,
+      "matrix_rows": 5,
+      "missing_must": [],
+      "reason": "",
+      "findings": [],
+      "matrix": [
+        {
+          "intent_id": "INT-001",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-DIG-001",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-002",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-DIG-002",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-003",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-DIG-003",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-004",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-DIG-004",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-005",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-DIG-005",
+          "status": "covered"
+        }
+      ]
+    },
+    "B_fsm_audit": {
+      "pass": true,
+      "check": "B",
+      "name": "fsm_audit",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "fsm": {
+        "transition_count": 4,
+        "from_states": [
+          "idle",
+          "running"
+        ],
+        "hanging_states": [],
+        "terminals": [
+          "blocked",
+          "done"
+        ],
+        "illegal_present": true,
+        "five_tuple_present": true
+      }
+    },
+    "C_testability": {
+      "pass": true,
+      "check": "C",
+      "name": "testability",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "ac_count": 5,
+      "tc_count": 6,
+      "missing_ac": [],
+      "covered": {
+        "AC-DIG-001": [
+          "TC-DIG-001"
+        ],
+        "AC-DIG-002": [
+          "TC-DIG-002"
+        ],
+        "AC-DIG-003": [
+          "TC-DIG-003"
+        ],
+        "AC-DIG-004": [
+          "TC-DIG-004"
+        ],
+        "AC-DIG-005": [
+          "TC-DIG-005",
+          "TC-DIG-ILL-001"
+        ]
+      }
+    },
+    "C_domain_exec_layer": {
+      "pass": true,
+      "check": "C_exec",
+      "name": "domain_exec_layer",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "exec_tc_count": 6,
+      "exec_tc_ids": [
+        "TC-DIG-001",
+        "TC-DIG-002",
+        "TC-DIG-003",
+        "TC-DIG-004",
+        "TC-DIG-005",
+        "TC-DIG-ILL-001"
+      ],
+      "domain_kind": "business"
+    },
+    "D_fill_depth": {
+      "pass": true,
+      "check": "D",
+      "name": "fill_depth",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "package_maturity": "filled",
+      "domain_kind": "business",
+      "business_domain": true
+    }
+  },
+  "findings": [],
+  "humanizer": {
+    "rule": "humanizer_only_after_abc_pass_before_freeze",
+    "abc_pass": true,
+    "allowed_now": true,
+    "fill_depth_pass": true,
+    "note": "Polish L0/narrative only after A/B/C; preserve_machine_fields=true; freeze needs D+exec too"
+  },
+  "evaluated_at": "2026-07-30T07:32:33.982895+00:00",
+  "paths": {
+    "truth": "docs/beacon/v0.0.3/features/ops-digest-cron/truth.md",
+    "tests": "docs/beacon/v0.0.3/features/ops-digest-cron/tests.md",
+    "report": "docs/beacon/v0.0.3/.machine/execution/ops-digest-cron.truth-review-gate.json"
+  }
+}

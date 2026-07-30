@@ -21,6 +21,9 @@ def install_skill(source: str | Path, *, dry_run: bool = False) -> dict[str, Any
             if target.is_symlink() and target.resolve() == skill_source:
                 actions.append({"target": str(target), "status": "already_installed"})
                 continue
+            if dry_run:
+                actions.append({"target": str(target), "status": "exists_would_skip"})
+                continue
             raise DeliveryBusError(
                 "skill_target_exists",
                 f"Refusing to overwrite existing skill target: {target}",

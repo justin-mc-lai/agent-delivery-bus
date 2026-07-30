@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "feature": "nl-intent-envelope",
+  "status": "pending_qa",
+  "at": "2026-07-30T07:53:46.826920+00:00",
+  "tc_ids": [
+    "TC-INT-001",
+    "TC-INT-002",
+    "TC-INT-003",
+    "TC-INT-004",
+    "TC-INT-005",
+    "TC-INT-006",
+    "TC-INT-007",
+    "TC-INT-ILL-001",
+    "TC-INT-ILL-002",
+    "TC-INT-CLI"
+  ]
+}

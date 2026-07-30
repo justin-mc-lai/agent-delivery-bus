@@ -1,0 +1,508 @@
+{
+  "schema_version": "1.0",
+  "feature": "worker-beacon-binding",
+  "feature_slug": "worker-beacon-binding",
+  "version": "v0.0.3",
+  "runtime_version": "v1.6.11",
+  "runtime_capability_line": "v1.3.3",
+  "required": true,
+  "reason_code": "",
+  "blocked": false,
+  "status": "pass",
+  "findings": [],
+  "report_json_path": "docs/beacon/v0.0.3/.machine/execution/requirement-clarity-worker-beacon-binding.json",
+  "report_markdown_path": "docs/beacon/v0.0.3/execution/requirement-clarity-worker-beacon-binding.md",
+  "state_path": ".beacon/state/requirement-clarity-worker-beacon-binding.json",
+  "diagram_truth": {
+    "schema_version": "1.0",
+    "version": "v0.0.3",
+    "supported": false,
+    "required": false,
+    "ready": false,
+    "diagram_types": [],
+    "state_axes": [],
+    "missing_diagram_types": [],
+    "missing_state_axes": false,
+    "complexity_signals": [],
+    "review_gates": [],
+    "qa_coverage_hints": [],
+    "evidence_lines": {},
+    "generated_at": "2026-07-30T07:32:31.367656+00:00",
+    "feature": "worker-beacon-binding",
+    "feature_slug": "worker-beacon-binding",
+    "prd_ref": "docs/beacon/v0.0.3/prd/worker-beacon-binding.md",
+    "user_story_ref": "docs/beacon/v0.0.3/user-story/worker-beacon-binding.md"
+  },
+  "domain_fsm_gate": {
+    "schema_version": "1.0",
+    "feature": "worker-beacon-binding",
+    "feature_slug": "worker-beacon-binding",
+    "version": "v0.0.3",
+    "truth_path": "docs/beacon/v0.0.3/features/worker-beacon-binding/truth.md",
+    "tests_path": "docs/beacon/v0.0.3/features/worker-beacon-binding/tests.md",
+    "required": true,
+    "blocked": false,
+    "status": "pass",
+    "reason_code": "",
+    "findings": [],
+    "requirement": {
+      "required": true,
+      "reason": "explicit_domain_mark",
+      "explicit": true,
+      "partial": true,
+      "complexity": false,
+      "business_signal": false,
+      "version_supported": false
+    },
+    "projection": {
+      "schema_version": "1.0",
+      "domain_fsm_schema": "domain-fsm.v1",
+      "entity_precedence_schema": "entity-precedence.v1",
+      "frontmatter": {
+        "slug": "worker-beacon-binding",
+        "version": "v0.0.3",
+        "status": "draft",
+        "revision_id": "R1",
+        "language": "zh",
+        "domain_required": "true",
+        "domain_kind": "business",
+        "ux_required": "false",
+        "package_maturity": "filled",
+        "parser_contract": "beacon-feature-package-v2",
+        "materials_status": "current",
+        "truth_source_model": "intent_first",
+        "git_canonical_branch": "main",
+        "program": "adb-nl-stable-ops",
+        "promotion_ref": "user-ack-三节-2026-07-30",
+        "canonical_refs": {
+          "prd": "docs/beacon/v0.0.3/features/worker-beacon-binding/truth.md",
+          "user_story": "docs/beacon/v0.0.3/features/worker-beacon-binding/truth.md",
+          "test_case": "docs/beacon/v0.0.3/features/worker-beacon-binding/tests.md"
+        }
+      },
+      "frontmatter_errors": [],
+      "has_domain_model_section": true,
+      "has_domain_fsm_section": true,
+      "has_illegal_transition_section": true,
+      "entities": [
+        {
+          "entity": "EnvelopeOrRequest",
+          "key": "project_slug, stage, feature, action",
+          "precedence": "需要项目时必须已解析",
+          "requires": "需要项目时必须已解析"
+        },
+        {
+          "entity": "ResultEnvelope",
+          "key": "status, blocked, reason_code, resume_action, data",
+          "precedence": "所有公共命令统一外壳",
+          "requires": "所有公共命令统一外壳"
+        },
+        {
+          "entity": "Gate",
+          "key": "preflight/approval refs",
+          "precedence": "不得削弱既有 approve",
+          "requires": "不得削弱既有 approve"
+        }
+      ],
+      "entity_precedence": [
+        {
+          "entity": "EnvelopeOrRequest",
+          "key": "project_slug, stage, feature, action",
+          "precedence": "需要项目时必须已解析",
+          "requires": "需要项目时必须已解析"
+        },
+        {
+          "entity": "ResultEnvelope",
+          "key": "status, blocked, reason_code, resume_action, data",
+          "precedence": "所有公共命令统一外壳",
+          "requires": "所有公共命令统一外壳"
+        },
+        {
+          "entity": "Gate",
+          "key": "preflight/approval refs",
+          "precedence": "不得削弱既有 approve",
+          "requires": "不得削弱既有 approve"
+        }
+      ],
+      "aggregates": [
+        {
+          "name": "WRKFlow",
+          "states": [
+            "blocked",
+            "done",
+            "idle",
+            "running"
+          ],
+          "transitions": [
+            {
+              "from": "",
+              "to": "idle",
+              "guard": "ready",
+              "initial": "true"
+            },
+            {
+              "from": "idle",
+              "to": "running",
+              "guard": "request_valid"
+            },
+            {
+              "from": "running",
+              "to": "done",
+              "guard": "success"
+            },
+            {
+              "from": "running",
+              "to": "blocked",
+              "guard": "gate_fail"
+            }
+          ]
+        }
+      ],
+      "illegal_transition_slots": [
+        {
+          "description": "binding → completed skipping Hermes/reconcile · TC-WRK-ILL-001",
+          "aggregate": "",
+          "source": "truth"
+        },
+        {
+          "description": "binding → implement_dispatch without approve · TC-WRK-ILL-001",
+          "aggregate": "",
+          "source": "truth"
+        },
+        {
+          "description": "goal_stage_enabled without P4 promote · TC-WRK-ILL-002",
+          "aggregate": "",
+          "source": "truth"
+        }
+      ],
+      "acceptance_criteria": [
+        {
+          "ac_id": "AC-WRK-001",
+          "description": "dispatch 创建的 Hermes task body 含 stage→Beacon skill/命令绑定字段（至少 plan）"
+        },
+        {
+          "ac_id": "AC-WRK-002",
+          "description": "runner 约定使用 Hermes coding profile 或显式 Codex/等价本机 agent，不得假定云端集群调度器"
+        },
+        {
+          "ac_id": "AC-WRK-003",
+          "description": "workspace admission/预检失败时不得创建成功派工；返回稳定 reason_code"
+        },
+        {
+          "ac_id": "AC-WRK-004",
+          "description": "implement/freeze 仍要求既有 approve token；绑定层不得绕过"
+        },
+        {
+          "ac_id": "AC-WRK-005",
+          "description": "goal-stage-binding 默认 defer：未升格前 ENABLED_STAGES 不含 goal，或显式 blocked reason"
+        }
+      ],
+      "bound_ac_ids": [
+        "AC-WRK-001",
+        "AC-WRK-003",
+        "AC-WRK-005"
+      ],
+      "orphan_ac_ids": [],
+      "aggregates_missing_illegal_slots": [],
+      "raw_section_titles": [
+        "人话",
+        "User Intent",
+        "User Intent Snapshot",
+        "Alignment Surface",
+        "Phased Backlog",
+        "Deferral Ledger",
+        "用户旅程",
+        "失败旅程",
+        "Domain Model",
+        "Intent Coverage Matrix",
+        "Acceptance Criteria",
+        "Domain FSM — WRKFlow",
+        "FSM 五元组",
+        "Illegal transitions",
+        "Public CLI Contract",
+        "Non-goals",
+        "Freeze readiness"
+      ]
+    },
+    "validation": {
+      "schema_version": "1.0",
+      "required": true,
+      "blocked": false,
+      "status": "pass",
+      "reason_code": "",
+      "findings": [],
+      "projection": {
+        "schema_version": "1.0",
+        "domain_fsm_schema": "domain-fsm.v1",
+        "entity_precedence_schema": "entity-precedence.v1",
+        "frontmatter": {
+          "slug": "worker-beacon-binding",
+          "version": "v0.0.3",
+          "status": "draft",
+          "revision_id": "R1",
+          "language": "zh",
+          "domain_required": "true",
+          "domain_kind": "business",
+          "ux_required": "false",
+          "package_maturity": "filled",
+          "parser_contract": "beacon-feature-package-v2",
+          "materials_status": "current",
+          "truth_source_model": "intent_first",
+          "git_canonical_branch": "main",
+          "program": "adb-nl-stable-ops",
+          "promotion_ref": "user-ack-三节-2026-07-30",
+          "canonical_refs": {
+            "prd": "docs/beacon/v0.0.3/features/worker-beacon-binding/truth.md",
+            "user_story": "docs/beacon/v0.0.3/features/worker-beacon-binding/truth.md",
+            "test_case": "docs/beacon/v0.0.3/features/worker-beacon-binding/tests.md"
+          }
+        },
+        "frontmatter_errors": [],
+        "has_domain_model_section": true,
+        "has_domain_fsm_section": true,
+        "has_illegal_transition_section": true,
+        "entities": [
+          {
+            "entity": "EnvelopeOrRequest",
+            "key": "project_slug, stage, feature, action",
+            "precedence": "需要项目时必须已解析",
+            "requires": "需要项目时必须已解析"
+          },
+          {
+            "entity": "ResultEnvelope",
+            "key": "status, blocked, reason_code, resume_action, data",
+            "precedence": "所有公共命令统一外壳",
+            "requires": "所有公共命令统一外壳"
+          },
+          {
+            "entity": "Gate",
+            "key": "preflight/approval refs",
+            "precedence": "不得削弱既有 approve",
+            "requires": "不得削弱既有 approve"
+          }
+        ],
+        "entity_precedence": [
+          {
+            "entity": "EnvelopeOrRequest",
+            "key": "project_slug, stage, feature, action",
+            "precedence": "需要项目时必须已解析",
+            "requires": "需要项目时必须已解析"
+          },
+          {
+            "entity": "ResultEnvelope",
+            "key": "status, blocked, reason_code, resume_action, data",
+            "precedence": "所有公共命令统一外壳",
+            "requires": "所有公共命令统一外壳"
+          },
+          {
+            "entity": "Gate",
+            "key": "preflight/approval refs",
+            "precedence": "不得削弱既有 approve",
+            "requires": "不得削弱既有 approve"
+          }
+        ],
+        "aggregates": [
+          {
+            "name": "WRKFlow",
+            "states": [
+              "blocked",
+              "done",
+              "idle",
+              "running"
+            ],
+            "transitions": [
+              {
+                "from": "",
+                "to": "idle",
+                "guard": "ready",
+                "initial": "true"
+              },
+              {
+                "from": "idle",
+                "to": "running",
+                "guard": "request_valid"
+              },
+              {
+                "from": "running",
+                "to": "done",
+                "guard": "success"
+              },
+              {
+                "from": "running",
+                "to": "blocked",
+                "guard": "gate_fail"
+              }
+            ]
+          }
+        ],
+        "illegal_transition_slots": [
+          {
+            "description": "binding → completed skipping Hermes/reconcile · TC-WRK-ILL-001",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "binding → implement_dispatch without approve · TC-WRK-ILL-001",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "goal_stage_enabled without P4 promote · TC-WRK-ILL-002",
+            "aggregate": "",
+            "source": "truth"
+          }
+        ],
+        "acceptance_criteria": [
+          {
+            "ac_id": "AC-WRK-001",
+            "description": "dispatch 创建的 Hermes task body 含 stage→Beacon skill/命令绑定字段（至少 plan）"
+          },
+          {
+            "ac_id": "AC-WRK-002",
+            "description": "runner 约定使用 Hermes coding profile 或显式 Codex/等价本机 agent，不得假定云端集群调度器"
+          },
+          {
+            "ac_id": "AC-WRK-003",
+            "description": "workspace admission/预检失败时不得创建成功派工；返回稳定 reason_code"
+          },
+          {
+            "ac_id": "AC-WRK-004",
+            "description": "implement/freeze 仍要求既有 approve token；绑定层不得绕过"
+          },
+          {
+            "ac_id": "AC-WRK-005",
+            "description": "goal-stage-binding 默认 defer：未升格前 ENABLED_STAGES 不含 goal，或显式 blocked reason"
+          }
+        ],
+        "bound_ac_ids": [
+          "AC-WRK-001",
+          "AC-WRK-003",
+          "AC-WRK-005"
+        ],
+        "orphan_ac_ids": [],
+        "aggregates_missing_illegal_slots": [],
+        "raw_section_titles": [
+          "人话",
+          "User Intent",
+          "User Intent Snapshot",
+          "Alignment Surface",
+          "Phased Backlog",
+          "Deferral Ledger",
+          "用户旅程",
+          "失败旅程",
+          "Domain Model",
+          "Intent Coverage Matrix",
+          "Acceptance Criteria",
+          "Domain FSM — WRKFlow",
+          "FSM 五元组",
+          "Illegal transitions",
+          "Public CLI Contract",
+          "Non-goals",
+          "Freeze readiness"
+        ]
+      },
+      "summary": {
+        "entity_count": 3,
+        "aggregate_count": 1,
+        "illegal_slot_count": 3,
+        "orphan_ac_count": 0,
+        "bound_ac_count": 3
+      }
+    },
+    "recommended_action": ""
+  },
+  "human_closure_contract": {
+    "required": false,
+    "research_path": "docs/beacon/v0.0.3/research/worker-beacon-binding.md",
+    "research_exists": false,
+    "source_architecture_path": "docs/beacon/v0.0.3/source-architecture/worker-beacon-binding.md",
+    "source_architecture_exists": false,
+    "required_sections": [
+      "architecture",
+      "business_flow"
+    ],
+    "missing_sections": [
+      "architecture",
+      "business_flow"
+    ],
+    "diagram_types": [],
+    "complexity_signals": []
+  },
+  "requirement_closure_contract": {
+    "required": true,
+    "chain_order": [
+      "research",
+      "prd",
+      "user_story",
+      "test_case",
+      "requirement_clarity",
+      "freeze"
+    ],
+    "human_closure_required": false,
+    "paths": {
+      "research": "docs/beacon/v0.0.3/research/worker-beacon-binding.md",
+      "prd": "docs/beacon/v0.0.3/features/worker-beacon-binding/truth.md",
+      "user_story": "docs/beacon/v0.0.3/features/worker-beacon-binding/truth.md",
+      "test_case": "docs/beacon/v0.0.3/features/worker-beacon-binding/tests.md"
+    },
+    "exists": {
+      "research": false,
+      "prd": true,
+      "user_story": true,
+      "test_case": true
+    },
+    "required_research_sections": [],
+    "missing_research_sections": [],
+    "ac_projection": {
+      "prd_ac_ids": [],
+      "user_story_ac_ids": [],
+      "test_case_ac_ids": [],
+      "upstream_ac_ids": [],
+      "missing_test_case_ac_ids": []
+    }
+  },
+  "version_projection_truth_contract": {
+    "required": false,
+    "supported": false,
+    "projection_types": [],
+    "research_path": "docs/beacon/v0.0.3/research/worker-beacon-binding.md",
+    "research_exists": false,
+    "required_fields": [
+      "prd_refs",
+      "user_story_refs",
+      "test_case_refs",
+      "coverage_notes",
+      "out_of_scope_notes"
+    ],
+    "field_presence": {
+      "prd_refs": false,
+      "user_story_refs": false,
+      "test_case_refs": false,
+      "coverage_notes": false,
+      "out_of_scope_notes": false
+    },
+    "missing_fields": [],
+    "required_refs": {
+      "prd_refs": "docs/beacon/v0.0.3/features/worker-beacon-binding/truth.md",
+      "user_story_refs": "docs/beacon/v0.0.3/features/worker-beacon-binding/truth.md",
+      "test_case_refs": "docs/beacon/v0.0.3/features/worker-beacon-binding/tests.md"
+    },
+    "missing_ref_targets": [],
+    "ready": false
+  },
+  "support_write_topology_contract": {
+    "schema_version": "1.0",
+    "supported": true,
+    "status": "pass",
+    "blocked": false,
+    "reason_code": "",
+    "diagnostics": []
+  },
+  "required_artifacts": [],
+  "scanned_files": [
+    "docs/beacon/v0.0.3/features/worker-beacon-binding/truth.md",
+    "docs/beacon/v0.0.3/features/worker-beacon-binding/tests.md",
+    "docs/beacon/v0.0.3/features/worker-beacon-binding/tasks.md",
+    "docs/beacon/v0.0.3/features/worker-beacon-binding/evidence.md"
+  ]
+}

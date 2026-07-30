@@ -1,0 +1,258 @@
+{
+  "schema_version": "1.0",
+  "truth_map_contract": "beacon-truth-map-v1",
+  "truth_source_model": "feature_package_authoritative",
+  "truth_package_contract": "beacon-feature-package-v2",
+  "machine_json_role": "generated_state_not_truth",
+  "generated_by": "beacon.truth_map.resolver",
+  "generated_at": "2026-07-30T07:54:27.466393+00:00",
+  "feature": "nl-intent-envelope",
+  "feature_slug": "nl-intent-envelope",
+  "version": "v0.0.3",
+  "truth_authority": false,
+  "json_authority": false,
+  "source_paths": {
+    "truth": "docs/beacon/v0.0.3/features/nl-intent-envelope/truth.md",
+    "tests": "docs/beacon/v0.0.3/features/nl-intent-envelope/tests.md",
+    "tasks": "docs/beacon/v0.0.3/features/nl-intent-envelope/tasks.md",
+    "evidence": "docs/beacon/v0.0.3/features/nl-intent-envelope/evidence.md"
+  },
+  "source_hashes": {
+    "truth": "8e70e3ffb25f31d4d7a237178d932649062100d55e6eb128e7a8a8eea980e880",
+    "tests": "0deb3960c3a1d57969fd4d25010df331235b028c62568ba1a7bf904f3aed0ff7",
+    "tasks": "a77299062d375d316fc764e99c41b77829508ad66613ded0f9d1e6450990bb5d",
+    "evidence": "381ad330e43ca254e011b678e80717e388b30a216bb6e42096e3d8aef901f439"
+  },
+  "truth_frontmatter": {
+    "slug": "nl-intent-envelope",
+    "version": "v0.0.3",
+    "status": "frozen",
+    "revision_id": "R2",
+    "language": "zh",
+    "domain_required": "true",
+    "domain_kind": "business",
+    "ux_required": "false",
+    "package_maturity": "filled",
+    "parser_contract": "beacon-feature-package-v2",
+    "materials_status": "current",
+    "truth_source_model": "intent_first",
+    "git_canonical_branch": "main",
+    "program": "adb-nl-stable-ops",
+    "promotion_ref": "user-ack-三节-2026-07-30",
+    "canonical_refs": {
+      "prd": "docs/beacon/v0.0.3/features/nl-intent-envelope/truth.md",
+      "user_story": "docs/beacon/v0.0.3/features/nl-intent-envelope/truth.md",
+      "test_case": "docs/beacon/v0.0.3/features/nl-intent-envelope/tests.md"
+    },
+    "provenance": {
+      "- ac_id": "AC-INT-003",
+      "source_type": "program_ack",
+      "source_ref": "user-ack-三节-2026-07-30 / feature-graph first lake"
+    }
+  },
+  "frontmatter_errors": [],
+  "acceptance_criteria": [
+    {
+      "ac_id": "AC-INT-001",
+      "theme": "提供 `adb intent parse`（及等价 Python API），输出 IntentEnvelope JSON，含 schema_version/status/blocked/reason_code/resume_action/data",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-INT-002",
+      "theme": "使用 registry slug/alias/path 解析项目；唯一命中写入 project_slug；零命中 `intent_project_unresolved`",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-INT-003",
+      "theme": "多候选歧义时 fail-closed：`intent_project_ambiguous`，data.project_candidates 非空，不得静默挑第一个",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-INT-004",
+      "theme": "Hermes skill 合同：展示信封并取得确认前，不得调用 `adb dispatch`；可用文档/fixture 断言确认门",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-INT-005",
+      "theme": "可将 envelope 的 project/stage/feature 传入既有 `adb assign candidates`，仍只产出候选",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-INT-006",
+      "theme": "parse/confirm 路径不得创建 executor task、不得消费 approve token",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-INT-007",
+      "theme": "提供可执行 pytest 契约覆盖唯一解析、歧义拒绝、非法跳过确认",
+      "description": ""
+    }
+  ],
+  "test_rows": [
+    {
+      "ac_id": "AC-INT-001",
+      "tc_id": "TC-INT-001",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_intent_parse.py -k envelope_schema --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；输出含 schema_version/status/blocked/reason_code/data.envelope",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-INT-002",
+      "tc_id": "TC-INT-002",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_intent_parse.py -k unique_alias_resolve --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；唯一 alias 解析为 project_slug",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-INT-003",
+      "tc_id": "TC-INT-003",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_intent_parse.py -k ambiguous_project --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；歧义返回 intent_project_ambiguous 且 candidates>1",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-INT-004",
+      "tc_id": "TC-INT-004",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_intent_confirm_gate.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；未确认不得进入 dispatch 调用路径",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-INT-005",
+      "tc_id": "TC-INT-005",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_intent_parse.py -k assign_bridge --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；envelope 字段可驱动 assign candidates 且无 task_id",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-INT-006",
+      "tc_id": "TC-INT-006",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_intent_parse.py -k no_side_effects --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；parse 不创建 executor task、不消费 approve token",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-INT-007",
+      "tc_id": "TC-INT-007",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_intent_parse.py tests/test_intent_confirm_gate.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；契约套件全绿",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-INT-004, AC-INT-006",
+      "tc_id": "TC-INT-ILL-001",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_intent_confirm_gate.py -k illegal_skip_confirm --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；skip confirm / parse→task / parse→token 均 fail-closed",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-INT-003",
+      "tc_id": "TC-INT-ILL-002",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_intent_parse.py -k illegal_silent_pick --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；禁止静默挑选第一候选",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-INT-001",
+      "tc_id": "TC-INT-CLI",
+      "layer": "",
+      "command": "`PYTHONPATH=src python3 -m agent_delivery_bus.cli --config config/projects.json --db :memory: intent parse --utterance \"beacon plan demo\" --json`",
+      "assertion": "exit_code==0 或 blocked 带稳定 reason_code；JSON 含 schema_version",
+      "evidence_path": ""
+    }
+  ],
+  "task_rows": [
+    {
+      "id": "TASK-001",
+      "title": "Implement AC-INT-001: 提供 `adb intent parse`（及等价 Python API），输出 IntentEnvelope JSON，含 schema... · ac=AC-INT-001 · evidence=`.beacon/evidence/implement/nl-intent-envelope/AC-INT-001.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-002",
+      "title": "Implement AC-INT-002: 使用 registry slug/alias/path 解析项目；唯一命中写入 project_slug；零命中 `intent_proj... · ac=AC-INT-002 · evidence=`.beacon/evidence/implement/nl-intent-envelope/AC-INT-002.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-003",
+      "title": "Implement AC-INT-003: 多候选歧义时 fail-closed：`intent_project_ambiguous`，data.project_candidates... · ac=AC-INT-003 · evidence=`.beacon/evidence/implement/nl-intent-envelope/AC-INT-003.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-004",
+      "title": "Implement AC-INT-004: Hermes skill 合同：展示信封并取得确认前，不得调用 `adb dispatch`；可用文档/fixture 断言确认门 · ac=AC-INT-004 · evidence=`.beacon/evidence/implement/nl-intent-envelope/AC-INT-004.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-005",
+      "title": "Implement AC-INT-005: 可将 envelope 的 project/stage/feature 传入既有 `adb assign candidates`，仍只产出候选 · ac=AC-INT-005 · evidence=`.beacon/evidence/implement/nl-intent-envelope/AC-INT-005.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-006",
+      "title": "Implement AC-INT-006: parse/confirm 路径不得创建 executor task、不得消费 approve token · ac=AC-INT-006 · evidence=`.beacon/evidence/implement/nl-intent-envelope/AC-INT-006.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-007",
+      "title": "Implement AC-INT-007: 提供可执行 pytest 契约覆盖唯一解析、歧义拒绝、非法跳过确认 · ac=AC-INT-007 · evidence=`.beacon/evidence/implement/nl-intent-envelope/AC-INT-007.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-008",
+      "title": "Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/nl-intent-envelope/GATES.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-009",
+      "title": "Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/nl-intent-envelope/QA-MATRIX.json`",
+      "status": "checked"
+    }
+  ],
+  "checkbox_errors": [],
+  "evidence_rows": [
+    {
+      "surface": "truth",
+      "authority": "requirement_truth",
+      "canonical_artifact": "docs/beacon/v0.0.3/features/nl-intent-envelope/truth.md",
+      "status": "draft→freeze",
+      "route": "truth"
+    },
+    {
+      "surface": "tests",
+      "authority": "test_truth",
+      "canonical_artifact": "docs/beacon/v0.0.3/features/nl-intent-envelope/tests.md",
+      "status": "current",
+      "route": "qa"
+    },
+    {
+      "surface": "program",
+      "authority": "support_advisory",
+      "canonical_artifact": "docs/beacon/v0.0.3/programs/adb-nl-stable-ops/",
+      "status": "p4_acked",
+      "route": "plan"
+    },
+    {
+      "surface": "implement",
+      "authority": "support_advisory",
+      "canonical_artifact": ".beacon/evidence/implement/nl-intent-envelope/",
+      "status": "planned",
+      "route": "implement"
+    },
+    {
+      "surface": "qa",
+      "authority": "qa_verdict",
+      "canonical_artifact": ".beacon/evidence/qa-feature/nl-intent-envelope/",
+      "status": "planned",
+      "route": "qa"
+    }
+  ]
+}

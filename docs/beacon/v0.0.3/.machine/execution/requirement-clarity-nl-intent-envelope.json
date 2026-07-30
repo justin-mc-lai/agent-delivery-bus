@@ -1,0 +1,764 @@
+{
+  "schema_version": "1.0",
+  "feature": "nl-intent-envelope",
+  "feature_slug": "nl-intent-envelope",
+  "version": "v0.0.3",
+  "runtime_version": "v1.6.11",
+  "runtime_capability_line": "v1.3.3",
+  "required": true,
+  "reason_code": "",
+  "blocked": false,
+  "status": "pass",
+  "findings": [],
+  "report_json_path": "docs/beacon/v0.0.3/.machine/execution/requirement-clarity-nl-intent-envelope.json",
+  "report_markdown_path": "docs/beacon/v0.0.3/execution/requirement-clarity-nl-intent-envelope.md",
+  "state_path": ".beacon/state/requirement-clarity-nl-intent-envelope.json",
+  "diagram_truth": {
+    "schema_version": "1.0",
+    "version": "v0.0.3",
+    "supported": false,
+    "required": false,
+    "ready": false,
+    "diagram_types": [],
+    "state_axes": [],
+    "missing_diagram_types": [],
+    "missing_state_axes": false,
+    "complexity_signals": [],
+    "review_gates": [],
+    "qa_coverage_hints": [],
+    "evidence_lines": {},
+    "generated_at": "2026-07-30T07:48:51.102416+00:00",
+    "feature": "nl-intent-envelope",
+    "feature_slug": "nl-intent-envelope",
+    "prd_ref": "docs/beacon/v0.0.3/prd/nl-intent-envelope.md",
+    "user_story_ref": "docs/beacon/v0.0.3/user-story/nl-intent-envelope.md"
+  },
+  "domain_fsm_gate": {
+    "schema_version": "1.0",
+    "feature": "nl-intent-envelope",
+    "feature_slug": "nl-intent-envelope",
+    "version": "v0.0.3",
+    "truth_path": "docs/beacon/v0.0.3/features/nl-intent-envelope/truth.md",
+    "tests_path": "docs/beacon/v0.0.3/features/nl-intent-envelope/tests.md",
+    "required": true,
+    "blocked": false,
+    "status": "pass",
+    "reason_code": "",
+    "findings": [],
+    "requirement": {
+      "required": true,
+      "reason": "explicit_domain_mark",
+      "explicit": true,
+      "partial": true,
+      "complexity": false,
+      "business_signal": true,
+      "version_supported": false
+    },
+    "projection": {
+      "schema_version": "1.0",
+      "domain_fsm_schema": "domain-fsm.v1",
+      "entity_precedence_schema": "entity-precedence.v1",
+      "frontmatter": {
+        "slug": "nl-intent-envelope",
+        "version": "v0.0.3",
+        "status": "draft",
+        "revision_id": "R2",
+        "language": "zh",
+        "domain_required": "true",
+        "domain_kind": "business",
+        "ux_required": "false",
+        "package_maturity": "filled",
+        "parser_contract": "beacon-feature-package-v2",
+        "materials_status": "current",
+        "truth_source_model": "intent_first",
+        "git_canonical_branch": "main",
+        "program": "adb-nl-stable-ops",
+        "promotion_ref": "user-ack-三节-2026-07-30",
+        "canonical_refs": {
+          "prd": "docs/beacon/v0.0.3/features/nl-intent-envelope/truth.md",
+          "user_story": "docs/beacon/v0.0.3/features/nl-intent-envelope/truth.md",
+          "test_case": "docs/beacon/v0.0.3/features/nl-intent-envelope/tests.md"
+        },
+        "provenance": {
+          "- ac_id": "AC-INT-003",
+          "source_type": "program_ack",
+          "source_ref": "user-ack-三节-2026-07-30 / feature-graph first lake"
+        }
+      },
+      "frontmatter_errors": [],
+      "has_domain_model_section": true,
+      "has_domain_fsm_section": true,
+      "has_illegal_transition_section": true,
+      "entities": [
+        {
+          "entity": "ProjectRegistry",
+          "key": "slug, aliases, path",
+          "precedence": "loaded before parse",
+          "requires": "loaded before parse"
+        },
+        {
+          "entity": "IntentEnvelope",
+          "key": "schema_version, utterance_hash, action, project_slug, project_candidates, stage, feature, confidence, ambiguity_codes, requires_confirmation, requires_approval",
+          "precedence": "requires ProjectRegistry；action 需项目时 project_slug 唯一或 blocked",
+          "requires": "requires ProjectRegistry；action 需项目时 project_slug 唯一或 blocked"
+        },
+        {
+          "entity": "IntentParser",
+          "key": "parse(utterance, registry)",
+          "precedence": "requires ProjectRegistry；只读 registry；不写 dispatch/approval",
+          "requires": "requires ProjectRegistry；只读 registry；不写 dispatch/approval"
+        },
+        {
+          "entity": "AmbiguityReport",
+          "key": "reason_code, resume_action, candidates",
+          "precedence": "requires IntentParser multi-hit；fail-closed",
+          "requires": "requires IntentParser multi-hit；fail-closed"
+        },
+        {
+          "entity": "ConfirmGate",
+          "key": "envelope, actor_ack",
+          "precedence": "requires IntentEnvelope resolved；ack 前不得调用 dispatch",
+          "requires": "requires IntentEnvelope resolved；ack 前不得调用 dispatch"
+        },
+        {
+          "entity": "ProjectRegistry",
+          "key": "1",
+          "precedence": "—",
+          "requires": "—"
+        },
+        {
+          "entity": "IntentParser",
+          "key": "2",
+          "precedence": "ProjectRegistry",
+          "requires": "ProjectRegistry"
+        },
+        {
+          "entity": "IntentEnvelope",
+          "key": "3",
+          "precedence": "IntentParser",
+          "requires": "IntentParser"
+        },
+        {
+          "entity": "AmbiguityReport",
+          "key": "3",
+          "precedence": "IntentParser",
+          "requires": "IntentParser"
+        },
+        {
+          "entity": "ConfirmGate",
+          "key": "4",
+          "precedence": "IntentEnvelope",
+          "requires": "IntentEnvelope"
+        }
+      ],
+      "entity_precedence": [
+        {
+          "entity": "ProjectRegistry",
+          "key": "slug, aliases, path",
+          "precedence": "loaded before parse",
+          "requires": "loaded before parse"
+        },
+        {
+          "entity": "IntentEnvelope",
+          "key": "schema_version, utterance_hash, action, project_slug, project_candidates, stage, feature, confidence, ambiguity_codes, requires_confirmation, requires_approval",
+          "precedence": "requires ProjectRegistry；action 需项目时 project_slug 唯一或 blocked",
+          "requires": "requires ProjectRegistry；action 需项目时 project_slug 唯一或 blocked"
+        },
+        {
+          "entity": "IntentParser",
+          "key": "parse(utterance, registry)",
+          "precedence": "requires ProjectRegistry；只读 registry；不写 dispatch/approval",
+          "requires": "requires ProjectRegistry；只读 registry；不写 dispatch/approval"
+        },
+        {
+          "entity": "AmbiguityReport",
+          "key": "reason_code, resume_action, candidates",
+          "precedence": "requires IntentParser multi-hit；fail-closed",
+          "requires": "requires IntentParser multi-hit；fail-closed"
+        },
+        {
+          "entity": "ConfirmGate",
+          "key": "envelope, actor_ack",
+          "precedence": "requires IntentEnvelope resolved；ack 前不得调用 dispatch",
+          "requires": "requires IntentEnvelope resolved；ack 前不得调用 dispatch"
+        },
+        {
+          "entity": "ProjectRegistry",
+          "key": "1",
+          "precedence": "—",
+          "requires": "—"
+        },
+        {
+          "entity": "IntentParser",
+          "key": "2",
+          "precedence": "ProjectRegistry",
+          "requires": "ProjectRegistry"
+        },
+        {
+          "entity": "IntentEnvelope",
+          "key": "3",
+          "precedence": "IntentParser",
+          "requires": "IntentParser"
+        },
+        {
+          "entity": "AmbiguityReport",
+          "key": "3",
+          "precedence": "IntentParser",
+          "requires": "IntentParser"
+        },
+        {
+          "entity": "ConfirmGate",
+          "key": "4",
+          "precedence": "IntentEnvelope",
+          "requires": "IntentEnvelope"
+        }
+      ],
+      "aggregates": [
+        {
+          "name": "IntentParse",
+          "states": [
+            "ambiguous",
+            "blocked",
+            "confirmed",
+            "idle",
+            "parsing",
+            "ready_for_structured_cli",
+            "resolved"
+          ],
+          "transitions": [
+            {
+              "from": "",
+              "to": "idle",
+              "guard": "registry loaded",
+              "initial": "true"
+            },
+            {
+              "from": "idle",
+              "to": "parsing",
+              "guard": "utterance received"
+            },
+            {
+              "from": "parsing",
+              "to": "resolved",
+              "guard": "unique project when required"
+            },
+            {
+              "from": "parsing",
+              "to": "ambiguous",
+              "guard": "multiple project candidates"
+            },
+            {
+              "from": "parsing",
+              "to": "blocked",
+              "guard": "missing required fields or unknown action"
+            },
+            {
+              "from": "resolved",
+              "to": "blocked",
+              "guard": "missing required fields or unknown action"
+            },
+            {
+              "from": "resolved",
+              "to": "confirmed",
+              "guard": "actor_ack"
+            },
+            {
+              "from": "confirmed",
+              "to": "ready_for_structured_cli",
+              "guard": "envelope valid"
+            }
+          ]
+        }
+      ],
+      "illegal_transition_slots": [
+        {
+          "description": "IntentParse.resolved → ready_for_structured_cli without confirm · TC-INT-ILL-001",
+          "aggregate": "IntentParse",
+          "source": "truth"
+        },
+        {
+          "description": "IntentParse.parsing → create_executor_task · TC-INT-ILL-001",
+          "aggregate": "IntentParse",
+          "source": "truth"
+        },
+        {
+          "description": "IntentParse.ambiguous → resolved by silent first-candidate pick · TC-INT-ILL-002",
+          "aggregate": "IntentParse",
+          "source": "truth"
+        },
+        {
+          "description": "IntentParser.parse → consume_approval_token · TC-INT-ILL-001",
+          "aggregate": "IntentParser",
+          "source": "truth"
+        }
+      ],
+      "acceptance_criteria": [
+        {
+          "ac_id": "AC-INT-001",
+          "description": "提供 `adb intent parse`（及等价 Python API），输出 IntentEnvelope JSON，含 schema_version/status/blocked/reason_code/resume_action/data"
+        },
+        {
+          "ac_id": "AC-INT-002",
+          "description": "使用 registry slug/alias/path 解析项目；唯一命中写入 project_slug；零命中 `intent_project_unresolved`"
+        },
+        {
+          "ac_id": "AC-INT-003",
+          "description": "多候选歧义时 fail-closed：`intent_project_ambiguous`，data.project_candidates 非空，不得静默挑第一个"
+        },
+        {
+          "ac_id": "AC-INT-004",
+          "description": "Hermes skill 合同：展示信封并取得确认前，不得调用 `adb dispatch`；可用文档/fixture 断言确认门"
+        },
+        {
+          "ac_id": "AC-INT-005",
+          "description": "可将 envelope 的 project/stage/feature 传入既有 `adb assign candidates`，仍只产出候选"
+        },
+        {
+          "ac_id": "AC-INT-006",
+          "description": "parse/confirm 路径不得创建 executor task、不得消费 approve token"
+        },
+        {
+          "ac_id": "AC-INT-007",
+          "description": "提供可执行 pytest 契约覆盖唯一解析、歧义拒绝、非法跳过确认"
+        }
+      ],
+      "bound_ac_ids": [
+        "AC-INT-001",
+        "AC-INT-002",
+        "AC-INT-003",
+        "AC-INT-006",
+        "AC-INT-007"
+      ],
+      "orphan_ac_ids": [],
+      "aggregates_missing_illegal_slots": [],
+      "raw_section_titles": [
+        "人话",
+        "User Intent",
+        "User Intent Snapshot",
+        "Alignment Surface",
+        "Phased Backlog",
+        "Deferral Ledger",
+        "用户旅程",
+        "失败旅程",
+        "Domain Model",
+        "Entity Precedence",
+        "Intent Coverage Matrix",
+        "Acceptance Criteria",
+        "Domain FSM — IntentParse",
+        "FSM 五元组",
+        "Illegal transitions",
+        "Public CLI Contract",
+        "Non-goals",
+        "Freeze readiness"
+      ]
+    },
+    "validation": {
+      "schema_version": "1.0",
+      "required": true,
+      "blocked": false,
+      "status": "pass",
+      "reason_code": "",
+      "findings": [],
+      "projection": {
+        "schema_version": "1.0",
+        "domain_fsm_schema": "domain-fsm.v1",
+        "entity_precedence_schema": "entity-precedence.v1",
+        "frontmatter": {
+          "slug": "nl-intent-envelope",
+          "version": "v0.0.3",
+          "status": "draft",
+          "revision_id": "R2",
+          "language": "zh",
+          "domain_required": "true",
+          "domain_kind": "business",
+          "ux_required": "false",
+          "package_maturity": "filled",
+          "parser_contract": "beacon-feature-package-v2",
+          "materials_status": "current",
+          "truth_source_model": "intent_first",
+          "git_canonical_branch": "main",
+          "program": "adb-nl-stable-ops",
+          "promotion_ref": "user-ack-三节-2026-07-30",
+          "canonical_refs": {
+            "prd": "docs/beacon/v0.0.3/features/nl-intent-envelope/truth.md",
+            "user_story": "docs/beacon/v0.0.3/features/nl-intent-envelope/truth.md",
+            "test_case": "docs/beacon/v0.0.3/features/nl-intent-envelope/tests.md"
+          },
+          "provenance": {
+            "- ac_id": "AC-INT-003",
+            "source_type": "program_ack",
+            "source_ref": "user-ack-三节-2026-07-30 / feature-graph first lake"
+          }
+        },
+        "frontmatter_errors": [],
+        "has_domain_model_section": true,
+        "has_domain_fsm_section": true,
+        "has_illegal_transition_section": true,
+        "entities": [
+          {
+            "entity": "ProjectRegistry",
+            "key": "slug, aliases, path",
+            "precedence": "loaded before parse",
+            "requires": "loaded before parse"
+          },
+          {
+            "entity": "IntentEnvelope",
+            "key": "schema_version, utterance_hash, action, project_slug, project_candidates, stage, feature, confidence, ambiguity_codes, requires_confirmation, requires_approval",
+            "precedence": "requires ProjectRegistry；action 需项目时 project_slug 唯一或 blocked",
+            "requires": "requires ProjectRegistry；action 需项目时 project_slug 唯一或 blocked"
+          },
+          {
+            "entity": "IntentParser",
+            "key": "parse(utterance, registry)",
+            "precedence": "requires ProjectRegistry；只读 registry；不写 dispatch/approval",
+            "requires": "requires ProjectRegistry；只读 registry；不写 dispatch/approval"
+          },
+          {
+            "entity": "AmbiguityReport",
+            "key": "reason_code, resume_action, candidates",
+            "precedence": "requires IntentParser multi-hit；fail-closed",
+            "requires": "requires IntentParser multi-hit；fail-closed"
+          },
+          {
+            "entity": "ConfirmGate",
+            "key": "envelope, actor_ack",
+            "precedence": "requires IntentEnvelope resolved；ack 前不得调用 dispatch",
+            "requires": "requires IntentEnvelope resolved；ack 前不得调用 dispatch"
+          },
+          {
+            "entity": "ProjectRegistry",
+            "key": "1",
+            "precedence": "—",
+            "requires": "—"
+          },
+          {
+            "entity": "IntentParser",
+            "key": "2",
+            "precedence": "ProjectRegistry",
+            "requires": "ProjectRegistry"
+          },
+          {
+            "entity": "IntentEnvelope",
+            "key": "3",
+            "precedence": "IntentParser",
+            "requires": "IntentParser"
+          },
+          {
+            "entity": "AmbiguityReport",
+            "key": "3",
+            "precedence": "IntentParser",
+            "requires": "IntentParser"
+          },
+          {
+            "entity": "ConfirmGate",
+            "key": "4",
+            "precedence": "IntentEnvelope",
+            "requires": "IntentEnvelope"
+          }
+        ],
+        "entity_precedence": [
+          {
+            "entity": "ProjectRegistry",
+            "key": "slug, aliases, path",
+            "precedence": "loaded before parse",
+            "requires": "loaded before parse"
+          },
+          {
+            "entity": "IntentEnvelope",
+            "key": "schema_version, utterance_hash, action, project_slug, project_candidates, stage, feature, confidence, ambiguity_codes, requires_confirmation, requires_approval",
+            "precedence": "requires ProjectRegistry；action 需项目时 project_slug 唯一或 blocked",
+            "requires": "requires ProjectRegistry；action 需项目时 project_slug 唯一或 blocked"
+          },
+          {
+            "entity": "IntentParser",
+            "key": "parse(utterance, registry)",
+            "precedence": "requires ProjectRegistry；只读 registry；不写 dispatch/approval",
+            "requires": "requires ProjectRegistry；只读 registry；不写 dispatch/approval"
+          },
+          {
+            "entity": "AmbiguityReport",
+            "key": "reason_code, resume_action, candidates",
+            "precedence": "requires IntentParser multi-hit；fail-closed",
+            "requires": "requires IntentParser multi-hit；fail-closed"
+          },
+          {
+            "entity": "ConfirmGate",
+            "key": "envelope, actor_ack",
+            "precedence": "requires IntentEnvelope resolved；ack 前不得调用 dispatch",
+            "requires": "requires IntentEnvelope resolved；ack 前不得调用 dispatch"
+          },
+          {
+            "entity": "ProjectRegistry",
+            "key": "1",
+            "precedence": "—",
+            "requires": "—"
+          },
+          {
+            "entity": "IntentParser",
+            "key": "2",
+            "precedence": "ProjectRegistry",
+            "requires": "ProjectRegistry"
+          },
+          {
+            "entity": "IntentEnvelope",
+            "key": "3",
+            "precedence": "IntentParser",
+            "requires": "IntentParser"
+          },
+          {
+            "entity": "AmbiguityReport",
+            "key": "3",
+            "precedence": "IntentParser",
+            "requires": "IntentParser"
+          },
+          {
+            "entity": "ConfirmGate",
+            "key": "4",
+            "precedence": "IntentEnvelope",
+            "requires": "IntentEnvelope"
+          }
+        ],
+        "aggregates": [
+          {
+            "name": "IntentParse",
+            "states": [
+              "ambiguous",
+              "blocked",
+              "confirmed",
+              "idle",
+              "parsing",
+              "ready_for_structured_cli",
+              "resolved"
+            ],
+            "transitions": [
+              {
+                "from": "",
+                "to": "idle",
+                "guard": "registry loaded",
+                "initial": "true"
+              },
+              {
+                "from": "idle",
+                "to": "parsing",
+                "guard": "utterance received"
+              },
+              {
+                "from": "parsing",
+                "to": "resolved",
+                "guard": "unique project when required"
+              },
+              {
+                "from": "parsing",
+                "to": "ambiguous",
+                "guard": "multiple project candidates"
+              },
+              {
+                "from": "parsing",
+                "to": "blocked",
+                "guard": "missing required fields or unknown action"
+              },
+              {
+                "from": "resolved",
+                "to": "blocked",
+                "guard": "missing required fields or unknown action"
+              },
+              {
+                "from": "resolved",
+                "to": "confirmed",
+                "guard": "actor_ack"
+              },
+              {
+                "from": "confirmed",
+                "to": "ready_for_structured_cli",
+                "guard": "envelope valid"
+              }
+            ]
+          }
+        ],
+        "illegal_transition_slots": [
+          {
+            "description": "IntentParse.resolved → ready_for_structured_cli without confirm · TC-INT-ILL-001",
+            "aggregate": "IntentParse",
+            "source": "truth"
+          },
+          {
+            "description": "IntentParse.parsing → create_executor_task · TC-INT-ILL-001",
+            "aggregate": "IntentParse",
+            "source": "truth"
+          },
+          {
+            "description": "IntentParse.ambiguous → resolved by silent first-candidate pick · TC-INT-ILL-002",
+            "aggregate": "IntentParse",
+            "source": "truth"
+          },
+          {
+            "description": "IntentParser.parse → consume_approval_token · TC-INT-ILL-001",
+            "aggregate": "IntentParser",
+            "source": "truth"
+          }
+        ],
+        "acceptance_criteria": [
+          {
+            "ac_id": "AC-INT-001",
+            "description": "提供 `adb intent parse`（及等价 Python API），输出 IntentEnvelope JSON，含 schema_version/status/blocked/reason_code/resume_action/data"
+          },
+          {
+            "ac_id": "AC-INT-002",
+            "description": "使用 registry slug/alias/path 解析项目；唯一命中写入 project_slug；零命中 `intent_project_unresolved`"
+          },
+          {
+            "ac_id": "AC-INT-003",
+            "description": "多候选歧义时 fail-closed：`intent_project_ambiguous`，data.project_candidates 非空，不得静默挑第一个"
+          },
+          {
+            "ac_id": "AC-INT-004",
+            "description": "Hermes skill 合同：展示信封并取得确认前，不得调用 `adb dispatch`；可用文档/fixture 断言确认门"
+          },
+          {
+            "ac_id": "AC-INT-005",
+            "description": "可将 envelope 的 project/stage/feature 传入既有 `adb assign candidates`，仍只产出候选"
+          },
+          {
+            "ac_id": "AC-INT-006",
+            "description": "parse/confirm 路径不得创建 executor task、不得消费 approve token"
+          },
+          {
+            "ac_id": "AC-INT-007",
+            "description": "提供可执行 pytest 契约覆盖唯一解析、歧义拒绝、非法跳过确认"
+          }
+        ],
+        "bound_ac_ids": [
+          "AC-INT-001",
+          "AC-INT-002",
+          "AC-INT-003",
+          "AC-INT-006",
+          "AC-INT-007"
+        ],
+        "orphan_ac_ids": [],
+        "aggregates_missing_illegal_slots": [],
+        "raw_section_titles": [
+          "人话",
+          "User Intent",
+          "User Intent Snapshot",
+          "Alignment Surface",
+          "Phased Backlog",
+          "Deferral Ledger",
+          "用户旅程",
+          "失败旅程",
+          "Domain Model",
+          "Entity Precedence",
+          "Intent Coverage Matrix",
+          "Acceptance Criteria",
+          "Domain FSM — IntentParse",
+          "FSM 五元组",
+          "Illegal transitions",
+          "Public CLI Contract",
+          "Non-goals",
+          "Freeze readiness"
+        ]
+      },
+      "summary": {
+        "entity_count": 10,
+        "aggregate_count": 1,
+        "illegal_slot_count": 4,
+        "orphan_ac_count": 0,
+        "bound_ac_count": 5
+      }
+    },
+    "recommended_action": ""
+  },
+  "human_closure_contract": {
+    "required": false,
+    "research_path": "docs/beacon/v0.0.3/research/nl-intent-envelope.md",
+    "research_exists": false,
+    "source_architecture_path": "docs/beacon/v0.0.3/source-architecture/nl-intent-envelope.md",
+    "source_architecture_exists": false,
+    "required_sections": [
+      "architecture",
+      "business_flow"
+    ],
+    "missing_sections": [
+      "architecture",
+      "business_flow"
+    ],
+    "diagram_types": [],
+    "complexity_signals": []
+  },
+  "requirement_closure_contract": {
+    "required": true,
+    "chain_order": [
+      "research",
+      "prd",
+      "user_story",
+      "test_case",
+      "requirement_clarity",
+      "freeze"
+    ],
+    "human_closure_required": false,
+    "paths": {
+      "research": "docs/beacon/v0.0.3/research/nl-intent-envelope.md",
+      "prd": "docs/beacon/v0.0.3/features/nl-intent-envelope/truth.md",
+      "user_story": "docs/beacon/v0.0.3/features/nl-intent-envelope/truth.md",
+      "test_case": "docs/beacon/v0.0.3/features/nl-intent-envelope/tests.md"
+    },
+    "exists": {
+      "research": false,
+      "prd": true,
+      "user_story": true,
+      "test_case": true
+    },
+    "required_research_sections": [],
+    "missing_research_sections": [],
+    "ac_projection": {
+      "prd_ac_ids": [],
+      "user_story_ac_ids": [],
+      "test_case_ac_ids": [],
+      "upstream_ac_ids": [],
+      "missing_test_case_ac_ids": []
+    }
+  },
+  "version_projection_truth_contract": {
+    "required": false,
+    "supported": false,
+    "projection_types": [],
+    "research_path": "docs/beacon/v0.0.3/research/nl-intent-envelope.md",
+    "research_exists": false,
+    "required_fields": [
+      "prd_refs",
+      "user_story_refs",
+      "test_case_refs",
+      "coverage_notes",
+      "out_of_scope_notes"
+    ],
+    "field_presence": {
+      "prd_refs": false,
+      "user_story_refs": false,
+      "test_case_refs": false,
+      "coverage_notes": false,
+      "out_of_scope_notes": false
+    },
+    "missing_fields": [],
+    "required_refs": {
+      "prd_refs": "docs/beacon/v0.0.3/features/nl-intent-envelope/truth.md",
+      "user_story_refs": "docs/beacon/v0.0.3/features/nl-intent-envelope/truth.md",
+      "test_case_refs": "docs/beacon/v0.0.3/features/nl-intent-envelope/tests.md"
+    },
+    "missing_ref_targets": [],
+    "ready": false
+  },
+  "support_write_topology_contract": {
+    "schema_version": "1.0",
+    "supported": true,
+    "status": "pass",
+    "blocked": false,
+    "reason_code": "",
+    "diagnostics": []
+  },
+  "required_artifacts": [],
+  "scanned_files": [
+    "docs/beacon/v0.0.3/features/nl-intent-envelope/truth.md",
+    "docs/beacon/v0.0.3/features/nl-intent-envelope/tests.md",
+    "docs/beacon/v0.0.3/features/nl-intent-envelope/tasks.md",
+    "docs/beacon/v0.0.3/features/nl-intent-envelope/evidence.md"
+  ]
+}

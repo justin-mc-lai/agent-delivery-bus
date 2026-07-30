@@ -1,0 +1,3 @@
+{"timestamp":"2026-07-30T15:08:00+08:00","utterance_delta":"需要更完善的自然语言任务派发、kanban管理、adb+NL稳定触发、意图分析、准确项目分配；经hermes跑本机agent(codex)执行beacon skill(plan/goal)；定期反馈看板/beacon版本需求/知识库梳理；让adb调度足够稳定","user_decision":"pending","plan_mode":"interactive","lake_or_ocean":"海","classifier_reason":"vague multi-capability product intent; no source URL; brainstorm/align"}
+{"timestamp":"2026-07-30T15:15:00+08:00","utterance_delta":"4 feature-graph first + 1 nl-intent-envelope as first lake","user_decision":"promoted_to_feature_graph","first_lake":"nl-intent-envelope","plan_mode":"interactive"}
+{"timestamp":"2026-07-30T15:18:00+08:00","utterance_delta":"ack 三节","user_decision":"p4_acked","ack_ref":"user-ack-三节-2026-07-30","next_harness":"truth","first_lake":"nl-intent-envelope"}

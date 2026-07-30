@@ -1,0 +1,492 @@
+{
+  "schema_version": "1.0",
+  "feature": "beacon-read-surface",
+  "feature_slug": "beacon-read-surface",
+  "version": "v0.0.3",
+  "runtime_version": "v1.6.11",
+  "runtime_capability_line": "v1.3.3",
+  "required": true,
+  "reason_code": "",
+  "blocked": false,
+  "status": "pass",
+  "findings": [],
+  "report_json_path": "docs/beacon/v0.0.3/.machine/execution/requirement-clarity-beacon-read-surface.json",
+  "report_markdown_path": "docs/beacon/v0.0.3/execution/requirement-clarity-beacon-read-surface.md",
+  "state_path": ".beacon/state/requirement-clarity-beacon-read-surface.json",
+  "diagram_truth": {
+    "schema_version": "1.0",
+    "version": "v0.0.3",
+    "supported": false,
+    "required": false,
+    "ready": false,
+    "diagram_types": [],
+    "state_axes": [],
+    "missing_diagram_types": [],
+    "missing_state_axes": false,
+    "complexity_signals": [],
+    "review_gates": [],
+    "qa_coverage_hints": [],
+    "evidence_lines": {},
+    "generated_at": "2026-07-30T07:32:33.592940+00:00",
+    "feature": "beacon-read-surface",
+    "feature_slug": "beacon-read-surface",
+    "prd_ref": "docs/beacon/v0.0.3/prd/beacon-read-surface.md",
+    "user_story_ref": "docs/beacon/v0.0.3/user-story/beacon-read-surface.md"
+  },
+  "domain_fsm_gate": {
+    "schema_version": "1.0",
+    "feature": "beacon-read-surface",
+    "feature_slug": "beacon-read-surface",
+    "version": "v0.0.3",
+    "truth_path": "docs/beacon/v0.0.3/features/beacon-read-surface/truth.md",
+    "tests_path": "docs/beacon/v0.0.3/features/beacon-read-surface/tests.md",
+    "required": true,
+    "blocked": false,
+    "status": "pass",
+    "reason_code": "",
+    "findings": [],
+    "requirement": {
+      "required": true,
+      "reason": "explicit_domain_mark",
+      "explicit": true,
+      "partial": true,
+      "complexity": false,
+      "business_signal": false,
+      "version_supported": false
+    },
+    "projection": {
+      "schema_version": "1.0",
+      "domain_fsm_schema": "domain-fsm.v1",
+      "entity_precedence_schema": "entity-precedence.v1",
+      "frontmatter": {
+        "slug": "beacon-read-surface",
+        "version": "v0.0.3",
+        "status": "draft",
+        "revision_id": "R1",
+        "language": "zh",
+        "domain_required": "true",
+        "domain_kind": "business",
+        "ux_required": "false",
+        "package_maturity": "filled",
+        "parser_contract": "beacon-feature-package-v2",
+        "materials_status": "current",
+        "truth_source_model": "intent_first",
+        "git_canonical_branch": "main",
+        "program": "adb-nl-stable-ops",
+        "promotion_ref": "user-ack-三节-2026-07-30",
+        "canonical_refs": {
+          "prd": "docs/beacon/v0.0.3/features/beacon-read-surface/truth.md",
+          "user_story": "docs/beacon/v0.0.3/features/beacon-read-surface/truth.md",
+          "test_case": "docs/beacon/v0.0.3/features/beacon-read-surface/tests.md"
+        }
+      },
+      "frontmatter_errors": [],
+      "has_domain_model_section": true,
+      "has_domain_fsm_section": true,
+      "has_illegal_transition_section": true,
+      "entities": [
+        {
+          "entity": "VersionDigest",
+          "key": "project, docs_version",
+          "precedence": "read-only",
+          "requires": "read-only"
+        },
+        {
+          "entity": "RequirementDigest",
+          "key": "project, feature_summaries",
+          "precedence": "read-only",
+          "requires": "read-only"
+        },
+        {
+          "entity": "ResultEnvelope",
+          "key": "status, blocked, reason_code",
+          "precedence": "统一外壳",
+          "requires": "统一外壳"
+        }
+      ],
+      "entity_precedence": [
+        {
+          "entity": "VersionDigest",
+          "key": "project, docs_version",
+          "precedence": "read-only",
+          "requires": "read-only"
+        },
+        {
+          "entity": "RequirementDigest",
+          "key": "project, feature_summaries",
+          "precedence": "read-only",
+          "requires": "read-only"
+        },
+        {
+          "entity": "ResultEnvelope",
+          "key": "status, blocked, reason_code",
+          "precedence": "统一外壳",
+          "requires": "统一外壳"
+        }
+      ],
+      "aggregates": [
+        {
+          "name": "BeaconRead",
+          "states": [
+            "blocked",
+            "done",
+            "idle",
+            "running"
+          ],
+          "transitions": [
+            {
+              "from": "",
+              "to": "idle",
+              "guard": "project resolved",
+              "initial": "true"
+            },
+            {
+              "from": "idle",
+              "to": "running",
+              "guard": "read request valid"
+            },
+            {
+              "from": "running",
+              "to": "done",
+              "guard": "beacon public CLI ok"
+            },
+            {
+              "from": "running",
+              "to": "blocked",
+              "guard": "cli fail or write attempt"
+            }
+          ]
+        }
+      ],
+      "illegal_transition_slots": [
+        {
+          "description": "running → write_truth · TC-BCR-ILL-001",
+          "aggregate": "",
+          "source": "truth"
+        },
+        {
+          "description": "running → freeze_feature · TC-BCR-ILL-001",
+          "aggregate": "",
+          "source": "truth"
+        }
+      ],
+      "acceptance_criteria": [
+        {
+          "ac_id": "AC-BCR-001",
+          "description": "VersionDigest：按 project 只读摘要 docs version，合法路径 idle→running→done"
+        },
+        {
+          "ac_id": "AC-BCR-002",
+          "description": "RequirementDigest：最新需求/feature 摘要只读；失败进入 blocked"
+        },
+        {
+          "ac_id": "AC-BCR-003",
+          "description": "Intent action=beacon_status 路由到 VersionDigest/RequirementDigest 只读面，成功态 done"
+        },
+        {
+          "ac_id": "AC-BCR-004",
+          "description": "不允许 write_truth/freeze（illegal/拒绝）；本湖命令保持 read-only，违规 blocked"
+        }
+      ],
+      "bound_ac_ids": [
+        "AC-BCR-001",
+        "AC-BCR-002",
+        "AC-BCR-003",
+        "AC-BCR-004"
+      ],
+      "orphan_ac_ids": [],
+      "aggregates_missing_illegal_slots": [],
+      "raw_section_titles": [
+        "人话",
+        "User Intent",
+        "User Intent Snapshot",
+        "Alignment Surface",
+        "Phased Backlog",
+        "Deferral Ledger",
+        "用户旅程",
+        "失败旅程",
+        "Domain Model",
+        "Intent Coverage Matrix",
+        "Acceptance Criteria",
+        "Domain FSM — BeaconRead",
+        "FSM 五元组",
+        "Illegal transitions",
+        "Public CLI Contract",
+        "Non-goals",
+        "Freeze readiness"
+      ]
+    },
+    "validation": {
+      "schema_version": "1.0",
+      "required": true,
+      "blocked": false,
+      "status": "pass",
+      "reason_code": "",
+      "findings": [],
+      "projection": {
+        "schema_version": "1.0",
+        "domain_fsm_schema": "domain-fsm.v1",
+        "entity_precedence_schema": "entity-precedence.v1",
+        "frontmatter": {
+          "slug": "beacon-read-surface",
+          "version": "v0.0.3",
+          "status": "draft",
+          "revision_id": "R1",
+          "language": "zh",
+          "domain_required": "true",
+          "domain_kind": "business",
+          "ux_required": "false",
+          "package_maturity": "filled",
+          "parser_contract": "beacon-feature-package-v2",
+          "materials_status": "current",
+          "truth_source_model": "intent_first",
+          "git_canonical_branch": "main",
+          "program": "adb-nl-stable-ops",
+          "promotion_ref": "user-ack-三节-2026-07-30",
+          "canonical_refs": {
+            "prd": "docs/beacon/v0.0.3/features/beacon-read-surface/truth.md",
+            "user_story": "docs/beacon/v0.0.3/features/beacon-read-surface/truth.md",
+            "test_case": "docs/beacon/v0.0.3/features/beacon-read-surface/tests.md"
+          }
+        },
+        "frontmatter_errors": [],
+        "has_domain_model_section": true,
+        "has_domain_fsm_section": true,
+        "has_illegal_transition_section": true,
+        "entities": [
+          {
+            "entity": "VersionDigest",
+            "key": "project, docs_version",
+            "precedence": "read-only",
+            "requires": "read-only"
+          },
+          {
+            "entity": "RequirementDigest",
+            "key": "project, feature_summaries",
+            "precedence": "read-only",
+            "requires": "read-only"
+          },
+          {
+            "entity": "ResultEnvelope",
+            "key": "status, blocked, reason_code",
+            "precedence": "统一外壳",
+            "requires": "统一外壳"
+          }
+        ],
+        "entity_precedence": [
+          {
+            "entity": "VersionDigest",
+            "key": "project, docs_version",
+            "precedence": "read-only",
+            "requires": "read-only"
+          },
+          {
+            "entity": "RequirementDigest",
+            "key": "project, feature_summaries",
+            "precedence": "read-only",
+            "requires": "read-only"
+          },
+          {
+            "entity": "ResultEnvelope",
+            "key": "status, blocked, reason_code",
+            "precedence": "统一外壳",
+            "requires": "统一外壳"
+          }
+        ],
+        "aggregates": [
+          {
+            "name": "BeaconRead",
+            "states": [
+              "blocked",
+              "done",
+              "idle",
+              "running"
+            ],
+            "transitions": [
+              {
+                "from": "",
+                "to": "idle",
+                "guard": "project resolved",
+                "initial": "true"
+              },
+              {
+                "from": "idle",
+                "to": "running",
+                "guard": "read request valid"
+              },
+              {
+                "from": "running",
+                "to": "done",
+                "guard": "beacon public CLI ok"
+              },
+              {
+                "from": "running",
+                "to": "blocked",
+                "guard": "cli fail or write attempt"
+              }
+            ]
+          }
+        ],
+        "illegal_transition_slots": [
+          {
+            "description": "running → write_truth · TC-BCR-ILL-001",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "running → freeze_feature · TC-BCR-ILL-001",
+            "aggregate": "",
+            "source": "truth"
+          }
+        ],
+        "acceptance_criteria": [
+          {
+            "ac_id": "AC-BCR-001",
+            "description": "VersionDigest：按 project 只读摘要 docs version，合法路径 idle→running→done"
+          },
+          {
+            "ac_id": "AC-BCR-002",
+            "description": "RequirementDigest：最新需求/feature 摘要只读；失败进入 blocked"
+          },
+          {
+            "ac_id": "AC-BCR-003",
+            "description": "Intent action=beacon_status 路由到 VersionDigest/RequirementDigest 只读面，成功态 done"
+          },
+          {
+            "ac_id": "AC-BCR-004",
+            "description": "不允许 write_truth/freeze（illegal/拒绝）；本湖命令保持 read-only，违规 blocked"
+          }
+        ],
+        "bound_ac_ids": [
+          "AC-BCR-001",
+          "AC-BCR-002",
+          "AC-BCR-003",
+          "AC-BCR-004"
+        ],
+        "orphan_ac_ids": [],
+        "aggregates_missing_illegal_slots": [],
+        "raw_section_titles": [
+          "人话",
+          "User Intent",
+          "User Intent Snapshot",
+          "Alignment Surface",
+          "Phased Backlog",
+          "Deferral Ledger",
+          "用户旅程",
+          "失败旅程",
+          "Domain Model",
+          "Intent Coverage Matrix",
+          "Acceptance Criteria",
+          "Domain FSM — BeaconRead",
+          "FSM 五元组",
+          "Illegal transitions",
+          "Public CLI Contract",
+          "Non-goals",
+          "Freeze readiness"
+        ]
+      },
+      "summary": {
+        "entity_count": 3,
+        "aggregate_count": 1,
+        "illegal_slot_count": 2,
+        "orphan_ac_count": 0,
+        "bound_ac_count": 4
+      }
+    },
+    "recommended_action": ""
+  },
+  "human_closure_contract": {
+    "required": false,
+    "research_path": "docs/beacon/v0.0.3/research/beacon-read-surface.md",
+    "research_exists": false,
+    "source_architecture_path": "docs/beacon/v0.0.3/source-architecture/beacon-read-surface.md",
+    "source_architecture_exists": false,
+    "required_sections": [
+      "architecture",
+      "business_flow"
+    ],
+    "missing_sections": [
+      "architecture",
+      "business_flow"
+    ],
+    "diagram_types": [],
+    "complexity_signals": []
+  },
+  "requirement_closure_contract": {
+    "required": true,
+    "chain_order": [
+      "research",
+      "prd",
+      "user_story",
+      "test_case",
+      "requirement_clarity",
+      "freeze"
+    ],
+    "human_closure_required": false,
+    "paths": {
+      "research": "docs/beacon/v0.0.3/research/beacon-read-surface.md",
+      "prd": "docs/beacon/v0.0.3/features/beacon-read-surface/truth.md",
+      "user_story": "docs/beacon/v0.0.3/features/beacon-read-surface/truth.md",
+      "test_case": "docs/beacon/v0.0.3/features/beacon-read-surface/tests.md"
+    },
+    "exists": {
+      "research": false,
+      "prd": true,
+      "user_story": true,
+      "test_case": true
+    },
+    "required_research_sections": [],
+    "missing_research_sections": [],
+    "ac_projection": {
+      "prd_ac_ids": [],
+      "user_story_ac_ids": [],
+      "test_case_ac_ids": [],
+      "upstream_ac_ids": [],
+      "missing_test_case_ac_ids": []
+    }
+  },
+  "version_projection_truth_contract": {
+    "required": false,
+    "supported": false,
+    "projection_types": [],
+    "research_path": "docs/beacon/v0.0.3/research/beacon-read-surface.md",
+    "research_exists": false,
+    "required_fields": [
+      "prd_refs",
+      "user_story_refs",
+      "test_case_refs",
+      "coverage_notes",
+      "out_of_scope_notes"
+    ],
+    "field_presence": {
+      "prd_refs": false,
+      "user_story_refs": false,
+      "test_case_refs": false,
+      "coverage_notes": false,
+      "out_of_scope_notes": false
+    },
+    "missing_fields": [],
+    "required_refs": {
+      "prd_refs": "docs/beacon/v0.0.3/features/beacon-read-surface/truth.md",
+      "user_story_refs": "docs/beacon/v0.0.3/features/beacon-read-surface/truth.md",
+      "test_case_refs": "docs/beacon/v0.0.3/features/beacon-read-surface/tests.md"
+    },
+    "missing_ref_targets": [],
+    "ready": false
+  },
+  "support_write_topology_contract": {
+    "schema_version": "1.0",
+    "supported": true,
+    "status": "pass",
+    "blocked": false,
+    "reason_code": "",
+    "diagnostics": []
+  },
+  "required_artifacts": [],
+  "scanned_files": [
+    "docs/beacon/v0.0.3/features/beacon-read-surface/truth.md",
+    "docs/beacon/v0.0.3/features/beacon-read-surface/tests.md",
+    "docs/beacon/v0.0.3/features/beacon-read-surface/tasks.md",
+    "docs/beacon/v0.0.3/features/beacon-read-surface/evidence.md"
+  ]
+}

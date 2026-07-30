@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "artifact": "qa_acceptance_envelope",
+  "version": "v0.0.3",
+  "feature": "nl-intent-envelope",
+  "feature_slug": "nl-intent-envelope",
+  "revision_id": "R1",
+  "verdict": "passed",
+  "accepted_at": "2026-07-30T07:54:51.638503+00:00",
+  "accepted_by": "qa",
+  "run_id": "run-20260730T155447158643",
+  "transaction_id": "tx-qa-acceptance-nl-intent-envelope-167454ddd534",
+  "source_hash": "sha256:167454ddd5348a04176225becd50d32655d17ff900810d53d4dcbc3db825a4b8",
+  "projection_seq": 1,
+  "source_command": "beacon qa run \"nl-intent-envelope\" --project-root /Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.3/nl-intent-envelope --version v0.0.3",
+  "requirement_refs": [
+    "docs/beacon/v0.0.3/features/nl-intent-envelope/truth.md",
+    "docs/beacon/v0.0.3/features/nl-intent-envelope/truth.md",
+    "docs/beacon/v0.0.3/features/nl-intent-envelope/tests.md",
+    "docs/beacon/v0.0.3/.machine/execution/nl-intent-envelope.revision.json"
+  ],
+  "test_case_refs": [],
+  "evidence_refs": [
+    ".beacon/auto-test-status.json",
+    ".beacon/qa/status.json",
+    ".beacon/coverage-summary.json",
+    ".beacon/release-gate-report.json"
+  ],
+  "story_status": "implemented",
+  "revision_delivery_status": "implemented",
+  "required_ac_count": 0,
+  "required_test_count": 0,
+  "canonical_envelope_ref": "docs/beacon/v0.0.3/.machine/execution/qa-acceptance-nl-intent-envelope.json",
+  "markdown_ref": "docs/beacon/v0.0.3/execution/qa-acceptance-brief-nl-intent-envelope.md",
+  "transaction_lineage": {
+    "current_transaction_id": "tx-qa-acceptance-nl-intent-envelope-167454ddd534",
+    "projection_seq": 1,
+    "source_hash": "sha256:167454ddd5348a04176225becd50d32655d17ff900810d53d4dcbc3db825a4b8",
+    "workflow_memory_ref": ".beacon/memory/workflow-lifecycle.json",
+    "memory_event_id": "",
+    "memory_entry_id": "91544baa-48bb-4175-978d-c39254c09289"
+  },
+  "sink_checksums": {
+    "machine": "sha256:64be707c47952fc1917253caf04917ad85f7f17470ca8dec8d1deebebb113bb2",
+    "human": "sha256:bf10ecc3d44367cabffd901533f645d5a921df97bb698343ef0d04e7948a7305",
+    "runtime": "sha256:452c74d7f91c804349c31f3c8ccaf11cd0fe86542e184ce8f5c2e6ba536ad8b0"
+  },
+  "runtime_projection_ref": ".beacon/transactions/qa-acceptance-nl-intent-envelope.json",
+  "transaction_status": "applied",
+  "failed_sinks": []
+}

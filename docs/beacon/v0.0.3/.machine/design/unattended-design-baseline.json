@@ -1,0 +1,151 @@
+{
+  "schema_version": "1.0",
+  "version": "v0.0.3",
+  "status": "ready",
+  "mode": "baseline",
+  "preset": "editorial-calm",
+  "preset_label": "Editorial Calm",
+  "preset_source": "apple+vercel hybrid",
+  "surface": "web",
+  "surface_decision": {
+    "surface": "web",
+    "label": "Web Product / Marketing-capable",
+    "preset": "restrained-product",
+    "reason": "explicit",
+    "scores": {},
+    "hits": []
+  },
+  "company_template": {
+    "company_template": "notion",
+    "label": "Notion-inspired knowledge surface",
+    "inspired_by": "notion",
+    "default_surface": "web",
+    "default_preset": "editorial-calm",
+    "colors": {
+      "primary": "#2383e2",
+      "on-primary": "#ffffff",
+      "secondary": "#787774",
+      "neutral": "#ffffff",
+      "canvas": "#ffffff",
+      "border": "#e3e2e0",
+      "danger": "#eb5757",
+      "success": "#0f7b6c",
+      "warning": "#d9730d",
+      "ink": "#37352f"
+    },
+    "reason": "keyword hits: docs, 知识库, 文档",
+    "scores": {
+      "vercel": 1,
+      "stripe": 0.5,
+      "linear": 0,
+      "notion": 3.5,
+      "figma": 0,
+      "apple": 0.5,
+      "shopify": 0,
+      "airbnb": 0.5,
+      "slack": 1,
+      "ibm": 0
+    },
+    "hits": [
+      "docs",
+      "知识库",
+      "文档"
+    ],
+    "catalog_size": 10
+  },
+  "visual_delivery_claimed": false,
+  "ux_signals": [],
+  "open_source_ui_agent_principles": {
+    "vibe-to-ui": {
+      "routes": [
+        "explore",
+        "extract"
+      ],
+      "absorbed_into": [
+        "information_hierarchy",
+        "layout_models",
+        "first_screen_intent"
+      ],
+      "execution_kind": "execution-capable"
+    },
+    "ui-ux-pro-max": {
+      "routes": [
+        "system"
+      ],
+      "absorbed_into": [
+        "tokens",
+        "component_system",
+        "states",
+        "responsive",
+        "accessibility"
+      ],
+      "execution_kind": "execution-capable"
+    },
+    "impeccable": {
+      "routes": [
+        "review",
+        "polish"
+      ],
+      "absorbed_into": [
+        "spacing",
+        "focus_visibility",
+        "microcopy",
+        "ship_readiness",
+        "anti_ai_ui"
+      ],
+      "execution_kind": "execution-capable"
+    },
+    "awesome-design-md": {
+      "routes": [
+        "library"
+      ],
+      "absorbed_into": [
+        "pattern_references_only"
+      ],
+      "execution_kind": "reference-only"
+    }
+  },
+  "tokens": {
+    "source": "apple+vercel hybrid",
+    "label": "Editorial Calm",
+    "bg": "#ffffff",
+    "fg": "#222222",
+    "card": "#ffffff",
+    "border": "#e3e2e0",
+    "muted": "#787774",
+    "primary": "#2383e2",
+    "primary_fg": "#ffffff",
+    "danger": "#eb5757",
+    "success": "#0f7b6c",
+    "warning": "#d9730d",
+    "radius": "10px",
+    "font": "ui-sans-serif, system-ui, \"Iowan Old Style\", \"Palatino Linotype\", serif",
+    "density": "airy",
+    "preset": "editorial-calm",
+    "company_template": "notion",
+    "inspired_by": "notion"
+  },
+  "existing_design_preserved": false,
+  "writes": {
+    "design_truth": "written",
+    "version_contracts": {
+      "version_style": "written",
+      "component_system": "written",
+      "interaction_contract": "written",
+      "state_matrix": "written",
+      "machine_design_projection": "docs/beacon/v0.0.3/.machine/design/design-contract.projection.json"
+    },
+    "surface_example_pc-console": "written",
+    "surface_example_web": "written",
+    "surface_example_h5": "written",
+    "surface_example_client": "written"
+  },
+  "generated_at": "2026-07-30T07:49:57.902688Z",
+  "operator_next": {
+    "accept_baseline": "keep DESIGN.md / merge fine-tune-proposal sections",
+    "polish": "beacon design route polish \"<feature>\" --project /Users/apple/Developer/Personal/products/agent-delivery-bus --version v0.0.3 --json",
+    "system": "beacon design route system \"<feature>\" --project /Users/apple/Developer/Personal/products/agent-delivery-bus --version v0.0.3 --json",
+    "bind": "beacon prototype adapt \"<feature>\" --project /Users/apple/Developer/Personal/products/agent-delivery-bus --version v0.0.3 --design-result-ref <accepted>",
+    "implement_rule": "When DESIGN.md exists, implement must align tokens/components; freestyle UI is process drift"
+  }
+}

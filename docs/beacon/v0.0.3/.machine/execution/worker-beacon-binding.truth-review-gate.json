@@ -1,0 +1,158 @@
+{
+  "schema": "truth-review-gate.v1",
+  "schema_version": "1.0",
+  "feature": "worker-beacon-binding",
+  "version": "v0.0.3",
+  "pass": true,
+  "blocked": false,
+  "review_gate_pass": true,
+  "abc_pass": true,
+  "reason_code": "",
+  "domain_required": true,
+  "checks": {
+    "A_intent_coverage": {
+      "pass": true,
+      "check": "A",
+      "name": "intent_coverage",
+      "required": true,
+      "matrix_rows": 5,
+      "missing_must": [],
+      "reason": "",
+      "findings": [],
+      "matrix": [
+        {
+          "intent_id": "INT-001",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-WRK-001",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-002",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-WRK-002",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-003",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-WRK-003",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-004",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-WRK-004",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-005",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-WRK-005",
+          "status": "covered"
+        }
+      ]
+    },
+    "B_fsm_audit": {
+      "pass": true,
+      "check": "B",
+      "name": "fsm_audit",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "fsm": {
+        "transition_count": 4,
+        "from_states": [
+          "binding",
+          "idle",
+          "queued"
+        ],
+        "hanging_states": [],
+        "terminals": [
+          "blocked",
+          "reconciling"
+        ],
+        "illegal_present": true,
+        "five_tuple_present": true
+      }
+    },
+    "C_testability": {
+      "pass": true,
+      "check": "C",
+      "name": "testability",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "ac_count": 5,
+      "tc_count": 7,
+      "missing_ac": [],
+      "covered": {
+        "AC-WRK-001": [
+          "TC-WRK-001"
+        ],
+        "AC-WRK-002": [
+          "TC-WRK-002"
+        ],
+        "AC-WRK-003": [
+          "TC-WRK-003"
+        ],
+        "AC-WRK-004": [
+          "TC-WRK-004",
+          "TC-WRK-ILL-001"
+        ],
+        "AC-WRK-005": [
+          "TC-WRK-005",
+          "TC-WRK-ILL-002"
+        ]
+      }
+    },
+    "C_domain_exec_layer": {
+      "pass": true,
+      "check": "C_exec",
+      "name": "domain_exec_layer",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "exec_tc_count": 7,
+      "exec_tc_ids": [
+        "TC-WRK-001",
+        "TC-WRK-002",
+        "TC-WRK-003",
+        "TC-WRK-004",
+        "TC-WRK-005",
+        "TC-WRK-ILL-001",
+        "TC-WRK-ILL-002"
+      ],
+      "domain_kind": "business"
+    },
+    "D_fill_depth": {
+      "pass": true,
+      "check": "D",
+      "name": "fill_depth",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "package_maturity": "filled",
+      "domain_kind": "business",
+      "business_domain": true
+    }
+  },
+  "findings": [],
+  "humanizer": {
+    "rule": "humanizer_only_after_abc_pass_before_freeze",
+    "abc_pass": true,
+    "allowed_now": true,
+    "fill_depth_pass": true,
+    "note": "Polish L0/narrative only after A/B/C; preserve_machine_fields=true; freeze needs D+exec too"
+  },
+  "evaluated_at": "2026-07-30T07:32:30.697813+00:00",
+  "paths": {
+    "truth": "docs/beacon/v0.0.3/features/worker-beacon-binding/truth.md",
+    "tests": "docs/beacon/v0.0.3/features/worker-beacon-binding/tests.md",
+    "report": "docs/beacon/v0.0.3/.machine/execution/worker-beacon-binding.truth-review-gate.json"
+  }
+}

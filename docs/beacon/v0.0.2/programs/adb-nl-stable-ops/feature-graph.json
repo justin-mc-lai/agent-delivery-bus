@@ -1,0 +1,216 @@
+{
+  "schema_version": "1.0",
+  "program_slug": "adb-nl-stable-ops",
+  "version": "v0.0.3",
+  "version_status": "proposed",
+  "scope_mode": "phased_full",
+  "approach": "B-intent-cli-thin-skill",
+  "first_lake": "nl-intent-envelope",
+  "status": "acked",
+  "ack_ref": "user-ack-三节-2026-07-30",
+  "baseline_lakes": [
+    {
+      "slug": "delivery-bus-mvp",
+      "version": "v0.0.1",
+      "status": "shipped",
+      "role": "control_plane_baseline"
+    },
+    {
+      "slug": "memory-adapter-auto-assign",
+      "version": "v0.0.2",
+      "status": "shipped",
+      "role": "memory_assign_baseline"
+    }
+  ],
+  "waves": [
+    {
+      "wave": 1,
+      "name": "intent-foundation",
+      "lakes": ["nl-intent-envelope"]
+    },
+    {
+      "wave": 2,
+      "name": "execution-and-read-surfaces",
+      "lakes": ["worker-beacon-binding", "kanban-ops-nl", "beacon-read-surface"],
+      "parallel": true
+    },
+    {
+      "wave": 3,
+      "name": "periodic-feedback",
+      "lakes": ["ops-digest-cron"]
+    },
+    {
+      "wave": 4,
+      "name": "knowledge-support",
+      "lakes": ["knowledge-curation-digest"],
+      "support_surface": true
+    }
+  ],
+  "lakes": [
+    {
+      "slug": "nl-intent-envelope",
+      "title": "自然语言意图信封",
+      "wave": 1,
+      "depends_on": ["delivery-bus-mvp", "memory-adapter-auto-assign"],
+      "parity_subset": [
+        "intent-parse-cli",
+        "intent-envelope-schema",
+        "alias-resolve-fail-closed",
+        "ambiguity-reason-codes",
+        "hermes-skill-confirm-gate",
+        "assign-candidates-bridge",
+        "pytest-intent-contract"
+      ],
+      "in_scope": [
+        "NL/飞书话术 → IntentEnvelope",
+        "项目歧义拒绝与 resume_action",
+        "薄 Hermes skill：先 parse 再确认再调 ADB",
+        "与现有 approve/dispatch 结构化参数对齐"
+      ],
+      "out_of_scope": [
+        "自动跳过确认直接 dispatch",
+        "ADB 内嵌 NLU 模型服务",
+        "飞书 OpenAPI 直推"
+      ],
+      "status": "planned_first",
+      "recommended_delivery_version": "v0.0.3"
+    },
+    {
+      "slug": "worker-beacon-binding",
+      "title": "Hermes Worker ↔ Beacon Skill 绑定",
+      "wave": 2,
+      "depends_on": ["nl-intent-envelope"],
+      "parity_subset": [
+        "stage-to-skill-map",
+        "codex-or-coding-runner-profile",
+        "task-body-contract",
+        "workspace-admission-hook",
+        "plan-stage-binding",
+        "goal-stage-binding"
+      ],
+      "in_scope": [
+        "dispatch 后 Hermes task 明确调用 Beacon skill（至少 plan）",
+        "本机 agent runner 约定（Codex/coding profile）",
+        "admission 失败 fail-closed"
+      ],
+      "out_of_scope": [
+        "Orca 主调度器替换 Hermes",
+        "自动 release",
+        "绕过 approve 的 implement/freeze"
+      ],
+      "deferrals": [
+        {
+          "item": "goal-stage-binding",
+          "default": "phase_later",
+          "note": "是否把 goal 升为 ENABLED_STAGES 一等公民待 P4 ack；默认先做 plan 绑定"
+        }
+      ],
+      "status": "planned",
+      "recommended_delivery_version": "v0.0.3"
+    },
+    {
+      "slug": "kanban-ops-nl",
+      "title": "Kanban 运维与表格反馈",
+      "wave": 2,
+      "depends_on": ["nl-intent-envelope"],
+      "parity_subset": [
+        "fleet-table-contract",
+        "boards-status-nl-actions",
+        "awaiting-approvals-table",
+        "hermes-public-cli-only"
+      ],
+      "in_scope": [
+        "NL → fleet/boards/approvals 查询与只读运维",
+        "稳定表格/JSON 反馈契约"
+      ],
+      "out_of_scope": [
+        "读写 Hermes 私有 SQLite",
+        "Web UI"
+      ],
+      "status": "planned",
+      "recommended_delivery_version": "v0.0.3"
+    },
+    {
+      "slug": "beacon-read-surface",
+      "title": "Beacon 版本与最新需求只读面",
+      "wave": 2,
+      "depends_on": ["nl-intent-envelope"],
+      "parity_subset": [
+        "version-list-summary",
+        "latest-requirement-digest",
+        "beacon-public-cli-only"
+      ],
+      "in_scope": [
+        "按项目查询 docs version / 最新 feature 需求摘要",
+        "经 Beacon 公开 CLI；结果可进 Intent action=beacon_status"
+      ],
+      "out_of_scope": [
+        "改写 truth / freeze",
+        "把 Beacon 私库当权威"
+      ],
+      "status": "planned",
+      "recommended_delivery_version": "v0.0.3"
+    },
+    {
+      "slug": "ops-digest-cron",
+      "title": "定期进度看板 Digest",
+      "wave": 3,
+      "depends_on": ["kanban-ops-nl", "beacon-read-surface"],
+      "parity_subset": [
+        "hermes-cron-job-template",
+        "digest-render-fleet-plus-awaiting",
+        "feishu-payload-handoff",
+        "digest-idempotency"
+      ],
+      "in_scope": [
+        "Hermes cron 定期跑 digest 命令",
+        "汇总 fleet + 待拍板 +（可选）beacon 摘要",
+        "产出飞书可发送载荷（不强制 ADB 直连飞书 API）"
+      ],
+      "out_of_scope": [
+        "ADB 进程内嵌 cron daemon",
+        "自动根据 digest 派工"
+      ],
+      "status": "planned",
+      "recommended_delivery_version": "v0.0.4"
+    },
+    {
+      "slug": "knowledge-curation-digest",
+      "title": "知识库定期梳理反馈",
+      "wave": 4,
+      "depends_on": [],
+      "soft_depends_on": ["ops-digest-cron"],
+      "parity_subset": [
+        "brain-curation-job",
+        "curation-summary-payload",
+        "outside-adb-core"
+      ],
+      "in_scope": [
+        "Personal Brain + Hermes cron/skill 定期梳理摘要"
+      ],
+      "out_of_scope": [
+        "知识正文写入 ADB SQLite",
+        "灵感直接变 software truth"
+      ],
+      "support_surface": true,
+      "status": "planned_deferrable",
+      "recommended_delivery_version": "v0.0.4+"
+    }
+  ],
+  "edges": [
+    {"from": "delivery-bus-mvp", "to": "nl-intent-envelope", "type": "baseline"},
+    {"from": "memory-adapter-auto-assign", "to": "nl-intent-envelope", "type": "baseline"},
+    {"from": "nl-intent-envelope", "to": "worker-beacon-binding", "type": "hard"},
+    {"from": "nl-intent-envelope", "to": "kanban-ops-nl", "type": "hard"},
+    {"from": "nl-intent-envelope", "to": "beacon-read-surface", "type": "hard"},
+    {"from": "kanban-ops-nl", "to": "ops-digest-cron", "type": "hard"},
+    {"from": "beacon-read-surface", "to": "ops-digest-cron", "type": "hard"},
+    {"from": "ops-digest-cron", "to": "knowledge-curation-digest", "type": "soft"}
+  ],
+  "topology_ascii": [
+    " [v0.0.1 delivery-bus-mvp]──┐",
+    "                            ├─► nl-intent-envelope ─┬─► worker-beacon-binding",
+    " [v0.0.2 memory-adapter…]───┘                      ├─► kanban-ops-nl ──┐",
+    "                                                   └─► beacon-read-surface ─┴─► ops-digest-cron ╌╌► knowledge-curation-digest"
+  ]
+}
