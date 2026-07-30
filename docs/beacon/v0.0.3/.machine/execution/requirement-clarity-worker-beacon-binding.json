@@ -27,7 +27,7 @@
     "review_gates": [],
     "qa_coverage_hints": [],
     "evidence_lines": {},
-    "generated_at": "2026-07-30T07:32:31.367656+00:00",
+    "generated_at": "2026-07-30T09:09:09.874662+00:00",
     "feature": "worker-beacon-binding",
     "feature_slug": "worker-beacon-binding",
     "prd_ref": "docs/beacon/v0.0.3/prd/worker-beacon-binding.md",

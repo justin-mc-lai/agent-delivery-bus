@@ -1,18 +1,18 @@
 {
   "schema_version": "1.0",
-  "feature": "nl-intent-envelope",
-  "feature_slug": "nl-intent-envelope",
+  "feature": "worker-beacon-binding",
+  "feature_slug": "worker-beacon-binding",
   "version": "v0.0.3",
   "status": "pass",
   "blocked": false,
   "reason_code": "",
-  "generated_at": "2026-07-30T07:54:27.294877+00:00",
-  "package_dir": "docs/beacon/v0.0.3/features/nl-intent-envelope",
+  "generated_at": "2026-07-30T09:18:41.787350+00:00",
+  "package_dir": "docs/beacon/v0.0.3/features/worker-beacon-binding",
   "truth_frontmatter": {
-    "slug": "nl-intent-envelope",
+    "slug": "worker-beacon-binding",
     "version": "v0.0.3",
     "status": "frozen",
-    "revision_id": "R2",
+    "revision_id": "R1",
     "language": "zh",
     "domain_required": "true",
     "domain_kind": "business",
@@ -25,25 +25,20 @@
     "program": "adb-nl-stable-ops",
     "promotion_ref": "user-ack-三节-2026-07-30",
     "canonical_refs": {
-      "prd": "docs/beacon/v0.0.3/features/nl-intent-envelope/truth.md",
-      "user_story": "docs/beacon/v0.0.3/features/nl-intent-envelope/truth.md",
-      "test_case": "docs/beacon/v0.0.3/features/nl-intent-envelope/tests.md"
-    },
-    "provenance": {
-      "- ac_id": "AC-INT-003",
-      "source_type": "program_ack",
-      "source_ref": "user-ack-三节-2026-07-30 / feature-graph first lake"
+      "prd": "docs/beacon/v0.0.3/features/worker-beacon-binding/truth.md",
+      "user_story": "docs/beacon/v0.0.3/features/worker-beacon-binding/truth.md",
+      "test_case": "docs/beacon/v0.0.3/features/worker-beacon-binding/tests.md"
     }
   },
-  "ac_count": 7,
-  "test_count": 10,
-  "checkbox_count": 9,
-  "evidence_row_count": 5,
+  "ac_count": 5,
+  "test_count": 7,
+  "checkbox_count": 7,
+  "evidence_row_count": 4,
   "gate_authority": "canonical_surfaces_preserved",
   "checkbox_gate_bypass": false,
   "task_evidence_gate": {
     "pass": true,
-    "checked_ok": 9,
+    "checked_ok": 7,
     "checked_bad": 0,
     "unbound": 0,
     "findings": [],

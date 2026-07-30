@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "feature": "worker-beacon-binding",
+  "status": "pass",
+  "at": "2026-07-30T09:17:11.686746+00:00",
+  "checks": [
+    "truth_frozen",
+    "truth_review_pass",
+    "tests_declared",
+    "workspace_admitted",
+    "worker_binding_module",
+    "contract_tests_pass"
+  ],
+  "refs": {
+    "revision": "docs/beacon/v0.0.3/.machine/execution/worker-beacon-binding.revision.json",
+    "truth_review": "docs/beacon/v0.0.3/.machine/execution/worker-beacon-binding.truth-review-gate.json",
+    "admission": ".beacon/state/workspace-admission/v0.0.3/worker-beacon-binding.json",
+    "junit": ".beacon/junit.xml"
+  }
+}

@@ -25,6 +25,16 @@ Beacon and Hermes are example adapters. Replace them without changing the ledger
 - `freeze`: approval required; truth-canonical branch rules still apply.
 - `release`: approval tokens can be issued for future compatibility, but dispatch is disabled and must return `stage_not_enabled`.
 
+## Worker ↔ Beacon binding (task body)
+
+Successful `adb dispatch` Hermes task bodies include a `### Beacon worker binding` section with:
+
+- `stage` → `beacon_skill` / `public_harness` / `beacon_command` (at least `plan` → `beacon-plan`)
+- `runner_kind: local_agent` with Hermes `coding` profile (or explicit `codex` / equivalent); `cloud_scheduler_forbidden: true`
+- Enabled stages: `plan`, `implement`, `qa`, `freeze`. `goal` is deferred (`goal_stage_deferred`) until an explicit promote/change.
+
+Binding never bypasses approval for restricted stages, and admission/preflight failures must not create executor tasks.
+
 ## Preflight
 
 Core preflight is read-only and always checks:

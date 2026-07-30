@@ -149,7 +149,7 @@
     "fill_depth_pass": true,
     "note": "Polish L0/narrative only after A/B/C; preserve_machine_fields=true; freeze needs D+exec too"
   },
-  "evaluated_at": "2026-07-30T07:32:30.697813+00:00",
+  "evaluated_at": "2026-07-30T09:20:47.502079+00:00",
   "paths": {
     "truth": "docs/beacon/v0.0.3/features/worker-beacon-binding/truth.md",
     "tests": "docs/beacon/v0.0.3/features/worker-beacon-binding/tests.md",

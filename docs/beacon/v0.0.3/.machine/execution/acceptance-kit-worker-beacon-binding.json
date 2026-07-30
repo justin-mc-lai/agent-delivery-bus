@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "feature": "worker-beacon-binding",
+  "feature_slug": "worker-beacon-binding",
+  "version": "v0.0.3",
+  "verdict": "passed",
+  "layers": {
+    "skill-contract": {
+      "status": "pass",
+      "source_truth_ref": "docs/beacon/v0.0.3/features/worker-beacon-binding/truth.md",
+      "evidence_ref": "docs/beacon/v0.0.3/.machine/execution/qa-acceptance-worker-beacon-binding.json"
+    },
+    "scenario-suite": {
+      "status": "pass",
+      "source_truth_ref": "docs/beacon/v0.0.3/features/worker-beacon-binding/truth.md",
+      "evidence_ref": "docs/beacon/v0.0.3/execution/qa-acceptance-brief-worker-beacon-binding.md"
+    },
+    "trace-scorecard": {
+      "status": "pass",
+      "source_truth_ref": "docs/beacon/v0.0.3/features/worker-beacon-binding/tests.md",
+      "evidence_ref": "docs/beacon/v0.0.3/features/worker-beacon-binding/tests.md"
+    },
+    "real-project-proof": {
+      "status": "pass",
+      "source_truth_ref": ".beacon/transactions/qa-acceptance-worker-beacon-binding.json",
+      "evidence_ref": ".beacon/transactions/qa-acceptance-worker-beacon-binding.json"
+    }
+  },
+  "real_project_proof": {
+    "status": "pass",
+    "evidence_refs": [
+      ".beacon/transactions/qa-acceptance-worker-beacon-binding.json",
+      "docs/beacon/v0.0.3/execution/qa-acceptance-brief-worker-beacon-binding.md",
+      "docs/beacon/v0.0.3/.machine/execution/qa-acceptance-worker-beacon-binding.json",
+      ".beacon/auto-test-status.json",
+      ".beacon/qa/status.json",
+      ".beacon/coverage-summary.json",
+      ".beacon/release-gate-report.json"
+    ],
+    "source": "qa_acceptance_envelope"
+  },
+  "regression_pass": true
+}

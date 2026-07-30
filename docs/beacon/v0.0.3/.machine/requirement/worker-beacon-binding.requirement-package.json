@@ -1,0 +1,202 @@
+{
+  "schema_version": "1.0",
+  "truth_map_contract": "beacon-truth-map-v1",
+  "truth_source_model": "feature_package_authoritative",
+  "truth_package_contract": "beacon-feature-package-v2",
+  "machine_json_role": "generated_state_not_truth",
+  "generated_by": "beacon.truth_map.resolver",
+  "generated_at": "2026-07-30T09:21:40.419268+00:00",
+  "feature": "worker-beacon-binding",
+  "feature_slug": "worker-beacon-binding",
+  "version": "v0.0.3",
+  "truth_authority": false,
+  "json_authority": false,
+  "source_paths": {
+    "truth": "docs/beacon/v0.0.3/features/worker-beacon-binding/truth.md",
+    "tests": "docs/beacon/v0.0.3/features/worker-beacon-binding/tests.md",
+    "tasks": "docs/beacon/v0.0.3/features/worker-beacon-binding/tasks.md",
+    "evidence": "docs/beacon/v0.0.3/features/worker-beacon-binding/evidence.md"
+  },
+  "source_hashes": {
+    "truth": "b9f6ed27f05867ff0155c5edd0c9bdd4213de8a2b6055e4c4c72105f6bedc83c",
+    "tests": "9671c2ab4decdfde2def7c7024fcbcd4aba60327c161c54807f475c89449a622",
+    "tasks": "bb28ed334ac7ef88b80c24e595a85398d6dbb94df1fae05406693e9ca8f744ad",
+    "evidence": "78be6d39f9b52590f5d122f0e4e6edc923590e4c5205d3c0418071a428a1e1c8"
+  },
+  "truth_frontmatter": {
+    "slug": "worker-beacon-binding",
+    "version": "v0.0.3",
+    "status": "frozen",
+    "revision_id": "R1",
+    "language": "zh",
+    "domain_required": "true",
+    "domain_kind": "business",
+    "ux_required": "false",
+    "package_maturity": "filled",
+    "parser_contract": "beacon-feature-package-v2",
+    "materials_status": "current",
+    "truth_source_model": "intent_first",
+    "git_canonical_branch": "main",
+    "program": "adb-nl-stable-ops",
+    "promotion_ref": "user-ack-三节-2026-07-30",
+    "canonical_refs": {
+      "prd": "docs/beacon/v0.0.3/features/worker-beacon-binding/truth.md",
+      "user_story": "docs/beacon/v0.0.3/features/worker-beacon-binding/truth.md",
+      "test_case": "docs/beacon/v0.0.3/features/worker-beacon-binding/tests.md"
+    }
+  },
+  "frontmatter_errors": [],
+  "acceptance_criteria": [
+    {
+      "ac_id": "AC-WRK-001",
+      "theme": "dispatch 创建的 Hermes task body 含 stage→Beacon skill/命令绑定字段（至少 plan）",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-WRK-002",
+      "theme": "runner 约定使用 Hermes coding profile 或显式 Codex/等价本机 agent，不得假定云端集群调度器",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-WRK-003",
+      "theme": "workspace admission/预检失败时不得创建成功派工；返回稳定 reason_code",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-WRK-004",
+      "theme": "implement/freeze 仍要求既有 approve token；绑定层不得绕过",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-WRK-005",
+      "theme": "goal-stage-binding 默认 defer：未升格前 ENABLED_STAGES 不含 goal，或显式 blocked reason",
+      "description": ""
+    }
+  ],
+  "test_rows": [
+    {
+      "ac_id": "AC-WRK-001",
+      "tc_id": "TC-WRK-001",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_worker_binding.py -k task_body_plan --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；task body 含 plan skill 绑定",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-WRK-002",
+      "tc_id": "TC-WRK-002",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_worker_binding.py -k runner_profile --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；runner profile 显式",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-WRK-003",
+      "tc_id": "TC-WRK-003",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_worker_binding.py -k admission_fail_closed --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；admission 失败 blocked",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-WRK-004",
+      "tc_id": "TC-WRK-004",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_worker_binding.py -k approve_still_required --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；受限阶段仍要 token",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-WRK-005",
+      "tc_id": "TC-WRK-005",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_worker_binding.py -k goal_deferred --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；goal 未升格时拒绝或 defer reason",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-WRK-004",
+      "tc_id": "TC-WRK-ILL-001",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_worker_binding.py -k illegal_skip_approve --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；非法绕过 approve fail-closed",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-WRK-005",
+      "tc_id": "TC-WRK-ILL-002",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_worker_binding.py -k illegal_goal_enable --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；未升格启用 goal 非法",
+      "evidence_path": ""
+    }
+  ],
+  "task_rows": [
+    {
+      "id": "TASK-001",
+      "title": "Implement AC-WRK-001: dispatch 创建的 Hermes task body 含 stage→Beacon skill/命令绑定字段（至少 plan） · ac=AC-WRK-001 · evidence=`.beacon/evidence/implement/worker-beacon-binding/AC-WRK-001.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-002",
+      "title": "Implement AC-WRK-002: runner 约定使用 Hermes coding profile 或显式 Codex/等价本机 agent，不得假定云端集群调度器 · ac=AC-WRK-002 · evidence=`.beacon/evidence/implement/worker-beacon-binding/AC-WRK-002.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-003",
+      "title": "Implement AC-WRK-003: workspace admission/预检失败时不得创建成功派工；返回稳定 reason_code · ac=AC-WRK-003 · evidence=`.beacon/evidence/implement/worker-beacon-binding/AC-WRK-003.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-004",
+      "title": "Implement AC-WRK-004: implement/freeze 仍要求既有 approve token；绑定层不得绕过 · ac=AC-WRK-004 · evidence=`.beacon/evidence/implement/worker-beacon-binding/AC-WRK-004.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-005",
+      "title": "Implement AC-WRK-005: goal-stage-binding 默认 defer：未升格前 ENABLED_STAGES 不含 goal，或显式 blocked r... · ac=AC-WRK-005 · evidence=`.beacon/evidence/implement/worker-beacon-binding/AC-WRK-005.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-006",
+      "title": "Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/worker-beacon-binding/GATES.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-007",
+      "title": "Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/worker-beacon-binding/QA-MATRIX.json`",
+      "status": "checked"
+    }
+  ],
+  "checkbox_errors": [],
+  "evidence_rows": [
+    {
+      "surface": "truth",
+      "authority": "requirement_truth",
+      "canonical_artifact": "docs/beacon/v0.0.3/features/worker-beacon-binding/truth.md",
+      "status": "frozen",
+      "route": "truth"
+    },
+    {
+      "surface": "tests",
+      "authority": "test_truth",
+      "canonical_artifact": "docs/beacon/v0.0.3/features/worker-beacon-binding/tests.md",
+      "status": "current",
+      "route": "qa"
+    },
+    {
+      "surface": "implement",
+      "authority": "support_advisory",
+      "canonical_artifact": ".beacon/evidence/implement/worker-beacon-binding/",
+      "status": "ready",
+      "route": "implement"
+    },
+    {
+      "surface": "qa",
+      "authority": "qa_verdict",
+      "canonical_artifact": ".beacon/evidence/qa-feature/worker-beacon-binding/",
+      "status": "passed",
+      "route": "qa"
+    }
+  ]
+}

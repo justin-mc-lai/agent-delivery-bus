@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "feature": "worker-beacon-binding",
+  "feature_slug": "worker-beacon-binding",
+  "version": "v0.0.3",
+  "revision_id": "R1",
+  "source_revision_id": "",
+  "reason": "freeze",
+  "doc_status": "frozen",
+  "delivery_status": "accepted",
+  "lifecycle_status": "accepted",
+  "baseline_hash": "sha256:7b2c84aba133e1ba7aed9ecbfadc702418e77f566ea8cd3500c941f805da7270",
+  "superseded_by": "",
+  "created_at": "2026-07-30T09:09:10.083382+00:00",
+  "frozen_at": "2026-07-30T09:09:10.083987+00:00",
+  "accepted_at": "2026-07-30T09:20:52.131885+00:00",
+  "last_implementation_run_id": "run-20260730T092011Z-1d16",
+  "changed_files": [
+    "src/agent_delivery_bus/worker_binding.py",
+    "src/agent_delivery_bus/service.py",
+    "tests/test_worker_binding.py",
+    "tests/helpers.py",
+    "skills/agent-delivery-bus/SKILL.md",
+    "skills/agent-delivery-bus/references/contracts.md",
+    "src/agent_delivery_bus"
+  ],
+  "last_verification_run_id": "run-20260730T172048551452",
+  "verification_evidence": [
+    ".beacon/auto-test-status.json",
+    ".beacon/qa/status.json",
+    ".beacon/coverage-summary.json",
+    ".beacon/release-gate-report.json"
+  ],
+  "accepted_by": "qa"
+}

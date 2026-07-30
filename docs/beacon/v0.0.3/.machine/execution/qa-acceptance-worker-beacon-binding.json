@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "artifact": "qa_acceptance_envelope",
+  "version": "v0.0.3",
+  "feature": "worker-beacon-binding",
+  "feature_slug": "worker-beacon-binding",
+  "revision_id": "R1",
+  "verdict": "passed",
+  "accepted_at": "2026-07-30T09:20:52.131885+00:00",
+  "accepted_by": "qa",
+  "run_id": "run-20260730T172048551452",
+  "transaction_id": "tx-qa-acceptance-worker-beacon-binding-4bf632a021cc",
+  "source_hash": "sha256:4bf632a021ccc82ad615707725b8b84b2834eb590b18e29e4d81b43918841551",
+  "projection_seq": 1,
+  "source_command": "beacon qa run \"worker-beacon-binding\" --project-root /Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.3/worker-beacon-binding --version v0.0.3",
+  "requirement_refs": [
+    "docs/beacon/v0.0.3/features/worker-beacon-binding/truth.md",
+    "docs/beacon/v0.0.3/features/worker-beacon-binding/truth.md",
+    "docs/beacon/v0.0.3/features/worker-beacon-binding/tests.md",
+    "docs/beacon/v0.0.3/.machine/execution/worker-beacon-binding.revision.json"
+  ],
+  "test_case_refs": [],
+  "evidence_refs": [
+    ".beacon/auto-test-status.json",
+    ".beacon/qa/status.json",
+    ".beacon/coverage-summary.json",
+    ".beacon/release-gate-report.json"
+  ],
+  "story_status": "implemented",
+  "revision_delivery_status": "implemented",
+  "required_ac_count": 0,
+  "required_test_count": 0,
+  "canonical_envelope_ref": "docs/beacon/v0.0.3/.machine/execution/qa-acceptance-worker-beacon-binding.json",
+  "markdown_ref": "docs/beacon/v0.0.3/execution/qa-acceptance-brief-worker-beacon-binding.md",
+  "transaction_lineage": {
+    "current_transaction_id": "tx-qa-acceptance-worker-beacon-binding-4bf632a021cc",
+    "projection_seq": 1,
+    "source_hash": "sha256:4bf632a021ccc82ad615707725b8b84b2834eb590b18e29e4d81b43918841551",
+    "workflow_memory_ref": ".beacon/memory/workflow-lifecycle.json",
+    "memory_event_id": "",
+    "memory_entry_id": "f1cf46d0-82d8-4b86-86f2-82e64931ed52"
+  },
+  "sink_checksums": {
+    "machine": "sha256:6a63a48a2514384f11c26172c694050f445cc14e80697549f51a69dcdd943430",
+    "human": "sha256:c2a4d51a7c0b9a8c08971202fbc41bec29d83ca8a8f3a6cf547e4b4992472ece",
+    "runtime": "sha256:43abc42fd33c1b0dc94eabdabd0814a7c0cadfeed4095b5579533c44493d450a"
+  },
+  "runtime_projection_ref": ".beacon/transactions/qa-acceptance-worker-beacon-binding.json",
+  "transaction_status": "applied",
+  "failed_sinks": []
+}

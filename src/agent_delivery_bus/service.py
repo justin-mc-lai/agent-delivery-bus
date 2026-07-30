@@ -13,9 +13,14 @@ from .errors import CommandTimedOut, DeliveryBusError
 from .preflight import Preflight
 from .registry import Project, ProjectRegistry
 from .storage import Storage
+from .worker_binding import (
+    ENABLED_STAGES,
+    assert_stage_enabled,
+    format_binding_section,
+    resolve_worker_binding,
+)
 
 
-ENABLED_STAGES = {"plan", "implement", "qa", "freeze"}
 TERMINAL_EXECUTOR_SUCCESS = {"done", "completed", "success", "succeeded"}
 TERMINAL_EXECUTOR_FAILURE = {"blocked", "failed", "cancelled", "archived"}
 
@@ -43,6 +48,11 @@ def task_body(
     feature: str,
     memory_summary: str = "",
 ) -> str:
+    binding = resolve_worker_binding(
+        stage=stage,
+        feature=feature,
+        docs_version=project.docs_version or "",
+    )
     approval_note = (
         "A matching one-time approval was reserved by Agent Delivery Bus."
         if stage in RESTRICTED_STAGES
@@ -59,6 +69,8 @@ def task_body(
         "Run the project's governed workflow for this stage and preserve its delivery gates.",
         "Do not release, merge, push, or repair project context unless a separate human instruction explicitly authorizes it.",
         "Worker success is an execution receipt only; Agent Delivery Bus will reconcile truth-gate evidence separately.",
+        "",
+        format_binding_section(binding),
     ]
     if memory_summary.strip():
         lines.extend(["", "### Scoped memory recall", memory_summary.strip()])
@@ -145,18 +157,10 @@ class DeliveryService:
         project = self.registry.resolve(slug=project_slug)
         if not project.dispatchable:
             raise DeliveryBusError("project_not_dispatchable", f"Project {project.slug} is not dispatchable")
-        stage = stage.strip().lower()
         feature = feature.strip()
         if not feature:
             raise DeliveryBusError("feature_required", "feature is required")
-        if stage == "release":
-            raise DeliveryBusError(
-                "stage_not_enabled",
-                "Automatic release dispatch is disabled in v0.1.0",
-                resume_action=f"run release manually in {project.repo} after reviewing evidence",
-            )
-        if stage not in ENABLED_STAGES:
-            raise DeliveryBusError("stage_invalid", f"Unsupported stage: {stage}")
+        stage = assert_stage_enabled(stage)
 
         request = normalized_request(project, stage=stage, feature=feature)
         digest = request_digest(request)

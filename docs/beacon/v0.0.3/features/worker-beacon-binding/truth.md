@@ -1,7 +1,7 @@
 ---
 slug: worker-beacon-binding
 version: v0.0.3
-status: draft
+status: frozen
 revision_id: R1
 language: zh
 domain_required: true
@@ -138,6 +138,6 @@ goal 一等 stage；cron digest；知识库梳理；kanban 运维扩展。
 
 ## Freeze readiness
 
-- [x] Alignment / Phased / Deferral 无 pending
+- [x] Alignment / Phased / Deferral 无未决项
 - [x] FSM + Illegal 已具体化
 - [x] AC↔TC Command+Assertion 齐全
