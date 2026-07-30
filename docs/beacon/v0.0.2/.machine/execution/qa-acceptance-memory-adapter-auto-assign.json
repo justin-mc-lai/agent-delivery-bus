@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "artifact": "qa_acceptance_envelope",
+  "version": "v0.0.2",
+  "feature": "memory-adapter-auto-assign",
+  "feature_slug": "memory-adapter-auto-assign",
+  "revision_id": "R1",
+  "verdict": "passed",
+  "accepted_at": "2026-07-30T04:48:47.354310+00:00",
+  "accepted_by": "qa",
+  "run_id": "run-20260730T124843145906",
+  "transaction_id": "tx-qa-acceptance-memory-adapter-auto-assign-5d788da7d612",
+  "source_hash": "sha256:5d788da7d612fb63271e8417b8990a3f39edb33fcc000c8d14208fe985c96080",
+  "projection_seq": 1,
+  "source_command": "beacon qa run \"memory-adapter-auto-assign\" --project-root /Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.2/memory-adapter-auto-assign --version v0.0.2",
+  "requirement_refs": [
+    "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/truth.md",
+    "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/truth.md",
+    "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/tests.md",
+    "docs/beacon/v0.0.2/.machine/execution/memory-adapter-auto-assign.revision.json"
+  ],
+  "test_case_refs": [],
+  "evidence_refs": [
+    ".beacon/auto-test-status.json",
+    ".beacon/qa/status.json",
+    ".beacon/coverage-summary.json",
+    ".beacon/release-gate-report.json"
+  ],
+  "story_status": "implemented",
+  "revision_delivery_status": "implemented",
+  "required_ac_count": 0,
+  "required_test_count": 0,
+  "canonical_envelope_ref": "docs/beacon/v0.0.2/.machine/execution/qa-acceptance-memory-adapter-auto-assign.json",
+  "markdown_ref": "docs/beacon/v0.0.2/execution/qa-acceptance-brief-memory-adapter-auto-assign.md",
+  "transaction_lineage": {
+    "current_transaction_id": "tx-qa-acceptance-memory-adapter-auto-assign-5d788da7d612",
+    "projection_seq": 1,
+    "source_hash": "sha256:5d788da7d612fb63271e8417b8990a3f39edb33fcc000c8d14208fe985c96080",
+    "workflow_memory_ref": ".beacon/memory/workflow-lifecycle.json",
+    "memory_event_id": "",
+    "memory_entry_id": "fa18f4bc-b898-4840-85eb-6093e20cbad2"
+  },
+  "sink_checksums": {
+    "machine": "sha256:11103b842aace11d342a197642c1154a6bcbec22166b039e6a515f7bf4b3ec6e",
+    "human": "sha256:182ba9be4b3677f5bdfd5c2f0fb76220b85b24a0afa1442328881a318cc3ce58",
+    "runtime": "sha256:c92a324c1ca0f0b3b27208b0f9c4495884bc2f52d9fe6b7e634ebcf92c8e3c5b"
+  },
+  "runtime_projection_ref": ".beacon/transactions/qa-acceptance-memory-adapter-auto-assign.json",
+  "transaction_status": "applied",
+  "failed_sinks": []
+}

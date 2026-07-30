@@ -1,0 +1,780 @@
+{
+  "schema_version": "1.0",
+  "feature": "memory-adapter-auto-assign",
+  "feature_slug": "memory-adapter-auto-assign",
+  "version": "v0.0.2",
+  "runtime_version": "v1.6.11",
+  "runtime_capability_line": "v1.3.3",
+  "required": true,
+  "reason_code": "",
+  "blocked": false,
+  "status": "pass",
+  "findings": [],
+  "report_json_path": "docs/beacon/v0.0.2/.machine/execution/requirement-clarity-memory-adapter-auto-assign.json",
+  "report_markdown_path": "docs/beacon/v0.0.2/execution/requirement-clarity-memory-adapter-auto-assign.md",
+  "state_path": ".beacon/state/requirement-clarity-memory-adapter-auto-assign.json",
+  "diagram_truth": {
+    "schema_version": "1.0",
+    "version": "v0.0.2",
+    "supported": false,
+    "required": false,
+    "ready": false,
+    "diagram_types": [],
+    "state_axes": [],
+    "missing_diagram_types": [],
+    "missing_state_axes": false,
+    "complexity_signals": [],
+    "review_gates": [],
+    "qa_coverage_hints": [],
+    "evidence_lines": {},
+    "generated_at": "2026-07-30T04:04:11.860015+00:00",
+    "feature": "memory-adapter-auto-assign",
+    "feature_slug": "memory-adapter-auto-assign",
+    "prd_ref": "docs/beacon/v0.0.2/prd/memory-adapter-auto-assign.md",
+    "user_story_ref": "docs/beacon/v0.0.2/user-story/memory-adapter-auto-assign.md"
+  },
+  "domain_fsm_gate": {
+    "schema_version": "1.0",
+    "feature": "memory-adapter-auto-assign",
+    "feature_slug": "memory-adapter-auto-assign",
+    "version": "v0.0.2",
+    "truth_path": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/truth.md",
+    "tests_path": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/tests.md",
+    "required": true,
+    "blocked": false,
+    "status": "pass",
+    "reason_code": "",
+    "findings": [],
+    "requirement": {
+      "required": true,
+      "reason": "explicit_domain_mark",
+      "explicit": true,
+      "partial": true,
+      "complexity": false,
+      "business_signal": false,
+      "version_supported": false
+    },
+    "projection": {
+      "schema_version": "1.0",
+      "domain_fsm_schema": "domain-fsm.v1",
+      "entity_precedence_schema": "entity-precedence.v1",
+      "frontmatter": {
+        "slug": "memory-adapter-auto-assign",
+        "version": "v0.0.2",
+        "status": "draft",
+        "revision_id": "R2",
+        "language": "zh",
+        "domain_required": "true",
+        "domain_kind": "business",
+        "ux_required": "false",
+        "package_maturity": "filled",
+        "parser_contract": "beacon-feature-package-v2",
+        "materials_status": "current",
+        "truth_source_model": "intent_first",
+        "git_canonical_branch": "main",
+        "canonical_refs": {
+          "prd": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/truth.md",
+          "user_story": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/truth.md",
+          "test_case": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/tests.md"
+        },
+        "provenance": {
+          "- ac_id": "AC-MEM-007",
+          "source_type": "user_intent",
+          "source_ref": "拍板通过后允许项目内 agent 调度"
+        }
+      },
+      "frontmatter_errors": [],
+      "has_domain_model_section": true,
+      "has_domain_fsm_section": true,
+      "has_illegal_transition_section": true,
+      "entities": [
+        {
+          "entity": "MemoryScope",
+          "key": "project_slug, optional agent_id",
+          "precedence": "召回与写回必须绑定同一 project_slug；跨 slug 不可见",
+          "requires": "召回与写回必须绑定同一 project_slug；跨 slug 不可见"
+        },
+        {
+          "entity": "MemoryAdapter",
+          "key": "recall, writeback, health",
+          "precedence": "位于 adapters 层；核心 registry/storage/approvals 不得硬编码 agentmemory",
+          "requires": "位于 adapters 层；核心 registry/storage/approvals 不得硬编码 agentmemory"
+        },
+        {
+          "entity": "MemoryRecord",
+          "key": "scope, kind, payload, dispatch_id",
+          "precedence": "writeback 至少含 project/stage/feature/dispatch_id/reason_code",
+          "requires": "writeback 至少含 project/stage/feature/dispatch_id/reason_code"
+        },
+        {
+          "entity": "DispatchCandidate",
+          "key": "project, stage, feature, score, reasons",
+          "precedence": "仅候选；不得持有或消费 approve token；不得含 executor task_id",
+          "requires": "仅候选；不得持有或消费 approve token；不得含 executor task_id"
+        },
+        {
+          "entity": "AssignmentScorer",
+          "key": "rules, weights",
+          "precedence": "只产出 candidates 列表",
+          "requires": "只产出 candidates 列表"
+        },
+        {
+          "entity": "PendingApprovalView",
+          "key": "project, stage, feature, expires_at, actor_hint",
+          "precedence": "展示待拍板；不等于已授权",
+          "requires": "展示待拍板；不等于已授权"
+        },
+        {
+          "entity": "Approval",
+          "key": "token_hash, actor, project, stage, feature, expiry, state",
+          "precedence": "沿用现有 ApprovalService；一次性",
+          "requires": "沿用现有 ApprovalService；一次性"
+        },
+        {
+          "entity": "Dispatch",
+          "key": "id, state, approval_id, memory_injection_ref",
+          "precedence": "受限阶段必须 reserved token；recall 摘要可注入 body",
+          "requires": "受限阶段必须 reserved token；recall 摘要可注入 body"
+        }
+      ],
+      "entity_precedence": [
+        {
+          "entity": "MemoryScope",
+          "key": "project_slug, optional agent_id",
+          "precedence": "召回与写回必须绑定同一 project_slug；跨 slug 不可见",
+          "requires": "召回与写回必须绑定同一 project_slug；跨 slug 不可见"
+        },
+        {
+          "entity": "MemoryAdapter",
+          "key": "recall, writeback, health",
+          "precedence": "位于 adapters 层；核心 registry/storage/approvals 不得硬编码 agentmemory",
+          "requires": "位于 adapters 层；核心 registry/storage/approvals 不得硬编码 agentmemory"
+        },
+        {
+          "entity": "MemoryRecord",
+          "key": "scope, kind, payload, dispatch_id",
+          "precedence": "writeback 至少含 project/stage/feature/dispatch_id/reason_code",
+          "requires": "writeback 至少含 project/stage/feature/dispatch_id/reason_code"
+        },
+        {
+          "entity": "DispatchCandidate",
+          "key": "project, stage, feature, score, reasons",
+          "precedence": "仅候选；不得持有或消费 approve token；不得含 executor task_id",
+          "requires": "仅候选；不得持有或消费 approve token；不得含 executor task_id"
+        },
+        {
+          "entity": "AssignmentScorer",
+          "key": "rules, weights",
+          "precedence": "只产出 candidates 列表",
+          "requires": "只产出 candidates 列表"
+        },
+        {
+          "entity": "PendingApprovalView",
+          "key": "project, stage, feature, expires_at, actor_hint",
+          "precedence": "展示待拍板；不等于已授权",
+          "requires": "展示待拍板；不等于已授权"
+        },
+        {
+          "entity": "Approval",
+          "key": "token_hash, actor, project, stage, feature, expiry, state",
+          "precedence": "沿用现有 ApprovalService；一次性",
+          "requires": "沿用现有 ApprovalService；一次性"
+        },
+        {
+          "entity": "Dispatch",
+          "key": "id, state, approval_id, memory_injection_ref",
+          "precedence": "受限阶段必须 reserved token；recall 摘要可注入 body",
+          "requires": "受限阶段必须 reserved token；recall 摘要可注入 body"
+        }
+      ],
+      "aggregates": [
+        {
+          "name": "MemoryDispatch",
+          "states": [
+            "awaiting_human_approve",
+            "blocked",
+            "candidates_ready",
+            "completed",
+            "dispatch_authorized",
+            "dispatched",
+            "idle",
+            "recalling",
+            "writing_back"
+          ],
+          "transitions": [
+            {
+              "from": "",
+              "to": "idle",
+              "guard": "registry loaded",
+              "initial": "true"
+            },
+            {
+              "from": "idle",
+              "to": "candidates_ready",
+              "guard": "scorer produced zero-or-more candidates"
+            },
+            {
+              "from": "candidates_ready",
+              "to": "awaiting_human_approve",
+              "guard": "restricted stage or candidate selected"
+            },
+            {
+              "from": "idle",
+              "to": "awaiting_human_approve",
+              "guard": "restricted stage or candidate selected"
+            },
+            {
+              "from": "awaiting_human_approve",
+              "to": "dispatch_authorized",
+              "guard": "matching approve token issued"
+            },
+            {
+              "from": "dispatch_authorized",
+              "to": "recalling",
+              "guard": "preflight pass and token reserved"
+            },
+            {
+              "from": "recalling",
+              "to": "dispatched",
+              "guard": "acl_scope_ok and executor task created"
+            },
+            {
+              "from": "dispatched",
+              "to": "writing_back",
+              "guard": "executor terminal and reconcile evaluated"
+            },
+            {
+              "from": "writing_back",
+              "to": "completed",
+              "guard": "final state persisted"
+            },
+            {
+              "from": "awaiting_human_approve",
+              "to": "blocked",
+              "guard": "approval_required or memory_acl_denied or gate fail"
+            },
+            {
+              "from": "recalling",
+              "to": "blocked",
+              "guard": "approval_required or memory_acl_denied or gate fail"
+            },
+            {
+              "from": "writing_back",
+              "to": "blocked",
+              "guard": "approval_required or memory_acl_denied or gate fail"
+            }
+          ]
+        }
+      ],
+      "illegal_transition_slots": [
+        {
+          "description": "MemoryDispatch.candidates_ready → dispatched without approve (跳过 approve) · TC-MEM-ILL-001",
+          "aggregate": "MemoryDispatch",
+          "source": "truth"
+        },
+        {
+          "description": "MemoryDispatch.idle → dispatched without recall/preflight · TC-MEM-ILL-001",
+          "aggregate": "MemoryDispatch",
+          "source": "truth"
+        },
+        {
+          "description": "MemoryDispatch.awaiting_human_approve → completed · TC-MEM-ILL-001",
+          "aggregate": "MemoryDispatch",
+          "source": "truth"
+        },
+        {
+          "description": "MemoryDispatch.recalling → completed skipping executor/reconcile · TC-MEM-ILL-001",
+          "aggregate": "MemoryDispatch",
+          "source": "truth"
+        },
+        {
+          "description": "MemoryScope.cross_project → recall_success · TC-MEM-ILL-002",
+          "aggregate": "MemoryScope",
+          "source": "truth"
+        },
+        {
+          "description": "AssignmentScorer.score → consume_approval_token · TC-MEM-ILL-001",
+          "aggregate": "AssignmentScorer",
+          "source": "truth"
+        },
+        {
+          "description": "MemoryAdapter.writeback_failure → erase_reconcile_result · TC-MEM-ILL-002",
+          "aggregate": "MemoryAdapter",
+          "source": "truth"
+        }
+      ],
+      "acceptance_criteria": [
+        {
+          "ac_id": "AC-MEM-001",
+          "description": "提供位于 ADB 核心外的 MemoryAdapter SPI；dispatch 前按 project_slug 做 scoped recall，并将摘要注入 task body/上下文，不把 agentmemory 客户端嵌进 registry/storage/approvals 核心模块"
+        },
+        {
+          "ac_id": "AC-MEM-002",
+          "description": "reconcile 进入 completed/blocked 终态后调用 MemoryAdapter.writeback，写入含 project_slug/stage/feature/dispatch_id/reason_code 的证据记忆；写回失败不得抹掉 reconcile 主结果"
+        },
+        {
+          "ac_id": "AC-MEM-003",
+          "description": "跨项目 ACL：以项目 B scope 召回不得返回项目 A 写入的记忆；越权命中必须 fail-closed 并有可执行测试断言"
+        },
+        {
+          "ac_id": "AC-MEM-004",
+          "description": "自动分配：规则+评分器仅产出 dispatch candidates（含 score/reason），不得直接创建 executor task 或消费 approve 令牌"
+        },
+        {
+          "ac_id": "AC-MEM-005",
+          "description": "受限阶段派工仍必须经现有 ApprovalService.issue/reserve/finalize；候选转派工路径只能消费有效 approve token"
+        },
+        {
+          "ac_id": "AC-MEM-006",
+          "description": "提供 awaiting_approval / 待拍板列表（CLI/JSON），并可经 Hermes 飞书通道渲染待拍板事项（项目/阶段/feature/过期时间/actor 需求）"
+        },
+        {
+          "ac_id": "AC-MEM-007",
+          "description": "拍板签发有效令牌后，允许对该 project/stage/feature 执行 in-project agent dispatch；无令牌时保持 approval_required 阻断"
+        }
+      ],
+      "bound_ac_ids": [
+        "AC-MEM-001",
+        "AC-MEM-002",
+        "AC-MEM-004",
+        "AC-MEM-005",
+        "AC-MEM-006",
+        "AC-MEM-007"
+      ],
+      "orphan_ac_ids": [],
+      "aggregates_missing_illegal_slots": [],
+      "raw_section_titles": [
+        "人话",
+        "User Intent",
+        "User Intent Snapshot",
+        "用户旅程",
+        "失败旅程",
+        "Domain Model",
+        "Intent Coverage Matrix",
+        "Acceptance Criteria",
+        "Domain FSM — MemoryDispatch",
+        "FSM 五元组",
+        "Illegal transitions",
+        "Public CLI Contract",
+        "Non-goals",
+        "Freeze readiness"
+      ]
+    },
+    "validation": {
+      "schema_version": "1.0",
+      "required": true,
+      "blocked": false,
+      "status": "pass",
+      "reason_code": "",
+      "findings": [],
+      "projection": {
+        "schema_version": "1.0",
+        "domain_fsm_schema": "domain-fsm.v1",
+        "entity_precedence_schema": "entity-precedence.v1",
+        "frontmatter": {
+          "slug": "memory-adapter-auto-assign",
+          "version": "v0.0.2",
+          "status": "draft",
+          "revision_id": "R2",
+          "language": "zh",
+          "domain_required": "true",
+          "domain_kind": "business",
+          "ux_required": "false",
+          "package_maturity": "filled",
+          "parser_contract": "beacon-feature-package-v2",
+          "materials_status": "current",
+          "truth_source_model": "intent_first",
+          "git_canonical_branch": "main",
+          "canonical_refs": {
+            "prd": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/truth.md",
+            "user_story": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/truth.md",
+            "test_case": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/tests.md"
+          },
+          "provenance": {
+            "- ac_id": "AC-MEM-007",
+            "source_type": "user_intent",
+            "source_ref": "拍板通过后允许项目内 agent 调度"
+          }
+        },
+        "frontmatter_errors": [],
+        "has_domain_model_section": true,
+        "has_domain_fsm_section": true,
+        "has_illegal_transition_section": true,
+        "entities": [
+          {
+            "entity": "MemoryScope",
+            "key": "project_slug, optional agent_id",
+            "precedence": "召回与写回必须绑定同一 project_slug；跨 slug 不可见",
+            "requires": "召回与写回必须绑定同一 project_slug；跨 slug 不可见"
+          },
+          {
+            "entity": "MemoryAdapter",
+            "key": "recall, writeback, health",
+            "precedence": "位于 adapters 层；核心 registry/storage/approvals 不得硬编码 agentmemory",
+            "requires": "位于 adapters 层；核心 registry/storage/approvals 不得硬编码 agentmemory"
+          },
+          {
+            "entity": "MemoryRecord",
+            "key": "scope, kind, payload, dispatch_id",
+            "precedence": "writeback 至少含 project/stage/feature/dispatch_id/reason_code",
+            "requires": "writeback 至少含 project/stage/feature/dispatch_id/reason_code"
+          },
+          {
+            "entity": "DispatchCandidate",
+            "key": "project, stage, feature, score, reasons",
+            "precedence": "仅候选；不得持有或消费 approve token；不得含 executor task_id",
+            "requires": "仅候选；不得持有或消费 approve token；不得含 executor task_id"
+          },
+          {
+            "entity": "AssignmentScorer",
+            "key": "rules, weights",
+            "precedence": "只产出 candidates 列表",
+            "requires": "只产出 candidates 列表"
+          },
+          {
+            "entity": "PendingApprovalView",
+            "key": "project, stage, feature, expires_at, actor_hint",
+            "precedence": "展示待拍板；不等于已授权",
+            "requires": "展示待拍板；不等于已授权"
+          },
+          {
+            "entity": "Approval",
+            "key": "token_hash, actor, project, stage, feature, expiry, state",
+            "precedence": "沿用现有 ApprovalService；一次性",
+            "requires": "沿用现有 ApprovalService；一次性"
+          },
+          {
+            "entity": "Dispatch",
+            "key": "id, state, approval_id, memory_injection_ref",
+            "precedence": "受限阶段必须 reserved token；recall 摘要可注入 body",
+            "requires": "受限阶段必须 reserved token；recall 摘要可注入 body"
+          }
+        ],
+        "entity_precedence": [
+          {
+            "entity": "MemoryScope",
+            "key": "project_slug, optional agent_id",
+            "precedence": "召回与写回必须绑定同一 project_slug；跨 slug 不可见",
+            "requires": "召回与写回必须绑定同一 project_slug；跨 slug 不可见"
+          },
+          {
+            "entity": "MemoryAdapter",
+            "key": "recall, writeback, health",
+            "precedence": "位于 adapters 层；核心 registry/storage/approvals 不得硬编码 agentmemory",
+            "requires": "位于 adapters 层；核心 registry/storage/approvals 不得硬编码 agentmemory"
+          },
+          {
+            "entity": "MemoryRecord",
+            "key": "scope, kind, payload, dispatch_id",
+            "precedence": "writeback 至少含 project/stage/feature/dispatch_id/reason_code",
+            "requires": "writeback 至少含 project/stage/feature/dispatch_id/reason_code"
+          },
+          {
+            "entity": "DispatchCandidate",
+            "key": "project, stage, feature, score, reasons",
+            "precedence": "仅候选；不得持有或消费 approve token；不得含 executor task_id",
+            "requires": "仅候选；不得持有或消费 approve token；不得含 executor task_id"
+          },
+          {
+            "entity": "AssignmentScorer",
+            "key": "rules, weights",
+            "precedence": "只产出 candidates 列表",
+            "requires": "只产出 candidates 列表"
+          },
+          {
+            "entity": "PendingApprovalView",
+            "key": "project, stage, feature, expires_at, actor_hint",
+            "precedence": "展示待拍板；不等于已授权",
+            "requires": "展示待拍板；不等于已授权"
+          },
+          {
+            "entity": "Approval",
+            "key": "token_hash, actor, project, stage, feature, expiry, state",
+            "precedence": "沿用现有 ApprovalService；一次性",
+            "requires": "沿用现有 ApprovalService；一次性"
+          },
+          {
+            "entity": "Dispatch",
+            "key": "id, state, approval_id, memory_injection_ref",
+            "precedence": "受限阶段必须 reserved token；recall 摘要可注入 body",
+            "requires": "受限阶段必须 reserved token；recall 摘要可注入 body"
+          }
+        ],
+        "aggregates": [
+          {
+            "name": "MemoryDispatch",
+            "states": [
+              "awaiting_human_approve",
+              "blocked",
+              "candidates_ready",
+              "completed",
+              "dispatch_authorized",
+              "dispatched",
+              "idle",
+              "recalling",
+              "writing_back"
+            ],
+            "transitions": [
+              {
+                "from": "",
+                "to": "idle",
+                "guard": "registry loaded",
+                "initial": "true"
+              },
+              {
+                "from": "idle",
+                "to": "candidates_ready",
+                "guard": "scorer produced zero-or-more candidates"
+              },
+              {
+                "from": "candidates_ready",
+                "to": "awaiting_human_approve",
+                "guard": "restricted stage or candidate selected"
+              },
+              {
+                "from": "idle",
+                "to": "awaiting_human_approve",
+                "guard": "restricted stage or candidate selected"
+              },
+              {
+                "from": "awaiting_human_approve",
+                "to": "dispatch_authorized",
+                "guard": "matching approve token issued"
+              },
+              {
+                "from": "dispatch_authorized",
+                "to": "recalling",
+                "guard": "preflight pass and token reserved"
+              },
+              {
+                "from": "recalling",
+                "to": "dispatched",
+                "guard": "acl_scope_ok and executor task created"
+              },
+              {
+                "from": "dispatched",
+                "to": "writing_back",
+                "guard": "executor terminal and reconcile evaluated"
+              },
+              {
+                "from": "writing_back",
+                "to": "completed",
+                "guard": "final state persisted"
+              },
+              {
+                "from": "awaiting_human_approve",
+                "to": "blocked",
+                "guard": "approval_required or memory_acl_denied or gate fail"
+              },
+              {
+                "from": "recalling",
+                "to": "blocked",
+                "guard": "approval_required or memory_acl_denied or gate fail"
+              },
+              {
+                "from": "writing_back",
+                "to": "blocked",
+                "guard": "approval_required or memory_acl_denied or gate fail"
+              }
+            ]
+          }
+        ],
+        "illegal_transition_slots": [
+          {
+            "description": "MemoryDispatch.candidates_ready → dispatched without approve (跳过 approve) · TC-MEM-ILL-001",
+            "aggregate": "MemoryDispatch",
+            "source": "truth"
+          },
+          {
+            "description": "MemoryDispatch.idle → dispatched without recall/preflight · TC-MEM-ILL-001",
+            "aggregate": "MemoryDispatch",
+            "source": "truth"
+          },
+          {
+            "description": "MemoryDispatch.awaiting_human_approve → completed · TC-MEM-ILL-001",
+            "aggregate": "MemoryDispatch",
+            "source": "truth"
+          },
+          {
+            "description": "MemoryDispatch.recalling → completed skipping executor/reconcile · TC-MEM-ILL-001",
+            "aggregate": "MemoryDispatch",
+            "source": "truth"
+          },
+          {
+            "description": "MemoryScope.cross_project → recall_success · TC-MEM-ILL-002",
+            "aggregate": "MemoryScope",
+            "source": "truth"
+          },
+          {
+            "description": "AssignmentScorer.score → consume_approval_token · TC-MEM-ILL-001",
+            "aggregate": "AssignmentScorer",
+            "source": "truth"
+          },
+          {
+            "description": "MemoryAdapter.writeback_failure → erase_reconcile_result · TC-MEM-ILL-002",
+            "aggregate": "MemoryAdapter",
+            "source": "truth"
+          }
+        ],
+        "acceptance_criteria": [
+          {
+            "ac_id": "AC-MEM-001",
+            "description": "提供位于 ADB 核心外的 MemoryAdapter SPI；dispatch 前按 project_slug 做 scoped recall，并将摘要注入 task body/上下文，不把 agentmemory 客户端嵌进 registry/storage/approvals 核心模块"
+          },
+          {
+            "ac_id": "AC-MEM-002",
+            "description": "reconcile 进入 completed/blocked 终态后调用 MemoryAdapter.writeback，写入含 project_slug/stage/feature/dispatch_id/reason_code 的证据记忆；写回失败不得抹掉 reconcile 主结果"
+          },
+          {
+            "ac_id": "AC-MEM-003",
+            "description": "跨项目 ACL：以项目 B scope 召回不得返回项目 A 写入的记忆；越权命中必须 fail-closed 并有可执行测试断言"
+          },
+          {
+            "ac_id": "AC-MEM-004",
+            "description": "自动分配：规则+评分器仅产出 dispatch candidates（含 score/reason），不得直接创建 executor task 或消费 approve 令牌"
+          },
+          {
+            "ac_id": "AC-MEM-005",
+            "description": "受限阶段派工仍必须经现有 ApprovalService.issue/reserve/finalize；候选转派工路径只能消费有效 approve token"
+          },
+          {
+            "ac_id": "AC-MEM-006",
+            "description": "提供 awaiting_approval / 待拍板列表（CLI/JSON），并可经 Hermes 飞书通道渲染待拍板事项（项目/阶段/feature/过期时间/actor 需求）"
+          },
+          {
+            "ac_id": "AC-MEM-007",
+            "description": "拍板签发有效令牌后，允许对该 project/stage/feature 执行 in-project agent dispatch；无令牌时保持 approval_required 阻断"
+          }
+        ],
+        "bound_ac_ids": [
+          "AC-MEM-001",
+          "AC-MEM-002",
+          "AC-MEM-004",
+          "AC-MEM-005",
+          "AC-MEM-006",
+          "AC-MEM-007"
+        ],
+        "orphan_ac_ids": [],
+        "aggregates_missing_illegal_slots": [],
+        "raw_section_titles": [
+          "人话",
+          "User Intent",
+          "User Intent Snapshot",
+          "用户旅程",
+          "失败旅程",
+          "Domain Model",
+          "Intent Coverage Matrix",
+          "Acceptance Criteria",
+          "Domain FSM — MemoryDispatch",
+          "FSM 五元组",
+          "Illegal transitions",
+          "Public CLI Contract",
+          "Non-goals",
+          "Freeze readiness"
+        ]
+      },
+      "summary": {
+        "entity_count": 8,
+        "aggregate_count": 1,
+        "illegal_slot_count": 7,
+        "orphan_ac_count": 0,
+        "bound_ac_count": 6
+      }
+    },
+    "recommended_action": ""
+  },
+  "human_closure_contract": {
+    "required": false,
+    "research_path": "docs/beacon/v0.0.2/research/memory-adapter-auto-assign.md",
+    "research_exists": false,
+    "source_architecture_path": "docs/beacon/v0.0.2/source-architecture/memory-adapter-auto-assign.md",
+    "source_architecture_exists": false,
+    "required_sections": [
+      "architecture",
+      "business_flow"
+    ],
+    "missing_sections": [
+      "architecture",
+      "business_flow"
+    ],
+    "diagram_types": [],
+    "complexity_signals": []
+  },
+  "requirement_closure_contract": {
+    "required": true,
+    "chain_order": [
+      "research",
+      "prd",
+      "user_story",
+      "test_case",
+      "requirement_clarity",
+      "freeze"
+    ],
+    "human_closure_required": false,
+    "paths": {
+      "research": "docs/beacon/v0.0.2/research/memory-adapter-auto-assign.md",
+      "prd": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/truth.md",
+      "user_story": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/truth.md",
+      "test_case": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/tests.md"
+    },
+    "exists": {
+      "research": false,
+      "prd": true,
+      "user_story": true,
+      "test_case": true
+    },
+    "required_research_sections": [],
+    "missing_research_sections": [],
+    "ac_projection": {
+      "prd_ac_ids": [],
+      "user_story_ac_ids": [],
+      "test_case_ac_ids": [],
+      "upstream_ac_ids": [],
+      "missing_test_case_ac_ids": []
+    }
+  },
+  "version_projection_truth_contract": {
+    "required": false,
+    "supported": false,
+    "projection_types": [],
+    "research_path": "docs/beacon/v0.0.2/research/memory-adapter-auto-assign.md",
+    "research_exists": false,
+    "required_fields": [
+      "prd_refs",
+      "user_story_refs",
+      "test_case_refs",
+      "coverage_notes",
+      "out_of_scope_notes"
+    ],
+    "field_presence": {
+      "prd_refs": false,
+      "user_story_refs": false,
+      "test_case_refs": false,
+      "coverage_notes": false,
+      "out_of_scope_notes": false
+    },
+    "missing_fields": [],
+    "required_refs": {
+      "prd_refs": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/truth.md",
+      "user_story_refs": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/truth.md",
+      "test_case_refs": "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/tests.md"
+    },
+    "missing_ref_targets": [],
+    "ready": false
+  },
+  "support_write_topology_contract": {
+    "schema_version": "1.0",
+    "supported": true,
+    "status": "pass",
+    "blocked": false,
+    "reason_code": "",
+    "diagnostics": []
+  },
+  "required_artifacts": [],
+  "scanned_files": [
+    "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/truth.md",
+    "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/tests.md",
+    "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/tasks.md",
+    "docs/beacon/v0.0.2/features/memory-adapter-auto-assign/evidence.md"
+  ]
+}

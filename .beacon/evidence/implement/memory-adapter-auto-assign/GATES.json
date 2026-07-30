@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "feature": "memory-adapter-auto-assign",
+  "version": "v0.0.2",
+  "ac_id": "GATES",
+  "generated_at": "2026-07-30T04:47:06.569634+00:00",
+  "pass": true,
+  "command": {
+    "cmd": "PYTHONPATH=src python3 -m pytest -q tests/test_memory_adapter.py tests/test_auto_assign.py tests/test_pending_approvals.py tests/test_boundaries.py",
+    "exit_code": 0,
+    "stdout": ".............                                                            [100%]\n13 passed in 0.08s\n",
+    "stderr": ""
+  },
+  "artifacts": [
+    "src/agent_delivery_bus/adapters/spi.py",
+    "src/agent_delivery_bus/adapters/memory.py",
+    "src/agent_delivery_bus/assign.py",
+    "src/agent_delivery_bus/pending.py",
+    "src/agent_delivery_bus/service.py",
+    "src/agent_delivery_bus/cli.py"
+  ]
+}

@@ -3,7 +3,8 @@
   "updated": "2026-07-28",
   "adapters": {
     "executor": "null",
-    "truth_gate": "null"
+    "truth_gate": "null",
+    "memory": "inprocess"
   },
   "notes": {
     "knowledge_os": "Keep inspiration/knowledge/collaboration-rule folders outside this registry. Register only software delivery targets here.",

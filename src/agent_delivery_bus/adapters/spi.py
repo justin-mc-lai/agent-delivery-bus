@@ -69,6 +69,46 @@ class ExecutorAdapter(Protocol):
         """Locate a remote task by idempotency key during reconcile."""
 
 
+@runtime_checkable
+class MemoryAdapter(Protocol):
+    """Thin memory SPI outside ADB core.
+
+    Concrete backends (agentmemory REST, in-process test store, …) live under
+    ``adapters/``. Core registry/storage/approvals must not import backend SDKs.
+    """
+
+    name: str
+
+    def health(self) -> dict[str, Any]:
+        """Return ``{"ok": bool, ...}`` for adapter readiness."""
+
+    def recall(
+        self,
+        *,
+        project_slug: str,
+        query: str,
+        limit: int = 8,
+        agent_id: str = "",
+    ) -> dict[str, Any]:
+        """Scoped recall. Must fail closed on cross-project hits.
+
+        Returns ``{"records": [...], "summary": str, "injection_ref": str}``.
+        """
+
+    def writeback(
+        self,
+        *,
+        project_slug: str,
+        stage: str,
+        feature: str,
+        dispatch_id: str,
+        reason_code: str,
+        payload: dict[str, Any] | None = None,
+        agent_id: str = "",
+    ) -> dict[str, Any]:
+        """Persist evidence memory tagged with project_slug scope."""
+
+
 def as_check(
     name: str,
     passed: bool,
