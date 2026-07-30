@@ -1,0 +1,585 @@
+{
+  "schema_version": "1.0",
+  "feature": "nl-intent-envelope",
+  "feature_slug": "nl-intent-envelope",
+  "version": "v0.0.3",
+  "generated_at": "2026-07-30T07:54:29.359128+00:00",
+  "expansion_profile": "pua-web",
+  "scenario_depth": "standard",
+  "families_required": [
+    "happy",
+    "negative",
+    "boundary",
+    "recovery",
+    "compatibility"
+  ],
+  "stories": [
+    {
+      "ac_id": "AC-001",
+      "theme": "general",
+      "text": "Acceptance criteria TBD",
+      "scenario_ids": [],
+      "scenario_families": [],
+      "required_families": [],
+      "scenarios": []
+    },
+    {
+      "ac_id": "AC-INT-001",
+      "theme": "",
+      "text": "exit_code==0；输出含 schema_version/status/blocked/reason_code/data.envelope",
+      "scenario_ids": [
+        "SC-AUTO-TC-INT-001",
+        "SC-AUTO-TC-INT-CLI"
+      ],
+      "scenario_families": [
+        "primary",
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-INT-001",
+          "source_tc_id": "TC-INT-001",
+          "tc_id": "TC-INT-001-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        },
+        {
+          "scenario_id": "SC-AUTO-TC-INT-CLI",
+          "source_tc_id": "TC-INT-CLI",
+          "tc_id": "TC-INT-CLI-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-INT-002",
+      "theme": "",
+      "text": "exit_code==0；唯一 alias 解析为 project_slug",
+      "scenario_ids": [
+        "SC-AUTO-TC-INT-002"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-INT-002",
+          "source_tc_id": "TC-INT-002",
+          "tc_id": "TC-INT-002-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-INT-003",
+      "theme": "",
+      "text": "exit_code==0；歧义返回 intent_project_ambiguous 且 candidates>1",
+      "scenario_ids": [
+        "SC-AUTO-TC-INT-003",
+        "SC-AUTO-TC-INT-ILL-002"
+      ],
+      "scenario_families": [
+        "primary",
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-INT-003",
+          "source_tc_id": "TC-INT-003",
+          "tc_id": "TC-INT-003-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        },
+        {
+          "scenario_id": "SC-AUTO-TC-INT-ILL-002",
+          "source_tc_id": "TC-INT-ILL-002",
+          "tc_id": "TC-INT-ILL-002-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-INT-004",
+      "theme": "",
+      "text": "exit_code==0；未确认不得进入 dispatch 调用路径",
+      "scenario_ids": [
+        "SC-AUTO-TC-INT-004"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-INT-004",
+          "source_tc_id": "TC-INT-004",
+          "tc_id": "TC-INT-004-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-INT-005",
+      "theme": "",
+      "text": "exit_code==0；envelope 字段可驱动 assign candidates 且无 task_id",
+      "scenario_ids": [
+        "SC-AUTO-TC-INT-005"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-INT-005",
+          "source_tc_id": "TC-INT-005",
+          "tc_id": "TC-INT-005-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-INT-006",
+      "theme": "",
+      "text": "exit_code==0；parse 不创建 executor task、不消费 approve token",
+      "scenario_ids": [
+        "SC-AUTO-TC-INT-006"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-INT-006",
+          "source_tc_id": "TC-INT-006",
+          "tc_id": "TC-INT-006-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-INT-007",
+      "theme": "",
+      "text": "exit_code==0；契约套件全绿",
+      "scenario_ids": [
+        "SC-AUTO-TC-INT-007"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-INT-007",
+          "source_tc_id": "TC-INT-007",
+          "tc_id": "TC-INT-007-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-INT-004, AC-INT-006",
+      "theme": "",
+      "text": "exit_code==0；skip confirm / parse→task / parse→token 均 fail-closed",
+      "scenario_ids": [
+        "SC-AUTO-TC-INT-ILL-001"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-INT-ILL-001",
+          "source_tc_id": "TC-INT-ILL-001",
+          "tc_id": "TC-INT-ILL-001-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario_id": "SC-AUTO-TC-INT-001",
+      "source_tc_id": "TC-INT-001",
+      "tc_id": "TC-INT-001-PRIMARY",
+      "ac_id": "AC-INT-001",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；输出含 schema_version/status/blocked/reason_code/data.envelope",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_intent_parse.py -k envelope_schema --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；输出含 schema_version/status/blocked/reason_code/data.envelope",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/nl-intent-envelope/tc-int-001/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-INT-002",
+      "source_tc_id": "TC-INT-002",
+      "tc_id": "TC-INT-002-PRIMARY",
+      "ac_id": "AC-INT-002",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；唯一 alias 解析为 project_slug",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_intent_parse.py -k unique_alias_resolve --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；唯一 alias 解析为 project_slug",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/nl-intent-envelope/tc-int-002/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-INT-003",
+      "source_tc_id": "TC-INT-003",
+      "tc_id": "TC-INT-003-PRIMARY",
+      "ac_id": "AC-INT-003",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；歧义返回 intent_project_ambiguous 且 candidates>1",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_intent_parse.py -k ambiguous_project --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；歧义返回 intent_project_ambiguous 且 candidates>1",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/nl-intent-envelope/tc-int-003/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-INT-004",
+      "source_tc_id": "TC-INT-004",
+      "tc_id": "TC-INT-004-PRIMARY",
+      "ac_id": "AC-INT-004",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；未确认不得进入 dispatch 调用路径",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_intent_confirm_gate.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；未确认不得进入 dispatch 调用路径",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/nl-intent-envelope/tc-int-004/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-INT-005",
+      "source_tc_id": "TC-INT-005",
+      "tc_id": "TC-INT-005-PRIMARY",
+      "ac_id": "AC-INT-005",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；envelope 字段可驱动 assign candidates 且无 task_id",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_intent_parse.py -k assign_bridge --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；envelope 字段可驱动 assign candidates 且无 task_id",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/nl-intent-envelope/tc-int-005/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-INT-006",
+      "source_tc_id": "TC-INT-006",
+      "tc_id": "TC-INT-006-PRIMARY",
+      "ac_id": "AC-INT-006",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；parse 不创建 executor task、不消费 approve token",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_intent_parse.py -k no_side_effects --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；parse 不创建 executor task、不消费 approve token",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/nl-intent-envelope/tc-int-006/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-INT-007",
+      "source_tc_id": "TC-INT-007",
+      "tc_id": "TC-INT-007-PRIMARY",
+      "ac_id": "AC-INT-007",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；契约套件全绿",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_intent_parse.py tests/test_intent_confirm_gate.py --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；契约套件全绿",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/nl-intent-envelope/tc-int-007/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-INT-ILL-001",
+      "source_tc_id": "TC-INT-ILL-001",
+      "tc_id": "TC-INT-ILL-001-PRIMARY",
+      "ac_id": "AC-INT-004, AC-INT-006",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；skip confirm / parse→task / parse→token 均 fail-closed",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_intent_confirm_gate.py -k illegal_skip_confirm --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；skip confirm / parse→task / parse→token 均 fail-closed",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/nl-intent-envelope/tc-int-ill-001/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-INT-ILL-002",
+      "source_tc_id": "TC-INT-ILL-002",
+      "tc_id": "TC-INT-ILL-002-PRIMARY",
+      "ac_id": "AC-INT-003",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；禁止静默挑选第一候选",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_intent_parse.py -k illegal_silent_pick --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；禁止静默挑选第一候选",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/nl-intent-envelope/tc-int-ill-002/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-INT-CLI",
+      "source_tc_id": "TC-INT-CLI",
+      "tc_id": "TC-INT-CLI-PRIMARY",
+      "ac_id": "AC-INT-001",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0 或 blocked 带稳定 reason_code；JSON 含 schema_version",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "PYTHONPATH=src python3 -m agent_delivery_bus.cli --config config/projects.json --db :memory: intent parse --utterance \"beacon plan demo\" --json",
+      "assertion": "exit_code==0 或 blocked 带稳定 reason_code；JSON 含 schema_version",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/nl-intent-envelope/tc-int-cli/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    }
+  ]
+}

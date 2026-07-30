@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "program_slug": "adb-nl-stable-ops",
+  "revision_id": "R1",
+  "status": "acked",
+  "acked_at": "2026-07-30T15:18:00+08:00",
+  "ack_ref": "user-ack-三节-2026-07-30",
+  "sections": {
+    "manifest_scope": {
+      "status": "accepted",
+      "summary": "phased_full ocean; approach B; no auto-release; no private DB"
+    },
+    "lake_topology": {
+      "status": "accepted",
+      "summary": "W1 intent → W2 worker|kanban|beacon-read → W3 digest → W4 knowledge support"
+    },
+    "first_lake_and_deferrals": {
+      "status": "accepted",
+      "first_lake": "nl-intent-envelope",
+      "defaults": {
+        "goal-stage-binding": "defer",
+        "knowledge-curation-digest": "deferrable_support"
+      }
+    }
+  },
+  "p2_review_id": "pln-review-20260730t071531z",
+  "next_route": {
+    "harness": "truth",
+    "first_lake": "nl-intent-envelope",
+    "prerequisites": [
+      "add v0.0.3 to docs/beacon/governance/project-version-governance.md (or confirm deliver under existing version policy)",
+      "beacon workspace admit --version v0.0.3 --feature nl-intent-envelope",
+      "beacon-gen-truth / truth harness for nl-intent-envelope seven-round loop"
+    ]
+  }
+}

@@ -29,6 +29,8 @@ scheduler, the worker, or the delivery gate.
 ## Decision boundaries
 
 - Resolve the project from the registry; never infer a target from a similar name.
+- For natural-language intents: call `adb intent parse` first, show the IntentEnvelope, and obtain human confirmation before `adb assign` / `adb approve` / `adb dispatch`.
+- Never call `adb dispatch` from an unconfirmed envelope (`requires_confirmation` / missing actor ack).
 - Run strict preflight before proposing a real dispatch.
 - Require a matching one-time approval for `implement` and `freeze`.
 - Treat `release` as disabled even when an approval exists.
@@ -42,6 +44,9 @@ scheduler, the worker, or the delivery gate.
 bin/adb projects list --json
 bin/adb projects resolve --slug <slug> --json
 bin/adb doctor --project <slug> --json
+bin/adb intent parse --utterance "<natural language>" --json
+bin/adb intent parse --utterance "<natural language>" --project <slug> --json
+bin/adb assign candidates --project <slug> --stage <stage> --feature <feature> --json
 bin/adb dispatch --project <slug> --stage <plan|implement|qa|freeze> --feature <feature> --dry-run --json
 bin/adb approve --actor <actor> --project <slug> --stage <implement|freeze|release> --feature <feature> --json
 bin/adb dispatch --project <slug> --stage <stage> --feature <feature> --approval-token <token> --json
@@ -51,7 +56,16 @@ bin/adb fleet --json
 bin/adb fleet --project <slug> --json
 bin/adb boards status --project <slug>
 bin/adb boards status --project <slug> --json
+bin/adb approvals awaiting --channel feishu --json
 ```
+
+### Confirm gate (Hermes skill contract)
+
+1. Parse: `adb intent parse --utterance ... --json`
+2. If `blocked`: report `reason_code` / `resume_action` / candidates; do not dispatch.
+3. Present `data.envelope` to the human.
+4. Only after explicit confirmation may you call assign / approve / dispatch using envelope fields.
+5. Parse/confirm paths must never create executor tasks or consume approval tokens.
 
 Read [references/contracts.md](references/contracts.md) before performing a real
 dispatch or interpreting reconciliation.

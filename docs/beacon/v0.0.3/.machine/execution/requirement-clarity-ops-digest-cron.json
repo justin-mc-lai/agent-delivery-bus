@@ -1,0 +1,502 @@
+{
+  "schema_version": "1.0",
+  "feature": "ops-digest-cron",
+  "feature_slug": "ops-digest-cron",
+  "version": "v0.0.3",
+  "runtime_version": "v1.6.11",
+  "runtime_capability_line": "v1.3.3",
+  "required": true,
+  "reason_code": "",
+  "blocked": false,
+  "status": "pass",
+  "findings": [],
+  "report_json_path": "docs/beacon/v0.0.3/.machine/execution/requirement-clarity-ops-digest-cron.json",
+  "report_markdown_path": "docs/beacon/v0.0.3/execution/requirement-clarity-ops-digest-cron.md",
+  "state_path": ".beacon/state/requirement-clarity-ops-digest-cron.json",
+  "diagram_truth": {
+    "schema_version": "1.0",
+    "version": "v0.0.3",
+    "supported": false,
+    "required": false,
+    "ready": false,
+    "diagram_types": [],
+    "state_axes": [],
+    "missing_diagram_types": [],
+    "missing_state_axes": false,
+    "complexity_signals": [],
+    "review_gates": [],
+    "qa_coverage_hints": [],
+    "evidence_lines": {},
+    "generated_at": "2026-07-30T07:32:34.838380+00:00",
+    "feature": "ops-digest-cron",
+    "feature_slug": "ops-digest-cron",
+    "prd_ref": "docs/beacon/v0.0.3/prd/ops-digest-cron.md",
+    "user_story_ref": "docs/beacon/v0.0.3/user-story/ops-digest-cron.md"
+  },
+  "domain_fsm_gate": {
+    "schema_version": "1.0",
+    "feature": "ops-digest-cron",
+    "feature_slug": "ops-digest-cron",
+    "version": "v0.0.3",
+    "truth_path": "docs/beacon/v0.0.3/features/ops-digest-cron/truth.md",
+    "tests_path": "docs/beacon/v0.0.3/features/ops-digest-cron/tests.md",
+    "required": true,
+    "blocked": false,
+    "status": "pass",
+    "reason_code": "",
+    "findings": [],
+    "requirement": {
+      "required": true,
+      "reason": "explicit_domain_mark",
+      "explicit": true,
+      "partial": true,
+      "complexity": false,
+      "business_signal": false,
+      "version_supported": false
+    },
+    "projection": {
+      "schema_version": "1.0",
+      "domain_fsm_schema": "domain-fsm.v1",
+      "entity_precedence_schema": "entity-precedence.v1",
+      "frontmatter": {
+        "slug": "ops-digest-cron",
+        "version": "v0.0.3",
+        "status": "draft",
+        "revision_id": "R1",
+        "language": "zh",
+        "domain_required": "true",
+        "domain_kind": "business",
+        "ux_required": "false",
+        "package_maturity": "filled",
+        "parser_contract": "beacon-feature-package-v2",
+        "materials_status": "current",
+        "truth_source_model": "intent_first",
+        "git_canonical_branch": "main",
+        "program": "adb-nl-stable-ops",
+        "promotion_ref": "user-ack-三节-2026-07-30",
+        "canonical_refs": {
+          "prd": "docs/beacon/v0.0.3/features/ops-digest-cron/truth.md",
+          "user_story": "docs/beacon/v0.0.3/features/ops-digest-cron/truth.md",
+          "test_case": "docs/beacon/v0.0.3/features/ops-digest-cron/tests.md"
+        }
+      },
+      "frontmatter_errors": [],
+      "has_domain_model_section": true,
+      "has_domain_fsm_section": true,
+      "has_illegal_transition_section": true,
+      "entities": [
+        {
+          "entity": "DigestPayload",
+          "key": "fleet, awaiting, optional beacon",
+          "precedence": "no dispatch side effects",
+          "requires": "no dispatch side effects"
+        },
+        {
+          "entity": "CronTemplate",
+          "key": "hermes cron job",
+          "precedence": "outside ADB daemon",
+          "requires": "outside ADB daemon"
+        },
+        {
+          "entity": "ResultEnvelope",
+          "key": "status, blocked, reason_code",
+          "precedence": "统一外壳",
+          "requires": "统一外壳"
+        }
+      ],
+      "entity_precedence": [
+        {
+          "entity": "DigestPayload",
+          "key": "fleet, awaiting, optional beacon",
+          "precedence": "no dispatch side effects",
+          "requires": "no dispatch side effects"
+        },
+        {
+          "entity": "CronTemplate",
+          "key": "hermes cron job",
+          "precedence": "outside ADB daemon",
+          "requires": "outside ADB daemon"
+        },
+        {
+          "entity": "ResultEnvelope",
+          "key": "status, blocked, reason_code",
+          "precedence": "统一外壳",
+          "requires": "统一外壳"
+        }
+      ],
+      "aggregates": [
+        {
+          "name": "OpsDigest",
+          "states": [
+            "blocked",
+            "done",
+            "idle",
+            "running"
+          ],
+          "transitions": [
+            {
+              "from": "",
+              "to": "idle",
+              "guard": "cron or CLI trigger",
+              "initial": "true"
+            },
+            {
+              "from": "idle",
+              "to": "running",
+              "guard": "collect surfaces"
+            },
+            {
+              "from": "running",
+              "to": "done",
+              "guard": "payload rendered"
+            },
+            {
+              "from": "running",
+              "to": "blocked",
+              "guard": "collect fail or illegal dispatch"
+            }
+          ]
+        }
+      ],
+      "illegal_transition_slots": [
+        {
+          "description": "rendering → dispatch · TC-DIG-ILL-001",
+          "aggregate": "",
+          "source": "truth"
+        },
+        {
+          "description": "rendering → approve · TC-DIG-ILL-001",
+          "aggregate": "",
+          "source": "truth"
+        }
+      ],
+      "acceptance_criteria": [
+        {
+          "ac_id": "AC-DIG-001",
+          "description": "DigestPayload：`adb digest render` 沿 idle→running→done 汇总 fleet+awaiting（可选 beacon）"
+        },
+        {
+          "ac_id": "AC-DIG-002",
+          "description": "CronTemplate：文档化 Hermes cron 触发 digest；不在 ADB 内嵌调度器；路径仍到 done"
+        },
+        {
+          "ac_id": "AC-DIG-003",
+          "description": "飞书通道仅产出 DigestPayload 载荷；不强制 OpenAPI；成功态 done"
+        },
+        {
+          "ac_id": "AC-DIG-004",
+          "description": "digest 幂等：相同输入不 create 派工副作用，保持 done 且无 dispatch"
+        },
+        {
+          "ac_id": "AC-DIG-005",
+          "description": "digest 不得自动 approve/dispatch（illegal/拒绝）；违规进入 blocked"
+        }
+      ],
+      "bound_ac_ids": [
+        "AC-DIG-001",
+        "AC-DIG-002",
+        "AC-DIG-003",
+        "AC-DIG-004",
+        "AC-DIG-005"
+      ],
+      "orphan_ac_ids": [],
+      "aggregates_missing_illegal_slots": [],
+      "raw_section_titles": [
+        "人话",
+        "User Intent",
+        "User Intent Snapshot",
+        "Alignment Surface",
+        "Phased Backlog",
+        "Deferral Ledger",
+        "用户旅程",
+        "失败旅程",
+        "Domain Model",
+        "Intent Coverage Matrix",
+        "Acceptance Criteria",
+        "Domain FSM — OpsDigest",
+        "FSM 五元组",
+        "Illegal transitions",
+        "Public CLI Contract",
+        "Non-goals",
+        "Freeze readiness"
+      ]
+    },
+    "validation": {
+      "schema_version": "1.0",
+      "required": true,
+      "blocked": false,
+      "status": "pass",
+      "reason_code": "",
+      "findings": [],
+      "projection": {
+        "schema_version": "1.0",
+        "domain_fsm_schema": "domain-fsm.v1",
+        "entity_precedence_schema": "entity-precedence.v1",
+        "frontmatter": {
+          "slug": "ops-digest-cron",
+          "version": "v0.0.3",
+          "status": "draft",
+          "revision_id": "R1",
+          "language": "zh",
+          "domain_required": "true",
+          "domain_kind": "business",
+          "ux_required": "false",
+          "package_maturity": "filled",
+          "parser_contract": "beacon-feature-package-v2",
+          "materials_status": "current",
+          "truth_source_model": "intent_first",
+          "git_canonical_branch": "main",
+          "program": "adb-nl-stable-ops",
+          "promotion_ref": "user-ack-三节-2026-07-30",
+          "canonical_refs": {
+            "prd": "docs/beacon/v0.0.3/features/ops-digest-cron/truth.md",
+            "user_story": "docs/beacon/v0.0.3/features/ops-digest-cron/truth.md",
+            "test_case": "docs/beacon/v0.0.3/features/ops-digest-cron/tests.md"
+          }
+        },
+        "frontmatter_errors": [],
+        "has_domain_model_section": true,
+        "has_domain_fsm_section": true,
+        "has_illegal_transition_section": true,
+        "entities": [
+          {
+            "entity": "DigestPayload",
+            "key": "fleet, awaiting, optional beacon",
+            "precedence": "no dispatch side effects",
+            "requires": "no dispatch side effects"
+          },
+          {
+            "entity": "CronTemplate",
+            "key": "hermes cron job",
+            "precedence": "outside ADB daemon",
+            "requires": "outside ADB daemon"
+          },
+          {
+            "entity": "ResultEnvelope",
+            "key": "status, blocked, reason_code",
+            "precedence": "统一外壳",
+            "requires": "统一外壳"
+          }
+        ],
+        "entity_precedence": [
+          {
+            "entity": "DigestPayload",
+            "key": "fleet, awaiting, optional beacon",
+            "precedence": "no dispatch side effects",
+            "requires": "no dispatch side effects"
+          },
+          {
+            "entity": "CronTemplate",
+            "key": "hermes cron job",
+            "precedence": "outside ADB daemon",
+            "requires": "outside ADB daemon"
+          },
+          {
+            "entity": "ResultEnvelope",
+            "key": "status, blocked, reason_code",
+            "precedence": "统一外壳",
+            "requires": "统一外壳"
+          }
+        ],
+        "aggregates": [
+          {
+            "name": "OpsDigest",
+            "states": [
+              "blocked",
+              "done",
+              "idle",
+              "running"
+            ],
+            "transitions": [
+              {
+                "from": "",
+                "to": "idle",
+                "guard": "cron or CLI trigger",
+                "initial": "true"
+              },
+              {
+                "from": "idle",
+                "to": "running",
+                "guard": "collect surfaces"
+              },
+              {
+                "from": "running",
+                "to": "done",
+                "guard": "payload rendered"
+              },
+              {
+                "from": "running",
+                "to": "blocked",
+                "guard": "collect fail or illegal dispatch"
+              }
+            ]
+          }
+        ],
+        "illegal_transition_slots": [
+          {
+            "description": "rendering → dispatch · TC-DIG-ILL-001",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "rendering → approve · TC-DIG-ILL-001",
+            "aggregate": "",
+            "source": "truth"
+          }
+        ],
+        "acceptance_criteria": [
+          {
+            "ac_id": "AC-DIG-001",
+            "description": "DigestPayload：`adb digest render` 沿 idle→running→done 汇总 fleet+awaiting（可选 beacon）"
+          },
+          {
+            "ac_id": "AC-DIG-002",
+            "description": "CronTemplate：文档化 Hermes cron 触发 digest；不在 ADB 内嵌调度器；路径仍到 done"
+          },
+          {
+            "ac_id": "AC-DIG-003",
+            "description": "飞书通道仅产出 DigestPayload 载荷；不强制 OpenAPI；成功态 done"
+          },
+          {
+            "ac_id": "AC-DIG-004",
+            "description": "digest 幂等：相同输入不 create 派工副作用，保持 done 且无 dispatch"
+          },
+          {
+            "ac_id": "AC-DIG-005",
+            "description": "digest 不得自动 approve/dispatch（illegal/拒绝）；违规进入 blocked"
+          }
+        ],
+        "bound_ac_ids": [
+          "AC-DIG-001",
+          "AC-DIG-002",
+          "AC-DIG-003",
+          "AC-DIG-004",
+          "AC-DIG-005"
+        ],
+        "orphan_ac_ids": [],
+        "aggregates_missing_illegal_slots": [],
+        "raw_section_titles": [
+          "人话",
+          "User Intent",
+          "User Intent Snapshot",
+          "Alignment Surface",
+          "Phased Backlog",
+          "Deferral Ledger",
+          "用户旅程",
+          "失败旅程",
+          "Domain Model",
+          "Intent Coverage Matrix",
+          "Acceptance Criteria",
+          "Domain FSM — OpsDigest",
+          "FSM 五元组",
+          "Illegal transitions",
+          "Public CLI Contract",
+          "Non-goals",
+          "Freeze readiness"
+        ]
+      },
+      "summary": {
+        "entity_count": 3,
+        "aggregate_count": 1,
+        "illegal_slot_count": 2,
+        "orphan_ac_count": 0,
+        "bound_ac_count": 5
+      }
+    },
+    "recommended_action": ""
+  },
+  "human_closure_contract": {
+    "required": false,
+    "research_path": "docs/beacon/v0.0.3/research/ops-digest-cron.md",
+    "research_exists": false,
+    "source_architecture_path": "docs/beacon/v0.0.3/source-architecture/ops-digest-cron.md",
+    "source_architecture_exists": false,
+    "required_sections": [
+      "architecture",
+      "business_flow"
+    ],
+    "missing_sections": [
+      "architecture",
+      "business_flow"
+    ],
+    "diagram_types": [],
+    "complexity_signals": []
+  },
+  "requirement_closure_contract": {
+    "required": true,
+    "chain_order": [
+      "research",
+      "prd",
+      "user_story",
+      "test_case",
+      "requirement_clarity",
+      "freeze"
+    ],
+    "human_closure_required": false,
+    "paths": {
+      "research": "docs/beacon/v0.0.3/research/ops-digest-cron.md",
+      "prd": "docs/beacon/v0.0.3/features/ops-digest-cron/truth.md",
+      "user_story": "docs/beacon/v0.0.3/features/ops-digest-cron/truth.md",
+      "test_case": "docs/beacon/v0.0.3/features/ops-digest-cron/tests.md"
+    },
+    "exists": {
+      "research": false,
+      "prd": true,
+      "user_story": true,
+      "test_case": true
+    },
+    "required_research_sections": [],
+    "missing_research_sections": [],
+    "ac_projection": {
+      "prd_ac_ids": [],
+      "user_story_ac_ids": [],
+      "test_case_ac_ids": [],
+      "upstream_ac_ids": [],
+      "missing_test_case_ac_ids": []
+    }
+  },
+  "version_projection_truth_contract": {
+    "required": false,
+    "supported": false,
+    "projection_types": [],
+    "research_path": "docs/beacon/v0.0.3/research/ops-digest-cron.md",
+    "research_exists": false,
+    "required_fields": [
+      "prd_refs",
+      "user_story_refs",
+      "test_case_refs",
+      "coverage_notes",
+      "out_of_scope_notes"
+    ],
+    "field_presence": {
+      "prd_refs": false,
+      "user_story_refs": false,
+      "test_case_refs": false,
+      "coverage_notes": false,
+      "out_of_scope_notes": false
+    },
+    "missing_fields": [],
+    "required_refs": {
+      "prd_refs": "docs/beacon/v0.0.3/features/ops-digest-cron/truth.md",
+      "user_story_refs": "docs/beacon/v0.0.3/features/ops-digest-cron/truth.md",
+      "test_case_refs": "docs/beacon/v0.0.3/features/ops-digest-cron/tests.md"
+    },
+    "missing_ref_targets": [],
+    "ready": false
+  },
+  "support_write_topology_contract": {
+    "schema_version": "1.0",
+    "supported": true,
+    "status": "pass",
+    "blocked": false,
+    "reason_code": "",
+    "diagnostics": []
+  },
+  "required_artifacts": [],
+  "scanned_files": [
+    "docs/beacon/v0.0.3/features/ops-digest-cron/truth.md",
+    "docs/beacon/v0.0.3/features/ops-digest-cron/tests.md",
+    "docs/beacon/v0.0.3/features/ops-digest-cron/tasks.md",
+    "docs/beacon/v0.0.3/features/ops-digest-cron/evidence.md"
+  ]
+}

@@ -1,0 +1,524 @@
+{
+  "schema_version": "1.0",
+  "feature": "kanban-ops-nl",
+  "feature_slug": "kanban-ops-nl",
+  "version": "v0.0.3",
+  "runtime_version": "v1.6.11",
+  "runtime_capability_line": "v1.3.3",
+  "required": true,
+  "reason_code": "",
+  "blocked": false,
+  "status": "pass",
+  "findings": [],
+  "report_json_path": "docs/beacon/v0.0.3/.machine/execution/requirement-clarity-kanban-ops-nl.json",
+  "report_markdown_path": "docs/beacon/v0.0.3/execution/requirement-clarity-kanban-ops-nl.md",
+  "state_path": ".beacon/state/requirement-clarity-kanban-ops-nl.json",
+  "diagram_truth": {
+    "schema_version": "1.0",
+    "version": "v0.0.3",
+    "supported": false,
+    "required": false,
+    "ready": false,
+    "diagram_types": [],
+    "state_axes": [],
+    "missing_diagram_types": [],
+    "missing_state_axes": false,
+    "complexity_signals": [],
+    "review_gates": [],
+    "qa_coverage_hints": [],
+    "evidence_lines": {},
+    "generated_at": "2026-07-30T07:32:32.444212+00:00",
+    "feature": "kanban-ops-nl",
+    "feature_slug": "kanban-ops-nl",
+    "prd_ref": "docs/beacon/v0.0.3/prd/kanban-ops-nl.md",
+    "user_story_ref": "docs/beacon/v0.0.3/user-story/kanban-ops-nl.md"
+  },
+  "domain_fsm_gate": {
+    "schema_version": "1.0",
+    "feature": "kanban-ops-nl",
+    "feature_slug": "kanban-ops-nl",
+    "version": "v0.0.3",
+    "truth_path": "docs/beacon/v0.0.3/features/kanban-ops-nl/truth.md",
+    "tests_path": "docs/beacon/v0.0.3/features/kanban-ops-nl/tests.md",
+    "required": true,
+    "blocked": false,
+    "status": "pass",
+    "reason_code": "",
+    "findings": [],
+    "requirement": {
+      "required": true,
+      "reason": "explicit_domain_mark",
+      "explicit": true,
+      "partial": true,
+      "complexity": false,
+      "business_signal": false,
+      "version_supported": false
+    },
+    "projection": {
+      "schema_version": "1.0",
+      "domain_fsm_schema": "domain-fsm.v1",
+      "entity_precedence_schema": "entity-precedence.v1",
+      "frontmatter": {
+        "slug": "kanban-ops-nl",
+        "version": "v0.0.3",
+        "status": "draft",
+        "revision_id": "R1",
+        "language": "zh",
+        "domain_required": "true",
+        "domain_kind": "business",
+        "ux_required": "false",
+        "package_maturity": "filled",
+        "parser_contract": "beacon-feature-package-v2",
+        "materials_status": "current",
+        "truth_source_model": "intent_first",
+        "git_canonical_branch": "main",
+        "program": "adb-nl-stable-ops",
+        "promotion_ref": "user-ack-三节-2026-07-30",
+        "canonical_refs": {
+          "prd": "docs/beacon/v0.0.3/features/kanban-ops-nl/truth.md",
+          "user_story": "docs/beacon/v0.0.3/features/kanban-ops-nl/truth.md",
+          "test_case": "docs/beacon/v0.0.3/features/kanban-ops-nl/tests.md"
+        }
+      },
+      "frontmatter_errors": [],
+      "has_domain_model_section": true,
+      "has_domain_fsm_section": true,
+      "has_illegal_transition_section": true,
+      "entities": [
+        {
+          "entity": "FleetTable",
+          "key": "projects, health, board",
+          "precedence": "idle→done 只读",
+          "requires": "idle→done 只读"
+        },
+        {
+          "entity": "BoardView",
+          "key": "columns, counts",
+          "precedence": "project scoped",
+          "requires": "project scoped"
+        },
+        {
+          "entity": "PendingApprovalView",
+          "key": "project, stage, feature",
+          "precedence": "awaiting list",
+          "requires": "awaiting list"
+        },
+        {
+          "entity": "ResultEnvelope",
+          "key": "status, blocked, reason_code",
+          "precedence": "统一外壳",
+          "requires": "统一外壳"
+        }
+      ],
+      "entity_precedence": [
+        {
+          "entity": "FleetTable",
+          "key": "projects, health, board",
+          "precedence": "idle→done 只读",
+          "requires": "idle→done 只读"
+        },
+        {
+          "entity": "BoardView",
+          "key": "columns, counts",
+          "precedence": "project scoped",
+          "requires": "project scoped"
+        },
+        {
+          "entity": "PendingApprovalView",
+          "key": "project, stage, feature",
+          "precedence": "awaiting list",
+          "requires": "awaiting list"
+        },
+        {
+          "entity": "ResultEnvelope",
+          "key": "status, blocked, reason_code",
+          "precedence": "统一外壳",
+          "requires": "统一外壳"
+        }
+      ],
+      "aggregates": [
+        {
+          "name": "KanbanOps",
+          "states": [
+            "blocked",
+            "done",
+            "idle",
+            "running"
+          ],
+          "transitions": [
+            {
+              "from": "",
+              "to": "idle",
+              "guard": "registry/fleet ready",
+              "initial": "true"
+            },
+            {
+              "from": "idle",
+              "to": "running",
+              "guard": "query args valid"
+            },
+            {
+              "from": "running",
+              "to": "done",
+              "guard": "public CLI success"
+            },
+            {
+              "from": "running",
+              "to": "blocked",
+              "guard": "cli fail or illegal db access"
+            }
+          ]
+        }
+      ],
+      "illegal_transition_slots": [
+        {
+          "description": "running → open_hermes_sqlite · TC-KAN-ILL-001",
+          "aggregate": "",
+          "source": "truth"
+        },
+        {
+          "description": "query → mutate_without_public_cli · TC-KAN-ILL-001",
+          "aggregate": "",
+          "source": "truth"
+        }
+      ],
+      "acceptance_criteria": [
+        {
+          "ac_id": "AC-KAN-001",
+          "description": "FleetTable 查询：`adb fleet [--json]` 沿 Domain FSM 合法路径 idle→running→done 输出多项目健康/看板摘要表字段稳定"
+        },
+        {
+          "ac_id": "AC-KAN-002",
+          "description": "BoardView 查询：`adb boards status --project` 沿 idle→running→done 展开列/计数；失败进入 blocked 并给 reason_code"
+        },
+        {
+          "ac_id": "AC-KAN-003",
+          "description": "boards\\"
+        },
+        {
+          "ac_id": "AC-KAN-004",
+          "description": "PendingApprovalView 待拍板表格复用 approvals awaiting，可与 fleet 一并作为反馈面（合法路径 done）"
+        },
+        {
+          "ac_id": "AC-KAN-005",
+          "description": "禁止读取 Hermes 私有 SQLite（illegal）；仅公开 CLI/API；违规必须 reject/拒绝并 blocked"
+        }
+      ],
+      "bound_ac_ids": [
+        "AC-KAN-001",
+        "AC-KAN-002",
+        "AC-KAN-004",
+        "AC-KAN-005"
+      ],
+      "orphan_ac_ids": [],
+      "aggregates_missing_illegal_slots": [],
+      "raw_section_titles": [
+        "人话",
+        "User Intent",
+        "User Intent Snapshot",
+        "Alignment Surface",
+        "Phased Backlog",
+        "Deferral Ledger",
+        "用户旅程",
+        "失败旅程",
+        "Domain Model",
+        "Intent Coverage Matrix",
+        "Acceptance Criteria",
+        "Domain FSM — KanbanOps",
+        "FSM 五元组",
+        "Illegal transitions",
+        "Public CLI Contract",
+        "Non-goals",
+        "Freeze readiness"
+      ]
+    },
+    "validation": {
+      "schema_version": "1.0",
+      "required": true,
+      "blocked": false,
+      "status": "pass",
+      "reason_code": "",
+      "findings": [],
+      "projection": {
+        "schema_version": "1.0",
+        "domain_fsm_schema": "domain-fsm.v1",
+        "entity_precedence_schema": "entity-precedence.v1",
+        "frontmatter": {
+          "slug": "kanban-ops-nl",
+          "version": "v0.0.3",
+          "status": "draft",
+          "revision_id": "R1",
+          "language": "zh",
+          "domain_required": "true",
+          "domain_kind": "business",
+          "ux_required": "false",
+          "package_maturity": "filled",
+          "parser_contract": "beacon-feature-package-v2",
+          "materials_status": "current",
+          "truth_source_model": "intent_first",
+          "git_canonical_branch": "main",
+          "program": "adb-nl-stable-ops",
+          "promotion_ref": "user-ack-三节-2026-07-30",
+          "canonical_refs": {
+            "prd": "docs/beacon/v0.0.3/features/kanban-ops-nl/truth.md",
+            "user_story": "docs/beacon/v0.0.3/features/kanban-ops-nl/truth.md",
+            "test_case": "docs/beacon/v0.0.3/features/kanban-ops-nl/tests.md"
+          }
+        },
+        "frontmatter_errors": [],
+        "has_domain_model_section": true,
+        "has_domain_fsm_section": true,
+        "has_illegal_transition_section": true,
+        "entities": [
+          {
+            "entity": "FleetTable",
+            "key": "projects, health, board",
+            "precedence": "idle→done 只读",
+            "requires": "idle→done 只读"
+          },
+          {
+            "entity": "BoardView",
+            "key": "columns, counts",
+            "precedence": "project scoped",
+            "requires": "project scoped"
+          },
+          {
+            "entity": "PendingApprovalView",
+            "key": "project, stage, feature",
+            "precedence": "awaiting list",
+            "requires": "awaiting list"
+          },
+          {
+            "entity": "ResultEnvelope",
+            "key": "status, blocked, reason_code",
+            "precedence": "统一外壳",
+            "requires": "统一外壳"
+          }
+        ],
+        "entity_precedence": [
+          {
+            "entity": "FleetTable",
+            "key": "projects, health, board",
+            "precedence": "idle→done 只读",
+            "requires": "idle→done 只读"
+          },
+          {
+            "entity": "BoardView",
+            "key": "columns, counts",
+            "precedence": "project scoped",
+            "requires": "project scoped"
+          },
+          {
+            "entity": "PendingApprovalView",
+            "key": "project, stage, feature",
+            "precedence": "awaiting list",
+            "requires": "awaiting list"
+          },
+          {
+            "entity": "ResultEnvelope",
+            "key": "status, blocked, reason_code",
+            "precedence": "统一外壳",
+            "requires": "统一外壳"
+          }
+        ],
+        "aggregates": [
+          {
+            "name": "KanbanOps",
+            "states": [
+              "blocked",
+              "done",
+              "idle",
+              "running"
+            ],
+            "transitions": [
+              {
+                "from": "",
+                "to": "idle",
+                "guard": "registry/fleet ready",
+                "initial": "true"
+              },
+              {
+                "from": "idle",
+                "to": "running",
+                "guard": "query args valid"
+              },
+              {
+                "from": "running",
+                "to": "done",
+                "guard": "public CLI success"
+              },
+              {
+                "from": "running",
+                "to": "blocked",
+                "guard": "cli fail or illegal db access"
+              }
+            ]
+          }
+        ],
+        "illegal_transition_slots": [
+          {
+            "description": "running → open_hermes_sqlite · TC-KAN-ILL-001",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "query → mutate_without_public_cli · TC-KAN-ILL-001",
+            "aggregate": "",
+            "source": "truth"
+          }
+        ],
+        "acceptance_criteria": [
+          {
+            "ac_id": "AC-KAN-001",
+            "description": "FleetTable 查询：`adb fleet [--json]` 沿 Domain FSM 合法路径 idle→running→done 输出多项目健康/看板摘要表字段稳定"
+          },
+          {
+            "ac_id": "AC-KAN-002",
+            "description": "BoardView 查询：`adb boards status --project` 沿 idle→running→done 展开列/计数；失败进入 blocked 并给 reason_code"
+          },
+          {
+            "ac_id": "AC-KAN-003",
+            "description": "boards\\"
+          },
+          {
+            "ac_id": "AC-KAN-004",
+            "description": "PendingApprovalView 待拍板表格复用 approvals awaiting，可与 fleet 一并作为反馈面（合法路径 done）"
+          },
+          {
+            "ac_id": "AC-KAN-005",
+            "description": "禁止读取 Hermes 私有 SQLite（illegal）；仅公开 CLI/API；违规必须 reject/拒绝并 blocked"
+          }
+        ],
+        "bound_ac_ids": [
+          "AC-KAN-001",
+          "AC-KAN-002",
+          "AC-KAN-004",
+          "AC-KAN-005"
+        ],
+        "orphan_ac_ids": [],
+        "aggregates_missing_illegal_slots": [],
+        "raw_section_titles": [
+          "人话",
+          "User Intent",
+          "User Intent Snapshot",
+          "Alignment Surface",
+          "Phased Backlog",
+          "Deferral Ledger",
+          "用户旅程",
+          "失败旅程",
+          "Domain Model",
+          "Intent Coverage Matrix",
+          "Acceptance Criteria",
+          "Domain FSM — KanbanOps",
+          "FSM 五元组",
+          "Illegal transitions",
+          "Public CLI Contract",
+          "Non-goals",
+          "Freeze readiness"
+        ]
+      },
+      "summary": {
+        "entity_count": 4,
+        "aggregate_count": 1,
+        "illegal_slot_count": 2,
+        "orphan_ac_count": 0,
+        "bound_ac_count": 4
+      }
+    },
+    "recommended_action": ""
+  },
+  "human_closure_contract": {
+    "required": false,
+    "research_path": "docs/beacon/v0.0.3/research/kanban-ops-nl.md",
+    "research_exists": false,
+    "source_architecture_path": "docs/beacon/v0.0.3/source-architecture/kanban-ops-nl.md",
+    "source_architecture_exists": false,
+    "required_sections": [
+      "architecture",
+      "business_flow"
+    ],
+    "missing_sections": [
+      "architecture",
+      "business_flow"
+    ],
+    "diagram_types": [],
+    "complexity_signals": []
+  },
+  "requirement_closure_contract": {
+    "required": true,
+    "chain_order": [
+      "research",
+      "prd",
+      "user_story",
+      "test_case",
+      "requirement_clarity",
+      "freeze"
+    ],
+    "human_closure_required": false,
+    "paths": {
+      "research": "docs/beacon/v0.0.3/research/kanban-ops-nl.md",
+      "prd": "docs/beacon/v0.0.3/features/kanban-ops-nl/truth.md",
+      "user_story": "docs/beacon/v0.0.3/features/kanban-ops-nl/truth.md",
+      "test_case": "docs/beacon/v0.0.3/features/kanban-ops-nl/tests.md"
+    },
+    "exists": {
+      "research": false,
+      "prd": true,
+      "user_story": true,
+      "test_case": true
+    },
+    "required_research_sections": [],
+    "missing_research_sections": [],
+    "ac_projection": {
+      "prd_ac_ids": [],
+      "user_story_ac_ids": [],
+      "test_case_ac_ids": [],
+      "upstream_ac_ids": [],
+      "missing_test_case_ac_ids": []
+    }
+  },
+  "version_projection_truth_contract": {
+    "required": false,
+    "supported": false,
+    "projection_types": [],
+    "research_path": "docs/beacon/v0.0.3/research/kanban-ops-nl.md",
+    "research_exists": false,
+    "required_fields": [
+      "prd_refs",
+      "user_story_refs",
+      "test_case_refs",
+      "coverage_notes",
+      "out_of_scope_notes"
+    ],
+    "field_presence": {
+      "prd_refs": false,
+      "user_story_refs": false,
+      "test_case_refs": false,
+      "coverage_notes": false,
+      "out_of_scope_notes": false
+    },
+    "missing_fields": [],
+    "required_refs": {
+      "prd_refs": "docs/beacon/v0.0.3/features/kanban-ops-nl/truth.md",
+      "user_story_refs": "docs/beacon/v0.0.3/features/kanban-ops-nl/truth.md",
+      "test_case_refs": "docs/beacon/v0.0.3/features/kanban-ops-nl/tests.md"
+    },
+    "missing_ref_targets": [],
+    "ready": false
+  },
+  "support_write_topology_contract": {
+    "schema_version": "1.0",
+    "supported": true,
+    "status": "pass",
+    "blocked": false,
+    "reason_code": "",
+    "diagnostics": []
+  },
+  "required_artifacts": [],
+  "scanned_files": [
+    "docs/beacon/v0.0.3/features/kanban-ops-nl/truth.md",
+    "docs/beacon/v0.0.3/features/kanban-ops-nl/tests.md",
+    "docs/beacon/v0.0.3/features/kanban-ops-nl/tasks.md",
+    "docs/beacon/v0.0.3/features/kanban-ops-nl/evidence.md"
+  ]
+}

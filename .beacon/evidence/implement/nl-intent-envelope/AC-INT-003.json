@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "ac_id": "AC-INT-003",
+  "feature": "nl-intent-envelope",
+  "version": "v0.0.3",
+  "status": "implemented",
+  "implemented_at": "2026-07-30T07:53:46.826920+00:00",
+  "evidence": [
+    "src/agent_delivery_bus/intent.py",
+    "src/agent_delivery_bus/cli.py",
+    "tests/test_intent_parse.py",
+    "tests/test_intent_confirm_gate.py",
+    "skills/agent-delivery-bus/SKILL.md"
+  ],
+  "commands": [
+    "python3 -m pytest -q tests/test_intent_parse.py tests/test_intent_confirm_gate.py"
+  ]
+}

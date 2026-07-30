@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "version": "v0.0.3",
+  "projection_only": true,
+  "truth_contract": {
+    "schema_version": "1.0",
+    "version": "v0.0.3",
+    "truth_paths": {
+      "product_truth": "PRODUCT.md",
+      "design_truth": "DESIGN.md",
+      "version_style": "docs/beacon/v0.0.3/design/style.md",
+      "component_system": "docs/beacon/v0.0.3/design/component-system.md",
+      "interaction_contract": "docs/beacon/v0.0.3/design/interaction-contract.md",
+      "state_matrix": "docs/beacon/v0.0.3/design/state-matrix.md",
+      "machine_design_projection": "docs/beacon/v0.0.3/.machine/design"
+    },
+    "truth_authority": {
+      "project_level": [
+        "PRODUCT.md",
+        "DESIGN.md"
+      ],
+      "version_wide": [
+        "docs/beacon/v0.0.3/design/style.md",
+        "docs/beacon/v0.0.3/design/component-system.md",
+        "docs/beacon/v0.0.3/design/interaction-contract.md",
+        "docs/beacon/v0.0.3/design/state-matrix.md"
+      ],
+      "projection_only": [
+        "docs/beacon/v0.0.3/.machine/design"
+      ],
+      "feature_local_design_product_rejected": true
+    },
+    "required_axes": [
+      "page",
+      "component",
+      "state",
+      "interaction",
+      "accessibility",
+      "responsive"
+    ],
+    "writeback_policy": {
+      "accepted_ui_ux_facts_require_truth_binding": true,
+      "truth_changing_design_facts_route": "beacon-change-refreeze",
+      "support_outputs_are_not_truth": true
+    }
+  },
+  "generated_at": "2026-07-30T07:49:57.901477Z"
+}
