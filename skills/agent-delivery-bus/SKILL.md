@@ -59,6 +59,9 @@ bin/adb boards status --project <slug> --json
 bin/adb approvals awaiting --channel feishu --json
 ```
 
+Dispatch task bodies embed stage→Beacon skill binding for the local Hermes `coding`
+(or Codex) runner. `goal` is not an enabled dispatch stage by default.
+
 ### Confirm gate (Hermes skill contract)
 
 1. Parse: `adb intent parse --utterance ... --json`

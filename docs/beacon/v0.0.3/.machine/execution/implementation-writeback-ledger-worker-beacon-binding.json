@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "artifact": "implementation_writeback_ledger",
+  "feature": "worker-beacon-binding",
+  "feature_slug": "worker-beacon-binding",
+  "version": "v0.0.3",
+  "entries": [
+    {
+      "recorded_at": "2026-07-30T09:20:11.985796+00:00",
+      "revision_id": "R1",
+      "run_id": "run-20260730T092011Z-1d16",
+      "implemented_item_ids": [
+        "TEST-001",
+        "AC-001",
+        "TASK-001"
+      ],
+      "changed_files": [
+        "src/agent_delivery_bus/worker_binding.py",
+        "src/agent_delivery_bus/service.py",
+        "tests/test_worker_binding.py",
+        "tests/helpers.py",
+        "skills/agent-delivery-bus/SKILL.md",
+        "skills/agent-delivery-bus/references/contracts.md",
+        "src/agent_delivery_bus"
+      ]
+    }
+  ],
+  "last_recorded_at": "2026-07-30T09:20:11.985796+00:00"
+}

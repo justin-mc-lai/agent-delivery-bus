@@ -1,0 +1,411 @@
+{
+  "schema_version": "1.0",
+  "feature": "worker-beacon-binding",
+  "feature_slug": "worker-beacon-binding",
+  "version": "v0.0.3",
+  "generated_at": "2026-07-30T09:19:20.119297+00:00",
+  "expansion_profile": "pua-web",
+  "scenario_depth": "standard",
+  "families_required": [
+    "happy",
+    "negative",
+    "boundary",
+    "recovery",
+    "compatibility"
+  ],
+  "stories": [
+    {
+      "ac_id": "AC-001",
+      "theme": "general",
+      "text": "Acceptance criteria TBD",
+      "scenario_ids": [],
+      "scenario_families": [],
+      "required_families": [],
+      "scenarios": []
+    },
+    {
+      "ac_id": "AC-WRK-001",
+      "theme": "",
+      "text": "exit_code==0；task body 含 plan skill 绑定",
+      "scenario_ids": [
+        "SC-AUTO-TC-WRK-001"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-WRK-001",
+          "source_tc_id": "TC-WRK-001",
+          "tc_id": "TC-WRK-001-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-WRK-002",
+      "theme": "",
+      "text": "exit_code==0；runner profile 显式",
+      "scenario_ids": [
+        "SC-AUTO-TC-WRK-002"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-WRK-002",
+          "source_tc_id": "TC-WRK-002",
+          "tc_id": "TC-WRK-002-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-WRK-003",
+      "theme": "",
+      "text": "exit_code==0；admission 失败 blocked",
+      "scenario_ids": [
+        "SC-AUTO-TC-WRK-003"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-WRK-003",
+          "source_tc_id": "TC-WRK-003",
+          "tc_id": "TC-WRK-003-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-WRK-004",
+      "theme": "",
+      "text": "exit_code==0；受限阶段仍要 token",
+      "scenario_ids": [
+        "SC-AUTO-TC-WRK-004",
+        "SC-AUTO-TC-WRK-ILL-001"
+      ],
+      "scenario_families": [
+        "primary",
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-WRK-004",
+          "source_tc_id": "TC-WRK-004",
+          "tc_id": "TC-WRK-004-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        },
+        {
+          "scenario_id": "SC-AUTO-TC-WRK-ILL-001",
+          "source_tc_id": "TC-WRK-ILL-001",
+          "tc_id": "TC-WRK-ILL-001-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-WRK-005",
+      "theme": "",
+      "text": "exit_code==0；goal 未升格时拒绝或 defer reason",
+      "scenario_ids": [
+        "SC-AUTO-TC-WRK-005",
+        "SC-AUTO-TC-WRK-ILL-002"
+      ],
+      "scenario_families": [
+        "primary",
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-WRK-005",
+          "source_tc_id": "TC-WRK-005",
+          "tc_id": "TC-WRK-005-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        },
+        {
+          "scenario_id": "SC-AUTO-TC-WRK-ILL-002",
+          "source_tc_id": "TC-WRK-ILL-002",
+          "tc_id": "TC-WRK-ILL-002-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario_id": "SC-AUTO-TC-WRK-001",
+      "source_tc_id": "TC-WRK-001",
+      "tc_id": "TC-WRK-001-PRIMARY",
+      "ac_id": "AC-WRK-001",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；task body 含 plan skill 绑定",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_worker_binding.py -k task_body_plan --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；task body 含 plan skill 绑定",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/worker-beacon-binding/tc-wrk-001/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-WRK-002",
+      "source_tc_id": "TC-WRK-002",
+      "tc_id": "TC-WRK-002-PRIMARY",
+      "ac_id": "AC-WRK-002",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；runner profile 显式",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_worker_binding.py -k runner_profile --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；runner profile 显式",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/worker-beacon-binding/tc-wrk-002/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-WRK-003",
+      "source_tc_id": "TC-WRK-003",
+      "tc_id": "TC-WRK-003-PRIMARY",
+      "ac_id": "AC-WRK-003",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；admission 失败 blocked",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_worker_binding.py -k admission_fail_closed --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；admission 失败 blocked",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/worker-beacon-binding/tc-wrk-003/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-WRK-004",
+      "source_tc_id": "TC-WRK-004",
+      "tc_id": "TC-WRK-004-PRIMARY",
+      "ac_id": "AC-WRK-004",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；受限阶段仍要 token",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_worker_binding.py -k approve_still_required --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；受限阶段仍要 token",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/worker-beacon-binding/tc-wrk-004/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-WRK-005",
+      "source_tc_id": "TC-WRK-005",
+      "tc_id": "TC-WRK-005-PRIMARY",
+      "ac_id": "AC-WRK-005",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；goal 未升格时拒绝或 defer reason",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_worker_binding.py -k goal_deferred --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；goal 未升格时拒绝或 defer reason",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/worker-beacon-binding/tc-wrk-005/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-WRK-ILL-001",
+      "source_tc_id": "TC-WRK-ILL-001",
+      "tc_id": "TC-WRK-ILL-001-PRIMARY",
+      "ac_id": "AC-WRK-004",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；非法绕过 approve fail-closed",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_worker_binding.py -k illegal_skip_approve --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；非法绕过 approve fail-closed",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/worker-beacon-binding/tc-wrk-ill-001/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-WRK-ILL-002",
+      "source_tc_id": "TC-WRK-ILL-002",
+      "tc_id": "TC-WRK-ILL-002-PRIMARY",
+      "ac_id": "AC-WRK-005",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；未升格启用 goal 非法",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_worker_binding.py -k illegal_goal_enable --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；未升格启用 goal 非法",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/worker-beacon-binding/tc-wrk-ill-002/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    }
+  ]
+}

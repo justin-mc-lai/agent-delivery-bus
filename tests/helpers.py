@@ -73,6 +73,8 @@ class FakeExecutor:
         self.create_count = 0
         self.remote_status = remote_status
         self.tasks: dict[str, dict[str, Any]] = {}
+        self.last_body = ""
+        self.bodies: list[str] = []
 
     def preflight_checks(self, project: Project, *, stage: str):
         return []
@@ -88,11 +90,14 @@ class FakeExecutor:
 
     def create_task(self, project: Project, *, stage: str, feature: str, body: str, idempotency_key: str):
         self.create_count += 1
+        self.last_body = body
+        self.bodies.append(body)
         task_id = f"task-{self.create_count}"
         task = {
             "id": task_id,
             "status": self.remote_status,
             "idempotency_key": idempotency_key,
+            "body": body,
         }
         self.tasks[task_id] = task
         return {"board": self.board_for(project), "task_id": task_id, "payload": task}

@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "ac_id": "AC-WRK-002",
+  "feature": "worker-beacon-binding",
+  "version": "v0.0.3",
+  "status": "implemented",
+  "implemented_at": "2026-07-30T09:17:11.686746+00:00",
+  "evidence": [
+    "src/agent_delivery_bus/worker_binding.py",
+    "src/agent_delivery_bus/service.py",
+    "tests/test_worker_binding.py",
+    "tests/helpers.py",
+    "skills/agent-delivery-bus/references/contracts.md"
+  ],
+  "commands": [
+    "python3 -m pytest -q tests/test_worker_binding.py -k runner_profile"
+  ],
+  "notes": "runner_kind=local_agent, profile coding|codex, cloud_scheduler_forbidden"
+}

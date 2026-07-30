@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "feature": "worker-beacon-binding",
+  "status": "passed",
+  "at": "2026-07-30T09:21:23.796088+00:00",
+  "tc_ids": [
+    "TC-WRK-001",
+    "TC-WRK-002",
+    "TC-WRK-003",
+    "TC-WRK-004",
+    "TC-WRK-005",
+    "TC-WRK-ILL-001",
+    "TC-WRK-ILL-002"
+  ],
+  "qa_run_id": "run-20260730T172048551452",
+  "scorecard": {
+    "ac_accepted": 5,
+    "ac_total": 5,
+    "scenario_passed": 7,
+    "scenario_total": 7
+  }
+}
