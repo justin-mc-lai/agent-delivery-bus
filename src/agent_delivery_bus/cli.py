@@ -8,8 +8,10 @@ from typing import Any
 
 from .adapters.factory import adapters_from_config
 from .approvals import ApprovalService
+from .assign import AssignmentScorer
 from .errors import DeliveryBusError
 from .install import install_skill
+from .pending import pending_approval_views, render_pending_channel
 from .preflight import Preflight
 from .registry import ProjectRegistry
 from .service import DeliveryService
@@ -99,6 +101,21 @@ def build_parser() -> argparse.ArgumentParser:
     approve.add_argument("--feature", required=True)
     approve.add_argument("--ttl", type=int, default=900)
     approve.add_argument("--json", action="store_true")
+
+    approvals = sub.add_parser("approvals", help="list pending / awaiting human approvals")
+    approvals_sub = approvals.add_subparsers(dest="approvals_command", required=True)
+    approvals_awaiting = approvals_sub.add_parser("awaiting", help="待拍板列表（CLI/飞书载荷）")
+    approvals_awaiting.add_argument("--project")
+    approvals_awaiting.add_argument("--channel", default="text", choices=["text", "feishu"])
+    approvals_awaiting.add_argument("--json", action="store_true")
+
+    assign = sub.add_parser("assign", help="auto-assign scorer (candidates only)")
+    assign_sub = assign.add_subparsers(dest="assign_command", required=True)
+    assign_candidates = assign_sub.add_parser("candidates", help="score dispatch candidates; never creates tasks")
+    assign_candidates.add_argument("--project")
+    assign_candidates.add_argument("--stage", default="implement")
+    assign_candidates.add_argument("--feature", default="memory-adapter-auto-assign")
+    assign_candidates.add_argument("--json", action="store_true")
 
     dispatch = sub.add_parser("dispatch")
     dispatch.add_argument("--project", required=True)
@@ -483,8 +500,10 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
             preflight=preflight,
             executor=executor,
             truth_gate=truth_gate,
+            memory=wired["memory"],
         )
         approvals = ApprovalService(storage)
+        scorer = AssignmentScorer(registry)
 
         if args.command == "projects":
             if args.projects_command == "list":
@@ -589,6 +608,24 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                 ttl_seconds=args.ttl,
             )
             return envelope(status="pass", data=issued)
+
+        if args.command == "approvals":
+            if args.approvals_command == "awaiting":
+                views = pending_approval_views(storage, project_slug=args.project)
+                rendered = render_pending_channel(views, channel=args.channel)
+                return envelope(status="pass", data=rendered)
+            raise DeliveryBusError("approvals_command_invalid", f"Unknown approvals command: {args.approvals_command}")
+
+        if args.command == "assign":
+            if args.assign_command == "candidates":
+                rows = scorer.candidates(
+                    stage=args.stage,
+                    feature=args.feature,
+                    project_slug=args.project,
+                )
+                scorer.assert_candidates_only(rows)
+                return envelope(status="pass", data={"candidates": rows})
+            raise DeliveryBusError("assign_command_invalid", f"Unknown assign command: {args.assign_command}")
 
         if args.command == "dispatch":
             result = service.dispatch(

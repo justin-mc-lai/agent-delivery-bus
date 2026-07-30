@@ -6,7 +6,8 @@ import hashlib
 import json
 from typing import Any
 
-from .adapters.spi import ExecutorAdapter, TruthGateAdapter
+from .adapters.memory import InMemoryMemoryAdapter
+from .adapters.spi import ExecutorAdapter, MemoryAdapter, TruthGateAdapter
 from .approvals import ApprovalService, RESTRICTED_STAGES
 from .errors import CommandTimedOut, DeliveryBusError
 from .preflight import Preflight
@@ -35,26 +36,33 @@ def request_digest(request: dict[str, Any]) -> str:
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
-def task_body(project: Project, *, stage: str, feature: str) -> str:
+def task_body(
+    project: Project,
+    *,
+    stage: str,
+    feature: str,
+    memory_summary: str = "",
+) -> str:
     approval_note = (
         "A matching one-time approval was reserved by Agent Delivery Bus."
         if stage in RESTRICTED_STAGES
         else "This stage is not approval-gated."
     )
-    return "\n".join(
-        [
-            f"Project: {project.slug}",
-            f"Repository: {project.repo}",
-            f"Docs version: {project.docs_version or '(none)'}",
-            f"Stage: {stage}",
-            f"Feature: {feature}",
-            "",
-            approval_note,
-            "Run the project's governed workflow for this stage and preserve its delivery gates.",
-            "Do not release, merge, push, or repair project context unless a separate human instruction explicitly authorizes it.",
-            "Worker success is an execution receipt only; Agent Delivery Bus will reconcile truth-gate evidence separately.",
-        ]
-    )
+    lines = [
+        f"Project: {project.slug}",
+        f"Repository: {project.repo}",
+        f"Docs version: {project.docs_version or '(none)'}",
+        f"Stage: {stage}",
+        f"Feature: {feature}",
+        "",
+        approval_note,
+        "Run the project's governed workflow for this stage and preserve its delivery gates.",
+        "Do not release, merge, push, or repair project context unless a separate human instruction explicitly authorizes it.",
+        "Worker success is an execution receipt only; Agent Delivery Bus will reconcile truth-gate evidence separately.",
+    ]
+    if memory_summary.strip():
+        lines.extend(["", "### Scoped memory recall", memory_summary.strip()])
+    return "\n".join(lines)
 
 
 class DeliveryService:
@@ -66,6 +74,7 @@ class DeliveryService:
         preflight: Preflight | None = None,
         executor: ExecutorAdapter | None = None,
         truth_gate: TruthGateAdapter | None = None,
+        memory: MemoryAdapter | None = None,
         # Backward-compatible aliases
         hermes: ExecutorAdapter | None = None,
         beacon: TruthGateAdapter | None = None,
@@ -79,8 +88,49 @@ class DeliveryService:
         # Compatibility attributes for older call sites/tests.
         self.hermes = self.executor
         self.beacon = self.truth_gate
+        self.memory = memory or InMemoryMemoryAdapter()
         self.preflight = preflight or Preflight(self.truth_gate, self.executor)
         self.approvals = ApprovalService(storage)
+
+    def _recall_for_dispatch(self, project: Project, *, stage: str, feature: str) -> dict[str, Any]:
+        query = f"{project.slug} {stage} {feature}".strip()
+        return self.memory.recall(project_slug=project.slug, query=query, limit=8)
+
+    def _safe_writeback(
+        self,
+        *,
+        project_slug: str,
+        stage: str,
+        feature: str,
+        dispatch_id: str,
+        reason_code: str,
+        payload: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        try:
+            result = self.memory.writeback(
+                project_slug=project_slug,
+                stage=stage,
+                feature=feature,
+                dispatch_id=dispatch_id,
+                reason_code=reason_code,
+                payload=payload,
+            )
+            return {"ok": True, "result": result}
+        except DeliveryBusError as exc:
+            return {
+                "ok": False,
+                "reason_code": exc.reason_code,
+                "message": str(exc),
+                "resume_action": exc.resume_action,
+                "data": exc.data or {},
+            }
+        except Exception as exc:  # noqa: BLE001 - writeback must never erase reconcile
+            return {
+                "ok": False,
+                "reason_code": "memory_writeback_failed",
+                "message": str(exc),
+                "resume_action": "retry writeback; reconcile status is unchanged",
+            }
 
     def dispatch(
         self,
@@ -248,12 +298,39 @@ class DeliveryService:
             )
 
         try:
+            memory = self._recall_for_dispatch(project, stage=stage, feature=feature)
+        except DeliveryBusError as exc:
+            if approval_id:
+                self.approvals.release(approval_id, dispatch_id=dispatch_id)
+            dispatch = self.storage.transition(
+                dispatch_id,
+                expected_from="queued",
+                to_state="blocked",
+                event_type="memory_recall_failed",
+                reason_code=exc.reason_code,
+                resume_action=exc.resume_action,
+                payload={"error": str(exc), "data": exc.data or {}},
+            )
+            return {
+                "status": "blocked",
+                "blocked": True,
+                "reason_code": exc.reason_code,
+                "resume_action": exc.resume_action,
+                "dispatch": dispatch,
+            }
+
+        try:
             self.executor.ensure_board(project)
             receipt = self.executor.create_task(
                 project,
                 stage=stage,
                 feature=feature,
-                body=task_body(project, stage=stage, feature=feature),
+                body=task_body(
+                    project,
+                    stage=stage,
+                    feature=feature,
+                    memory_summary=str(memory.get("summary") or ""),
+                ),
                 idempotency_key=idempotency_key,
             )
             dispatch = self.storage.transition(
@@ -264,11 +341,24 @@ class DeliveryService:
                 approval_id=approval_id,
                 executor_board=str(receipt["board"]),
                 executor_task_id=str(receipt["task_id"]),
-                payload={"receipt": receipt},
+                payload={
+                    "receipt": receipt,
+                    "memory_injection_ref": memory.get("injection_ref"),
+                    "memory_record_count": len(memory.get("records") or []),
+                },
             )
             if approval_id:
                 self.approvals.finalize(approval_id, dispatch_id=dispatch_id)
-            return {"status": "dispatched", "blocked": False, "duplicate": not created, "dispatch": dispatch}
+            return {
+                "status": "dispatched",
+                "blocked": False,
+                "duplicate": not created,
+                "dispatch": dispatch,
+                "memory": {
+                    "injection_ref": memory.get("injection_ref"),
+                    "record_count": len(memory.get("records") or []),
+                },
+            }
         except CommandTimedOut as exc:
             dispatch = self.storage.transition(
                 dispatch_id,
@@ -345,11 +435,20 @@ class DeliveryService:
                     reason_code="executor_terminal_failure",
                     payload={"task": task},
                 )
+            writeback = self._safe_writeback(
+                project_slug=project.slug,
+                stage=dispatch["stage"],
+                feature=dispatch["feature"],
+                dispatch_id=dispatch_id,
+                reason_code="executor_terminal_failure",
+                payload={"status": "failed", "task": task},
+            )
             return {
                 "status": "failed",
                 "blocked": True,
                 "reason_code": "executor_terminal_failure",
                 "dispatch": dispatch,
+                "memory_writeback": writeback,
             }
         if status not in TERMINAL_EXECUTOR_SUCCESS:
             return {"status": dispatch["state"], "blocked": False, "remote_status": status, "dispatch": dispatch}
@@ -382,4 +481,18 @@ class DeliveryService:
             event_type="closure_verified",
             payload={"closure": closure, "task": task},
         )
-        return {"status": "completed", "blocked": False, "closure": closure, "dispatch": dispatch}
+        writeback = self._safe_writeback(
+            project_slug=project.slug,
+            stage=dispatch["stage"],
+            feature=dispatch["feature"],
+            dispatch_id=dispatch_id,
+            reason_code="",
+            payload={"status": "completed", "closure": closure, "task": task},
+        )
+        return {
+            "status": "completed",
+            "blocked": False,
+            "closure": closure,
+            "dispatch": dispatch,
+            "memory_writeback": writeback,
+        }
