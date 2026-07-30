@@ -40,6 +40,14 @@ class BoundaryTests(unittest.TestCase):
         self.assertNotIn('"setup-context"', text)
         self.assertNotIn('"sync-materials"', text)
 
+    def test_core_modules_do_not_embed_agentmemory_client(self):
+        root = Path(__file__).resolve().parents[1] / "src" / "agent_delivery_bus"
+        for name in ("registry.py", "storage.py", "approvals.py"):
+            text = (root / name).read_text(encoding="utf-8")
+            self.assertNotIn("agentmemory", text)
+            self.assertNotIn("AgentMemoryAdapter", text)
+            self.assertNotIn("3111", text)
+
 
 if __name__ == "__main__":
     unittest.main()

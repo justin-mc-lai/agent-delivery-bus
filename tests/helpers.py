@@ -35,6 +35,8 @@ def write_registry(path: Path, projects: list[Project]) -> Path:
         },
         "projects": [project.to_dict() for project in projects],
     }
+    if "memory" not in payload["adapters"]:
+        payload["adapters"]["memory"] = "inprocess"
     path.write_text(json.dumps(payload), encoding="utf-8")
     return path
 
