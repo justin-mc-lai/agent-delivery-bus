@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "artifact": "qa_acceptance_runtime_projection",
+  "version": "v0.0.4",
+  "feature": "vision-flywheel",
+  "feature_slug": "vision-flywheel",
+  "revision_id": "R1",
+  "verdict": "passed",
+  "transaction_id": "tx-qa-acceptance-vision-flywheel-dca431255e4d",
+  "source_hash": "sha256:dca431255e4d029a555809633b59bb2158e56c628ac684bb69703ed6fd6a6c9d",
+  "projection_seq": 1,
+  "committed_at": "2026-08-04T03:19:07.296795+00:00",
+  "write_status": "applied",
+  "failed_sinks": [],
+  "machine_ref": "docs/beacon/v0.0.4/.machine/execution/qa-acceptance-vision-flywheel.json",
+  "markdown_ref": "docs/beacon/v0.0.4/execution/qa-acceptance-brief-vision-flywheel.md",
+  "runtime_projection_ref": ".beacon/transactions/qa-acceptance-vision-flywheel.json",
+  "sink_checksums": {
+    "machine": "sha256:f8f5db807101ab84fa47592210da8af3562ecf21cc1dcd57b25ae102797d633f",
+    "human": "sha256:d670015755c239c8a6b8a8bd0095764991238969351404d918d9b330ebda4634",
+    "runtime": "sha256:f9893009e5ea7ad947e878a188a3a63606f62843961e9ddeafc6ce67e0d6f691"
+  }
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "run_id": "run-20260804T111902421974",
+    "generated_at": "2026-08-04T11:19:07.236248",
+    "summary_path": ".beacon/evidence/auto-test/run-20260804T111902421974/summary.json",
+    "summary_sha256": "389a21978c890735f1fe477f13f94f5f55efd961fcd6c4576c6f8c9e06b3c20f",
+    "manifest_path": ".beacon/evidence-manifest.json",
+    "manifest_sha256": "a34e9f43ebf5475fcae59eabc55ad778826221ded7f4975eb01d974f40748df1"
+  }
+]

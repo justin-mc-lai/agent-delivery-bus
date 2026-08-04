@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "artifact": "qa_acceptance_envelope",
+  "version": "v0.0.4",
+  "feature": "vision-flywheel",
+  "feature_slug": "vision-flywheel",
+  "revision_id": "R1",
+  "verdict": "passed",
+  "accepted_at": "2026-08-04T03:19:07.292359+00:00",
+  "accepted_by": "qa",
+  "run_id": "run-20260804T111902421974",
+  "transaction_id": "tx-qa-acceptance-vision-flywheel-dca431255e4d",
+  "source_hash": "sha256:dca431255e4d029a555809633b59bb2158e56c628ac684bb69703ed6fd6a6c9d",
+  "projection_seq": 1,
+  "source_command": "beacon qa run \"vision-flywheel\" --project-root /Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.4/vision-flywheel --version v0.0.4",
+  "requirement_refs": [
+    "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+    "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+    "docs/beacon/v0.0.4/features/vision-flywheel/tests.md",
+    "docs/beacon/v0.0.4/.machine/execution/vision-flywheel.revision.json"
+  ],
+  "test_case_refs": [],
+  "evidence_refs": [
+    ".beacon/auto-test-status.json",
+    ".beacon/qa/status.json",
+    ".beacon/coverage-summary.json",
+    ".beacon/release-gate-report.json"
+  ],
+  "story_status": "implemented",
+  "revision_delivery_status": "implemented",
+  "required_ac_count": 0,
+  "required_test_count": 0,
+  "canonical_envelope_ref": "docs/beacon/v0.0.4/.machine/execution/qa-acceptance-vision-flywheel.json",
+  "markdown_ref": "docs/beacon/v0.0.4/execution/qa-acceptance-brief-vision-flywheel.md",
+  "transaction_lineage": {
+    "current_transaction_id": "tx-qa-acceptance-vision-flywheel-dca431255e4d",
+    "projection_seq": 1,
+    "source_hash": "sha256:dca431255e4d029a555809633b59bb2158e56c628ac684bb69703ed6fd6a6c9d",
+    "workflow_memory_ref": ".beacon/memory/workflow-lifecycle.json",
+    "memory_event_id": "",
+    "memory_entry_id": "4415a523-1c55-464e-9ba2-c7a45e76a37b"
+  },
+  "sink_checksums": {
+    "machine": "sha256:f8f5db807101ab84fa47592210da8af3562ecf21cc1dcd57b25ae102797d633f",
+    "human": "sha256:d670015755c239c8a6b8a8bd0095764991238969351404d918d9b330ebda4634",
+    "runtime": "sha256:f9893009e5ea7ad947e878a188a3a63606f62843961e9ddeafc6ce67e0d6f691"
+  },
+  "runtime_projection_ref": ".beacon/transactions/qa-acceptance-vision-flywheel.json",
+  "transaction_status": "applied",
+  "failed_sinks": []
+}

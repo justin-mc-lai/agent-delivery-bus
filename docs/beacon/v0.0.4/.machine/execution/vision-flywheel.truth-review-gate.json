@@ -171,7 +171,7 @@
     "fill_depth_pass": true,
     "note": "Polish L0/narrative only after A/B/C; preserve_machine_fields=true; freeze needs D+exec too"
   },
-  "evaluated_at": "2026-08-04T03:18:26.416600+00:00",
+  "evaluated_at": "2026-08-04T03:19:01.285206+00:00",
   "paths": {
     "truth": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
     "tests": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md",

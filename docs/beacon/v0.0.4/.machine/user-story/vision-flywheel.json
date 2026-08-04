@@ -5,7 +5,7 @@
   "version": "v0.0.4",
   "current_revision_id": "R1",
   "lifecycle_status": "frozen",
-  "updated_at": "2026-08-04T03:18:49.070625+00:00",
+  "updated_at": "2026-08-04T03:19:07.298070+00:00",
   "revisions": [
     {
       "revision_id": "R1",
@@ -28,7 +28,7 @@
       "revision_id": "R1",
       "title": "vision-flywheel",
       "priority": "medium",
-      "status": "implemented",
+      "status": "accepted",
       "items": [
         {
           "id": "AC-001",
@@ -50,10 +50,10 @@
           "kind": "task",
           "text": "Implement current frozen revision",
           "required": true,
-          "status": "implemented",
+          "status": "accepted",
           "implemented_by_run_id": "run-20260804T031849Z-057e",
           "verified_by_run_id": null,
-          "accepted_at": null,
+          "accepted_at": "2026-08-04T03:19:07.292359+00:00",
           "changed_in_revision": "R1"
         },
         {
@@ -61,9 +61,9 @@
           "kind": "test",
           "text": "Verify AC-001 — Acceptance criteria TBD",
           "required": true,
-          "status": "implemented",
+          "status": "passed",
           "implemented_by_run_id": "run-20260804T031849Z-057e",
-          "verified_by_run_id": null,
+          "verified_by_run_id": "run-20260804T111902421974",
           "accepted_at": null,
           "changed_in_revision": "R1",
           "covers": [
@@ -91,7 +91,15 @@
         "src/agent_delivery_bus/storage.py",
         "src/agent_delivery_bus/cli.py",
         "tests/test_schedule.py"
-      ]
+      ],
+      "verification_evidence": [
+        ".beacon/auto-test-status.json",
+        ".beacon/qa/status.json",
+        ".beacon/coverage-summary.json",
+        ".beacon/release-gate-report.json"
+      ],
+      "accepted_at": "2026-08-04T03:19:07.292359+00:00",
+      "accepted_by": "qa"
     }
   ]
 }

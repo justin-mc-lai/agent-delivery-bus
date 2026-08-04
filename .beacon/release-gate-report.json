@@ -1,0 +1,16 @@
+{
+  "stage": "release",
+  "mode": "strict",
+  "status": "Pass",
+  "issues": [
+    {
+      "reason_code": "domain_fsm_legal_walk_missing",
+      "message": "domain_fsm_legal_walk_missing",
+      "blocked": true
+    }
+  ],
+  "blocked_count": 1,
+  "run_id": "run-20260804T111902421974",
+  "version": "v0.0.4",
+  "updated_at": "2026-08-04T03:19:07.277554+00:00"
+}

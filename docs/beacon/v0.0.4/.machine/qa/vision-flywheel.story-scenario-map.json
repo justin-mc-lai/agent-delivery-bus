@@ -22,7 +22,506 @@
       "scenario_families": [],
       "required_families": [],
       "scenarios": []
+    },
+    {
+      "ac_id": "AC-FLY-001",
+      "theme": "",
+      "text": "exit_code==0；register 成功写入调度注册表；重复 slug 幂等更新；未知引擎拒绝",
+      "scenario_ids": [
+        "SC-AUTO-TC-FLY-001"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-FLY-001",
+          "source_tc_id": "TC-FLY-001",
+          "tc_id": "TC-FLY-001-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-FLY-002",
+      "theme": "",
+      "text": "exit_code==0；list 含全部条目与 quota 状态；show 返回单条目",
+      "scenario_ids": [
+        "SC-AUTO-TC-FLY-002"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-FLY-002",
+          "source_tc_id": "TC-FLY-002",
+          "tc_id": "TC-FLY-002-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-FLY-003",
+      "theme": "",
+      "text": "exit_code==0；quota 充足→run；耗尽/不健康→blocked+reason_code；无 LLM 调用",
+      "scenario_ids": [
+        "SC-AUTO-TC-FLY-003"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-FLY-003",
+          "source_tc_id": "TC-FLY-003",
+          "tc_id": "TC-FLY-003-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-FLY-004",
+      "theme": "",
+      "text": "exit_code==0；slot 按白名单来源记账；耗尽→throttled；无证据不计配额",
+      "scenario_ids": [
+        "SC-AUTO-TC-FLY-004"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-FLY-004",
+          "source_tc_id": "TC-FLY-004",
+          "tc_id": "TC-FLY-004-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-FLY-005",
+      "theme": "",
+      "text": "exit_code==0；心跳运行追加写事件流（entry_slug/status/evidence_refs/quota_spent）",
+      "scenario_ids": [
+        "SC-AUTO-TC-FLY-005"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-FLY-005",
+          "source_tc_id": "TC-FLY-005",
+          "tc_id": "TC-FLY-005-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-FLY-006",
+      "theme": "",
+      "text": "exit_code==0；缺证据保持 reconciling；证据齐→completed",
+      "scenario_ids": [
+        "SC-AUTO-TC-FLY-006",
+        "SC-AUTO-TC-FLY-ILL-002"
+      ],
+      "scenario_families": [
+        "primary",
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-FLY-006",
+          "source_tc_id": "TC-FLY-006",
+          "tc_id": "TC-FLY-006-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        },
+        {
+          "scenario_id": "SC-AUTO-TC-FLY-ILL-002",
+          "source_tc_id": "TC-FLY-ILL-002",
+          "tc_id": "TC-FLY-ILL-002-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-FLY-007",
+      "theme": "",
+      "text": "exit_code==0；心跳不自动 approve/dispatch",
+      "scenario_ids": [
+        "SC-AUTO-TC-FLY-007",
+        "SC-AUTO-TC-FLY-ILL-001"
+      ],
+      "scenario_families": [
+        "primary",
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-FLY-007",
+          "source_tc_id": "TC-FLY-007",
+          "tc_id": "TC-FLY-007-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        },
+        {
+          "scenario_id": "SC-AUTO-TC-FLY-ILL-001",
+          "source_tc_id": "TC-FLY-ILL-001",
+          "tc_id": "TC-FLY-ILL-001-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
     }
   ],
-  "scenarios": []
+  "scenarios": [
+    {
+      "scenario_id": "SC-AUTO-TC-FLY-001",
+      "source_tc_id": "TC-FLY-001",
+      "tc_id": "TC-FLY-001-PRIMARY",
+      "ac_id": "AC-FLY-001",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；register 成功写入调度注册表；重复 slug 幂等更新；未知引擎拒绝",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_schedule.py -k register --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；register 成功写入调度注册表；重复 slug 幂等更新；未知引擎拒绝",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/vision-flywheel/tc-fly-001/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-FLY-002",
+      "source_tc_id": "TC-FLY-002",
+      "tc_id": "TC-FLY-002-PRIMARY",
+      "ac_id": "AC-FLY-002",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；list 含全部条目与 quota 状态；show 返回单条目",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_schedule.py -k list_show --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；list 含全部条目与 quota 状态；show 返回单条目",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/vision-flywheel/tc-fly-002/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-FLY-003",
+      "source_tc_id": "TC-FLY-003",
+      "tc_id": "TC-FLY-003-PRIMARY",
+      "ac_id": "AC-FLY-003",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；quota 充足→run；耗尽/不健康→blocked+reason_code；无 LLM 调用",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_schedule.py -k should_run --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；quota 充足→run；耗尽/不健康→blocked+reason_code；无 LLM 调用",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/vision-flywheel/tc-fly-003/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-FLY-004",
+      "source_tc_id": "TC-FLY-004",
+      "tc_id": "TC-FLY-004-PRIMARY",
+      "ac_id": "AC-FLY-004",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；slot 按白名单来源记账；耗尽→throttled；无证据不计配额",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_schedule.py -k quota --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；slot 按白名单来源记账；耗尽→throttled；无证据不计配额",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/vision-flywheel/tc-fly-004/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-FLY-005",
+      "source_tc_id": "TC-FLY-005",
+      "tc_id": "TC-FLY-005-PRIMARY",
+      "ac_id": "AC-FLY-005",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；心跳运行追加写事件流（entry_slug/status/evidence_refs/quota_spent）",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_schedule.py -k ledger --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；心跳运行追加写事件流（entry_slug/status/evidence_refs/quota_spent）",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/vision-flywheel/tc-fly-005/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-FLY-006",
+      "source_tc_id": "TC-FLY-006",
+      "tc_id": "TC-FLY-006-PRIMARY",
+      "ac_id": "AC-FLY-006",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；缺证据保持 reconciling；证据齐→completed",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_schedule.py -k reconcile --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；缺证据保持 reconciling；证据齐→completed",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/vision-flywheel/tc-fly-006/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-FLY-007",
+      "source_tc_id": "TC-FLY-007",
+      "tc_id": "TC-FLY-007-PRIMARY",
+      "ac_id": "AC-FLY-007",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；心跳不自动 approve/dispatch",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_schedule.py -k no_auto --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；心跳不自动 approve/dispatch",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/vision-flywheel/tc-fly-007/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-FLY-ILL-001",
+      "source_tc_id": "TC-FLY-ILL-001",
+      "tc_id": "TC-FLY-ILL-001-PRIMARY",
+      "ac_id": "AC-FLY-007",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；心跳→dispatch/approve 非法",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_schedule.py -k illegal_dispatch --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；心跳→dispatch/approve 非法",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/vision-flywheel/tc-fly-ill-001/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-FLY-ILL-002",
+      "source_tc_id": "TC-FLY-ILL-002",
+      "tc_id": "TC-FLY-ILL-002-PRIMARY",
+      "ac_id": "AC-FLY-006",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code==0；跳过 should-run 直达执行非法",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_schedule.py -k skip_should_run --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code==0；跳过 should-run 直达执行非法",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/vision-flywheel/tc-fly-ill-002/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    }
+  ]
 }
