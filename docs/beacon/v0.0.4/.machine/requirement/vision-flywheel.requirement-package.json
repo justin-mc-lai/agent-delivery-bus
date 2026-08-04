@@ -5,7 +5,7 @@
   "truth_package_contract": "beacon-feature-package-v2",
   "machine_json_role": "generated_state_not_truth",
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-08-04T01:43:24.837959+00:00",
+  "generated_at": "2026-08-04T03:18:01.790377+00:00",
   "feature": "vision-flywheel",
   "feature_slug": "vision-flywheel",
   "version": "v0.0.4",
@@ -20,8 +20,8 @@
   "source_hashes": {
     "truth": "a4e27e91f970c52e6576953656f602e65002c46793fe0153ba60d924376a2d0c",
     "tests": "db7a800b44f0733ce7b52eff5e722c70ee720adf0604eeb14f34be349956eef8",
-    "tasks": "47018476706ae03b63ea86a3d5f1a2cdc1f99b8df5fe08642d434d7f0956d6ad",
-    "evidence": "e29f0b0b61037a06743d35dc9d5c1ffa6be923dd2eccda3713e534b463ef9b37"
+    "tasks": "1233716780e554bec433668115b23dcea57fc88e0c8a46e6d254deab8b211ab8",
+    "evidence": "767caefbe2d425a2d936a72b67c06c75a3cdab74aa17d47854a22bf2a783abb6"
   },
   "truth_frontmatter": {
     "slug": "vision-flywheel",
@@ -161,47 +161,47 @@
     {
       "id": "TASK-001",
       "title": "Implement AC-FLY-001: `adb schedule register` 登记定时任务（slug/command/engine/cron_expr/quota_li... · ac=AC-FLY-001 · evidence=`.beacon/evidence/implement/vision-flywheel/AC-FLY-001.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-002",
       "title": "Implement AC-FLY-002: `adb schedule list` 输出全部注册条目（含 quota 状态）；`adb schedule show <slug>` 单条目 · ac=AC-FLY-002 · evidence=`.beacon/evidence/implement/vision-flywheel/AC-FLY-002.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-003",
       "title": "Implement AC-FLY-003: `adb schedule should-run <slug>` 确定性门卫链（quota 门卫 → 健康门卫），输出 run/block... · ac=AC-FLY-003 · evidence=`.beacon/evidence/implement/vision-flywheel/AC-FLY-003.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-004",
       "title": "Implement AC-FLY-004: quota 记账：被触发的执行按来源（heartbeat/controller 白名单）计 slot；配额耗尽 → throttled +... · ac=AC-FLY-004 · evidence=`.beacon/evidence/implement/vision-flywheel/AC-FLY-004.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-005",
       "title": "Implement AC-FLY-005: 心跳运行追加写 dispatch ledger（事件流：entry_slug/status/evidence_refs/quota_spe... · ac=AC-FLY-005 · evidence=`.beacon/evidence/implement/vision-flywheel/AC-FLY-005.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-006",
       "title": "Implement AC-FLY-006: 心跳证据对账：复用 truth-gate closure 逻辑，缺证据保持 reconciling；证据齐才 completed · ac=AC-FLY-006 · evidence=`.beacon/evidence/implement/vision-flywheel/AC-FLY-006.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-007",
       "title": "Implement AC-FLY-007: 心跳不得自动 approve/dispatch（illegal）；违规进入 blocked · ac=AC-FLY-007 · evidence=`.beacon/evidence/implement/vision-flywheel/AC-FLY-007.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-008",
       "title": "Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/vision-flywheel/GATES.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-009",
       "title": "Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/vision-flywheel/QA-MATRIX.json`",
-      "status": "unchecked"
+      "status": "checked"
     }
   ],
   "checkbox_errors": [],

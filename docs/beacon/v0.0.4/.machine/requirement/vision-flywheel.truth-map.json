@@ -67,8 +67,8 @@
     "source_hashes": {
       "truth": "a4e27e91f970c52e6576953656f602e65002c46793fe0153ba60d924376a2d0c",
       "tests": "db7a800b44f0733ce7b52eff5e722c70ee720adf0604eeb14f34be349956eef8",
-      "tasks": "47018476706ae03b63ea86a3d5f1a2cdc1f99b8df5fe08642d434d7f0956d6ad",
-      "evidence": "e29f0b0b61037a06743d35dc9d5c1ffa6be923dd2eccda3713e534b463ef9b37"
+      "tasks": "1233716780e554bec433668115b23dcea57fc88e0c8a46e6d254deab8b211ab8",
+      "evidence": "767caefbe2d425a2d936a72b67c06c75a3cdab74aa17d47854a22bf2a783abb6"
     },
     "surfaces": {
       "truth": {
@@ -115,7 +115,7 @@
         "filename": "tasks.md",
         "path": "docs/beacon/v0.0.4/features/vision-flywheel/tasks.md",
         "exists": true,
-        "source_hash": "47018476706ae03b63ea86a3d5f1a2cdc1f99b8df5fe08642d434d7f0956d6ad",
+        "source_hash": "1233716780e554bec433668115b23dcea57fc88e0c8a46e6d254deab8b211ab8",
         "authority": "markdown_feature_package",
         "json_authority": false
       },
@@ -131,7 +131,7 @@
         "filename": "evidence.md",
         "path": "docs/beacon/v0.0.4/features/vision-flywheel/evidence.md",
         "exists": true,
-        "source_hash": "e29f0b0b61037a06743d35dc9d5c1ffa6be923dd2eccda3713e534b463ef9b37",
+        "source_hash": "767caefbe2d425a2d936a72b67c06c75a3cdab74aa17d47854a22bf2a783abb6",
         "authority": "markdown_feature_package",
         "json_authority": false
       }
@@ -219,7 +219,7 @@
         "truth_authority": true,
         "json_authority": false,
         "generated_governance_state": false,
-        "source_hash": "bbeb496205f6060b5f7a467c63fbac923d56eac71ccf3d465f72fec34f14747e"
+        "source_hash": "058410b6896e17abbe2d2678864b9a26297b50e5aecc0e92136c5807ab1b78fc"
       },
       "global_boundaries": {
         "schema_version": "1.0",
@@ -374,7 +374,7 @@
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": "11e5f66fcd0888abe9e52e7e0aec94b1b797ba6cbf50433b67b400b1dbebebbd"
+        "source_hash": "075bfc46aa8f26082b82b67a31d3e432c86dc8e03add1bd441b630edadd96da8"
       },
       "evidence_manifest": {
         "schema_version": "1.0",
@@ -391,7 +391,7 @@
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": "faedc3ef13d1c8e95572c321f57ec86ac8e570d564c27ca932e7249cb1f93863"
+        "source_hash": "6b0a7749cde773737500c1bfe72be4d1b308f6e98f8b8ed6f705d81fe8d9f662"
       },
       "qa_status": {
         "schema_version": "1.0",
@@ -401,14 +401,14 @@
         "version": "v0.0.4",
         "surface": "qa_status",
         "path": ".beacon/qa/status.json",
-        "exists": true,
+        "exists": false,
         "required": false,
         "role": "generated_governance_state_not_truth",
         "authority": "generated_governance_state_not_truth",
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": "11b9264f517b722caa8c23413cae874f5caff12c25138b2dffac45ad67c807e9"
+        "source_hash": ""
       },
       "release_gate_report": {
         "schema_version": "1.0",
@@ -418,14 +418,14 @@
         "version": "v0.0.4",
         "surface": "release_gate_report",
         "path": ".beacon/release-gate-report.json",
-        "exists": true,
+        "exists": false,
         "required": false,
         "role": "generated_governance_state_not_truth",
         "authority": "generated_governance_state_not_truth",
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": "3cfb30eb2b1ad859f8090dc63ef8cbf6f46cf414a66b9a35c9cea993e0016123"
+        "source_hash": ""
       }
     },
     "manifest_authority": false,
@@ -624,7 +624,7 @@
         "entrypoint_kind": "llm_skill_guidance",
         "classification": "resolver_guidance_required",
         "exception_kind": "",
-        "exists": true,
+        "exists": false,
         "truth_center_routed": true,
         "explicit_v151_exception": false,
         "fail_closed": true,
@@ -637,7 +637,7 @@
         "entrypoint_kind": "llm_skill_guidance",
         "classification": "resolver_guidance_required",
         "exception_kind": "",
-        "exists": true,
+        "exists": false,
         "truth_center_routed": true,
         "explicit_v151_exception": false,
         "fail_closed": true,
@@ -700,11 +700,21 @@
         "severity": "error",
         "code": "truth_entrypoint_inventory_missing",
         "path": "beacon/utils/acceptance_kit.py"
+      },
+      {
+        "severity": "error",
+        "code": "truth_entrypoint_inventory_missing",
+        "path": "skills/beacon/**/SKILL.md"
+      },
+      {
+        "severity": "error",
+        "code": "truth_entrypoint_inventory_missing",
+        "path": ".agents/skills/**/SKILL.md"
       }
     ]
   },
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-08-04T01:43:24.836935+00:00",
+  "generated_at": "2026-08-04T03:18:01.784658+00:00",
   "truth_authority": false,
   "source_paths": {
     "truth": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
@@ -715,7 +725,7 @@
   "source_hashes": {
     "truth": "a4e27e91f970c52e6576953656f602e65002c46793fe0153ba60d924376a2d0c",
     "tests": "db7a800b44f0733ce7b52eff5e722c70ee720adf0604eeb14f34be349956eef8",
-    "tasks": "47018476706ae03b63ea86a3d5f1a2cdc1f99b8df5fe08642d434d7f0956d6ad",
-    "evidence": "e29f0b0b61037a06743d35dc9d5c1ffa6be923dd2eccda3713e534b463ef9b37"
+    "tasks": "1233716780e554bec433668115b23dcea57fc88e0c8a46e6d254deab8b211ab8",
+    "evidence": "767caefbe2d425a2d936a72b67c06c75a3cdab74aa17d47854a22bf2a783abb6"
   }
 }
