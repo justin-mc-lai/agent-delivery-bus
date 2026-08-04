@@ -25,4 +25,4 @@ materials_status: current
 
 ## Implement evidence
 
-（实现后填充 `.beacon/evidence/implement/search-boundary-curation/*.json`）
+已填充：`.beacon/evidence/implement/search-boundary-curation/AC-SBC-00*.json` + QA scorecard；junit=`.beacon/junit-search-boundary-curation.xml`

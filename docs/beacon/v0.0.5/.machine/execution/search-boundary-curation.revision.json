@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "feature": "search-boundary-curation",
+  "feature_slug": "search-boundary-curation",
+  "version": "v0.0.5",
+  "revision_id": "R1",
+  "source_revision_id": "",
+  "reason": "freeze",
+  "doc_status": "frozen",
+  "delivery_status": "accepted",
+  "lifecycle_status": "accepted",
+  "baseline_hash": "",
+  "superseded_by": "",
+  "created_at": "2026-08-04T06:44:43.606187+00:00",
+  "frozen_at": "2026-08-04T06:44:43.606187+00:00",
+  "accepted_at": "2026-08-04T06:44:43.606187+00:00",
+  "last_implementation_run_id": "run-20260804T064443Z-sbc",
+  "changed_files": [
+    "src/agent_delivery_bus/boundary.py",
+    "src/agent_delivery_bus/storage.py",
+    "src/agent_delivery_bus/cli.py",
+    "src/agent_delivery_bus/pending.py",
+    "tests/test_boundary.py",
+    "fixtures/adb-search-boundary-tick.sh"
+  ],
+  "last_verification_run_id": "run-20260804T064443Z-sbc",
+  "verification_evidence": [
+    ".beacon/junit-search-boundary-curation.xml",
+    ".beacon/evidence/qa/v0.0.5/search-boundary-curation/scorecard.json"
+  ],
+  "accepted_by": "qa"
+}
