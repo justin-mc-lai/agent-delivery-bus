@@ -15,6 +15,7 @@ from .intent import IntentParser
 from .pending import pending_approval_views, render_pending_channel
 from .preflight import Preflight
 from .registry import ProjectRegistry
+from .schedule import ScheduleService, hermes_cron_tick_script
 from .service import DeliveryService
 from .storage import Storage
 
@@ -145,6 +146,30 @@ def build_parser() -> argparse.ArgumentParser:
     reconcile = sub.add_parser("reconcile")
     reconcile.add_argument("dispatch_id", nargs="?")
     reconcile.add_argument("--json", action="store_true")
+
+    schedule = sub.add_parser("schedule", help="schedule heartbeat layer (register / should-run / quota)")
+    schedule_sub = schedule.add_subparsers(dest="schedule_command", required=True)
+    schedule_register = schedule_sub.add_parser("register", help="register a timed entry (no embedded daemon)")
+    schedule_register.add_argument("--slug", required=True)
+    schedule_register.add_argument("--command", required=True, dest="entry_command")
+    schedule_register.add_argument("--engine", required=True, help="registered engine only (hermes)")
+    schedule_register.add_argument("--cron", required=True, dest="cron_expr")
+    schedule_register.add_argument("--quota-limit", type=int, required=True)
+    schedule_register.add_argument("--health", default="healthy", choices=["healthy", "unhealthy"])
+    schedule_register.add_argument("--json", action="store_true")
+    schedule_list = schedule_sub.add_parser("list", help="list registered entries with quota status")
+    schedule_list.add_argument("--json", action="store_true")
+    schedule_show = schedule_sub.add_parser("show", help="show one schedule entry")
+    schedule_show.add_argument("slug")
+    schedule_show.add_argument("--json", action="store_true")
+    schedule_should = schedule_sub.add_parser("should-run", help="deterministic quota→health gate")
+    schedule_should.add_argument("slug")
+    schedule_should.add_argument("--json", action="store_true")
+    schedule_ledger = schedule_sub.add_parser("ledger", help="append-only heartbeat dispatch ledger")
+    schedule_ledger.add_argument("--slug", default="")
+    schedule_ledger.add_argument("--json", action="store_true")
+    schedule_tick = schedule_sub.add_parser("cron-template", help="print hermes cron tick script fixture")
+    schedule_tick.add_argument("--json", action="store_true")
 
     install = sub.add_parser("install-skills")
     install.add_argument("--dry-run", action="store_true")
@@ -681,6 +706,39 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
             results = [service.reconcile(dispatch_id) for dispatch_id in ids]
             blocked = any(item.get("blocked") for item in results)
             return envelope(status="blocked" if blocked else "pass", blocked=blocked, data={"results": results})
+
+        if args.command == "schedule":
+            schedules = ScheduleService(storage)
+            if args.schedule_command == "register":
+                entry = schedules.register(
+                    slug=args.slug,
+                    command=args.entry_command,
+                    engine=args.engine,
+                    cron_expr=args.cron_expr,
+                    quota_limit=args.quota_limit,
+                    health=args.health,
+                )
+                return envelope(status="pass", data={"entry": schedules.show(entry["slug"])})
+            if args.schedule_command == "list":
+                return envelope(status="pass", data={"entries": schedules.list_entries()})
+            if args.schedule_command == "show":
+                return envelope(status="pass", data={"entry": schedules.show(args.slug)})
+            if args.schedule_command == "should-run":
+                decision = schedules.should_run(args.slug)
+                return envelope(
+                    status=str(decision.get("status") or "pass"),
+                    blocked=bool(decision.get("blocked")),
+                    reason_code=str(decision.get("reason_code") or ""),
+                    resume_action=str(decision.get("resume_action") or ""),
+                    data=decision,
+                )
+            if args.schedule_command == "ledger":
+                rows = schedules.ledger(slug=args.slug or None)
+                return envelope(status="pass", data={"runs": rows})
+            if args.schedule_command == "cron-template":
+                script = hermes_cron_tick_script()
+                return envelope(status="pass", data={"text": script, "cron_owner": "hermes"})
+            raise DeliveryBusError("schedule_command_invalid", f"Unknown schedule command: {args.schedule_command}")
 
         raise DeliveryBusError("command_invalid", "Unknown command")
     finally:

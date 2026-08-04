@@ -93,6 +93,37 @@ class Storage:
                 PRIMARY KEY(dispatch_id, sequence),
                 FOREIGN KEY(dispatch_id) REFERENCES dispatches(dispatch_id)
             );
+            CREATE TABLE IF NOT EXISTS schedule_entries (
+                slug TEXT PRIMARY KEY,
+                command TEXT NOT NULL,
+                engine TEXT NOT NULL,
+                cron_expr TEXT NOT NULL,
+                quota_limit INTEGER NOT NULL,
+                health TEXT NOT NULL DEFAULT 'healthy',
+                updated_at TEXT NOT NULL,
+                created_at TEXT NOT NULL
+            );
+            CREATE TABLE IF NOT EXISTS quota_ledgers (
+                slug TEXT NOT NULL,
+                window TEXT NOT NULL,
+                slots_spent INTEGER NOT NULL DEFAULT 0,
+                slots_allowed INTEGER NOT NULL,
+                next_eligible_at TEXT NOT NULL DEFAULT '',
+                updated_at TEXT NOT NULL,
+                PRIMARY KEY(slug, window)
+            );
+            CREATE TABLE IF NOT EXISTS heartbeat_runs (
+                run_id TEXT PRIMARY KEY,
+                entry_slug TEXT NOT NULL,
+                source TEXT NOT NULL,
+                status TEXT NOT NULL,
+                evidence_refs_json TEXT NOT NULL DEFAULT '[]',
+                quota_spent INTEGER NOT NULL DEFAULT 0,
+                reason_code TEXT NOT NULL DEFAULT '',
+                payload_json TEXT NOT NULL DEFAULT '{}',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            );
             """
         )
         self._migrate_legacy_columns()
@@ -316,3 +347,194 @@ class Storage:
                 "SELECT dispatch_id FROM dispatches ORDER BY created_at DESC"
             ).fetchall()
         return [self.get_dispatch(row["dispatch_id"]) for row in rows]
+
+    # --- schedule / quota / heartbeat ledger (vision-flywheel) ---
+
+    def upsert_schedule_entry(self, entry: dict[str, Any]) -> dict[str, Any]:
+        slug = str(entry["slug"])
+        timestamp = now_iso()
+        existing = self.conn.execute(
+            "SELECT created_at FROM schedule_entries WHERE slug=?",
+            (slug,),
+        ).fetchone()
+        created_at = str(existing["created_at"]) if existing else timestamp
+        self.conn.execute(
+            """
+            INSERT INTO schedule_entries(
+              slug, command, engine, cron_expr, quota_limit, health, updated_at, created_at
+            ) VALUES(?,?,?,?,?,?,?,?)
+            ON CONFLICT(slug) DO UPDATE SET
+              command=excluded.command,
+              engine=excluded.engine,
+              cron_expr=excluded.cron_expr,
+              quota_limit=excluded.quota_limit,
+              health=excluded.health,
+              updated_at=excluded.updated_at
+            """,
+            (
+                slug,
+                str(entry["command"]),
+                str(entry["engine"]),
+                str(entry["cron_expr"]),
+                int(entry["quota_limit"]),
+                str(entry.get("health") or "healthy"),
+                str(entry.get("updated_at") or timestamp),
+                created_at,
+            ),
+        )
+        row = self.get_schedule_entry(slug)
+        assert row is not None
+        return row
+
+    def get_schedule_entry(self, slug: str) -> dict[str, Any] | None:
+        row = self.conn.execute(
+            "SELECT * FROM schedule_entries WHERE slug=?",
+            (slug,),
+        ).fetchone()
+        return dict(row) if row else None
+
+    def list_schedule_entries(self) -> list[dict[str, Any]]:
+        rows = self.conn.execute(
+            "SELECT * FROM schedule_entries ORDER BY slug ASC"
+        ).fetchall()
+        return [dict(row) for row in rows]
+
+    def ensure_quota_ledger(self, slug: str, *, window: str, slots_allowed: int) -> dict[str, Any]:
+        existing = self.conn.execute(
+            "SELECT * FROM quota_ledgers WHERE slug=? AND window=?",
+            (slug, window),
+        ).fetchone()
+        if existing:
+            if int(existing["slots_allowed"]) != int(slots_allowed):
+                self.conn.execute(
+                    "UPDATE quota_ledgers SET slots_allowed=?, updated_at=? WHERE slug=? AND window=?",
+                    (int(slots_allowed), now_iso(), slug, window),
+                )
+                existing = self.conn.execute(
+                    "SELECT * FROM quota_ledgers WHERE slug=? AND window=?",
+                    (slug, window),
+                ).fetchone()
+            return dict(existing)
+        self.conn.execute(
+            """
+            INSERT INTO quota_ledgers(slug, window, slots_spent, slots_allowed, next_eligible_at, updated_at)
+            VALUES(?,?,0,?,?,?)
+            """,
+            (slug, window, int(slots_allowed), "", now_iso()),
+        )
+        row = self.conn.execute(
+            "SELECT * FROM quota_ledgers WHERE slug=? AND window=?",
+            (slug, window),
+        ).fetchone()
+        return dict(row)
+
+    def spend_quota_slot(self, slug: str, *, window: str, slots: int = 1) -> dict[str, Any]:
+        with self.transaction():
+            row = self.conn.execute(
+                "SELECT * FROM quota_ledgers WHERE slug=? AND window=?",
+                (slug, window),
+            ).fetchone()
+            if row is None:
+                raise DeliveryBusError("quota_ledger_missing", f"no quota ledger for {slug}/{window}")
+            spent = int(row["slots_spent"])
+            allowed = int(row["slots_allowed"])
+            if spent + slots > allowed:
+                raise DeliveryBusError(
+                    "quota_exhausted",
+                    f"quota exhausted for {slug} in window {window}",
+                    resume_action="raise quota-limit or wait for next window",
+                )
+            new_spent = spent + slots
+            self.conn.execute(
+                "UPDATE quota_ledgers SET slots_spent=?, updated_at=? WHERE slug=? AND window=?",
+                (new_spent, now_iso(), slug, window),
+            )
+        ledger = self.ensure_quota_ledger(slug, window=window, slots_allowed=allowed)
+        return {**ledger, "spent_this_call": slots}
+
+    def append_heartbeat_run(self, run: dict[str, Any]) -> dict[str, Any]:
+        self.conn.execute(
+            """
+            INSERT INTO heartbeat_runs(
+              run_id, entry_slug, source, status, evidence_refs_json, quota_spent,
+              reason_code, payload_json, created_at, updated_at
+            ) VALUES(?,?,?,?,?,?,?,?,?,?)
+            """,
+            (
+                run["run_id"],
+                run["entry_slug"],
+                run["source"],
+                run["status"],
+                json.dumps(list(run.get("evidence_refs") or []), ensure_ascii=False),
+                int(run.get("quota_spent") or 0),
+                str(run.get("reason_code") or ""),
+                json.dumps(run.get("payload") or {}, ensure_ascii=False, sort_keys=True),
+                str(run.get("created_at") or now_iso()),
+                str(run.get("updated_at") or now_iso()),
+            ),
+        )
+        stored = self.get_heartbeat_run(run["run_id"])
+        assert stored is not None
+        return stored
+
+    def get_heartbeat_run(self, run_id: str) -> dict[str, Any] | None:
+        row = self.conn.execute(
+            "SELECT * FROM heartbeat_runs WHERE run_id=?",
+            (run_id,),
+        ).fetchone()
+        if row is None:
+            return None
+        payload = dict(row)
+        payload["evidence_refs"] = json.loads(payload.pop("evidence_refs_json") or "[]")
+        payload["payload"] = json.loads(payload.pop("payload_json") or "{}")
+        return payload
+
+    def update_heartbeat_run(
+        self,
+        run_id: str,
+        *,
+        status: str,
+        evidence_refs: list[str] | None = None,
+        quota_spent: int | None = None,
+        reason_code: str = "",
+        quota_snapshot: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        current = self.get_heartbeat_run(run_id)
+        if current is None:
+            raise DeliveryBusError("heartbeat_run_not_found", f"no heartbeat run {run_id}")
+        refs = list(evidence_refs if evidence_refs is not None else current.get("evidence_refs") or [])
+        spent = int(quota_spent if quota_spent is not None else current.get("quota_spent") or 0)
+        extra = dict(current.get("payload") or {})
+        if quota_snapshot:
+            extra["quota_snapshot"] = quota_snapshot
+        self.conn.execute(
+            """
+            UPDATE heartbeat_runs
+            SET status=?, evidence_refs_json=?, quota_spent=?, reason_code=?, payload_json=?, updated_at=?
+            WHERE run_id=?
+            """,
+            (
+                status,
+                json.dumps(refs, ensure_ascii=False),
+                spent,
+                reason_code,
+                json.dumps(extra, ensure_ascii=False, sort_keys=True),
+                now_iso(),
+                run_id,
+            ),
+        )
+        updated = self.get_heartbeat_run(run_id)
+        assert updated is not None
+        return updated
+
+    def list_heartbeat_runs(self, *, entry_slug: str | None = None) -> list[dict[str, Any]]:
+        if entry_slug:
+            rows = self.conn.execute(
+                "SELECT run_id FROM heartbeat_runs WHERE entry_slug=? ORDER BY created_at ASC",
+                (entry_slug,),
+            ).fetchall()
+        else:
+            rows = self.conn.execute(
+                "SELECT run_id FROM heartbeat_runs ORDER BY created_at ASC"
+            ).fetchall()
+        return [self.get_heartbeat_run(row["run_id"]) for row in rows]  # type: ignore[misc]
