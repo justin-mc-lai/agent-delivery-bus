@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "status": "pass",
+  "blocked": false,
+  "reason_code": "",
+  "version": "v0.0.5",
+  "feature": "search-boundary-curation",
+  "design_path": "DESIGN.md",
+  "runner": "npx @google/design.md lint",
+  "exit_code": 0,
+  "findings": [
+    {
+      "severity": "warning",
+      "path": "components.button-primary.minHeight",
+      "message": "'minHeight' is not a recognized component sub-token. Valid sub-tokens: backgroundColor, textColor, typography, rounded, padding, size, height, width.",
+      "rule": "broken-ref"
+    },
+    {
+      "severity": "warning",
+      "path": "components.button-secondary.border",
+      "message": "'border' is not a recognized component sub-token. Valid sub-tokens: backgroundColor, textColor, typography, rounded, padding, size, height, width.",
+      "rule": "broken-ref"
+    },
+    {
+      "severity": "warning",
+      "path": "components.card.border",
+      "message": "'border' is not a recognized component sub-token. Valid sub-tokens: backgroundColor, textColor, typography, rounded, padding, size, height, width.",
+      "rule": "broken-ref"
+    },
+    {
+      "severity": "warning",
+      "path": "components.button-secondary",
+      "message": "textColor (#1d1d1f) on backgroundColor (#00000000) has contrast ratio 1.25:1, below WCAG AA minimum of 4.5:1.",
+      "rule": "contrast-ratio"
+    },
+    {
+      "severity": "warning",
+      "path": "colors.neutral",
+      "message": "'neutral' is defined but never referenced by any component.",
+      "rule": "orphaned-tokens"
+    },
+    {
+      "severity": "warning",
+      "path": "colors.danger",
+      "message": "'danger' is defined but never referenced by any component.",
+      "rule": "orphaned-tokens"
+    },
+    {
+      "severity": "warning",
+      "path": "colors.success",
+      "message": "'success' is defined but never referenced by any component.",
+      "rule": "orphaned-tokens"
+    },
+    {
+      "severity": "warning",
+      "path": "colors.warning",
+      "message": "'warning' is defined but never referenced by any component.",
+      "rule": "orphaned-tokens"
+    },
+    {
+      "severity": "info",
+      "message": "Design system defines 10 colors, 4 typography scales, 3 rounding levels, 4 spacing tokens, 3 components.",
+      "rule": "token-summary"
+    }
+  ],
+  "summary": {
+    "errors": 0,
+    "warnings": 8,
+    "info": 0
+  },
+  "google": {
+    "available": true,
+    "runner": "npx @google/design.md lint",
+    "exit_code": 0,
+    "fallback": ""
+  },
+  "generated_at": "2026-08-04T09:21:03.705649Z"
+}

@@ -6,7 +6,7 @@
   "status": "pass",
   "blocked": false,
   "reason_code": "",
-  "generated_at": "2026-08-04T03:18:01.537338+00:00",
+  "generated_at": "2026-08-04T08:29:46.151583+00:00",
   "package_dir": "docs/beacon/v0.0.4/features/vision-flywheel",
   "truth_frontmatter": {
     "slug": "vision-flywheel",
