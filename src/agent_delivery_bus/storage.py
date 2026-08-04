@@ -130,6 +130,9 @@ class Storage:
                 query_hints_json TEXT NOT NULL DEFAULT '[]',
                 sources_json TEXT NOT NULL DEFAULT '[]',
                 rationale TEXT NOT NULL DEFAULT '',
+                project_profile_ref TEXT NOT NULL DEFAULT '',
+                account_profile_ref TEXT NOT NULL DEFAULT '',
+                provenance TEXT NOT NULL DEFAULT '',
                 status TEXT NOT NULL CHECK(status IN ('pending','approved','rejected')),
                 actor TEXT NOT NULL DEFAULT '',
                 decision_note TEXT NOT NULL DEFAULT '',
@@ -167,6 +170,23 @@ class Storage:
             self.conn.execute("ALTER TABLE dispatches ADD COLUMN executor_board TEXT")
         if "executor_task_id" not in columns:
             self.conn.execute("ALTER TABLE dispatches ADD COLUMN executor_task_id TEXT")
+
+        boundary_columns = {
+            row["name"]
+            for row in self.conn.execute("PRAGMA table_info(boundary_proposals)").fetchall()
+        }
+        if "project_profile_ref" not in boundary_columns:
+            self.conn.execute(
+                "ALTER TABLE boundary_proposals ADD COLUMN project_profile_ref TEXT NOT NULL DEFAULT ''"
+            )
+        if "account_profile_ref" not in boundary_columns:
+            self.conn.execute(
+                "ALTER TABLE boundary_proposals ADD COLUMN account_profile_ref TEXT NOT NULL DEFAULT ''"
+            )
+        if "provenance" not in boundary_columns:
+            self.conn.execute(
+                "ALTER TABLE boundary_proposals ADD COLUMN provenance TEXT NOT NULL DEFAULT ''"
+            )
 
     def snapshot_project(self, slug: str, payload: dict[str, Any]) -> None:
         self.conn.execute(
@@ -574,14 +594,18 @@ class Storage:
         self.conn.execute(
             """
             INSERT INTO boundary_proposals(
-              id, topic, query_hints_json, sources_json, rationale, status,
+              id, topic, query_hints_json, sources_json, rationale,
+              project_profile_ref, account_profile_ref, provenance, status,
               actor, decision_note, created_at, updated_at, decided_at
-            ) VALUES(?,?,?,?,?,?,?,?,?,?,?)
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             ON CONFLICT(id) DO UPDATE SET
               topic=excluded.topic,
               query_hints_json=excluded.query_hints_json,
               sources_json=excluded.sources_json,
               rationale=excluded.rationale,
+              project_profile_ref=excluded.project_profile_ref,
+              account_profile_ref=excluded.account_profile_ref,
+              provenance=excluded.provenance,
               status=excluded.status,
               actor=excluded.actor,
               decision_note=excluded.decision_note,
@@ -594,6 +618,9 @@ class Storage:
                 json.dumps(list(proposal.get("query_hints") or []), ensure_ascii=False),
                 json.dumps(list(proposal.get("sources") or []), ensure_ascii=False),
                 str(proposal.get("rationale") or ""),
+                str(proposal.get("project_profile_ref") or ""),
+                str(proposal.get("account_profile_ref") or ""),
+                str(proposal.get("provenance") or ""),
                 str(proposal.get("status") or "pending"),
                 str(proposal.get("actor") or ""),
                 str(proposal.get("decision_note") or ""),

@@ -179,6 +179,9 @@ def build_parser() -> argparse.ArgumentParser:
     boundary_ingest.add_argument("--query", action="append", default=[], dest="query_hints")
     boundary_ingest.add_argument("--source", action="append", default=[], dest="sources")
     boundary_ingest.add_argument("--rationale", default="")
+    boundary_ingest.add_argument("--project-profile-ref", default="", dest="project_profile_ref")
+    boundary_ingest.add_argument("--account-profile-ref", default="", dest="account_profile_ref")
+    boundary_ingest.add_argument("--provenance", default="in-vertical-fixture")
     boundary_ingest.add_argument("--auto-activate", action="store_true", help="illegal; always rejected")
     boundary_ingest.add_argument("--json", action="store_true")
     boundary_pending = boundary_sub.add_parser("pending", help="list pending proposals")
@@ -781,6 +784,9 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                     query_hints=list(args.query_hints or []),
                     sources=list(args.sources or []),
                     rationale=args.rationale,
+                    project_profile_ref=str(getattr(args, "project_profile_ref", "") or ""),
+                    account_profile_ref=str(getattr(args, "account_profile_ref", "") or ""),
+                    provenance=str(getattr(args, "provenance", "") or "in-vertical-fixture"),
                     auto_activate=bool(args.auto_activate),
                 )
                 return envelope(status="pass", data={"proposal": row})
