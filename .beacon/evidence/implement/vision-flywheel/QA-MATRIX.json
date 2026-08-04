@@ -1,0 +1,13 @@
+{
+  "schema": "implement-evidence.v1",
+  "feature": "vision-flywheel",
+  "version": "v0.0.4",
+  "ac": "QA-MATRIX",
+  "status": "pass",
+  "summary": "tests/test_schedule.py covers TC-FLY-001..007 + ILL-001/002",
+  "commands": [
+    "python3 -m pytest -q tests/test_schedule.py --junitxml .beacon/junit-vision-flywheel-schedule.xml"
+  ],
+  "junit": ".beacon/junit-vision-flywheel-schedule.xml",
+  "generated_at": "2026-08-04T03:17:04.094333+00:00"
+}

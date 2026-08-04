@@ -1,0 +1,13 @@
+{
+  "schema": "implement-evidence.v1",
+  "feature": "vision-flywheel",
+  "version": "v0.0.4",
+  "ac": "AC-FLY-001",
+  "status": "pass",
+  "summary": "schedule register + idempotent update + unknown engine reject",
+  "commands": [
+    "python3 -m pytest -q tests/test_schedule.py --junitxml .beacon/junit-vision-flywheel-schedule.xml"
+  ],
+  "junit": ".beacon/junit-vision-flywheel-schedule.xml",
+  "generated_at": "2026-08-04T03:17:04.094333+00:00"
+}
