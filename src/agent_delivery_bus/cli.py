@@ -9,6 +9,7 @@ from typing import Any
 from .adapters.factory import adapters_from_config
 from .approvals import ApprovalService
 from .assign import AssignmentScorer
+from .boundary import BoundaryService, hermes_boundary_tick_script
 from .errors import DeliveryBusError
 from .install import install_skill
 from .intent import IntentParser
@@ -170,6 +171,38 @@ def build_parser() -> argparse.ArgumentParser:
     schedule_ledger.add_argument("--json", action="store_true")
     schedule_tick = schedule_sub.add_parser("cron-template", help="print hermes cron tick script fixture")
     schedule_tick.add_argument("--json", action="store_true")
+
+    boundary = sub.add_parser("boundary", help="search-boundary curation (ingest → pending → decide)")
+    boundary_sub = boundary.add_subparsers(dest="boundary_command", required=True)
+    boundary_ingest = boundary_sub.add_parser("ingest", help="ingest a proposal into pending (never active)")
+    boundary_ingest.add_argument("--topic", required=True)
+    boundary_ingest.add_argument("--query", action="append", default=[], dest="query_hints")
+    boundary_ingest.add_argument("--source", action="append", default=[], dest="sources")
+    boundary_ingest.add_argument("--rationale", default="")
+    boundary_ingest.add_argument("--auto-activate", action="store_true", help="illegal; always rejected")
+    boundary_ingest.add_argument("--json", action="store_true")
+    boundary_pending = boundary_sub.add_parser("pending", help="list pending proposals")
+    boundary_pending.add_argument("--json", action="store_true")
+    boundary_show = boundary_sub.add_parser("show", help="show one proposal")
+    boundary_show.add_argument("proposal_id")
+    boundary_show.add_argument("--json", action="store_true")
+    boundary_decide = boundary_sub.add_parser("decide", help="human approve|reject")
+    boundary_decide.add_argument("proposal_id")
+    boundary_decide.add_argument("--actor", required=True)
+    boundary_decide.add_argument("--decision", required=True, choices=["approve", "reject"])
+    boundary_decide.add_argument("--note", default="")
+    boundary_decide.add_argument("--json", action="store_true")
+    boundary_list = boundary_sub.add_parser("list", help="list proposals (default: approved/active)")
+    boundary_list.add_argument(
+        "--status",
+        default="approved",
+        choices=["pending", "approved", "rejected", "all"],
+    )
+    boundary_list.add_argument("--json", action="store_true")
+    boundary_tick = boundary_sub.add_parser("cron-template", help="print hermes search-boundary tick script")
+    boundary_tick.add_argument("--json", action="store_true")
+    boundary_fixture = boundary_sub.add_parser("tick-fixture", help="run fixture ingest-only tick")
+    boundary_fixture.add_argument("--json", action="store_true")
 
     install = sub.add_parser("install-skills")
     install.add_argument("--dry-run", action="store_true")
@@ -739,6 +772,45 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                 script = hermes_cron_tick_script()
                 return envelope(status="pass", data={"text": script, "cron_owner": "hermes"})
             raise DeliveryBusError("schedule_command_invalid", f"Unknown schedule command: {args.schedule_command}")
+
+        if args.command == "boundary":
+            boundaries = BoundaryService(storage)
+            if args.boundary_command == "ingest":
+                row = boundaries.ingest(
+                    topic=args.topic,
+                    query_hints=list(args.query_hints or []),
+                    sources=list(args.sources or []),
+                    rationale=args.rationale,
+                    auto_activate=bool(args.auto_activate),
+                )
+                return envelope(status="pass", data={"proposal": row})
+            if args.boundary_command == "pending":
+                return envelope(status="pass", data={"proposals": boundaries.pending()})
+            if args.boundary_command == "show":
+                return envelope(status="pass", data={"proposal": boundaries.show(args.proposal_id)})
+            if args.boundary_command == "decide":
+                row = boundaries.decide(
+                    args.proposal_id,
+                    actor=args.actor,
+                    decision=args.decision,
+                    note=args.note,
+                )
+                return envelope(status="pass", data={"proposal": row})
+            if args.boundary_command == "list":
+                return envelope(
+                    status="pass",
+                    data={"proposals": boundaries.list(status=args.status)},
+                )
+            if args.boundary_command == "cron-template":
+                script = hermes_boundary_tick_script()
+                return envelope(status="pass", data={"text": script, "cron_owner": "hermes"})
+            if args.boundary_command == "tick-fixture":
+                result = boundaries.run_tick_fixture()
+                return envelope(status="pass", data=result)
+            raise DeliveryBusError(
+                "boundary_command_invalid",
+                f"Unknown boundary command: {args.boundary_command}",
+            )
 
         raise DeliveryBusError("command_invalid", "Unknown command")
     finally:

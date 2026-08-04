@@ -124,6 +124,28 @@ class Storage:
                 created_at TEXT NOT NULL,
                 updated_at TEXT NOT NULL
             );
+            CREATE TABLE IF NOT EXISTS boundary_proposals (
+                id TEXT PRIMARY KEY,
+                topic TEXT NOT NULL,
+                query_hints_json TEXT NOT NULL DEFAULT '[]',
+                sources_json TEXT NOT NULL DEFAULT '[]',
+                rationale TEXT NOT NULL DEFAULT '',
+                status TEXT NOT NULL CHECK(status IN ('pending','approved','rejected')),
+                actor TEXT NOT NULL DEFAULT '',
+                decision_note TEXT NOT NULL DEFAULT '',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+                decided_at TEXT NOT NULL DEFAULT ''
+            );
+            CREATE TABLE IF NOT EXISTS boundary_decisions (
+                decision_id TEXT PRIMARY KEY,
+                proposal_id TEXT NOT NULL,
+                actor TEXT NOT NULL,
+                decision TEXT NOT NULL,
+                note TEXT NOT NULL DEFAULT '',
+                created_at TEXT NOT NULL,
+                FOREIGN KEY(proposal_id) REFERENCES boundary_proposals(id)
+            );
             """
         )
         self._migrate_legacy_columns()
@@ -538,3 +560,120 @@ class Storage:
                 "SELECT run_id FROM heartbeat_runs ORDER BY created_at ASC"
             ).fetchall()
         return [self.get_heartbeat_run(row["run_id"]) for row in rows]  # type: ignore[misc]
+
+    # --- search-boundary proposals / decisions ---
+
+    def _row_to_boundary_proposal(self, row: Any) -> dict[str, Any]:
+        payload = dict(row)
+        payload["query_hints"] = json.loads(payload.pop("query_hints_json") or "[]")
+        payload["sources"] = json.loads(payload.pop("sources_json") or "[]")
+        return payload
+
+    def upsert_boundary_proposal(self, proposal: dict[str, Any]) -> dict[str, Any]:
+        proposal_id = str(proposal["id"])
+        self.conn.execute(
+            """
+            INSERT INTO boundary_proposals(
+              id, topic, query_hints_json, sources_json, rationale, status,
+              actor, decision_note, created_at, updated_at, decided_at
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?)
+            ON CONFLICT(id) DO UPDATE SET
+              topic=excluded.topic,
+              query_hints_json=excluded.query_hints_json,
+              sources_json=excluded.sources_json,
+              rationale=excluded.rationale,
+              status=excluded.status,
+              actor=excluded.actor,
+              decision_note=excluded.decision_note,
+              updated_at=excluded.updated_at,
+              decided_at=excluded.decided_at
+            """,
+            (
+                proposal_id,
+                str(proposal["topic"]),
+                json.dumps(list(proposal.get("query_hints") or []), ensure_ascii=False),
+                json.dumps(list(proposal.get("sources") or []), ensure_ascii=False),
+                str(proposal.get("rationale") or ""),
+                str(proposal.get("status") or "pending"),
+                str(proposal.get("actor") or ""),
+                str(proposal.get("decision_note") or ""),
+                str(proposal.get("created_at") or now_iso()),
+                str(proposal.get("updated_at") or now_iso()),
+                str(proposal.get("decided_at") or ""),
+            ),
+        )
+        row = self.get_boundary_proposal(proposal_id)
+        assert row is not None
+        return row
+
+    def get_boundary_proposal(self, proposal_id: str) -> dict[str, Any] | None:
+        row = self.conn.execute(
+            "SELECT * FROM boundary_proposals WHERE id=?",
+            (proposal_id,),
+        ).fetchone()
+        return self._row_to_boundary_proposal(row) if row else None
+
+    def list_boundary_proposals(self, *, status: str | None = None) -> list[dict[str, Any]]:
+        if status:
+            rows = self.conn.execute(
+                "SELECT * FROM boundary_proposals WHERE status=? ORDER BY created_at ASC",
+                (status,),
+            ).fetchall()
+        else:
+            rows = self.conn.execute(
+                "SELECT * FROM boundary_proposals ORDER BY created_at ASC"
+            ).fetchall()
+        return [self._row_to_boundary_proposal(row) for row in rows]
+
+    def update_boundary_proposal(
+        self,
+        proposal_id: str,
+        *,
+        status: str,
+        actor: str = "",
+        decision_note: str = "",
+        decided_at: str = "",
+    ) -> dict[str, Any]:
+        current = self.get_boundary_proposal(proposal_id)
+        if current is None:
+            raise DeliveryBusError("boundary_not_found", f"no boundary proposal {proposal_id}")
+        self.conn.execute(
+            """
+            UPDATE boundary_proposals
+            SET status=?, actor=?, decision_note=?, decided_at=?, updated_at=?
+            WHERE id=?
+            """,
+            (
+                status,
+                actor,
+                decision_note,
+                decided_at or now_iso(),
+                now_iso(),
+                proposal_id,
+            ),
+        )
+        row = self.get_boundary_proposal(proposal_id)
+        assert row is not None
+        return row
+
+    def append_boundary_decision(self, decision: dict[str, Any]) -> dict[str, Any]:
+        self.conn.execute(
+            """
+            INSERT INTO boundary_decisions(
+              decision_id, proposal_id, actor, decision, note, created_at
+            ) VALUES(?,?,?,?,?,?)
+            """,
+            (
+                decision["decision_id"],
+                decision["proposal_id"],
+                decision["actor"],
+                decision["decision"],
+                str(decision.get("note") or ""),
+                str(decision.get("created_at") or now_iso()),
+            ),
+        )
+        row = self.conn.execute(
+            "SELECT * FROM boundary_decisions WHERE decision_id=?",
+            (decision["decision_id"],),
+        ).fetchone()
+        return dict(row)
