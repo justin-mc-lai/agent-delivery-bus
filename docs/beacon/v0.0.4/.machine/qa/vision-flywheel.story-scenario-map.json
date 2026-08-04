@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "feature": "vision-flywheel",
+  "feature_slug": "vision-flywheel",
+  "version": "v0.0.4",
+  "generated_at": "2026-08-04T03:18:27.148986+00:00",
+  "expansion_profile": "pua-web",
+  "scenario_depth": "standard",
+  "families_required": [
+    "happy",
+    "negative",
+    "boundary",
+    "recovery",
+    "compatibility"
+  ],
+  "stories": [
+    {
+      "ac_id": "AC-001",
+      "theme": "general",
+      "text": "Acceptance criteria TBD",
+      "scenario_ids": [],
+      "scenario_families": [],
+      "required_families": [],
+      "scenarios": []
+    }
+  ],
+  "scenarios": []
+}

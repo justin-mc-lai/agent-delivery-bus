@@ -5,7 +5,7 @@
   "version": "v0.0.4",
   "current_revision_id": "R1",
   "lifecycle_status": "frozen",
-  "updated_at": "2026-08-04T01:43:24.697585+00:00",
+  "updated_at": "2026-08-04T03:18:49.070625+00:00",
   "revisions": [
     {
       "revision_id": "R1",
@@ -28,7 +28,7 @@
       "revision_id": "R1",
       "title": "vision-flywheel",
       "priority": "medium",
-      "status": "frozen",
+      "status": "implemented",
       "items": [
         {
           "id": "AC-001",
@@ -36,11 +36,11 @@
           "theme": "general",
           "text": "Acceptance criteria TBD",
           "required": true,
-          "status": "draft",
-          "implemented_by_run_id": null,
+          "status": "implemented",
+          "implemented_by_run_id": "run-20260804T031849Z-057e",
           "verified_by_run_id": null,
           "accepted_at": null,
-          "changed_in_revision": null,
+          "changed_in_revision": "R1",
           "story_id": "",
           "details": [],
           "source": "fallback"
@@ -50,22 +50,22 @@
           "kind": "task",
           "text": "Implement current frozen revision",
           "required": true,
-          "status": "draft",
-          "implemented_by_run_id": null,
+          "status": "implemented",
+          "implemented_by_run_id": "run-20260804T031849Z-057e",
           "verified_by_run_id": null,
           "accepted_at": null,
-          "changed_in_revision": null
+          "changed_in_revision": "R1"
         },
         {
           "id": "TEST-001",
           "kind": "test",
           "text": "Verify AC-001 — Acceptance criteria TBD",
           "required": true,
-          "status": "draft",
-          "implemented_by_run_id": null,
+          "status": "implemented",
+          "implemented_by_run_id": "run-20260804T031849Z-057e",
           "verified_by_run_id": null,
           "accepted_at": null,
-          "changed_in_revision": null,
+          "changed_in_revision": "R1",
           "covers": [
             "AC-001"
           ],
@@ -82,7 +82,16 @@
         "section_count": 0,
         "sections": {},
         "derived_items": []
-      }
+      },
+      "feature": "vision-flywheel",
+      "feature_slug": "vision-flywheel",
+      "version": "v0.0.4",
+      "last_changed_files": [
+        "src/agent_delivery_bus/schedule.py",
+        "src/agent_delivery_bus/storage.py",
+        "src/agent_delivery_bus/cli.py",
+        "tests/test_schedule.py"
+      ]
     }
   ]
 }

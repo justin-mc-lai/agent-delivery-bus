@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0",
+  "entries": [
+    {
+      "path": ".beacon/evidence/implement/vision-flywheel/AC-FLY-001.json",
+      "sha256": "dc16d4f25dbf2459bb3e80ecba0b69734465fd8f3df56d99acea591a45ce6d03",
+      "updated_at": "2026-08-04T03:18:49.072494+00:00"
+    },
+    {
+      "path": ".beacon/evidence/implement/vision-flywheel/AC-FLY-002.json",
+      "sha256": "27f704ffdbe7911e89b30b92f8746ee2857ae0b987c9e6bc4eccf13fe6ff8ad0",
+      "updated_at": "2026-08-04T03:18:49.072699+00:00"
+    },
+    {
+      "path": ".beacon/evidence/implement/vision-flywheel/AC-FLY-003.json",
+      "sha256": "7a2335a94e33b5a14dc223a27304332b8ac92dbf5cf8d7b36ef810f54c802acf",
+      "updated_at": "2026-08-04T03:18:49.072896+00:00"
+    },
+    {
+      "path": ".beacon/evidence/implement/vision-flywheel/AC-FLY-004.json",
+      "sha256": "af2fabcd857227a8aa7484fc4c164f770450ac020d786860636cef71ac045f65",
+      "updated_at": "2026-08-04T03:18:49.073046+00:00"
+    },
+    {
+      "path": ".beacon/evidence/implement/vision-flywheel/AC-FLY-005.json",
+      "sha256": "47f121930f22c1cb23b7a6aeb93170de7ae83bcdda40d8a2d7e5843a3e094fab",
+      "updated_at": "2026-08-04T03:18:49.073245+00:00"
+    },
+    {
+      "path": ".beacon/evidence/implement/vision-flywheel/AC-FLY-006.json",
+      "sha256": "955641a368842749cd31108569b6603e4206066776efa98da1b0ddbb4f68ca19",
+      "updated_at": "2026-08-04T03:18:49.073389+00:00"
+    },
+    {
+      "path": ".beacon/evidence/implement/vision-flywheel/AC-FLY-007.json",
+      "sha256": "ff0ed2898e127cd9ab879c1406f1973d06c85f92a61f51d634ad1452d5878d96",
+      "updated_at": "2026-08-04T03:18:49.073540+00:00"
+    },
+    {
+      "path": ".beacon/evidence/implement/vision-flywheel/GATES.json",
+      "sha256": "85dc586d2f6493679ba9411acecc7303f1a97ace6d9fe1dc3cb4fa407360111d",
+      "updated_at": "2026-08-04T03:18:49.073683+00:00"
+    },
+    {
+      "path": ".beacon/evidence/implement/vision-flywheel/QA-MATRIX.json",
+      "sha256": "f99ca3498b1841b70b9c3b81b60232726dea8de61b7e6cba373f582b1e65e4fb",
+      "updated_at": "2026-08-04T03:18:49.073910+00:00"
+    },
+    {
+      "path": ".beacon/junit-vision-flywheel-schedule.xml",
+      "sha256": "7becb23cbbfe34de548e3c4ad44bfe2bb95be3cde5d35cb4e132923c71394e9b",
+      "updated_at": "2026-08-04T03:18:49.074119+00:00"
+    },
+    {
+      "path": ".beacon/state/implementation-vision-flywheel.json",
+      "sha256": "7d77562d7c23cc32201d379926f708a4f6f28127d071a64fc8e306982b142aef",
+      "updated_at": "2026-08-04T03:18:49.072064+00:00"
+    },
+    {
+      "path": "docs/beacon/v0.0.4/.machine/requirement/feature-package-validation.json",
+      "sha256": "93545f4cf68033e49a3d226ad57e7f5f94e710919348f7cc11638bb195c986fe",
+      "updated_at": "2026-08-04T03:18:49.071999+00:00"
+    },
+    {
+      "path": "docs/beacon/v0.0.4/features/vision-flywheel/evidence.md",
+      "sha256": "767caefbe2d425a2d936a72b67c06c75a3cdab74aa17d47854a22bf2a783abb6",
+      "updated_at": "2026-08-04T03:18:49.072280+00:00"
+    }
+  ],
+  "updated_at": "2026-08-04T03:18:49.074131+00:00",
+  "version": "v0.0.4"
+}
