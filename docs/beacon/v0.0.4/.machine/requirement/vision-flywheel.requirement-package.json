@@ -1,0 +1,238 @@
+{
+  "schema_version": "1.0",
+  "truth_map_contract": "beacon-truth-map-v1",
+  "truth_source_model": "feature_package_authoritative",
+  "truth_package_contract": "beacon-feature-package-v2",
+  "machine_json_role": "generated_state_not_truth",
+  "generated_by": "beacon.truth_map.resolver",
+  "generated_at": "2026-08-04T01:43:24.837959+00:00",
+  "feature": "vision-flywheel",
+  "feature_slug": "vision-flywheel",
+  "version": "v0.0.4",
+  "truth_authority": false,
+  "json_authority": false,
+  "source_paths": {
+    "truth": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+    "tests": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md",
+    "tasks": "docs/beacon/v0.0.4/features/vision-flywheel/tasks.md",
+    "evidence": "docs/beacon/v0.0.4/features/vision-flywheel/evidence.md"
+  },
+  "source_hashes": {
+    "truth": "a4e27e91f970c52e6576953656f602e65002c46793fe0153ba60d924376a2d0c",
+    "tests": "db7a800b44f0733ce7b52eff5e722c70ee720adf0604eeb14f34be349956eef8",
+    "tasks": "47018476706ae03b63ea86a3d5f1a2cdc1f99b8df5fe08642d434d7f0956d6ad",
+    "evidence": "e29f0b0b61037a06743d35dc9d5c1ffa6be923dd2eccda3713e534b463ef9b37"
+  },
+  "truth_frontmatter": {
+    "slug": "vision-flywheel",
+    "version": "v0.0.4",
+    "status": "frozen",
+    "revision_id": "R1",
+    "language": "zh",
+    "domain_required": "true",
+    "domain_kind": "business",
+    "ux_required": "false",
+    "package_maturity": "filled",
+    "parser_contract": "beacon-feature-package-v2",
+    "materials_status": "current",
+    "truth_source_model": "intent_first",
+    "git_canonical_branch": "main",
+    "program": "personal-production-flywheel",
+    "promotion_ref": "user-ack-愿景立项-2026-08-04",
+    "canonical_refs": {
+      "prd": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+      "user_story": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+      "test_case": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md"
+    }
+  },
+  "frontmatter_errors": [],
+  "acceptance_criteria": [
+    {
+      "ac_id": "AC-FLY-001",
+      "theme": "`adb schedule register` 登记定时任务（slug/command/engine/cron_expr/quota_limit）到调度注册表；重复 slug 幂等更新；未注册引擎拒绝",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-FLY-002",
+      "theme": "`adb schedule list` 输出全部注册条目（含 quota 状态）；`adb schedule show <slug>` 单条目",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-FLY-003",
+      "theme": "`adb schedule should-run <slug>` 确定性门卫链（quota 门卫 → 健康门卫），输出 run/blocked + reason_code；无 LLM 判定",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-FLY-004",
+      "theme": "quota 记账：被触发的执行按来源（heartbeat/controller 白名单）计 slot；配额耗尽 → throttled + blocked；evidence 落盘后才计配额",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-FLY-005",
+      "theme": "心跳运行追加写 dispatch ledger（事件流：entry_slug/status/evidence_refs/quota_spent），可审计",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-FLY-006",
+      "theme": "心跳证据对账：复用 truth-gate closure 逻辑，缺证据保持 reconciling；证据齐才 completed",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-FLY-007",
+      "theme": "心跳不得自动 approve/dispatch（illegal）；违规进入 blocked",
+      "description": ""
+    }
+  ],
+  "test_rows": [
+    {
+      "ac_id": "AC-FLY-001",
+      "tc_id": "TC-FLY-001",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_schedule.py -k register --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；register 成功写入调度注册表；重复 slug 幂等更新；未知引擎拒绝",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-FLY-002",
+      "tc_id": "TC-FLY-002",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_schedule.py -k list_show --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；list 含全部条目与 quota 状态；show 返回单条目",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-FLY-003",
+      "tc_id": "TC-FLY-003",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_schedule.py -k should_run --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；quota 充足→run；耗尽/不健康→blocked+reason_code；无 LLM 调用",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-FLY-004",
+      "tc_id": "TC-FLY-004",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_schedule.py -k quota --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；slot 按白名单来源记账；耗尽→throttled；无证据不计配额",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-FLY-005",
+      "tc_id": "TC-FLY-005",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_schedule.py -k ledger --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；心跳运行追加写事件流（entry_slug/status/evidence_refs/quota_spent）",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-FLY-006",
+      "tc_id": "TC-FLY-006",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_schedule.py -k reconcile --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；缺证据保持 reconciling；证据齐→completed",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-FLY-007",
+      "tc_id": "TC-FLY-007",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_schedule.py -k no_auto --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；心跳不自动 approve/dispatch",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-FLY-007",
+      "tc_id": "TC-FLY-ILL-001",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_schedule.py -k illegal_dispatch --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；心跳→dispatch/approve 非法",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-FLY-006",
+      "tc_id": "TC-FLY-ILL-002",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_schedule.py -k skip_should_run --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
+      "assertion": "exit_code==0；跳过 should-run 直达执行非法",
+      "evidence_path": ""
+    }
+  ],
+  "task_rows": [
+    {
+      "id": "TASK-001",
+      "title": "Implement AC-FLY-001: `adb schedule register` 登记定时任务（slug/command/engine/cron_expr/quota_li... · ac=AC-FLY-001 · evidence=`.beacon/evidence/implement/vision-flywheel/AC-FLY-001.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-002",
+      "title": "Implement AC-FLY-002: `adb schedule list` 输出全部注册条目（含 quota 状态）；`adb schedule show <slug>` 单条目 · ac=AC-FLY-002 · evidence=`.beacon/evidence/implement/vision-flywheel/AC-FLY-002.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-003",
+      "title": "Implement AC-FLY-003: `adb schedule should-run <slug>` 确定性门卫链（quota 门卫 → 健康门卫），输出 run/block... · ac=AC-FLY-003 · evidence=`.beacon/evidence/implement/vision-flywheel/AC-FLY-003.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-004",
+      "title": "Implement AC-FLY-004: quota 记账：被触发的执行按来源（heartbeat/controller 白名单）计 slot；配额耗尽 → throttled +... · ac=AC-FLY-004 · evidence=`.beacon/evidence/implement/vision-flywheel/AC-FLY-004.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-005",
+      "title": "Implement AC-FLY-005: 心跳运行追加写 dispatch ledger（事件流：entry_slug/status/evidence_refs/quota_spe... · ac=AC-FLY-005 · evidence=`.beacon/evidence/implement/vision-flywheel/AC-FLY-005.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-006",
+      "title": "Implement AC-FLY-006: 心跳证据对账：复用 truth-gate closure 逻辑，缺证据保持 reconciling；证据齐才 completed · ac=AC-FLY-006 · evidence=`.beacon/evidence/implement/vision-flywheel/AC-FLY-006.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-007",
+      "title": "Implement AC-FLY-007: 心跳不得自动 approve/dispatch（illegal）；违规进入 blocked · ac=AC-FLY-007 · evidence=`.beacon/evidence/implement/vision-flywheel/AC-FLY-007.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-008",
+      "title": "Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/vision-flywheel/GATES.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-009",
+      "title": "Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/vision-flywheel/QA-MATRIX.json`",
+      "status": "unchecked"
+    }
+  ],
+  "checkbox_errors": [],
+  "evidence_rows": [
+    {
+      "surface": "truth",
+      "authority": "requirement_truth",
+      "canonical_artifact": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+      "status": "draft→freeze",
+      "route": "truth"
+    },
+    {
+      "surface": "tests",
+      "authority": "test_truth",
+      "canonical_artifact": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md",
+      "status": "current",
+      "route": "qa"
+    },
+    {
+      "surface": "implement",
+      "authority": "support_advisory",
+      "canonical_artifact": ".beacon/evidence/implement/vision-flywheel/",
+      "status": "planned",
+      "route": "implement"
+    },
+    {
+      "surface": "qa",
+      "authority": "qa_verdict",
+      "canonical_artifact": ".beacon/evidence/qa-feature/vision-flywheel/",
+      "status": "planned",
+      "route": "qa"
+    }
+  ]
+}

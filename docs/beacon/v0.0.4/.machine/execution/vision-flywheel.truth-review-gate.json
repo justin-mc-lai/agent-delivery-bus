@@ -1,0 +1,180 @@
+{
+  "schema": "truth-review-gate.v1",
+  "schema_version": "1.0",
+  "feature": "vision-flywheel",
+  "version": "v0.0.4",
+  "pass": true,
+  "blocked": false,
+  "review_gate_pass": true,
+  "abc_pass": true,
+  "reason_code": "",
+  "domain_required": true,
+  "checks": {
+    "A_intent_coverage": {
+      "pass": true,
+      "check": "A",
+      "name": "intent_coverage",
+      "required": true,
+      "matrix_rows": 7,
+      "missing_must": [],
+      "reason": "",
+      "findings": [],
+      "matrix": [
+        {
+          "intent_id": "INT-001",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-FLY-001",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-002",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-FLY-002",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-003",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-FLY-003",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-004",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-FLY-004",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-005",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-FLY-005",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-006",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-FLY-006",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-007",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-FLY-007",
+          "status": "covered"
+        }
+      ]
+    },
+    "B_fsm_audit": {
+      "pass": true,
+      "check": "B",
+      "name": "fsm_audit",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "fsm": {
+        "transition_count": 6,
+        "from_states": [
+          "checking",
+          "idle",
+          "running"
+        ],
+        "hanging_states": [],
+        "terminals": [
+          "blocked",
+          "done"
+        ],
+        "illegal_present": true,
+        "five_tuple_present": true
+      }
+    },
+    "C_testability": {
+      "pass": true,
+      "check": "C",
+      "name": "testability",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "ac_count": 7,
+      "tc_count": 9,
+      "missing_ac": [],
+      "covered": {
+        "AC-FLY-001": [
+          "TC-FLY-001"
+        ],
+        "AC-FLY-002": [
+          "TC-FLY-002"
+        ],
+        "AC-FLY-003": [
+          "TC-FLY-003"
+        ],
+        "AC-FLY-004": [
+          "TC-FLY-004"
+        ],
+        "AC-FLY-005": [
+          "TC-FLY-005"
+        ],
+        "AC-FLY-006": [
+          "TC-FLY-006",
+          "TC-FLY-ILL-002"
+        ],
+        "AC-FLY-007": [
+          "TC-FLY-007",
+          "TC-FLY-ILL-001"
+        ]
+      }
+    },
+    "C_domain_exec_layer": {
+      "pass": true,
+      "check": "C_exec",
+      "name": "domain_exec_layer",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "exec_tc_count": 9,
+      "exec_tc_ids": [
+        "TC-FLY-001",
+        "TC-FLY-002",
+        "TC-FLY-003",
+        "TC-FLY-004",
+        "TC-FLY-005",
+        "TC-FLY-006",
+        "TC-FLY-007",
+        "TC-FLY-ILL-001",
+        "TC-FLY-ILL-002"
+      ],
+      "domain_kind": "business"
+    },
+    "D_fill_depth": {
+      "pass": true,
+      "check": "D",
+      "name": "fill_depth",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "package_maturity": "filled",
+      "domain_kind": "business",
+      "business_domain": true
+    }
+  },
+  "findings": [],
+  "humanizer": {
+    "rule": "humanizer_only_after_abc_pass_before_freeze",
+    "abc_pass": true,
+    "allowed_now": true,
+    "fill_depth_pass": true,
+    "note": "Polish L0/narrative only after A/B/C; preserve_machine_fields=true; freeze needs D+exec too"
+  },
+  "evaluated_at": "2026-08-04T01:43:24.706657+00:00",
+  "paths": {
+    "truth": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+    "tests": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md",
+    "report": "docs/beacon/v0.0.4/.machine/execution/vision-flywheel.truth-review-gate.json"
+  }
+}
