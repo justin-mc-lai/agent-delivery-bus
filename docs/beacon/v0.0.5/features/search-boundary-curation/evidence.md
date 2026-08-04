@@ -1,28 +1,13 @@
----
-slug: search-boundary-curation
-version: v0.0.5
-materials_status: current
----
-
 # Evidence: search-boundary-curation
 
-## Authority Table
-
-| surface | authority |
-|---------|-----------|
-| docs/beacon/v0.0.5/features/search-boundary-curation/truth.md | requirement_truth |
-| docs/beacon/v0.0.5/features/search-boundary-curation/tests.md | test_truth |
-| docs/beacon/v0.0.5/features/search-boundary-curation/tasks.md | support_advisory |
-| .beacon/evidence/implement/search-boundary-curation/*.json | acceptance_truth |
-| .beacon/qa/features/search-boundary-curation/scorecard.json | qa_verdict |
-
-## Sources
-
-- User utterance: 定时整理新的网络搜索边界 → 进待审 → 你拍板
-- Prior lake: `docs/beacon/v0.0.4/features/vision-flywheel/truth.md`
-- Related: `docs/beacon/v0.0.3/features/knowledge-curation-digest/truth.md`
-- Hermes cron: script-only tick → ingest
-
-## Implement evidence
-
-已填充：`.beacon/evidence/implement/search-boundary-curation/AC-SBC-00*.json` + QA scorecard；junit=`.beacon/junit-search-boundary-curation.xml`
+| Surface | Authority | Canonical Artifact | Status | Route |
+|---------|-----------|--------------------|--------|-------|
+| truth | requirement_truth | docs/beacon/v0.0.5/features/search-boundary-curation/truth.md | R3 frozen | truth |
+| tests | test_truth | docs/beacon/v0.0.5/features/search-boundary-curation/tests.md | R3 Domain FSM QA Matrix | qa |
+| ui-state | support_advisory | docs/beacon/v0.0.5/features/search-boundary-curation/ui-state-matrix.md | present | design |
+| profiles | support_advisory | fixtures/vertical-profiles/ | present | implement |
+| design-lint | support_advisory | .beacon/evidence/design-md-lint/search-boundary-curation.json | pass | design |
+| implement | support_advisory | .beacon/evidence/implement/search-boundary-curation/ | present | implement |
+| qa | qa_verdict | .beacon/evidence/qa/v0.0.5/search-boundary-curation/scorecard.json | re-run after R3 freeze | qa |
+| qa-adversarial | support_advisory | .beacon/evidence/qa/v0.0.5/search-boundary-curation/adversarial-review.json | recorded | change |
+| hermes | support_advisory | ~/.hermes/scripts/adb-search-boundary-tick.sh | planned | release |

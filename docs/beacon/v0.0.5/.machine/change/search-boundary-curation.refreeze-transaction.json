@@ -1,0 +1,2793 @@
+{
+  "schema_version": "1.0",
+  "transaction_id": "tx-change-refreeze-search-boundary-curation-20260804t092150z",
+  "feature": "search-boundary-curation",
+  "feature_slug": "search-boundary-curation",
+  "version": "v0.0.5",
+  "change_reason": "R3 release coverage: legal walks + ui-state-matrix + design lint + ILL AC split",
+  "touched_surfaces": [
+    "change",
+    "truth",
+    "tests",
+    "tasks",
+    "evidence",
+    "requirement_clarity",
+    "freeze",
+    "feature_package_validation"
+  ],
+  "surface_statuses": {
+    "change": {
+      "path": "docs/beacon/v0.0.5/change/search-boundary-curation.md",
+      "exists": true,
+      "status": "present",
+      "required": false,
+      "authority": "change_record_not_requirement_truth"
+    },
+    "truth": {
+      "path": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+      "exists": true,
+      "status": "present",
+      "required": true,
+      "authority": "markdown_feature_package"
+    },
+    "tests": {
+      "path": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md",
+      "exists": true,
+      "status": "present",
+      "required": true,
+      "authority": "markdown_feature_package"
+    },
+    "tasks": {
+      "path": "docs/beacon/v0.0.5/features/search-boundary-curation/tasks.md",
+      "exists": true,
+      "status": "present",
+      "required": true,
+      "authority": "markdown_feature_package"
+    },
+    "evidence": {
+      "path": "docs/beacon/v0.0.5/features/search-boundary-curation/evidence.md",
+      "exists": true,
+      "status": "present",
+      "required": true,
+      "authority": "markdown_feature_package"
+    },
+    "requirement_clarity": {
+      "path": "docs/beacon/v0.0.5/.machine/execution/requirement-clarity-search-boundary-curation.json",
+      "exists": true,
+      "status": "passed",
+      "required": true
+    },
+    "freeze": {
+      "path": "docs/beacon/v0.0.5/.machine/change/search-boundary-curation.refreeze-transaction.json",
+      "exists": true,
+      "status": "complete",
+      "required": true
+    },
+    "feature_package_validation": {
+      "path": "docs/beacon/v0.0.5/.machine/requirement/feature-package-validation.json",
+      "exists": true,
+      "status": "passed",
+      "required": true,
+      "diagnostics": []
+    }
+  },
+  "truth_revision_before": {
+    "revision_id": "R3",
+    "doc_status": "draft",
+    "lifecycle_status": "idle",
+    "baseline_hash": ""
+  },
+  "truth_revision_after": {
+    "revision_id": "R3",
+    "doc_status": "frozen",
+    "lifecycle_status": "frozen",
+    "baseline_hash": "sha256:0f74903e7a3106baec896dcaba2dd41e3861c457326a98351aa27abd97e2bdec"
+  },
+  "refreeze_status": "complete",
+  "next_route": {
+    "target_surface": "beacon-implement",
+    "command": "beacon implement \"search-boundary-curation\" --project /Users/apple/Developer/Personal/products/agent-delivery-bus --version v0.0.5",
+    "why": "refreeze transaction completed; implementation may plan against the refreshed frozen truth"
+  },
+  "blocked_reason": "",
+  "delivery_execution": {
+    "implement_executed": false,
+    "qa_executed": false,
+    "release_executed": false
+  },
+  "created_at": "2026-08-04T09:21:50.124902+00:00",
+  "previous_revision": {
+    "revision_id": "R2",
+    "doc_status": "superseded",
+    "lifecycle_status": "superseded",
+    "baseline_hash": ""
+  },
+  "opened_revision": {
+    "revision_id": "R3",
+    "doc_status": "draft",
+    "lifecycle_status": "idle",
+    "baseline_hash": ""
+  },
+  "story_reopen": {
+    "current_revision_id": "R3",
+    "lifecycle_status": "draft"
+  },
+  "requirement_package": {
+    "schema_version": "1.0",
+    "project_root": "/Users/apple/Developer/Personal/products/agent-delivery-bus",
+    "version": "v0.0.5",
+    "feature": "search-boundary-curation",
+    "status": "synced",
+    "authority_state": "feature_package_authoritative",
+    "truth_authority": "markdown_feature_package",
+    "requirement_refs": {
+      "source_of_truth_root": "docs/beacon/v0.0.5/features/search-boundary-curation",
+      "prd": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+      "user_story": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+      "test_case": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md",
+      "truth": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+      "tests": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md",
+      "tasks": "docs/beacon/v0.0.5/features/search-boundary-curation/tasks.md",
+      "evidence": "docs/beacon/v0.0.5/features/search-boundary-curation/evidence.md"
+    },
+    "story_path": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+    "qa_matrix_path": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md",
+    "qa9_matrix_path": "",
+    "story_scenario_map_path": "",
+    "machine_rebuild": {
+      "schema_version": "1.0",
+      "truth_map_contract": "beacon-truth-map-v1",
+      "truth_source_model": "feature_package_authoritative",
+      "truth_package_contract": "beacon-feature-package-v2",
+      "machine_json_role": "generated_state_not_truth",
+      "generated_by": "beacon.truth_map.resolver",
+      "feature": "search-boundary-curation",
+      "feature_slug": "search-boundary-curation",
+      "version": "v0.0.5",
+      "status": "rebuilt",
+      "blocked": false,
+      "validation_status": "pass",
+      "source_paths": {
+        "truth": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+        "tests": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md",
+        "tasks": "docs/beacon/v0.0.5/features/search-boundary-curation/tasks.md",
+        "evidence": "docs/beacon/v0.0.5/features/search-boundary-curation/evidence.md"
+      },
+      "source_hashes": {
+        "truth": "ee36cc4122d2e33e81e45409147f0e70b0add9dd402c4a179905caaa4318930b",
+        "tests": "9ad59d60b3cdd6344a10e3d32d31696af8ccc77497a3d67914ad2a161e928c9b",
+        "tasks": "a4f3e57c6b81124a59286b1f92405dabc3de2ce64e1492d1bb6d18ae44942530",
+        "evidence": "d533351b025c005eb3ea54141a9dce4ad21dea0c0d1c19d0125cd6c00011dcc6"
+      },
+      "plan": {
+        "schema_version": "1.0",
+        "truth_map_contract": "beacon-truth-map-v1",
+        "truth_source_model": "feature_package_authoritative",
+        "truth_package_contract": "beacon-feature-package-v2",
+        "machine_json_role": "generated_state_not_truth",
+        "generated_by": "beacon.truth_map.resolver",
+        "feature": "search-boundary-curation",
+        "feature_slug": "search-boundary-curation",
+        "version": "v0.0.5",
+        "source_paths": {
+          "truth": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+          "tests": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md",
+          "tasks": "docs/beacon/v0.0.5/features/search-boundary-curation/tasks.md",
+          "evidence": "docs/beacon/v0.0.5/features/search-boundary-curation/evidence.md"
+        },
+        "outputs": {
+          "truth_map_projection": "docs/beacon/v0.0.5/.machine/requirement/search-boundary-curation.truth-map.json",
+          "requirement_package_state": "docs/beacon/v0.0.5/.machine/requirement/search-boundary-curation.requirement-package.json",
+          "feature_package_validation": "docs/beacon/v0.0.5/.machine/requirement/feature-package-validation.json"
+        },
+        "runtime_json_exemption": {
+          "role": "runtime_process_record_not_requirement_truth",
+          "applies_to": [
+            ".beacon/runs/**",
+            ".beacon/qa/**",
+            "runtime/process execution records"
+          ],
+          "requires_markdown_twin": false,
+          "requirement_authority": false
+        },
+        "routes": {
+          "doctor_rebuild": {
+            "status": "legacy_output_only",
+            "command": "beacon truth-map rebuild-machine search-boundary-curation --version v0.0.5"
+          },
+          "change_absorb": {
+            "status": "package_truth_target_only",
+            "command": "beacon change search-boundary-curation --version v0.0.5 --reason absorb-legacy-truth-into-feature-package"
+          }
+        }
+      },
+      "written": [
+        "docs/beacon/v0.0.5/.machine/requirement/search-boundary-curation.truth-map.json",
+        "docs/beacon/v0.0.5/.machine/requirement/search-boundary-curation.requirement-package.json",
+        "docs/beacon/v0.0.5/.machine/requirement/feature-package-validation.json"
+      ]
+    },
+    "story_sync": {
+      "path": "docs/beacon/v0.0.5/.machine/user-story/search-boundary-curation.json",
+      "feature": "search-boundary-curation",
+      "version": "v0.0.5",
+      "revision_id": "R3",
+      "ac_count": 1,
+      "test_count": 1,
+      "story_ids": [
+        ""
+      ]
+    }
+  },
+  "requirement_clarity": {
+    "gate": {
+      "schema_version": "1.0",
+      "feature": "search-boundary-curation",
+      "feature_slug": "search-boundary-curation",
+      "version": "v0.0.5",
+      "runtime_version": "v1.6.11",
+      "runtime_capability_line": "v1.3.3",
+      "required": true,
+      "reason_code": "",
+      "blocked": false,
+      "status": "pass",
+      "findings": [],
+      "report_json_path": "docs/beacon/v0.0.5/.machine/execution/requirement-clarity-search-boundary-curation.json",
+      "report_markdown_path": "docs/beacon/v0.0.5/execution/requirement-clarity-search-boundary-curation.md",
+      "state_path": ".beacon/state/requirement-clarity-search-boundary-curation.json",
+      "diagram_truth": {
+        "schema_version": "1.0",
+        "version": "v0.0.5",
+        "supported": false,
+        "required": false,
+        "ready": false,
+        "diagram_types": [],
+        "state_axes": [],
+        "missing_diagram_types": [],
+        "missing_state_axes": false,
+        "complexity_signals": [],
+        "review_gates": [],
+        "qa_coverage_hints": [],
+        "evidence_lines": {},
+        "generated_at": "2026-08-04T09:21:50.434947+00:00",
+        "feature": "search-boundary-curation",
+        "feature_slug": "search-boundary-curation",
+        "prd_ref": "docs/beacon/v0.0.5/prd/search-boundary-curation.md",
+        "user_story_ref": "docs/beacon/v0.0.5/user-story/search-boundary-curation.md"
+      },
+      "domain_fsm_gate": {
+        "schema_version": "1.0",
+        "feature": "search-boundary-curation",
+        "feature_slug": "search-boundary-curation",
+        "version": "v0.0.5",
+        "truth_path": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+        "tests_path": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md",
+        "required": true,
+        "blocked": false,
+        "status": "pass",
+        "reason_code": "",
+        "findings": [],
+        "requirement": {
+          "required": true,
+          "reason": "domain_section_present",
+          "explicit": false,
+          "partial": true,
+          "complexity": false,
+          "business_signal": true,
+          "version_supported": false
+        },
+        "projection": {
+          "schema_version": "1.0",
+          "domain_fsm_schema": "domain-fsm.v1",
+          "entity_precedence_schema": "entity-precedence.v1",
+          "frontmatter": {
+            "slug": "search-boundary-curation",
+            "version": "v0.0.5",
+            "status": "draft",
+            "language": "zh",
+            "package_maturity": "filled",
+            "parser_contract": "beacon-feature-package-v2",
+            "truth_source_model": "feature_package_authoritative",
+            "materials_status": "current",
+            "canonical_refs": {
+              "prd": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+              "user_story": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+              "test_case": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md"
+            }
+          },
+          "frontmatter_errors": [],
+          "has_domain_model_section": true,
+          "has_domain_fsm_section": true,
+          "has_illegal_transition_section": true,
+          "entities": [
+            {
+              "entity": "ProjectVerticalProfile",
+              "key": "id, themes, must_include, must_exclude, value_tests",
+              "precedence": "auditable; loaded before VerticalGate",
+              "requires": "auditable; loaded before VerticalGate"
+            },
+            {
+              "entity": "AccountVerticalProfile",
+              "key": "id, account_id, platform, vertical, brand, draft_tab_meaning, out_of_scope",
+              "precedence": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包",
+              "requires": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包"
+            },
+            {
+              "entity": "VerticalGate",
+              "key": "proposal, project_profile, account_profile?",
+              "precedence": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)",
+              "requires": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)"
+            },
+            {
+              "entity": "BoundaryProposal",
+              "key": "id, topic, query_hints, sources, rationale, project_profile_ref, account_profile_ref, provenance, status",
+              "precedence": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review",
+              "requires": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review"
+            },
+            {
+              "entity": "BoundaryDecision",
+              "key": "proposal_id, actor, decision, note, at",
+              "precedence": "append-only；approve→active，reject→rejected",
+              "requires": "append-only；approve→active，reject→rejected"
+            },
+            {
+              "entity": "ActiveBoundary",
+              "key": "proposal_id",
+              "precedence": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审",
+              "requires": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审"
+            },
+            {
+              "entity": "ProjectVerticalProfile",
+              "key": "1",
+              "precedence": "—",
+              "requires": "—"
+            },
+            {
+              "entity": "AccountVerticalProfile",
+              "key": "2",
+              "precedence": "ProjectVerticalProfile",
+              "requires": "ProjectVerticalProfile"
+            },
+            {
+              "entity": "VerticalGate",
+              "key": "3",
+              "precedence": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)",
+              "requires": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)"
+            },
+            {
+              "entity": "BoundaryProposal",
+              "key": "4",
+              "precedence": "VerticalGate allow",
+              "requires": "VerticalGate allow"
+            },
+            {
+              "entity": "BoundaryDecision",
+              "key": "5",
+              "precedence": "BoundaryProposal awaiting_review",
+              "requires": "BoundaryProposal awaiting_review"
+            },
+            {
+              "entity": "ActiveBoundary",
+              "key": "6",
+              "precedence": "BoundaryDecision approve",
+              "requires": "BoundaryDecision approve"
+            }
+          ],
+          "entity_precedence": [
+            {
+              "entity": "ProjectVerticalProfile",
+              "key": "id, themes, must_include, must_exclude, value_tests",
+              "precedence": "auditable; loaded before VerticalGate",
+              "requires": "auditable; loaded before VerticalGate"
+            },
+            {
+              "entity": "AccountVerticalProfile",
+              "key": "id, account_id, platform, vertical, brand, draft_tab_meaning, out_of_scope",
+              "precedence": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包",
+              "requires": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包"
+            },
+            {
+              "entity": "VerticalGate",
+              "key": "proposal, project_profile, account_profile?",
+              "precedence": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)",
+              "requires": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)"
+            },
+            {
+              "entity": "BoundaryProposal",
+              "key": "id, topic, query_hints, sources, rationale, project_profile_ref, account_profile_ref, provenance, status",
+              "precedence": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review",
+              "requires": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review"
+            },
+            {
+              "entity": "BoundaryDecision",
+              "key": "proposal_id, actor, decision, note, at",
+              "precedence": "append-only；approve→active，reject→rejected",
+              "requires": "append-only；approve→active，reject→rejected"
+            },
+            {
+              "entity": "ActiveBoundary",
+              "key": "proposal_id",
+              "precedence": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审",
+              "requires": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审"
+            },
+            {
+              "entity": "ProjectVerticalProfile",
+              "key": "1",
+              "precedence": "—",
+              "requires": "—"
+            },
+            {
+              "entity": "AccountVerticalProfile",
+              "key": "2",
+              "precedence": "ProjectVerticalProfile",
+              "requires": "ProjectVerticalProfile"
+            },
+            {
+              "entity": "VerticalGate",
+              "key": "3",
+              "precedence": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)",
+              "requires": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)"
+            },
+            {
+              "entity": "BoundaryProposal",
+              "key": "4",
+              "precedence": "VerticalGate allow",
+              "requires": "VerticalGate allow"
+            },
+            {
+              "entity": "BoundaryDecision",
+              "key": "5",
+              "precedence": "BoundaryProposal awaiting_review",
+              "requires": "BoundaryProposal awaiting_review"
+            },
+            {
+              "entity": "ActiveBoundary",
+              "key": "6",
+              "precedence": "BoundaryDecision approve",
+              "requires": "BoundaryDecision approve"
+            }
+          ],
+          "aggregates": [
+            {
+              "name": "BoundaryProposal",
+              "states": [
+                "active",
+                "approved",
+                "awaiting_review",
+                "blocked",
+                "idle",
+                "rejected",
+                "validating"
+              ],
+              "transitions": [
+                {
+                  "from": "",
+                  "to": "idle",
+                  "guard": "profiles available",
+                  "initial": "true"
+                },
+                {
+                  "from": "idle",
+                  "to": "validating",
+                  "guard": "ingest received"
+                },
+                {
+                  "from": "validating",
+                  "to": "awaiting_review",
+                  "guard": "fields_ok + profile_refs + VerticalGate allow"
+                },
+                {
+                  "from": "validating",
+                  "to": "blocked",
+                  "guard": "missing_profile_ref / vertical_gate_reject / illegal"
+                },
+                {
+                  "from": "awaiting_review",
+                  "to": "approved",
+                  "guard": "decide approve + actor"
+                },
+                {
+                  "from": "awaiting_review",
+                  "to": "rejected",
+                  "guard": "decide reject + actor"
+                },
+                {
+                  "from": "approved",
+                  "to": "active",
+                  "guard": "decide(approve) recorded"
+                }
+              ]
+            }
+          ],
+          "illegal_transition_slots": [
+            {
+              "description": "BoundaryProposal.idle → active without awaiting_review · TC-SBC-ILL-001",
+              "aggregate": "BoundaryProposal",
+              "source": "truth"
+            },
+            {
+              "description": "BoundaryProposal.awaiting_review → active without decide · TC-SBC-007",
+              "aggregate": "BoundaryProposal",
+              "source": "truth"
+            },
+            {
+              "description": "BoundaryProposal.validating → awaiting_review when VerticalGate reject · TC-SBC-ILL-002",
+              "aggregate": "BoundaryProposal",
+              "source": "truth"
+            },
+            {
+              "description": "BoundaryProposal.validating → awaiting_review when missing_profile_ref · TC-SBC-008",
+              "aggregate": "BoundaryProposal",
+              "source": "truth"
+            },
+            {
+              "description": "BoundaryProposal.idle → scheduled_tick with sticker_emoji_bank · TC-SBC-011",
+              "aggregate": "BoundaryProposal",
+              "source": "truth"
+            }
+          ],
+          "acceptance_criteria": [
+            {
+              "ac_id": "AC-SBC-001",
+              "description": "adb boundary ingest 写入 awaiting_review（topic 必填；query_hints/sources 可多值；须带 project_profile_ref；自媒体路径另带 account_profile_ref）；缺 topic/画像 ref 拒绝"
+            },
+            {
+              "ac_id": "AC-SBC-002",
+              "description": "CLI 列出全部 awaiting_review；show 返回单条（含画像 ref）"
+            },
+            {
+              "ac_id": "AC-SBC-003",
+              "description": "reject；approve→active，reject→rejected"
+            },
+            {
+              "ac_id": "AC-SBC-004",
+              "description": "adb boundary list 默认仅 active；可用 --status 过滤"
+            },
+            {
+              "ac_id": "AC-SBC-005",
+              "description": "待审提案进入 approvals awaiting（kind 绑定 boundary 待审）"
+            },
+            {
+              "ac_id": "AC-SBC-006",
+              "description": "定时路径：schedule + Hermes cron 日更；脚本只 ingest 不 auto-approve；默认产出 5 条垂直约束提案"
+            },
+            {
+              "ac_id": "AC-SBC-007",
+              "description": "illegal：ingest 直达 active、跳过待审启用、自动 approve → fail-closed"
+            },
+            {
+              "ac_id": "AC-SBC-008",
+              "description": "L1：无 project_profile_ref（及自媒体缺 account_profile_ref）不得 ingest；禁止无画像静态离题池"
+            },
+            {
+              "ac_id": "AC-SBC-009",
+              "description": "L2/L3：可加载审计 ProjectVerticalProfile 与 AccountVerticalProfile；库拾样例 vertical=oss-picks，贴图=image_post 非表情包，out_of_scope 含表情包/情感漫等"
+            },
+            {
+              "ac_id": "AC-SBC-010",
+              "description": "L4 VerticalGate：完整偏离项目/账号垂直（如表情包题）→ reason_code=vertical_gate_rejected，不得进入 awaiting_review；有意义价值陈述可通过"
+            },
+            {
+              "ac_id": "AC-SBC-011",
+              "description": "日批选题均绑定库拾画像且主题落在 GitHub 开源 AI 库 / AI Spec；题库与脚本不得含表情包/情侣/宠物等离题词；provenance 标明 intel-radar 或 in-vertical-fixture"
+            }
+          ],
+          "bound_ac_ids": [
+            "AC-SBC-001",
+            "AC-SBC-002",
+            "AC-SBC-003",
+            "AC-SBC-004",
+            "AC-SBC-007",
+            "AC-SBC-009",
+            "AC-SBC-010"
+          ],
+          "orphan_ac_ids": [
+            "AC-SBC-006"
+          ],
+          "aggregates_missing_illegal_slots": [],
+          "raw_section_titles": [
+            "人话",
+            "User Intent Snapshot",
+            "用户旅程",
+            "Intent Coverage Matrix",
+            "Acceptance Criteria",
+            "Domain Model",
+            "Entity Precedence",
+            "Domain FSM — BoundaryProposal",
+            "FSM 五元组",
+            "Legal walks",
+            "Illegal transitions",
+            "Public CLI Contract",
+            "Non-goals",
+            "Freeze readiness"
+          ]
+        },
+        "validation": {
+          "schema_version": "1.0",
+          "required": true,
+          "blocked": false,
+          "status": "pass",
+          "reason_code": "",
+          "findings": [],
+          "projection": {
+            "schema_version": "1.0",
+            "domain_fsm_schema": "domain-fsm.v1",
+            "entity_precedence_schema": "entity-precedence.v1",
+            "frontmatter": {
+              "slug": "search-boundary-curation",
+              "version": "v0.0.5",
+              "status": "draft",
+              "language": "zh",
+              "package_maturity": "filled",
+              "parser_contract": "beacon-feature-package-v2",
+              "truth_source_model": "feature_package_authoritative",
+              "materials_status": "current",
+              "canonical_refs": {
+                "prd": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+                "user_story": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+                "test_case": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md"
+              }
+            },
+            "frontmatter_errors": [],
+            "has_domain_model_section": true,
+            "has_domain_fsm_section": true,
+            "has_illegal_transition_section": true,
+            "entities": [
+              {
+                "entity": "ProjectVerticalProfile",
+                "key": "id, themes, must_include, must_exclude, value_tests",
+                "precedence": "auditable; loaded before VerticalGate",
+                "requires": "auditable; loaded before VerticalGate"
+              },
+              {
+                "entity": "AccountVerticalProfile",
+                "key": "id, account_id, platform, vertical, brand, draft_tab_meaning, out_of_scope",
+                "precedence": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包",
+                "requires": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包"
+              },
+              {
+                "entity": "VerticalGate",
+                "key": "proposal, project_profile, account_profile?",
+                "precedence": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)",
+                "requires": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)"
+              },
+              {
+                "entity": "BoundaryProposal",
+                "key": "id, topic, query_hints, sources, rationale, project_profile_ref, account_profile_ref, provenance, status",
+                "precedence": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review",
+                "requires": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review"
+              },
+              {
+                "entity": "BoundaryDecision",
+                "key": "proposal_id, actor, decision, note, at",
+                "precedence": "append-only；approve→active，reject→rejected",
+                "requires": "append-only；approve→active，reject→rejected"
+              },
+              {
+                "entity": "ActiveBoundary",
+                "key": "proposal_id",
+                "precedence": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审",
+                "requires": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审"
+              },
+              {
+                "entity": "ProjectVerticalProfile",
+                "key": "1",
+                "precedence": "—",
+                "requires": "—"
+              },
+              {
+                "entity": "AccountVerticalProfile",
+                "key": "2",
+                "precedence": "ProjectVerticalProfile",
+                "requires": "ProjectVerticalProfile"
+              },
+              {
+                "entity": "VerticalGate",
+                "key": "3",
+                "precedence": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)",
+                "requires": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)"
+              },
+              {
+                "entity": "BoundaryProposal",
+                "key": "4",
+                "precedence": "VerticalGate allow",
+                "requires": "VerticalGate allow"
+              },
+              {
+                "entity": "BoundaryDecision",
+                "key": "5",
+                "precedence": "BoundaryProposal awaiting_review",
+                "requires": "BoundaryProposal awaiting_review"
+              },
+              {
+                "entity": "ActiveBoundary",
+                "key": "6",
+                "precedence": "BoundaryDecision approve",
+                "requires": "BoundaryDecision approve"
+              }
+            ],
+            "entity_precedence": [
+              {
+                "entity": "ProjectVerticalProfile",
+                "key": "id, themes, must_include, must_exclude, value_tests",
+                "precedence": "auditable; loaded before VerticalGate",
+                "requires": "auditable; loaded before VerticalGate"
+              },
+              {
+                "entity": "AccountVerticalProfile",
+                "key": "id, account_id, platform, vertical, brand, draft_tab_meaning, out_of_scope",
+                "precedence": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包",
+                "requires": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包"
+              },
+              {
+                "entity": "VerticalGate",
+                "key": "proposal, project_profile, account_profile?",
+                "precedence": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)",
+                "requires": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)"
+              },
+              {
+                "entity": "BoundaryProposal",
+                "key": "id, topic, query_hints, sources, rationale, project_profile_ref, account_profile_ref, provenance, status",
+                "precedence": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review",
+                "requires": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review"
+              },
+              {
+                "entity": "BoundaryDecision",
+                "key": "proposal_id, actor, decision, note, at",
+                "precedence": "append-only；approve→active，reject→rejected",
+                "requires": "append-only；approve→active，reject→rejected"
+              },
+              {
+                "entity": "ActiveBoundary",
+                "key": "proposal_id",
+                "precedence": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审",
+                "requires": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审"
+              },
+              {
+                "entity": "ProjectVerticalProfile",
+                "key": "1",
+                "precedence": "—",
+                "requires": "—"
+              },
+              {
+                "entity": "AccountVerticalProfile",
+                "key": "2",
+                "precedence": "ProjectVerticalProfile",
+                "requires": "ProjectVerticalProfile"
+              },
+              {
+                "entity": "VerticalGate",
+                "key": "3",
+                "precedence": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)",
+                "requires": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)"
+              },
+              {
+                "entity": "BoundaryProposal",
+                "key": "4",
+                "precedence": "VerticalGate allow",
+                "requires": "VerticalGate allow"
+              },
+              {
+                "entity": "BoundaryDecision",
+                "key": "5",
+                "precedence": "BoundaryProposal awaiting_review",
+                "requires": "BoundaryProposal awaiting_review"
+              },
+              {
+                "entity": "ActiveBoundary",
+                "key": "6",
+                "precedence": "BoundaryDecision approve",
+                "requires": "BoundaryDecision approve"
+              }
+            ],
+            "aggregates": [
+              {
+                "name": "BoundaryProposal",
+                "states": [
+                  "active",
+                  "approved",
+                  "awaiting_review",
+                  "blocked",
+                  "idle",
+                  "rejected",
+                  "validating"
+                ],
+                "transitions": [
+                  {
+                    "from": "",
+                    "to": "idle",
+                    "guard": "profiles available",
+                    "initial": "true"
+                  },
+                  {
+                    "from": "idle",
+                    "to": "validating",
+                    "guard": "ingest received"
+                  },
+                  {
+                    "from": "validating",
+                    "to": "awaiting_review",
+                    "guard": "fields_ok + profile_refs + VerticalGate allow"
+                  },
+                  {
+                    "from": "validating",
+                    "to": "blocked",
+                    "guard": "missing_profile_ref / vertical_gate_reject / illegal"
+                  },
+                  {
+                    "from": "awaiting_review",
+                    "to": "approved",
+                    "guard": "decide approve + actor"
+                  },
+                  {
+                    "from": "awaiting_review",
+                    "to": "rejected",
+                    "guard": "decide reject + actor"
+                  },
+                  {
+                    "from": "approved",
+                    "to": "active",
+                    "guard": "decide(approve) recorded"
+                  }
+                ]
+              }
+            ],
+            "illegal_transition_slots": [
+              {
+                "description": "BoundaryProposal.idle → active without awaiting_review · TC-SBC-ILL-001",
+                "aggregate": "BoundaryProposal",
+                "source": "truth"
+              },
+              {
+                "description": "BoundaryProposal.awaiting_review → active without decide · TC-SBC-007",
+                "aggregate": "BoundaryProposal",
+                "source": "truth"
+              },
+              {
+                "description": "BoundaryProposal.validating → awaiting_review when VerticalGate reject · TC-SBC-ILL-002",
+                "aggregate": "BoundaryProposal",
+                "source": "truth"
+              },
+              {
+                "description": "BoundaryProposal.validating → awaiting_review when missing_profile_ref · TC-SBC-008",
+                "aggregate": "BoundaryProposal",
+                "source": "truth"
+              },
+              {
+                "description": "BoundaryProposal.idle → scheduled_tick with sticker_emoji_bank · TC-SBC-011",
+                "aggregate": "BoundaryProposal",
+                "source": "truth"
+              }
+            ],
+            "acceptance_criteria": [
+              {
+                "ac_id": "AC-SBC-001",
+                "description": "adb boundary ingest 写入 awaiting_review（topic 必填；query_hints/sources 可多值；须带 project_profile_ref；自媒体路径另带 account_profile_ref）；缺 topic/画像 ref 拒绝"
+              },
+              {
+                "ac_id": "AC-SBC-002",
+                "description": "CLI 列出全部 awaiting_review；show 返回单条（含画像 ref）"
+              },
+              {
+                "ac_id": "AC-SBC-003",
+                "description": "reject；approve→active，reject→rejected"
+              },
+              {
+                "ac_id": "AC-SBC-004",
+                "description": "adb boundary list 默认仅 active；可用 --status 过滤"
+              },
+              {
+                "ac_id": "AC-SBC-005",
+                "description": "待审提案进入 approvals awaiting（kind 绑定 boundary 待审）"
+              },
+              {
+                "ac_id": "AC-SBC-006",
+                "description": "定时路径：schedule + Hermes cron 日更；脚本只 ingest 不 auto-approve；默认产出 5 条垂直约束提案"
+              },
+              {
+                "ac_id": "AC-SBC-007",
+                "description": "illegal：ingest 直达 active、跳过待审启用、自动 approve → fail-closed"
+              },
+              {
+                "ac_id": "AC-SBC-008",
+                "description": "L1：无 project_profile_ref（及自媒体缺 account_profile_ref）不得 ingest；禁止无画像静态离题池"
+              },
+              {
+                "ac_id": "AC-SBC-009",
+                "description": "L2/L3：可加载审计 ProjectVerticalProfile 与 AccountVerticalProfile；库拾样例 vertical=oss-picks，贴图=image_post 非表情包，out_of_scope 含表情包/情感漫等"
+              },
+              {
+                "ac_id": "AC-SBC-010",
+                "description": "L4 VerticalGate：完整偏离项目/账号垂直（如表情包题）→ reason_code=vertical_gate_rejected，不得进入 awaiting_review；有意义价值陈述可通过"
+              },
+              {
+                "ac_id": "AC-SBC-011",
+                "description": "日批选题均绑定库拾画像且主题落在 GitHub 开源 AI 库 / AI Spec；题库与脚本不得含表情包/情侣/宠物等离题词；provenance 标明 intel-radar 或 in-vertical-fixture"
+              }
+            ],
+            "bound_ac_ids": [
+              "AC-SBC-001",
+              "AC-SBC-002",
+              "AC-SBC-003",
+              "AC-SBC-004",
+              "AC-SBC-007",
+              "AC-SBC-009",
+              "AC-SBC-010"
+            ],
+            "orphan_ac_ids": [
+              "AC-SBC-006"
+            ],
+            "aggregates_missing_illegal_slots": [],
+            "raw_section_titles": [
+              "人话",
+              "User Intent Snapshot",
+              "用户旅程",
+              "Intent Coverage Matrix",
+              "Acceptance Criteria",
+              "Domain Model",
+              "Entity Precedence",
+              "Domain FSM — BoundaryProposal",
+              "FSM 五元组",
+              "Legal walks",
+              "Illegal transitions",
+              "Public CLI Contract",
+              "Non-goals",
+              "Freeze readiness"
+            ]
+          },
+          "summary": {
+            "entity_count": 12,
+            "aggregate_count": 1,
+            "illegal_slot_count": 5,
+            "orphan_ac_count": 1,
+            "bound_ac_count": 7
+          }
+        },
+        "recommended_action": ""
+      },
+      "human_closure_contract": {
+        "required": false,
+        "research_path": "docs/beacon/v0.0.5/research/search-boundary-curation.md",
+        "research_exists": true,
+        "source_architecture_path": "docs/beacon/v0.0.5/source-architecture/search-boundary-curation.md",
+        "source_architecture_exists": false,
+        "required_sections": [
+          "architecture",
+          "business_flow"
+        ],
+        "missing_sections": [
+          "architecture",
+          "business_flow"
+        ],
+        "diagram_types": [],
+        "complexity_signals": []
+      },
+      "requirement_closure_contract": {
+        "required": true,
+        "chain_order": [
+          "research",
+          "prd",
+          "user_story",
+          "test_case",
+          "requirement_clarity",
+          "freeze"
+        ],
+        "human_closure_required": false,
+        "paths": {
+          "research": "docs/beacon/v0.0.5/research/search-boundary-curation.md",
+          "prd": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+          "user_story": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+          "test_case": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md"
+        },
+        "exists": {
+          "research": true,
+          "prd": true,
+          "user_story": true,
+          "test_case": true
+        },
+        "required_research_sections": [],
+        "missing_research_sections": [],
+        "ac_projection": {
+          "prd_ac_ids": [],
+          "user_story_ac_ids": [],
+          "test_case_ac_ids": [],
+          "upstream_ac_ids": [],
+          "missing_test_case_ac_ids": []
+        }
+      },
+      "version_projection_truth_contract": {
+        "required": false,
+        "supported": false,
+        "projection_types": [],
+        "research_path": "docs/beacon/v0.0.5/research/search-boundary-curation.md",
+        "research_exists": true,
+        "required_fields": [
+          "prd_refs",
+          "user_story_refs",
+          "test_case_refs",
+          "coverage_notes",
+          "out_of_scope_notes"
+        ],
+        "field_presence": {
+          "prd_refs": false,
+          "user_story_refs": false,
+          "test_case_refs": false,
+          "coverage_notes": false,
+          "out_of_scope_notes": false
+        },
+        "missing_fields": [],
+        "required_refs": {
+          "prd_refs": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+          "user_story_refs": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+          "test_case_refs": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md"
+        },
+        "missing_ref_targets": [],
+        "ready": false
+      },
+      "support_write_topology_contract": {
+        "schema_version": "1.0",
+        "supported": true,
+        "status": "pass",
+        "blocked": false,
+        "reason_code": "",
+        "diagnostics": []
+      },
+      "required_artifacts": [],
+      "scanned_files": [
+        "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+        "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md",
+        "docs/beacon/v0.0.5/features/search-boundary-curation/tasks.md",
+        "docs/beacon/v0.0.5/features/search-boundary-curation/evidence.md",
+        "docs/beacon/v0.0.5/research/search-boundary-curation.md"
+      ]
+    },
+    "report": {
+      "json": "docs/beacon/v0.0.5/.machine/execution/requirement-clarity-search-boundary-curation.json",
+      "markdown": "docs/beacon/v0.0.5/execution/requirement-clarity-search-boundary-curation.md"
+    },
+    "writeback": {
+      "schema_version": "1.0",
+      "feature": "search-boundary-curation",
+      "feature_slug": "search-boundary-curation",
+      "version": "v0.0.5",
+      "status": "pass",
+      "blocked": false,
+      "reason_code": "",
+      "report_json_path": "docs/beacon/v0.0.5/.machine/execution/requirement-clarity-search-boundary-curation.json",
+      "report_markdown_path": "docs/beacon/v0.0.5/execution/requirement-clarity-search-boundary-curation.md",
+      "finding_count": 0,
+      "run_id": "",
+      "source": "change.refreeze-chain",
+      "written_at": "2026-08-04T09:21:50.441395+00:00",
+      "state_path": ".beacon/state/requirement-clarity-search-boundary-curation.json"
+    }
+  },
+  "truth_integrity_gate": {
+    "schema_version": "1.0",
+    "feature": "search-boundary-curation",
+    "feature_slug": "search-boundary-curation",
+    "version": "v0.0.5",
+    "mode": "block",
+    "truth_status": "draft",
+    "status": "pass",
+    "blocked": false,
+    "reason_code": "",
+    "findings": [],
+    "finding_count": 0,
+    "requirement_clarity": {
+      "schema_version": "1.0",
+      "feature": "search-boundary-curation",
+      "feature_slug": "search-boundary-curation",
+      "version": "v0.0.5",
+      "runtime_version": "v1.6.11",
+      "runtime_capability_line": "v1.3.3",
+      "required": true,
+      "reason_code": "",
+      "blocked": false,
+      "status": "pass",
+      "findings": [],
+      "report_json_path": "docs/beacon/v0.0.5/.machine/execution/requirement-clarity-search-boundary-curation.json",
+      "report_markdown_path": "docs/beacon/v0.0.5/execution/requirement-clarity-search-boundary-curation.md",
+      "state_path": ".beacon/state/requirement-clarity-search-boundary-curation.json",
+      "diagram_truth": {
+        "schema_version": "1.0",
+        "version": "v0.0.5",
+        "supported": false,
+        "required": false,
+        "ready": false,
+        "diagram_types": [],
+        "state_axes": [],
+        "missing_diagram_types": [],
+        "missing_state_axes": false,
+        "complexity_signals": [],
+        "review_gates": [],
+        "qa_coverage_hints": [],
+        "evidence_lines": {},
+        "generated_at": "2026-08-04T09:21:50.444531+00:00",
+        "feature": "search-boundary-curation",
+        "feature_slug": "search-boundary-curation",
+        "prd_ref": "docs/beacon/v0.0.5/prd/search-boundary-curation.md",
+        "user_story_ref": "docs/beacon/v0.0.5/user-story/search-boundary-curation.md"
+      },
+      "domain_fsm_gate": {
+        "schema_version": "1.0",
+        "feature": "search-boundary-curation",
+        "feature_slug": "search-boundary-curation",
+        "version": "v0.0.5",
+        "truth_path": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+        "tests_path": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md",
+        "required": true,
+        "blocked": false,
+        "status": "pass",
+        "reason_code": "",
+        "findings": [],
+        "requirement": {
+          "required": true,
+          "reason": "domain_section_present",
+          "explicit": false,
+          "partial": true,
+          "complexity": false,
+          "business_signal": true,
+          "version_supported": false
+        },
+        "projection": {
+          "schema_version": "1.0",
+          "domain_fsm_schema": "domain-fsm.v1",
+          "entity_precedence_schema": "entity-precedence.v1",
+          "frontmatter": {
+            "slug": "search-boundary-curation",
+            "version": "v0.0.5",
+            "status": "draft",
+            "language": "zh",
+            "package_maturity": "filled",
+            "parser_contract": "beacon-feature-package-v2",
+            "truth_source_model": "feature_package_authoritative",
+            "materials_status": "current",
+            "canonical_refs": {
+              "prd": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+              "user_story": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+              "test_case": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md"
+            }
+          },
+          "frontmatter_errors": [],
+          "has_domain_model_section": true,
+          "has_domain_fsm_section": true,
+          "has_illegal_transition_section": true,
+          "entities": [
+            {
+              "entity": "ProjectVerticalProfile",
+              "key": "id, themes, must_include, must_exclude, value_tests",
+              "precedence": "auditable; loaded before VerticalGate",
+              "requires": "auditable; loaded before VerticalGate"
+            },
+            {
+              "entity": "AccountVerticalProfile",
+              "key": "id, account_id, platform, vertical, brand, draft_tab_meaning, out_of_scope",
+              "precedence": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包",
+              "requires": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包"
+            },
+            {
+              "entity": "VerticalGate",
+              "key": "proposal, project_profile, account_profile?",
+              "precedence": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)",
+              "requires": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)"
+            },
+            {
+              "entity": "BoundaryProposal",
+              "key": "id, topic, query_hints, sources, rationale, project_profile_ref, account_profile_ref, provenance, status",
+              "precedence": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review",
+              "requires": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review"
+            },
+            {
+              "entity": "BoundaryDecision",
+              "key": "proposal_id, actor, decision, note, at",
+              "precedence": "append-only；approve→active，reject→rejected",
+              "requires": "append-only；approve→active，reject→rejected"
+            },
+            {
+              "entity": "ActiveBoundary",
+              "key": "proposal_id",
+              "precedence": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审",
+              "requires": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审"
+            },
+            {
+              "entity": "ProjectVerticalProfile",
+              "key": "1",
+              "precedence": "—",
+              "requires": "—"
+            },
+            {
+              "entity": "AccountVerticalProfile",
+              "key": "2",
+              "precedence": "ProjectVerticalProfile",
+              "requires": "ProjectVerticalProfile"
+            },
+            {
+              "entity": "VerticalGate",
+              "key": "3",
+              "precedence": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)",
+              "requires": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)"
+            },
+            {
+              "entity": "BoundaryProposal",
+              "key": "4",
+              "precedence": "VerticalGate allow",
+              "requires": "VerticalGate allow"
+            },
+            {
+              "entity": "BoundaryDecision",
+              "key": "5",
+              "precedence": "BoundaryProposal awaiting_review",
+              "requires": "BoundaryProposal awaiting_review"
+            },
+            {
+              "entity": "ActiveBoundary",
+              "key": "6",
+              "precedence": "BoundaryDecision approve",
+              "requires": "BoundaryDecision approve"
+            }
+          ],
+          "entity_precedence": [
+            {
+              "entity": "ProjectVerticalProfile",
+              "key": "id, themes, must_include, must_exclude, value_tests",
+              "precedence": "auditable; loaded before VerticalGate",
+              "requires": "auditable; loaded before VerticalGate"
+            },
+            {
+              "entity": "AccountVerticalProfile",
+              "key": "id, account_id, platform, vertical, brand, draft_tab_meaning, out_of_scope",
+              "precedence": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包",
+              "requires": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包"
+            },
+            {
+              "entity": "VerticalGate",
+              "key": "proposal, project_profile, account_profile?",
+              "precedence": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)",
+              "requires": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)"
+            },
+            {
+              "entity": "BoundaryProposal",
+              "key": "id, topic, query_hints, sources, rationale, project_profile_ref, account_profile_ref, provenance, status",
+              "precedence": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review",
+              "requires": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review"
+            },
+            {
+              "entity": "BoundaryDecision",
+              "key": "proposal_id, actor, decision, note, at",
+              "precedence": "append-only；approve→active，reject→rejected",
+              "requires": "append-only；approve→active，reject→rejected"
+            },
+            {
+              "entity": "ActiveBoundary",
+              "key": "proposal_id",
+              "precedence": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审",
+              "requires": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审"
+            },
+            {
+              "entity": "ProjectVerticalProfile",
+              "key": "1",
+              "precedence": "—",
+              "requires": "—"
+            },
+            {
+              "entity": "AccountVerticalProfile",
+              "key": "2",
+              "precedence": "ProjectVerticalProfile",
+              "requires": "ProjectVerticalProfile"
+            },
+            {
+              "entity": "VerticalGate",
+              "key": "3",
+              "precedence": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)",
+              "requires": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)"
+            },
+            {
+              "entity": "BoundaryProposal",
+              "key": "4",
+              "precedence": "VerticalGate allow",
+              "requires": "VerticalGate allow"
+            },
+            {
+              "entity": "BoundaryDecision",
+              "key": "5",
+              "precedence": "BoundaryProposal awaiting_review",
+              "requires": "BoundaryProposal awaiting_review"
+            },
+            {
+              "entity": "ActiveBoundary",
+              "key": "6",
+              "precedence": "BoundaryDecision approve",
+              "requires": "BoundaryDecision approve"
+            }
+          ],
+          "aggregates": [
+            {
+              "name": "BoundaryProposal",
+              "states": [
+                "active",
+                "approved",
+                "awaiting_review",
+                "blocked",
+                "idle",
+                "rejected",
+                "validating"
+              ],
+              "transitions": [
+                {
+                  "from": "",
+                  "to": "idle",
+                  "guard": "profiles available",
+                  "initial": "true"
+                },
+                {
+                  "from": "idle",
+                  "to": "validating",
+                  "guard": "ingest received"
+                },
+                {
+                  "from": "validating",
+                  "to": "awaiting_review",
+                  "guard": "fields_ok + profile_refs + VerticalGate allow"
+                },
+                {
+                  "from": "validating",
+                  "to": "blocked",
+                  "guard": "missing_profile_ref / vertical_gate_reject / illegal"
+                },
+                {
+                  "from": "awaiting_review",
+                  "to": "approved",
+                  "guard": "decide approve + actor"
+                },
+                {
+                  "from": "awaiting_review",
+                  "to": "rejected",
+                  "guard": "decide reject + actor"
+                },
+                {
+                  "from": "approved",
+                  "to": "active",
+                  "guard": "decide(approve) recorded"
+                }
+              ]
+            }
+          ],
+          "illegal_transition_slots": [
+            {
+              "description": "BoundaryProposal.idle → active without awaiting_review · TC-SBC-ILL-001",
+              "aggregate": "BoundaryProposal",
+              "source": "truth"
+            },
+            {
+              "description": "BoundaryProposal.awaiting_review → active without decide · TC-SBC-007",
+              "aggregate": "BoundaryProposal",
+              "source": "truth"
+            },
+            {
+              "description": "BoundaryProposal.validating → awaiting_review when VerticalGate reject · TC-SBC-ILL-002",
+              "aggregate": "BoundaryProposal",
+              "source": "truth"
+            },
+            {
+              "description": "BoundaryProposal.validating → awaiting_review when missing_profile_ref · TC-SBC-008",
+              "aggregate": "BoundaryProposal",
+              "source": "truth"
+            },
+            {
+              "description": "BoundaryProposal.idle → scheduled_tick with sticker_emoji_bank · TC-SBC-011",
+              "aggregate": "BoundaryProposal",
+              "source": "truth"
+            }
+          ],
+          "acceptance_criteria": [
+            {
+              "ac_id": "AC-SBC-001",
+              "description": "adb boundary ingest 写入 awaiting_review（topic 必填；query_hints/sources 可多值；须带 project_profile_ref；自媒体路径另带 account_profile_ref）；缺 topic/画像 ref 拒绝"
+            },
+            {
+              "ac_id": "AC-SBC-002",
+              "description": "CLI 列出全部 awaiting_review；show 返回单条（含画像 ref）"
+            },
+            {
+              "ac_id": "AC-SBC-003",
+              "description": "reject；approve→active，reject→rejected"
+            },
+            {
+              "ac_id": "AC-SBC-004",
+              "description": "adb boundary list 默认仅 active；可用 --status 过滤"
+            },
+            {
+              "ac_id": "AC-SBC-005",
+              "description": "待审提案进入 approvals awaiting（kind 绑定 boundary 待审）"
+            },
+            {
+              "ac_id": "AC-SBC-006",
+              "description": "定时路径：schedule + Hermes cron 日更；脚本只 ingest 不 auto-approve；默认产出 5 条垂直约束提案"
+            },
+            {
+              "ac_id": "AC-SBC-007",
+              "description": "illegal：ingest 直达 active、跳过待审启用、自动 approve → fail-closed"
+            },
+            {
+              "ac_id": "AC-SBC-008",
+              "description": "L1：无 project_profile_ref（及自媒体缺 account_profile_ref）不得 ingest；禁止无画像静态离题池"
+            },
+            {
+              "ac_id": "AC-SBC-009",
+              "description": "L2/L3：可加载审计 ProjectVerticalProfile 与 AccountVerticalProfile；库拾样例 vertical=oss-picks，贴图=image_post 非表情包，out_of_scope 含表情包/情感漫等"
+            },
+            {
+              "ac_id": "AC-SBC-010",
+              "description": "L4 VerticalGate：完整偏离项目/账号垂直（如表情包题）→ reason_code=vertical_gate_rejected，不得进入 awaiting_review；有意义价值陈述可通过"
+            },
+            {
+              "ac_id": "AC-SBC-011",
+              "description": "日批选题均绑定库拾画像且主题落在 GitHub 开源 AI 库 / AI Spec；题库与脚本不得含表情包/情侣/宠物等离题词；provenance 标明 intel-radar 或 in-vertical-fixture"
+            }
+          ],
+          "bound_ac_ids": [
+            "AC-SBC-001",
+            "AC-SBC-002",
+            "AC-SBC-003",
+            "AC-SBC-004",
+            "AC-SBC-007",
+            "AC-SBC-009",
+            "AC-SBC-010"
+          ],
+          "orphan_ac_ids": [
+            "AC-SBC-006"
+          ],
+          "aggregates_missing_illegal_slots": [],
+          "raw_section_titles": [
+            "人话",
+            "User Intent Snapshot",
+            "用户旅程",
+            "Intent Coverage Matrix",
+            "Acceptance Criteria",
+            "Domain Model",
+            "Entity Precedence",
+            "Domain FSM — BoundaryProposal",
+            "FSM 五元组",
+            "Legal walks",
+            "Illegal transitions",
+            "Public CLI Contract",
+            "Non-goals",
+            "Freeze readiness"
+          ]
+        },
+        "validation": {
+          "schema_version": "1.0",
+          "required": true,
+          "blocked": false,
+          "status": "pass",
+          "reason_code": "",
+          "findings": [],
+          "projection": {
+            "schema_version": "1.0",
+            "domain_fsm_schema": "domain-fsm.v1",
+            "entity_precedence_schema": "entity-precedence.v1",
+            "frontmatter": {
+              "slug": "search-boundary-curation",
+              "version": "v0.0.5",
+              "status": "draft",
+              "language": "zh",
+              "package_maturity": "filled",
+              "parser_contract": "beacon-feature-package-v2",
+              "truth_source_model": "feature_package_authoritative",
+              "materials_status": "current",
+              "canonical_refs": {
+                "prd": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+                "user_story": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+                "test_case": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md"
+              }
+            },
+            "frontmatter_errors": [],
+            "has_domain_model_section": true,
+            "has_domain_fsm_section": true,
+            "has_illegal_transition_section": true,
+            "entities": [
+              {
+                "entity": "ProjectVerticalProfile",
+                "key": "id, themes, must_include, must_exclude, value_tests",
+                "precedence": "auditable; loaded before VerticalGate",
+                "requires": "auditable; loaded before VerticalGate"
+              },
+              {
+                "entity": "AccountVerticalProfile",
+                "key": "id, account_id, platform, vertical, brand, draft_tab_meaning, out_of_scope",
+                "precedence": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包",
+                "requires": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包"
+              },
+              {
+                "entity": "VerticalGate",
+                "key": "proposal, project_profile, account_profile?",
+                "precedence": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)",
+                "requires": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)"
+              },
+              {
+                "entity": "BoundaryProposal",
+                "key": "id, topic, query_hints, sources, rationale, project_profile_ref, account_profile_ref, provenance, status",
+                "precedence": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review",
+                "requires": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review"
+              },
+              {
+                "entity": "BoundaryDecision",
+                "key": "proposal_id, actor, decision, note, at",
+                "precedence": "append-only；approve→active，reject→rejected",
+                "requires": "append-only；approve→active，reject→rejected"
+              },
+              {
+                "entity": "ActiveBoundary",
+                "key": "proposal_id",
+                "precedence": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审",
+                "requires": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审"
+              },
+              {
+                "entity": "ProjectVerticalProfile",
+                "key": "1",
+                "precedence": "—",
+                "requires": "—"
+              },
+              {
+                "entity": "AccountVerticalProfile",
+                "key": "2",
+                "precedence": "ProjectVerticalProfile",
+                "requires": "ProjectVerticalProfile"
+              },
+              {
+                "entity": "VerticalGate",
+                "key": "3",
+                "precedence": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)",
+                "requires": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)"
+              },
+              {
+                "entity": "BoundaryProposal",
+                "key": "4",
+                "precedence": "VerticalGate allow",
+                "requires": "VerticalGate allow"
+              },
+              {
+                "entity": "BoundaryDecision",
+                "key": "5",
+                "precedence": "BoundaryProposal awaiting_review",
+                "requires": "BoundaryProposal awaiting_review"
+              },
+              {
+                "entity": "ActiveBoundary",
+                "key": "6",
+                "precedence": "BoundaryDecision approve",
+                "requires": "BoundaryDecision approve"
+              }
+            ],
+            "entity_precedence": [
+              {
+                "entity": "ProjectVerticalProfile",
+                "key": "id, themes, must_include, must_exclude, value_tests",
+                "precedence": "auditable; loaded before VerticalGate",
+                "requires": "auditable; loaded before VerticalGate"
+              },
+              {
+                "entity": "AccountVerticalProfile",
+                "key": "id, account_id, platform, vertical, brand, draft_tab_meaning, out_of_scope",
+                "precedence": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包",
+                "requires": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包"
+              },
+              {
+                "entity": "VerticalGate",
+                "key": "proposal, project_profile, account_profile?",
+                "precedence": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)",
+                "requires": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)"
+              },
+              {
+                "entity": "BoundaryProposal",
+                "key": "id, topic, query_hints, sources, rationale, project_profile_ref, account_profile_ref, provenance, status",
+                "precedence": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review",
+                "requires": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review"
+              },
+              {
+                "entity": "BoundaryDecision",
+                "key": "proposal_id, actor, decision, note, at",
+                "precedence": "append-only；approve→active，reject→rejected",
+                "requires": "append-only；approve→active，reject→rejected"
+              },
+              {
+                "entity": "ActiveBoundary",
+                "key": "proposal_id",
+                "precedence": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审",
+                "requires": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审"
+              },
+              {
+                "entity": "ProjectVerticalProfile",
+                "key": "1",
+                "precedence": "—",
+                "requires": "—"
+              },
+              {
+                "entity": "AccountVerticalProfile",
+                "key": "2",
+                "precedence": "ProjectVerticalProfile",
+                "requires": "ProjectVerticalProfile"
+              },
+              {
+                "entity": "VerticalGate",
+                "key": "3",
+                "precedence": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)",
+                "requires": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)"
+              },
+              {
+                "entity": "BoundaryProposal",
+                "key": "4",
+                "precedence": "VerticalGate allow",
+                "requires": "VerticalGate allow"
+              },
+              {
+                "entity": "BoundaryDecision",
+                "key": "5",
+                "precedence": "BoundaryProposal awaiting_review",
+                "requires": "BoundaryProposal awaiting_review"
+              },
+              {
+                "entity": "ActiveBoundary",
+                "key": "6",
+                "precedence": "BoundaryDecision approve",
+                "requires": "BoundaryDecision approve"
+              }
+            ],
+            "aggregates": [
+              {
+                "name": "BoundaryProposal",
+                "states": [
+                  "active",
+                  "approved",
+                  "awaiting_review",
+                  "blocked",
+                  "idle",
+                  "rejected",
+                  "validating"
+                ],
+                "transitions": [
+                  {
+                    "from": "",
+                    "to": "idle",
+                    "guard": "profiles available",
+                    "initial": "true"
+                  },
+                  {
+                    "from": "idle",
+                    "to": "validating",
+                    "guard": "ingest received"
+                  },
+                  {
+                    "from": "validating",
+                    "to": "awaiting_review",
+                    "guard": "fields_ok + profile_refs + VerticalGate allow"
+                  },
+                  {
+                    "from": "validating",
+                    "to": "blocked",
+                    "guard": "missing_profile_ref / vertical_gate_reject / illegal"
+                  },
+                  {
+                    "from": "awaiting_review",
+                    "to": "approved",
+                    "guard": "decide approve + actor"
+                  },
+                  {
+                    "from": "awaiting_review",
+                    "to": "rejected",
+                    "guard": "decide reject + actor"
+                  },
+                  {
+                    "from": "approved",
+                    "to": "active",
+                    "guard": "decide(approve) recorded"
+                  }
+                ]
+              }
+            ],
+            "illegal_transition_slots": [
+              {
+                "description": "BoundaryProposal.idle → active without awaiting_review · TC-SBC-ILL-001",
+                "aggregate": "BoundaryProposal",
+                "source": "truth"
+              },
+              {
+                "description": "BoundaryProposal.awaiting_review → active without decide · TC-SBC-007",
+                "aggregate": "BoundaryProposal",
+                "source": "truth"
+              },
+              {
+                "description": "BoundaryProposal.validating → awaiting_review when VerticalGate reject · TC-SBC-ILL-002",
+                "aggregate": "BoundaryProposal",
+                "source": "truth"
+              },
+              {
+                "description": "BoundaryProposal.validating → awaiting_review when missing_profile_ref · TC-SBC-008",
+                "aggregate": "BoundaryProposal",
+                "source": "truth"
+              },
+              {
+                "description": "BoundaryProposal.idle → scheduled_tick with sticker_emoji_bank · TC-SBC-011",
+                "aggregate": "BoundaryProposal",
+                "source": "truth"
+              }
+            ],
+            "acceptance_criteria": [
+              {
+                "ac_id": "AC-SBC-001",
+                "description": "adb boundary ingest 写入 awaiting_review（topic 必填；query_hints/sources 可多值；须带 project_profile_ref；自媒体路径另带 account_profile_ref）；缺 topic/画像 ref 拒绝"
+              },
+              {
+                "ac_id": "AC-SBC-002",
+                "description": "CLI 列出全部 awaiting_review；show 返回单条（含画像 ref）"
+              },
+              {
+                "ac_id": "AC-SBC-003",
+                "description": "reject；approve→active，reject→rejected"
+              },
+              {
+                "ac_id": "AC-SBC-004",
+                "description": "adb boundary list 默认仅 active；可用 --status 过滤"
+              },
+              {
+                "ac_id": "AC-SBC-005",
+                "description": "待审提案进入 approvals awaiting（kind 绑定 boundary 待审）"
+              },
+              {
+                "ac_id": "AC-SBC-006",
+                "description": "定时路径：schedule + Hermes cron 日更；脚本只 ingest 不 auto-approve；默认产出 5 条垂直约束提案"
+              },
+              {
+                "ac_id": "AC-SBC-007",
+                "description": "illegal：ingest 直达 active、跳过待审启用、自动 approve → fail-closed"
+              },
+              {
+                "ac_id": "AC-SBC-008",
+                "description": "L1：无 project_profile_ref（及自媒体缺 account_profile_ref）不得 ingest；禁止无画像静态离题池"
+              },
+              {
+                "ac_id": "AC-SBC-009",
+                "description": "L2/L3：可加载审计 ProjectVerticalProfile 与 AccountVerticalProfile；库拾样例 vertical=oss-picks，贴图=image_post 非表情包，out_of_scope 含表情包/情感漫等"
+              },
+              {
+                "ac_id": "AC-SBC-010",
+                "description": "L4 VerticalGate：完整偏离项目/账号垂直（如表情包题）→ reason_code=vertical_gate_rejected，不得进入 awaiting_review；有意义价值陈述可通过"
+              },
+              {
+                "ac_id": "AC-SBC-011",
+                "description": "日批选题均绑定库拾画像且主题落在 GitHub 开源 AI 库 / AI Spec；题库与脚本不得含表情包/情侣/宠物等离题词；provenance 标明 intel-radar 或 in-vertical-fixture"
+              }
+            ],
+            "bound_ac_ids": [
+              "AC-SBC-001",
+              "AC-SBC-002",
+              "AC-SBC-003",
+              "AC-SBC-004",
+              "AC-SBC-007",
+              "AC-SBC-009",
+              "AC-SBC-010"
+            ],
+            "orphan_ac_ids": [
+              "AC-SBC-006"
+            ],
+            "aggregates_missing_illegal_slots": [],
+            "raw_section_titles": [
+              "人话",
+              "User Intent Snapshot",
+              "用户旅程",
+              "Intent Coverage Matrix",
+              "Acceptance Criteria",
+              "Domain Model",
+              "Entity Precedence",
+              "Domain FSM — BoundaryProposal",
+              "FSM 五元组",
+              "Legal walks",
+              "Illegal transitions",
+              "Public CLI Contract",
+              "Non-goals",
+              "Freeze readiness"
+            ]
+          },
+          "summary": {
+            "entity_count": 12,
+            "aggregate_count": 1,
+            "illegal_slot_count": 5,
+            "orphan_ac_count": 1,
+            "bound_ac_count": 7
+          }
+        },
+        "recommended_action": ""
+      },
+      "human_closure_contract": {
+        "required": false,
+        "research_path": "docs/beacon/v0.0.5/research/search-boundary-curation.md",
+        "research_exists": true,
+        "source_architecture_path": "docs/beacon/v0.0.5/source-architecture/search-boundary-curation.md",
+        "source_architecture_exists": false,
+        "required_sections": [
+          "architecture",
+          "business_flow"
+        ],
+        "missing_sections": [
+          "architecture",
+          "business_flow"
+        ],
+        "diagram_types": [],
+        "complexity_signals": []
+      },
+      "requirement_closure_contract": {
+        "required": true,
+        "chain_order": [
+          "research",
+          "prd",
+          "user_story",
+          "test_case",
+          "requirement_clarity",
+          "freeze"
+        ],
+        "human_closure_required": false,
+        "paths": {
+          "research": "docs/beacon/v0.0.5/research/search-boundary-curation.md",
+          "prd": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+          "user_story": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+          "test_case": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md"
+        },
+        "exists": {
+          "research": true,
+          "prd": true,
+          "user_story": true,
+          "test_case": true
+        },
+        "required_research_sections": [],
+        "missing_research_sections": [],
+        "ac_projection": {
+          "prd_ac_ids": [],
+          "user_story_ac_ids": [],
+          "test_case_ac_ids": [],
+          "upstream_ac_ids": [],
+          "missing_test_case_ac_ids": []
+        }
+      },
+      "version_projection_truth_contract": {
+        "required": false,
+        "supported": false,
+        "projection_types": [],
+        "research_path": "docs/beacon/v0.0.5/research/search-boundary-curation.md",
+        "research_exists": true,
+        "required_fields": [
+          "prd_refs",
+          "user_story_refs",
+          "test_case_refs",
+          "coverage_notes",
+          "out_of_scope_notes"
+        ],
+        "field_presence": {
+          "prd_refs": false,
+          "user_story_refs": false,
+          "test_case_refs": false,
+          "coverage_notes": false,
+          "out_of_scope_notes": false
+        },
+        "missing_fields": [],
+        "required_refs": {
+          "prd_refs": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+          "user_story_refs": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+          "test_case_refs": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md"
+        },
+        "missing_ref_targets": [],
+        "ready": false
+      },
+      "support_write_topology_contract": {
+        "schema_version": "1.0",
+        "supported": true,
+        "status": "pass",
+        "blocked": false,
+        "reason_code": "",
+        "diagnostics": []
+      },
+      "required_artifacts": [],
+      "scanned_files": [
+        "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+        "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md",
+        "docs/beacon/v0.0.5/features/search-boundary-curation/tasks.md",
+        "docs/beacon/v0.0.5/features/search-boundary-curation/evidence.md",
+        "docs/beacon/v0.0.5/research/search-boundary-curation.md"
+      ]
+    },
+    "domain_fsm": {
+      "schema_version": "1.0",
+      "feature": "search-boundary-curation",
+      "feature_slug": "search-boundary-curation",
+      "version": "v0.0.5",
+      "truth_path": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+      "tests_path": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md",
+      "required": true,
+      "blocked": false,
+      "status": "pass",
+      "reason_code": "",
+      "findings": [],
+      "requirement": {
+        "required": true,
+        "reason": "domain_section_present",
+        "explicit": false,
+        "partial": true,
+        "complexity": false,
+        "business_signal": true,
+        "version_supported": false
+      },
+      "projection": {
+        "schema_version": "1.0",
+        "domain_fsm_schema": "domain-fsm.v1",
+        "entity_precedence_schema": "entity-precedence.v1",
+        "frontmatter": {
+          "slug": "search-boundary-curation",
+          "version": "v0.0.5",
+          "status": "draft",
+          "language": "zh",
+          "package_maturity": "filled",
+          "parser_contract": "beacon-feature-package-v2",
+          "truth_source_model": "feature_package_authoritative",
+          "materials_status": "current",
+          "canonical_refs": {
+            "prd": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+            "user_story": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+            "test_case": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md"
+          }
+        },
+        "frontmatter_errors": [],
+        "has_domain_model_section": true,
+        "has_domain_fsm_section": true,
+        "has_illegal_transition_section": true,
+        "entities": [
+          {
+            "entity": "ProjectVerticalProfile",
+            "key": "id, themes, must_include, must_exclude, value_tests",
+            "precedence": "auditable; loaded before VerticalGate",
+            "requires": "auditable; loaded before VerticalGate"
+          },
+          {
+            "entity": "AccountVerticalProfile",
+            "key": "id, account_id, platform, vertical, brand, draft_tab_meaning, out_of_scope",
+            "precedence": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包",
+            "requires": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包"
+          },
+          {
+            "entity": "VerticalGate",
+            "key": "proposal, project_profile, account_profile?",
+            "precedence": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)",
+            "requires": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)"
+          },
+          {
+            "entity": "BoundaryProposal",
+            "key": "id, topic, query_hints, sources, rationale, project_profile_ref, account_profile_ref, provenance, status",
+            "precedence": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review",
+            "requires": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review"
+          },
+          {
+            "entity": "BoundaryDecision",
+            "key": "proposal_id, actor, decision, note, at",
+            "precedence": "append-only；approve→active，reject→rejected",
+            "requires": "append-only；approve→active，reject→rejected"
+          },
+          {
+            "entity": "ActiveBoundary",
+            "key": "proposal_id",
+            "precedence": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审",
+            "requires": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审"
+          },
+          {
+            "entity": "ProjectVerticalProfile",
+            "key": "1",
+            "precedence": "—",
+            "requires": "—"
+          },
+          {
+            "entity": "AccountVerticalProfile",
+            "key": "2",
+            "precedence": "ProjectVerticalProfile",
+            "requires": "ProjectVerticalProfile"
+          },
+          {
+            "entity": "VerticalGate",
+            "key": "3",
+            "precedence": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)",
+            "requires": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)"
+          },
+          {
+            "entity": "BoundaryProposal",
+            "key": "4",
+            "precedence": "VerticalGate allow",
+            "requires": "VerticalGate allow"
+          },
+          {
+            "entity": "BoundaryDecision",
+            "key": "5",
+            "precedence": "BoundaryProposal awaiting_review",
+            "requires": "BoundaryProposal awaiting_review"
+          },
+          {
+            "entity": "ActiveBoundary",
+            "key": "6",
+            "precedence": "BoundaryDecision approve",
+            "requires": "BoundaryDecision approve"
+          }
+        ],
+        "entity_precedence": [
+          {
+            "entity": "ProjectVerticalProfile",
+            "key": "id, themes, must_include, must_exclude, value_tests",
+            "precedence": "auditable; loaded before VerticalGate",
+            "requires": "auditable; loaded before VerticalGate"
+          },
+          {
+            "entity": "AccountVerticalProfile",
+            "key": "id, account_id, platform, vertical, brand, draft_tab_meaning, out_of_scope",
+            "precedence": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包",
+            "requires": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包"
+          },
+          {
+            "entity": "VerticalGate",
+            "key": "proposal, project_profile, account_profile?",
+            "precedence": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)",
+            "requires": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)"
+          },
+          {
+            "entity": "BoundaryProposal",
+            "key": "id, topic, query_hints, sources, rationale, project_profile_ref, account_profile_ref, provenance, status",
+            "precedence": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review",
+            "requires": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review"
+          },
+          {
+            "entity": "BoundaryDecision",
+            "key": "proposal_id, actor, decision, note, at",
+            "precedence": "append-only；approve→active，reject→rejected",
+            "requires": "append-only；approve→active，reject→rejected"
+          },
+          {
+            "entity": "ActiveBoundary",
+            "key": "proposal_id",
+            "precedence": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审",
+            "requires": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审"
+          },
+          {
+            "entity": "ProjectVerticalProfile",
+            "key": "1",
+            "precedence": "—",
+            "requires": "—"
+          },
+          {
+            "entity": "AccountVerticalProfile",
+            "key": "2",
+            "precedence": "ProjectVerticalProfile",
+            "requires": "ProjectVerticalProfile"
+          },
+          {
+            "entity": "VerticalGate",
+            "key": "3",
+            "precedence": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)",
+            "requires": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)"
+          },
+          {
+            "entity": "BoundaryProposal",
+            "key": "4",
+            "precedence": "VerticalGate allow",
+            "requires": "VerticalGate allow"
+          },
+          {
+            "entity": "BoundaryDecision",
+            "key": "5",
+            "precedence": "BoundaryProposal awaiting_review",
+            "requires": "BoundaryProposal awaiting_review"
+          },
+          {
+            "entity": "ActiveBoundary",
+            "key": "6",
+            "precedence": "BoundaryDecision approve",
+            "requires": "BoundaryDecision approve"
+          }
+        ],
+        "aggregates": [
+          {
+            "name": "BoundaryProposal",
+            "states": [
+              "active",
+              "approved",
+              "awaiting_review",
+              "blocked",
+              "idle",
+              "rejected",
+              "validating"
+            ],
+            "transitions": [
+              {
+                "from": "",
+                "to": "idle",
+                "guard": "profiles available",
+                "initial": "true"
+              },
+              {
+                "from": "idle",
+                "to": "validating",
+                "guard": "ingest received"
+              },
+              {
+                "from": "validating",
+                "to": "awaiting_review",
+                "guard": "fields_ok + profile_refs + VerticalGate allow"
+              },
+              {
+                "from": "validating",
+                "to": "blocked",
+                "guard": "missing_profile_ref / vertical_gate_reject / illegal"
+              },
+              {
+                "from": "awaiting_review",
+                "to": "approved",
+                "guard": "decide approve + actor"
+              },
+              {
+                "from": "awaiting_review",
+                "to": "rejected",
+                "guard": "decide reject + actor"
+              },
+              {
+                "from": "approved",
+                "to": "active",
+                "guard": "decide(approve) recorded"
+              }
+            ]
+          }
+        ],
+        "illegal_transition_slots": [
+          {
+            "description": "BoundaryProposal.idle → active without awaiting_review · TC-SBC-ILL-001",
+            "aggregate": "BoundaryProposal",
+            "source": "truth"
+          },
+          {
+            "description": "BoundaryProposal.awaiting_review → active without decide · TC-SBC-007",
+            "aggregate": "BoundaryProposal",
+            "source": "truth"
+          },
+          {
+            "description": "BoundaryProposal.validating → awaiting_review when VerticalGate reject · TC-SBC-ILL-002",
+            "aggregate": "BoundaryProposal",
+            "source": "truth"
+          },
+          {
+            "description": "BoundaryProposal.validating → awaiting_review when missing_profile_ref · TC-SBC-008",
+            "aggregate": "BoundaryProposal",
+            "source": "truth"
+          },
+          {
+            "description": "BoundaryProposal.idle → scheduled_tick with sticker_emoji_bank · TC-SBC-011",
+            "aggregate": "BoundaryProposal",
+            "source": "truth"
+          }
+        ],
+        "acceptance_criteria": [
+          {
+            "ac_id": "AC-SBC-001",
+            "description": "adb boundary ingest 写入 awaiting_review（topic 必填；query_hints/sources 可多值；须带 project_profile_ref；自媒体路径另带 account_profile_ref）；缺 topic/画像 ref 拒绝"
+          },
+          {
+            "ac_id": "AC-SBC-002",
+            "description": "CLI 列出全部 awaiting_review；show 返回单条（含画像 ref）"
+          },
+          {
+            "ac_id": "AC-SBC-003",
+            "description": "reject；approve→active，reject→rejected"
+          },
+          {
+            "ac_id": "AC-SBC-004",
+            "description": "adb boundary list 默认仅 active；可用 --status 过滤"
+          },
+          {
+            "ac_id": "AC-SBC-005",
+            "description": "待审提案进入 approvals awaiting（kind 绑定 boundary 待审）"
+          },
+          {
+            "ac_id": "AC-SBC-006",
+            "description": "定时路径：schedule + Hermes cron 日更；脚本只 ingest 不 auto-approve；默认产出 5 条垂直约束提案"
+          },
+          {
+            "ac_id": "AC-SBC-007",
+            "description": "illegal：ingest 直达 active、跳过待审启用、自动 approve → fail-closed"
+          },
+          {
+            "ac_id": "AC-SBC-008",
+            "description": "L1：无 project_profile_ref（及自媒体缺 account_profile_ref）不得 ingest；禁止无画像静态离题池"
+          },
+          {
+            "ac_id": "AC-SBC-009",
+            "description": "L2/L3：可加载审计 ProjectVerticalProfile 与 AccountVerticalProfile；库拾样例 vertical=oss-picks，贴图=image_post 非表情包，out_of_scope 含表情包/情感漫等"
+          },
+          {
+            "ac_id": "AC-SBC-010",
+            "description": "L4 VerticalGate：完整偏离项目/账号垂直（如表情包题）→ reason_code=vertical_gate_rejected，不得进入 awaiting_review；有意义价值陈述可通过"
+          },
+          {
+            "ac_id": "AC-SBC-011",
+            "description": "日批选题均绑定库拾画像且主题落在 GitHub 开源 AI 库 / AI Spec；题库与脚本不得含表情包/情侣/宠物等离题词；provenance 标明 intel-radar 或 in-vertical-fixture"
+          }
+        ],
+        "bound_ac_ids": [
+          "AC-SBC-001",
+          "AC-SBC-002",
+          "AC-SBC-003",
+          "AC-SBC-004",
+          "AC-SBC-007",
+          "AC-SBC-009",
+          "AC-SBC-010"
+        ],
+        "orphan_ac_ids": [
+          "AC-SBC-006"
+        ],
+        "aggregates_missing_illegal_slots": [],
+        "raw_section_titles": [
+          "人话",
+          "User Intent Snapshot",
+          "用户旅程",
+          "Intent Coverage Matrix",
+          "Acceptance Criteria",
+          "Domain Model",
+          "Entity Precedence",
+          "Domain FSM — BoundaryProposal",
+          "FSM 五元组",
+          "Legal walks",
+          "Illegal transitions",
+          "Public CLI Contract",
+          "Non-goals",
+          "Freeze readiness"
+        ]
+      },
+      "validation": {
+        "schema_version": "1.0",
+        "required": true,
+        "blocked": false,
+        "status": "pass",
+        "reason_code": "",
+        "findings": [],
+        "projection": {
+          "schema_version": "1.0",
+          "domain_fsm_schema": "domain-fsm.v1",
+          "entity_precedence_schema": "entity-precedence.v1",
+          "frontmatter": {
+            "slug": "search-boundary-curation",
+            "version": "v0.0.5",
+            "status": "draft",
+            "language": "zh",
+            "package_maturity": "filled",
+            "parser_contract": "beacon-feature-package-v2",
+            "truth_source_model": "feature_package_authoritative",
+            "materials_status": "current",
+            "canonical_refs": {
+              "prd": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+              "user_story": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+              "test_case": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md"
+            }
+          },
+          "frontmatter_errors": [],
+          "has_domain_model_section": true,
+          "has_domain_fsm_section": true,
+          "has_illegal_transition_section": true,
+          "entities": [
+            {
+              "entity": "ProjectVerticalProfile",
+              "key": "id, themes, must_include, must_exclude, value_tests",
+              "precedence": "auditable; loaded before VerticalGate",
+              "requires": "auditable; loaded before VerticalGate"
+            },
+            {
+              "entity": "AccountVerticalProfile",
+              "key": "id, account_id, platform, vertical, brand, draft_tab_meaning, out_of_scope",
+              "precedence": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包",
+              "requires": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包"
+            },
+            {
+              "entity": "VerticalGate",
+              "key": "proposal, project_profile, account_profile?",
+              "precedence": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)",
+              "requires": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)"
+            },
+            {
+              "entity": "BoundaryProposal",
+              "key": "id, topic, query_hints, sources, rationale, project_profile_ref, account_profile_ref, provenance, status",
+              "precedence": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review",
+              "requires": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review"
+            },
+            {
+              "entity": "BoundaryDecision",
+              "key": "proposal_id, actor, decision, note, at",
+              "precedence": "append-only；approve→active，reject→rejected",
+              "requires": "append-only；approve→active，reject→rejected"
+            },
+            {
+              "entity": "ActiveBoundary",
+              "key": "proposal_id",
+              "precedence": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审",
+              "requires": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审"
+            },
+            {
+              "entity": "ProjectVerticalProfile",
+              "key": "1",
+              "precedence": "—",
+              "requires": "—"
+            },
+            {
+              "entity": "AccountVerticalProfile",
+              "key": "2",
+              "precedence": "ProjectVerticalProfile",
+              "requires": "ProjectVerticalProfile"
+            },
+            {
+              "entity": "VerticalGate",
+              "key": "3",
+              "precedence": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)",
+              "requires": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)"
+            },
+            {
+              "entity": "BoundaryProposal",
+              "key": "4",
+              "precedence": "VerticalGate allow",
+              "requires": "VerticalGate allow"
+            },
+            {
+              "entity": "BoundaryDecision",
+              "key": "5",
+              "precedence": "BoundaryProposal awaiting_review",
+              "requires": "BoundaryProposal awaiting_review"
+            },
+            {
+              "entity": "ActiveBoundary",
+              "key": "6",
+              "precedence": "BoundaryDecision approve",
+              "requires": "BoundaryDecision approve"
+            }
+          ],
+          "entity_precedence": [
+            {
+              "entity": "ProjectVerticalProfile",
+              "key": "id, themes, must_include, must_exclude, value_tests",
+              "precedence": "auditable; loaded before VerticalGate",
+              "requires": "auditable; loaded before VerticalGate"
+            },
+            {
+              "entity": "AccountVerticalProfile",
+              "key": "id, account_id, platform, vertical, brand, draft_tab_meaning, out_of_scope",
+              "precedence": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包",
+              "requires": "requires ProjectVerticalProfile for 自媒体; 库拾 vertical=oss-picks；贴图=image_post 非表情包"
+            },
+            {
+              "entity": "VerticalGate",
+              "key": "proposal, project_profile, account_profile?",
+              "precedence": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)",
+              "requires": "requires profiles; complete drift → reject (reason_code=vertical_gate_rejected)"
+            },
+            {
+              "entity": "BoundaryProposal",
+              "key": "id, topic, query_hints, sources, rationale, project_profile_ref, account_profile_ref, provenance, status",
+              "precedence": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review",
+              "requires": "requires project_profile_ref；自媒体另需 account_profile_ref；VerticalGate allow 才进 awaiting_review"
+            },
+            {
+              "entity": "BoundaryDecision",
+              "key": "proposal_id, actor, decision, note, at",
+              "precedence": "append-only；approve→active，reject→rejected",
+              "requires": "append-only；approve→active，reject→rejected"
+            },
+            {
+              "entity": "ActiveBoundary",
+              "key": "proposal_id",
+              "precedence": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审",
+              "requires": "requires BoundaryDecision(approve)；禁止 ingest 直达 / 跳过待审"
+            },
+            {
+              "entity": "ProjectVerticalProfile",
+              "key": "1",
+              "precedence": "—",
+              "requires": "—"
+            },
+            {
+              "entity": "AccountVerticalProfile",
+              "key": "2",
+              "precedence": "ProjectVerticalProfile",
+              "requires": "ProjectVerticalProfile"
+            },
+            {
+              "entity": "VerticalGate",
+              "key": "3",
+              "precedence": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)",
+              "requires": "ProjectVerticalProfile (+ AccountVerticalProfile when 自媒体)"
+            },
+            {
+              "entity": "BoundaryProposal",
+              "key": "4",
+              "precedence": "VerticalGate allow",
+              "requires": "VerticalGate allow"
+            },
+            {
+              "entity": "BoundaryDecision",
+              "key": "5",
+              "precedence": "BoundaryProposal awaiting_review",
+              "requires": "BoundaryProposal awaiting_review"
+            },
+            {
+              "entity": "ActiveBoundary",
+              "key": "6",
+              "precedence": "BoundaryDecision approve",
+              "requires": "BoundaryDecision approve"
+            }
+          ],
+          "aggregates": [
+            {
+              "name": "BoundaryProposal",
+              "states": [
+                "active",
+                "approved",
+                "awaiting_review",
+                "blocked",
+                "idle",
+                "rejected",
+                "validating"
+              ],
+              "transitions": [
+                {
+                  "from": "",
+                  "to": "idle",
+                  "guard": "profiles available",
+                  "initial": "true"
+                },
+                {
+                  "from": "idle",
+                  "to": "validating",
+                  "guard": "ingest received"
+                },
+                {
+                  "from": "validating",
+                  "to": "awaiting_review",
+                  "guard": "fields_ok + profile_refs + VerticalGate allow"
+                },
+                {
+                  "from": "validating",
+                  "to": "blocked",
+                  "guard": "missing_profile_ref / vertical_gate_reject / illegal"
+                },
+                {
+                  "from": "awaiting_review",
+                  "to": "approved",
+                  "guard": "decide approve + actor"
+                },
+                {
+                  "from": "awaiting_review",
+                  "to": "rejected",
+                  "guard": "decide reject + actor"
+                },
+                {
+                  "from": "approved",
+                  "to": "active",
+                  "guard": "decide(approve) recorded"
+                }
+              ]
+            }
+          ],
+          "illegal_transition_slots": [
+            {
+              "description": "BoundaryProposal.idle → active without awaiting_review · TC-SBC-ILL-001",
+              "aggregate": "BoundaryProposal",
+              "source": "truth"
+            },
+            {
+              "description": "BoundaryProposal.awaiting_review → active without decide · TC-SBC-007",
+              "aggregate": "BoundaryProposal",
+              "source": "truth"
+            },
+            {
+              "description": "BoundaryProposal.validating → awaiting_review when VerticalGate reject · TC-SBC-ILL-002",
+              "aggregate": "BoundaryProposal",
+              "source": "truth"
+            },
+            {
+              "description": "BoundaryProposal.validating → awaiting_review when missing_profile_ref · TC-SBC-008",
+              "aggregate": "BoundaryProposal",
+              "source": "truth"
+            },
+            {
+              "description": "BoundaryProposal.idle → scheduled_tick with sticker_emoji_bank · TC-SBC-011",
+              "aggregate": "BoundaryProposal",
+              "source": "truth"
+            }
+          ],
+          "acceptance_criteria": [
+            {
+              "ac_id": "AC-SBC-001",
+              "description": "adb boundary ingest 写入 awaiting_review（topic 必填；query_hints/sources 可多值；须带 project_profile_ref；自媒体路径另带 account_profile_ref）；缺 topic/画像 ref 拒绝"
+            },
+            {
+              "ac_id": "AC-SBC-002",
+              "description": "CLI 列出全部 awaiting_review；show 返回单条（含画像 ref）"
+            },
+            {
+              "ac_id": "AC-SBC-003",
+              "description": "reject；approve→active，reject→rejected"
+            },
+            {
+              "ac_id": "AC-SBC-004",
+              "description": "adb boundary list 默认仅 active；可用 --status 过滤"
+            },
+            {
+              "ac_id": "AC-SBC-005",
+              "description": "待审提案进入 approvals awaiting（kind 绑定 boundary 待审）"
+            },
+            {
+              "ac_id": "AC-SBC-006",
+              "description": "定时路径：schedule + Hermes cron 日更；脚本只 ingest 不 auto-approve；默认产出 5 条垂直约束提案"
+            },
+            {
+              "ac_id": "AC-SBC-007",
+              "description": "illegal：ingest 直达 active、跳过待审启用、自动 approve → fail-closed"
+            },
+            {
+              "ac_id": "AC-SBC-008",
+              "description": "L1：无 project_profile_ref（及自媒体缺 account_profile_ref）不得 ingest；禁止无画像静态离题池"
+            },
+            {
+              "ac_id": "AC-SBC-009",
+              "description": "L2/L3：可加载审计 ProjectVerticalProfile 与 AccountVerticalProfile；库拾样例 vertical=oss-picks，贴图=image_post 非表情包，out_of_scope 含表情包/情感漫等"
+            },
+            {
+              "ac_id": "AC-SBC-010",
+              "description": "L4 VerticalGate：完整偏离项目/账号垂直（如表情包题）→ reason_code=vertical_gate_rejected，不得进入 awaiting_review；有意义价值陈述可通过"
+            },
+            {
+              "ac_id": "AC-SBC-011",
+              "description": "日批选题均绑定库拾画像且主题落在 GitHub 开源 AI 库 / AI Spec；题库与脚本不得含表情包/情侣/宠物等离题词；provenance 标明 intel-radar 或 in-vertical-fixture"
+            }
+          ],
+          "bound_ac_ids": [
+            "AC-SBC-001",
+            "AC-SBC-002",
+            "AC-SBC-003",
+            "AC-SBC-004",
+            "AC-SBC-007",
+            "AC-SBC-009",
+            "AC-SBC-010"
+          ],
+          "orphan_ac_ids": [
+            "AC-SBC-006"
+          ],
+          "aggregates_missing_illegal_slots": [],
+          "raw_section_titles": [
+            "人话",
+            "User Intent Snapshot",
+            "用户旅程",
+            "Intent Coverage Matrix",
+            "Acceptance Criteria",
+            "Domain Model",
+            "Entity Precedence",
+            "Domain FSM — BoundaryProposal",
+            "FSM 五元组",
+            "Legal walks",
+            "Illegal transitions",
+            "Public CLI Contract",
+            "Non-goals",
+            "Freeze readiness"
+          ]
+        },
+        "summary": {
+          "entity_count": 12,
+          "aggregate_count": 1,
+          "illegal_slot_count": 5,
+          "orphan_ac_count": 1,
+          "bound_ac_count": 7
+        }
+      },
+      "recommended_action": ""
+    },
+    "fake_delivery": {
+      "schema_version": "1.0",
+      "status": "pass",
+      "ok": true,
+      "closure_allowed": true,
+      "detected": [],
+      "policy_terms": [
+        "placeholder implementation",
+        "docs-only completion",
+        "fake runner evidence",
+        "zero assertions",
+        "placeholder evidence"
+      ],
+      "reason_code": ""
+    },
+    "feature_package_validation": {
+      "schema_version": "1.0",
+      "feature": "search-boundary-curation",
+      "feature_slug": "search-boundary-curation",
+      "version": "v0.0.5",
+      "status": "pass",
+      "blocked": false,
+      "reason_code": "",
+      "generated_at": "2026-08-04T09:21:50.461314+00:00",
+      "package_dir": "docs/beacon/v0.0.5/features/search-boundary-curation",
+      "truth_frontmatter": {
+        "slug": "search-boundary-curation",
+        "version": "v0.0.5",
+        "status": "draft",
+        "language": "zh",
+        "package_maturity": "filled",
+        "parser_contract": "beacon-feature-package-v2",
+        "truth_source_model": "feature_package_authoritative",
+        "materials_status": "current",
+        "canonical_refs": {
+          "prd": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+          "user_story": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+          "test_case": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md"
+        }
+      },
+      "ac_count": 11,
+      "test_count": 13,
+      "checkbox_count": 13,
+      "evidence_row_count": 9,
+      "gate_authority": "canonical_surfaces_preserved",
+      "checkbox_gate_bypass": false,
+      "task_evidence_gate": {
+        "pass": true,
+        "checked_ok": 13,
+        "checked_bad": 0,
+        "unbound": 0,
+        "findings": [],
+        "reason_code": ""
+      },
+      "evidence_gate_truth": false,
+      "diagnostics": [],
+      "report_path": "docs/beacon/v0.0.5/.machine/requirement/feature-package-validation.json"
+    },
+    "determinism_check": {
+      "placeholder_count": 0,
+      "hollow_template_count": 0
+    },
+    "closure_contract": {
+      "closure_allowed": true,
+      "detected": []
+    },
+    "recommended_action": ""
+  },
+  "truth_frontmatter_sync": {
+    "updated": true,
+    "status": "frozen",
+    "previous_status": "draft",
+    "path": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md"
+  },
+  "revision_delta": {
+    "schema_version": "1.0",
+    "feature": "search-boundary-curation",
+    "feature_slug": "search-boundary-curation",
+    "version": "v0.0.5",
+    "revision_id": "R3",
+    "source_revision_id": "R2",
+    "status": "not_applicable",
+    "cleanup_required": false,
+    "removed_requirement_count": 0,
+    "added_requirement_count": 0,
+    "retained_requirement_count": 0,
+    "removed_requirement_surfaces": [],
+    "added_requirement_surfaces": [],
+    "retained_requirement_surfaces": [],
+    "current_baseline_hash": "sha256:0f74903e7a3106baec896dcaba2dd41e3861c457326a98351aa27abd97e2bdec",
+    "source_baseline_hash": "",
+    "story_state_ref": "docs/beacon/v0.0.5/.machine/user-story/search-boundary-curation.json",
+    "generated_at": "2026-08-04T09:21:50.466654+00:00",
+    "json_ref": "docs/beacon/v0.0.5/.machine/execution/revision-delta-search-boundary-curation.json",
+    "markdown_ref": "docs/beacon/v0.0.5/execution/revision-delta-search-boundary-curation.md"
+  },
+  "release_projection_sync": {
+    "status": "pass",
+    "truth_authority": false,
+    "lifecycle_stage": false,
+    "release_publish_action": false,
+    "feature_projection": {
+      "schema_version": "1.0",
+      "status": "pass",
+      "feature": "search-boundary-curation",
+      "feature_slug": "search-boundary-curation",
+      "version": "v0.0.5",
+      "json_path": "docs/beacon/v0.0.5/.machine/change/search-boundary-curation.json",
+      "markdown_path": "docs/beacon/v0.0.5/change/search-boundary-curation.md",
+      "json_written": true,
+      "markdown_exists": true,
+      "projection_role": {
+        "artifact_role": "version_aggregate_projection",
+        "truth_source": false,
+        "gate_source": false,
+        "lifecycle_stage": false,
+        "release_publish_action": false
+      },
+      "payload": {
+        "schema_version": "1.0",
+        "version": "v0.0.5",
+        "feature": "search-boundary-curation",
+        "feature_slug": "search-boundary-curation",
+        "summary": "Maintains release-facing version aggregate projection guards so QA accepted features are included in version change scope before release check.",
+        "status": "completed",
+        "accepted_at": "2026-08-04T09:10:35.173569+00:00",
+        "revision_id": "R3",
+        "projection_role": {
+          "artifact_role": "version_aggregate_projection",
+          "truth_source": false,
+          "gate_source": false,
+          "lifecycle_stage": false,
+          "release_publish_action": false
+        },
+        "truth_authority": false,
+        "lifecycle_stage": false,
+        "added": [
+          "Feature-level release projection input for QA accepted current feature",
+          "Version aggregate projection inclusion guard and repair metadata",
+          "Repair-only projection rebuild path for release preflight artifacts"
+        ],
+        "removed": [
+          "Manual-only version aggregate projection repair before release check"
+        ],
+        "fixed": [
+          "Release check can route missing current feature projection to an actionable repair path",
+          "Version aggregate projection remains a read model instead of requirement truth"
+        ],
+        "traceability_refs": [
+          "docs/beacon/v0.0.5/change/search-boundary-curation.md",
+          "docs/beacon/v0.0.5/prd/search-boundary-curation.md",
+          "docs/beacon/v0.0.5/user-story/search-boundary-curation.md",
+          "docs/beacon/v0.0.5/qa/test-cases/search-boundary-curation.md",
+          "docs/beacon/v0.0.5/.machine/execution/search-boundary-curation.revision.json",
+          "docs/beacon/v0.0.5/.machine/execution/qa-acceptance-search-boundary-curation.json"
+        ],
+        "generated_at": "2026-08-04T09:21:50.467293+00:00"
+      }
+    },
+    "version_aggregate_projection": {
+      "schema_version": "1.0",
+      "status": "pass",
+      "version": "v0.0.5",
+      "markdown_path": "docs/beacon/v0.0.5/change/v0.0.5.md",
+      "json_path": "docs/beacon/v0.0.5/.machine/change/v0.0.5.json",
+      "feature_count": 1,
+      "feature_slugs": [
+        "search-boundary-curation"
+      ],
+      "projection_role": {
+        "artifact_role": "version_aggregate_projection",
+        "truth_source": false,
+        "gate_source": false,
+        "lifecycle_stage": false,
+        "release_publish_action": false
+      },
+      "truth_authority": false,
+      "lifecycle_stage": false,
+      "release_publish_action": false,
+      "implementation_order": {
+        "status": "analyzed",
+        "feature_count": 1,
+        "ordered_feature_slugs": [
+          "search-boundary-curation"
+        ],
+        "waves": [
+          {
+            "wave": 1,
+            "parallelizable": false,
+            "features": [
+              {
+                "feature": "search-boundary-curation",
+                "feature_slug": "search-boundary-curation",
+                "depends_on_features": [],
+                "direct_delivery_services": [],
+                "writable_services": [],
+                "parallelizable": true,
+                "reason_code": "parallel_no_conflict"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

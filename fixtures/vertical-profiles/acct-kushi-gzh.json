@@ -1,0 +1,21 @@
+{
+  "id": "acct-kushi-gzh",
+  "kind": "account_vertical_profile",
+  "account_id": "kushi-gzh",
+  "platform": "wechat-gzh",
+  "vertical": "oss-picks",
+  "brand": "库拾",
+  "draft_tab_meaning": "image_post",
+  "draft_tab_note": "微信草稿箱「贴图」= 图文信息图 / AI Spec 可视化，不是表情包贴纸",
+  "out_of_scope": [
+    "表情包",
+    "贴纸合集",
+    "情侣",
+    "闺蜜",
+    "宠物拟人",
+    "情感漫",
+    "航司票务",
+    "无字反应图娱乐向"
+  ],
+  "project_profile_ref": "proj-adb-oss-picks"
+}

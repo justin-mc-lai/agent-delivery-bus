@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0",
+  "version": "v0.0.5",
+  "status": "generated",
+  "artifact_role": "version_aggregate_projection",
+  "projection_role": {
+    "artifact_role": "version_aggregate_projection",
+    "truth_source": false,
+    "gate_source": false,
+    "lifecycle_stage": false,
+    "release_publish_action": false
+  },
+  "truth_authority": false,
+  "lifecycle_stage": false,
+  "release_publish_action": false,
+  "feature_count": 1,
+  "features": [
+    {
+      "feature": "search-boundary-curation",
+      "feature_slug": "search-boundary-curation",
+      "summary": "Maintains release-facing version aggregate projection guards so QA accepted features are included in version change scope before release check.",
+      "status": "completed"
+    }
+  ],
+  "implementation_order": {
+    "status": "analyzed",
+    "feature_count": 1,
+    "ordered_feature_slugs": [
+      "search-boundary-curation"
+    ],
+    "waves": [
+      {
+        "wave": 1,
+        "parallelizable": false,
+        "features": [
+          {
+            "feature": "search-boundary-curation",
+            "feature_slug": "search-boundary-curation",
+            "depends_on_features": [],
+            "direct_delivery_services": [],
+            "writable_services": [],
+            "parallelizable": true,
+            "reason_code": "parallel_no_conflict"
+          }
+        ]
+      }
+    ]
+  },
+  "added": [
+    "[search-boundary-curation] Feature-level release projection input for QA accepted current feature",
+    "[search-boundary-curation] Version aggregate projection inclusion guard and repair metadata",
+    "[search-boundary-curation] Repair-only projection rebuild path for release preflight artifacts"
+  ],
+  "removed": [
+    "[search-boundary-curation] Manual-only version aggregate projection repair before release check"
+  ],
+  "fixed": [
+    "[search-boundary-curation] Release check can route missing current feature projection to an actionable repair path",
+    "[search-boundary-curation] Version aggregate projection remains a read model instead of requirement truth"
+  ],
+  "traceability_refs": [
+    "docs/beacon/v0.0.5/change/search-boundary-curation.md",
+    "docs/beacon/v0.0.5/prd/search-boundary-curation.md",
+    "docs/beacon/v0.0.5/user-story/search-boundary-curation.md",
+    "docs/beacon/v0.0.5/qa/test-cases/search-boundary-curation.md",
+    "docs/beacon/v0.0.5/.machine/execution/search-boundary-curation.revision.json",
+    "docs/beacon/v0.0.5/.machine/execution/qa-acceptance-search-boundary-curation.json",
+    "docs/beacon/v0.0.5/.machine/change/search-boundary-curation.json"
+  ],
+  "generated_at": "2026-08-04 17:21"
+}

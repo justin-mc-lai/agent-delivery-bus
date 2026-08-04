@@ -5,7 +5,7 @@
   "truth_package_contract": "beacon-feature-package-v2",
   "machine_json_role": "generated_state_not_truth",
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-08-04T03:59:55.155118+00:00",
+  "generated_at": "2026-08-04T09:22:39.785496+00:00",
   "feature": "search-boundary-curation",
   "feature_slug": "search-boundary-curation",
   "version": "v0.0.5",
@@ -18,28 +18,20 @@
     "evidence": "docs/beacon/v0.0.5/features/search-boundary-curation/evidence.md"
   },
   "source_hashes": {
-    "truth": "72ee121700321e49d10a65a3022c1f7c2c6ebd22b1e5c511aa6988067b8d4f68",
-    "tests": "bbf07575ebcfbd0eae6552303049fdc171fd3fa7252b402fedae3bafd93498f0",
-    "tasks": "386b52f5aad84e70bd60cbd2d7da65c70e5db01caf86f13e6f01ab3d3a49ebd7",
-    "evidence": "70b0af96d30413f3941c92c1e5d1cb6d95477bb5eed284df86a4bed0b9150eb5"
+    "truth": "af84b718a7210f77bf226e77b7bad61e2f39a139f7c99c3a1dda081cb0b1a273",
+    "tests": "9ad59d60b3cdd6344a10e3d32d31696af8ccc77497a3d67914ad2a161e928c9b",
+    "tasks": "a4f3e57c6b81124a59286b1f92405dabc3de2ce64e1492d1bb6d18ae44942530",
+    "evidence": "f9f4e9b4d1ee00a3d43aacc47ac140bdd7369a14d92b6addc34c02d3b0f0ee57"
   },
   "truth_frontmatter": {
     "slug": "search-boundary-curation",
     "version": "v0.0.5",
     "status": "frozen",
-    "revision_id": "R1",
     "language": "zh",
-    "domain_required": "true",
-    "domain_kind": "business",
-    "ux_required": "false",
     "package_maturity": "filled",
     "parser_contract": "beacon-feature-package-v2",
+    "truth_source_model": "feature_package_authoritative",
     "materials_status": "current",
-    "truth_source_model": "intent_first",
-    "git_canonical_branch": "main",
-    "program": "personal-production-flywheel",
-    "promotion_ref": "user-ack-search-boundary-2026-08-04",
-    "depends_on": "vision-flywheel",
     "canonical_refs": {
       "prd": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
       "user_story": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
@@ -50,37 +42,57 @@
   "acceptance_criteria": [
     {
       "ac_id": "AC-SBC-001",
-      "theme": "`adb boundary ingest` 写入 pending 提案（topic 必填；query_hints/sources 可多值）；缺 topic 拒绝",
+      "theme": "adb boundary ingest 写入 awaiting_review（topic 必填；query_hints/sources 可多值；须带 project_profile_ref；自媒体路径另带 account_profile_ref）；缺 topic/画像 ref 拒绝",
       "description": ""
     },
     {
       "ac_id": "AC-SBC-002",
-      "theme": "`adb boundary pending` 列出全部 pending；`show <id>` 返回单条",
+      "theme": "CLI 列出全部 awaiting_review；show 返回单条（含画像 ref）",
       "description": ""
     },
     {
       "ac_id": "AC-SBC-003",
-      "theme": "`adb boundary decide <id> --actor A --decision approve\\",
-      "description": "reject`；approve→active，reject→rejected"
+      "theme": "adb boundary decide 指定 id --actor A --decision approve\\",
+      "description": "reject；approve→active，reject→rejected"
     },
     {
       "ac_id": "AC-SBC-004",
-      "theme": "`adb boundary list` 默认仅 active（approved）；可用 `--status` 过滤",
+      "theme": "adb boundary list 默认仅 active；可用 --status 过滤",
       "description": ""
     },
     {
       "ac_id": "AC-SBC-005",
-      "theme": "待审提案进入统一待拍板视图（`approvals awaiting` 含 `kind=boundary_pending`）",
+      "theme": "待审提案进入 approvals awaiting（kind 绑定 boundary 待审）",
       "description": ""
     },
     {
       "ac_id": "AC-SBC-006",
-      "theme": "定时路径：schedule 登记 + Hermes cron 脚本只 ingest，不 auto-approve；可跑 fixture 提案",
+      "theme": "定时路径：schedule + Hermes cron 日更；脚本只 ingest 不 auto-approve；默认产出 5 条垂直约束提案",
       "description": ""
     },
     {
       "ac_id": "AC-SBC-007",
-      "theme": "illegal：ingest 直达 active、跳过 pending 启用、自动 approve",
+      "theme": "illegal：ingest 直达 active、跳过待审启用、自动 approve → fail-closed",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-SBC-008",
+      "theme": "L1：无 project_profile_ref（及自媒体缺 account_profile_ref）不得 ingest；禁止无画像静态离题池",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-SBC-009",
+      "theme": "L2/L3：可加载审计 ProjectVerticalProfile 与 AccountVerticalProfile；库拾样例 vertical=oss-picks，贴图=image_post 非表情包，out_of_scope 含表情包/情感漫等",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-SBC-010",
+      "theme": "L4 VerticalGate：完整偏离项目/账号垂直（如表情包题）→ reason_code=vertical_gate_rejected，不得进入 awaiting_review；有意义价值陈述可通过",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-SBC-011",
+      "theme": "日批选题均绑定库拾画像且主题落在 GitHub 开源 AI 库 / AI Spec；题库与脚本不得含表情包/情侣/宠物等离题词；provenance 标明 intel-radar 或 in-vertical-fixture",
       "description": ""
     }
   ],
@@ -89,143 +101,238 @@
       "ac_id": "AC-SBC-001",
       "tc_id": "TC-SBC-001",
       "layer": "",
-      "command": "`python3 -m pytest -q tests/test_boundary.py -k ingest --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
-      "assertion": "exit_code==0；ingest→pending；缺 topic 拒绝",
+      "command": "`python3 -m pytest -q tests/test_boundary.py -k ingest_lands --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit-search-boundary-curation.xml}\"`",
+      "assertion": "exit_code==0；ingest→awaiting_review；缺 topic 拒绝",
       "evidence_path": ""
     },
     {
       "ac_id": "AC-SBC-002",
       "tc_id": "TC-SBC-002",
       "layer": "",
-      "command": "`python3 -m pytest -q tests/test_boundary.py -k pending_show --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
-      "assertion": "exit_code==0；pending 列表与 show 单条",
+      "command": "`python3 -m pytest -q tests/test_boundary.py -k list_awaiting_show --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit-search-boundary-curation.xml}\"`",
+      "assertion": "exit_code==0；待审列表/show 正确",
       "evidence_path": ""
     },
     {
       "ac_id": "AC-SBC-003",
       "tc_id": "TC-SBC-003",
       "layer": "",
-      "command": "`python3 -m pytest -q tests/test_boundary.py -k decide --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
-      "assertion": "exit_code==0；approve→approved；reject→rejected",
+      "command": "`python3 -m pytest -q tests/test_boundary.py -k decide_approve --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit-search-boundary-curation.xml}\"`",
+      "assertion": "exit_code==0；approve/reject + already_decided",
       "evidence_path": ""
     },
     {
       "ac_id": "AC-SBC-004",
       "tc_id": "TC-SBC-004",
       "layer": "",
-      "command": "`python3 -m pytest -q tests/test_boundary.py -k list_status --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
-      "assertion": "exit_code==0；list 默认 active；status 过滤",
+      "command": "`python3 -m pytest -q tests/test_boundary.py -k list_status --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit-search-boundary-curation.xml}\"`",
+      "assertion": "exit_code==0；默认 active；可按 status 过滤",
       "evidence_path": ""
     },
     {
       "ac_id": "AC-SBC-005",
       "tc_id": "TC-SBC-005",
       "layer": "",
-      "command": "`python3 -m pytest -q tests/test_boundary.py -k awaiting_view --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
-      "assertion": "exit_code==0；待拍板含 boundary_pending",
+      "command": "`python3 -m pytest -q tests/test_boundary.py -k awaiting_view --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit-search-boundary-curation.xml}\"`",
+      "assertion": "exit_code==0；kind 绑定 boundary 待审",
       "evidence_path": ""
     },
     {
       "ac_id": "AC-SBC-006",
       "tc_id": "TC-SBC-006",
       "layer": "",
-      "command": "`python3 -m pytest -q tests/test_boundary.py -k schedule_tick --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
-      "assertion": "exit_code==0；tick fixture 只 ingest 不 approve",
+      "command": "`python3 -m pytest -q tests/test_boundary.py -k schedule_tick --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit-search-boundary-curation.xml}\"`",
+      "assertion": "exit_code==0；每日 5 条垂直选题 ingest-only；无 decide 执行",
       "evidence_path": ""
     },
     {
       "ac_id": "AC-SBC-007",
       "tc_id": "TC-SBC-007",
       "layer": "",
-      "command": "`python3 -m pytest -q tests/test_boundary.py -k no_auto --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
-      "assertion": "exit_code==0；禁止 auto-approve",
+      "command": "`python3 -m pytest -q tests/test_boundary.py -k 'no_auto or illegal or skip_awaiting' --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit-search-boundary-curation.xml}\"`",
+      "assertion": "exit_code==0；非法路径 fail-closed",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-SBC-008",
+      "tc_id": "TC-SBC-008",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_boundary.py -k profile_refs_required --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit-search-boundary-curation.xml}\"`",
+      "assertion": "exit_code==0；缺 project/account 画像 ref 拒绝 ingest",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-SBC-009",
+      "tc_id": "TC-SBC-009",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_boundary.py -k vertical_profiles_auditable --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit-search-boundary-curation.xml}\"`",
+      "assertion": "exit_code==0；Project/Account 画像可加载且库拾=oss-picks",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-SBC-010",
+      "tc_id": "TC-SBC-010",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_boundary.py -k vertical_gate --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit-search-boundary-curation.xml}\"`",
+      "assertion": "exit_code==0；表情包/情感漫等完整偏离被 VerticalGate 拦下",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-SBC-011",
+      "tc_id": "TC-SBC-011",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_boundary.py -k kushi_topics_in_vertical --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit-search-boundary-curation.xml}\"`",
+      "assertion": "exit_code==0；日批 5 条均落在 GitHub 开源 AI / AI Spec；无表情包词",
       "evidence_path": ""
     },
     {
       "ac_id": "AC-SBC-007",
       "tc_id": "TC-SBC-ILL-001",
       "layer": "",
-      "command": "`python3 -m pytest -q tests/test_boundary.py -k illegal_activate --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
-      "assertion": "exit_code==0；ingest→active 非法",
+      "command": "`python3 -m pytest -q tests/test_boundary.py -k 'illegal or skip_awaiting' --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit-search-boundary-curation.xml}\"`",
+      "assertion": "exit_code==0；ingest→active / 跳过待审 均 fail-closed",
       "evidence_path": ""
     },
     {
-      "ac_id": "AC-SBC-007",
+      "ac_id": "AC-SBC-010",
       "tc_id": "TC-SBC-ILL-002",
       "layer": "",
-      "command": "`python3 -m pytest -q tests/test_boundary.py -k skip_pending --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"`",
-      "assertion": "exit_code==0；跳过 pending 启用非法",
+      "command": "`python3 -m pytest -q tests/test_boundary.py -k vertical_gate --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit-search-boundary-curation.xml}\"`",
+      "assertion": "exit_code==0；离题入待审 fail-closed",
       "evidence_path": ""
     }
   ],
   "task_rows": [
     {
       "id": "TASK-001",
-      "title": "Implement AC-SBC-001: boundary ingest → pending · ac=AC-SBC-001 · evidence=`.beacon/evidence/implement/search-boundary-curation/AC-SBC-001.json`",
-      "status": "unchecked"
+      "title": "Implement AC-SBC-001 · ac=AC-SBC-001 · evidence=`.beacon/evidence/implement/search-boundary-curation/AC-SBC-001.json`",
+      "status": "checked"
     },
     {
       "id": "TASK-002",
-      "title": "Implement AC-SBC-002: pending + show · ac=AC-SBC-002 · evidence=`.beacon/evidence/implement/search-boundary-curation/AC-SBC-002.json`",
-      "status": "unchecked"
+      "title": "Implement AC-SBC-002 · ac=AC-SBC-002 · evidence=`.beacon/evidence/implement/search-boundary-curation/AC-SBC-002.json`",
+      "status": "checked"
     },
     {
       "id": "TASK-003",
-      "title": "Implement AC-SBC-003: decide approve/reject · ac=AC-SBC-003 · evidence=`.beacon/evidence/implement/search-boundary-curation/AC-SBC-003.json`",
-      "status": "unchecked"
+      "title": "Implement AC-SBC-003 · ac=AC-SBC-003 · evidence=`.beacon/evidence/implement/search-boundary-curation/AC-SBC-003.json`",
+      "status": "checked"
     },
     {
       "id": "TASK-004",
-      "title": "Implement AC-SBC-004: list with status filter · ac=AC-SBC-004 · evidence=`.beacon/evidence/implement/search-boundary-curation/AC-SBC-004.json`",
-      "status": "unchecked"
+      "title": "Implement AC-SBC-004 · ac=AC-SBC-004 · evidence=`.beacon/evidence/implement/search-boundary-curation/AC-SBC-004.json`",
+      "status": "checked"
     },
     {
       "id": "TASK-005",
-      "title": "Implement AC-SBC-005: awaiting view boundary_pending · ac=AC-SBC-005 · evidence=`.beacon/evidence/implement/search-boundary-curation/AC-SBC-005.json`",
-      "status": "unchecked"
+      "title": "Implement AC-SBC-005 · ac=AC-SBC-005 · evidence=`.beacon/evidence/implement/search-boundary-curation/AC-SBC-005.json`",
+      "status": "checked"
     },
     {
       "id": "TASK-006",
-      "title": "Implement AC-SBC-006: schedule tick fixture ingest-only · ac=AC-SBC-006 · evidence=`.beacon/evidence/implement/search-boundary-curation/AC-SBC-006.json`",
-      "status": "unchecked"
+      "title": "Implement AC-SBC-006 · ac=AC-SBC-006 · evidence=`.beacon/evidence/implement/search-boundary-curation/AC-SBC-006.json`",
+      "status": "checked"
     },
     {
       "id": "TASK-007",
-      "title": "Implement AC-SBC-007: illegal auto-approve paths · ac=AC-SBC-007 · evidence=`.beacon/evidence/implement/search-boundary-curation/AC-SBC-007.json`",
-      "status": "unchecked"
+      "title": "Implement AC-SBC-007 · ac=AC-SBC-007 · evidence=`.beacon/evidence/implement/search-boundary-curation/AC-SBC-007.json`",
+      "status": "checked"
     },
     {
       "id": "TASK-008",
-      "title": "Validate package gates · ac=GATES · evidence=`.beacon/evidence/implement/search-boundary-curation/GATES.json`",
-      "status": "unchecked"
+      "title": "Implement AC-SBC-008 · ac=AC-SBC-008 · evidence=`.beacon/evidence/implement/search-boundary-curation/AC-SBC-008.json`",
+      "status": "checked"
     },
     {
       "id": "TASK-009",
+      "title": "Implement AC-SBC-009 · ac=AC-SBC-009 · evidence=`.beacon/evidence/implement/search-boundary-curation/AC-SBC-009.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-010",
+      "title": "Implement AC-SBC-010 · ac=AC-SBC-010 · evidence=`.beacon/evidence/implement/search-boundary-curation/AC-SBC-010.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-011",
+      "title": "Implement AC-SBC-011 · ac=AC-SBC-011 · evidence=`.beacon/evidence/implement/search-boundary-curation/AC-SBC-011.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-012",
+      "title": "Validate package gates · ac=GATES · evidence=`.beacon/evidence/implement/search-boundary-curation/GATES.json`",
+      "status": "checked"
+    },
+    {
+      "id": "TASK-013",
       "title": "Run QA matrix · ac=QA · evidence=`.beacon/evidence/implement/search-boundary-curation/QA-MATRIX.json`",
-      "status": "unchecked"
+      "status": "checked"
     }
   ],
   "checkbox_errors": [],
   "evidence_rows": [
     {
-      "surface": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
-      "authority": "requirement_truth"
+      "surface": "truth",
+      "authority": "requirement_truth",
+      "canonical_artifact": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+      "status": "R3 frozen",
+      "route": "truth"
     },
     {
-      "surface": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md",
-      "authority": "test_truth"
+      "surface": "tests",
+      "authority": "test_truth",
+      "canonical_artifact": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md",
+      "status": "R3 Domain FSM QA Matrix",
+      "route": "qa"
     },
     {
-      "surface": "docs/beacon/v0.0.5/features/search-boundary-curation/tasks.md",
-      "authority": "support_advisory"
+      "surface": "ui-state",
+      "authority": "support_advisory",
+      "canonical_artifact": "docs/beacon/v0.0.5/features/search-boundary-curation/ui-state-matrix.md",
+      "status": "present",
+      "route": "design"
     },
     {
-      "surface": ".beacon/evidence/implement/search-boundary-curation/*.json",
-      "authority": "acceptance_truth"
+      "surface": "profiles",
+      "authority": "support_advisory",
+      "canonical_artifact": "fixtures/vertical-profiles/",
+      "status": "present",
+      "route": "implement"
     },
     {
-      "surface": ".beacon/qa/features/search-boundary-curation/scorecard.json",
-      "authority": "qa_verdict"
+      "surface": "design-lint",
+      "authority": "support_advisory",
+      "canonical_artifact": ".beacon/evidence/design-md-lint/search-boundary-curation.json",
+      "status": "pass",
+      "route": "design"
+    },
+    {
+      "surface": "implement",
+      "authority": "support_advisory",
+      "canonical_artifact": ".beacon/evidence/implement/search-boundary-curation/",
+      "status": "present",
+      "route": "implement"
+    },
+    {
+      "surface": "qa",
+      "authority": "qa_verdict",
+      "canonical_artifact": ".beacon/evidence/qa/v0.0.5/search-boundary-curation/scorecard.json",
+      "status": "re-run after R3 freeze",
+      "route": "qa"
+    },
+    {
+      "surface": "qa-adversarial",
+      "authority": "support_advisory",
+      "canonical_artifact": ".beacon/evidence/qa/v0.0.5/search-boundary-curation/adversarial-review.json",
+      "status": "recorded",
+      "route": "change"
+    },
+    {
+      "surface": "hermes",
+      "authority": "support_advisory",
+      "canonical_artifact": "~/.hermes/scripts/adb-search-boundary-tick.sh",
+      "status": "planned",
+      "route": "release"
     }
   ]
 }

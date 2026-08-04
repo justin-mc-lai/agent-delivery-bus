@@ -1,13 +1,11 @@
 {
-  "schema": "implement-evidence.v1",
+  "schema_version": "1.0",
   "feature": "search-boundary-curation",
   "version": "v0.0.5",
-  "ac": "AC-SBC-007",
+  "ac_id": "AC-SBC-007",
   "status": "pass",
-  "summary": "illegal auto-activate / auto_approve / skip_pending blocked",
-  "commands": [
-    "python3 -m pytest -q tests/test_boundary.py --junitxml .beacon/junit-search-boundary-curation.xml"
-  ],
+  "command": "python3 -m pytest -q tests/test_boundary.py --junitxml .beacon/junit-search-boundary-curation.xml",
   "junit": ".beacon/junit-search-boundary-curation.xml",
-  "generated_at": "2026-08-04T06:44:43.606187+00:00"
+  "generated_at": "2026-08-04T08:37:16.071355+00:00",
+  "notes": "R2 vertical profiles + VerticalGate; wire status=pending"
 }

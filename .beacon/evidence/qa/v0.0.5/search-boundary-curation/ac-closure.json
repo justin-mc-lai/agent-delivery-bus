@@ -1,0 +1,225 @@
+{
+  "schema_version": "1.0",
+  "feature": "search-boundary-curation",
+  "feature_slug": "search-boundary-curation",
+  "run_id": "run-20260804T171029508129",
+  "generated_at": "2026-08-04T09:10:35.131425+00:00",
+  "reports": [
+    {
+      "ac_id": "AC-SBC-001",
+      "feature_slug": "search-boundary-curation",
+      "required_scenario_families": [],
+      "passed_scenario_families": [
+        "primary"
+      ],
+      "required_replay_scenarios": [],
+      "missing_replay_scenarios": [],
+      "scenario_ids": [
+        "TC-SBC-001"
+      ],
+      "closure_status": "accepted",
+      "confidence_min": 1.0,
+      "confidence_avg": 1.0,
+      "open_outcomes": [],
+      "blocking_reasons": []
+    },
+    {
+      "ac_id": "AC-SBC-002",
+      "feature_slug": "search-boundary-curation",
+      "required_scenario_families": [],
+      "passed_scenario_families": [
+        "primary"
+      ],
+      "required_replay_scenarios": [],
+      "missing_replay_scenarios": [],
+      "scenario_ids": [
+        "TC-SBC-002"
+      ],
+      "closure_status": "accepted",
+      "confidence_min": 1.0,
+      "confidence_avg": 1.0,
+      "open_outcomes": [],
+      "blocking_reasons": []
+    },
+    {
+      "ac_id": "AC-SBC-003",
+      "feature_slug": "search-boundary-curation",
+      "required_scenario_families": [],
+      "passed_scenario_families": [
+        "primary"
+      ],
+      "required_replay_scenarios": [],
+      "missing_replay_scenarios": [],
+      "scenario_ids": [
+        "TC-SBC-003"
+      ],
+      "closure_status": "accepted",
+      "confidence_min": 1.0,
+      "confidence_avg": 1.0,
+      "open_outcomes": [],
+      "blocking_reasons": []
+    },
+    {
+      "ac_id": "AC-SBC-004",
+      "feature_slug": "search-boundary-curation",
+      "required_scenario_families": [],
+      "passed_scenario_families": [
+        "primary"
+      ],
+      "required_replay_scenarios": [],
+      "missing_replay_scenarios": [],
+      "scenario_ids": [
+        "TC-SBC-004"
+      ],
+      "closure_status": "accepted",
+      "confidence_min": 1.0,
+      "confidence_avg": 1.0,
+      "open_outcomes": [],
+      "blocking_reasons": []
+    },
+    {
+      "ac_id": "AC-SBC-005",
+      "feature_slug": "search-boundary-curation",
+      "required_scenario_families": [],
+      "passed_scenario_families": [
+        "primary"
+      ],
+      "required_replay_scenarios": [],
+      "missing_replay_scenarios": [],
+      "scenario_ids": [
+        "TC-SBC-005"
+      ],
+      "closure_status": "accepted",
+      "confidence_min": 1.0,
+      "confidence_avg": 1.0,
+      "open_outcomes": [],
+      "blocking_reasons": []
+    },
+    {
+      "ac_id": "AC-SBC-006",
+      "feature_slug": "search-boundary-curation",
+      "required_scenario_families": [],
+      "passed_scenario_families": [
+        "primary"
+      ],
+      "required_replay_scenarios": [],
+      "missing_replay_scenarios": [],
+      "scenario_ids": [
+        "TC-SBC-006"
+      ],
+      "closure_status": "accepted",
+      "confidence_min": 1.0,
+      "confidence_avg": 1.0,
+      "open_outcomes": [],
+      "blocking_reasons": []
+    },
+    {
+      "ac_id": "AC-SBC-007",
+      "feature_slug": "search-boundary-curation",
+      "required_scenario_families": [],
+      "passed_scenario_families": [
+        "primary"
+      ],
+      "required_replay_scenarios": [],
+      "missing_replay_scenarios": [],
+      "scenario_ids": [
+        "TC-SBC-007"
+      ],
+      "closure_status": "accepted",
+      "confidence_min": 1.0,
+      "confidence_avg": 1.0,
+      "open_outcomes": [],
+      "blocking_reasons": []
+    },
+    {
+      "ac_id": "AC-SBC-007, AC-SBC-010",
+      "feature_slug": "search-boundary-curation",
+      "required_scenario_families": [],
+      "passed_scenario_families": [
+        "primary"
+      ],
+      "required_replay_scenarios": [],
+      "missing_replay_scenarios": [],
+      "scenario_ids": [
+        "TC-SBC-ILL-001"
+      ],
+      "closure_status": "accepted",
+      "confidence_min": 1.0,
+      "confidence_avg": 1.0,
+      "open_outcomes": [],
+      "blocking_reasons": []
+    },
+    {
+      "ac_id": "AC-SBC-008",
+      "feature_slug": "search-boundary-curation",
+      "required_scenario_families": [],
+      "passed_scenario_families": [
+        "primary"
+      ],
+      "required_replay_scenarios": [],
+      "missing_replay_scenarios": [],
+      "scenario_ids": [
+        "TC-SBC-008"
+      ],
+      "closure_status": "accepted",
+      "confidence_min": 1.0,
+      "confidence_avg": 1.0,
+      "open_outcomes": [],
+      "blocking_reasons": []
+    },
+    {
+      "ac_id": "AC-SBC-009",
+      "feature_slug": "search-boundary-curation",
+      "required_scenario_families": [],
+      "passed_scenario_families": [
+        "primary"
+      ],
+      "required_replay_scenarios": [],
+      "missing_replay_scenarios": [],
+      "scenario_ids": [
+        "TC-SBC-009"
+      ],
+      "closure_status": "accepted",
+      "confidence_min": 1.0,
+      "confidence_avg": 1.0,
+      "open_outcomes": [],
+      "blocking_reasons": []
+    },
+    {
+      "ac_id": "AC-SBC-010",
+      "feature_slug": "search-boundary-curation",
+      "required_scenario_families": [],
+      "passed_scenario_families": [
+        "primary"
+      ],
+      "required_replay_scenarios": [],
+      "missing_replay_scenarios": [],
+      "scenario_ids": [
+        "TC-SBC-010"
+      ],
+      "closure_status": "accepted",
+      "confidence_min": 1.0,
+      "confidence_avg": 1.0,
+      "open_outcomes": [],
+      "blocking_reasons": []
+    },
+    {
+      "ac_id": "AC-SBC-011",
+      "feature_slug": "search-boundary-curation",
+      "required_scenario_families": [],
+      "passed_scenario_families": [
+        "primary"
+      ],
+      "required_replay_scenarios": [],
+      "missing_replay_scenarios": [],
+      "scenario_ids": [
+        "TC-SBC-011"
+      ],
+      "closure_status": "accepted",
+      "confidence_min": 1.0,
+      "confidence_avg": 1.0,
+      "open_outcomes": [],
+      "blocking_reasons": []
+    }
+  ]
+}

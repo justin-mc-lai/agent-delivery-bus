@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0",
+  "mode_id": "eval-qa",
+  "public_id": "qa",
+  "feature": "search-boundary-curation",
+  "version": "v0.0.5",
+  "run_id": "run-20260804T171029508129",
+  "qa_status": "passed",
+  "release_ready": false,
+  "generated_at": "2026-08-04T09:12:49.036441+00:00",
+  "adversarial_review": [
+    {
+      "risk": "VerticalGate 假阴性：有意义价值陈述但词表擦边时放行离题题",
+      "verification": "TC-SBC-010 / vertical_gate tests assert emoji/情感漫 → vertical_gate_rejected; meaningful value statements pass",
+      "evidence": ".beacon/evidence/auto-test/run-20260804T171029508129/qa9-tc/TC-SBC-010/",
+      "status": "mitigated"
+    },
+    {
+      "risk": "缺画像 ref 仍被 ingest 进 awaiting_review",
+      "verification": "TC-SBC-008 profile_refs_required fail-closed",
+      "evidence": ".beacon/evidence/auto-test/run-20260804T171029508129/qa9-tc/TC-SBC-008/",
+      "status": "mitigated"
+    },
+    {
+      "risk": "cron/tick 静默 auto-approve 绕过人工门",
+      "verification": "TC-SBC-006 schedule_tick ingest-only; TC-SBC-007 no_auto/illegal/skip_awaiting",
+      "evidence": ".beacon/evidence/auto-test/run-20260804T171029508129/qa9-tc/TC-SBC-006/",
+      "status": "mitigated"
+    },
+    {
+      "risk": "wire status=pending 与 truth token awaiting_review 语义漂移导致运营误审",
+      "verification": "truth R2 documents wire compat; list/show tests cover awaiting_review binding (TC-SBC-002/005)",
+      "evidence": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+      "status": "accepted_residual"
+    },
+    {
+      "risk": "release 假绿：contract 层全绿但缺 legal FSM walk / design lint / ui-state-matrix",
+      "verification": "scorecard.release_ready=false; domain_fsm_legal_walk_missing; design_md_lint_missing; ui_state_matrix_missing",
+      "evidence": ".beacon/evidence/qa/v0.0.5/search-boundary-curation/scorecard.json",
+      "status": "open_release_blocker"
+    }
+  ],
+  "release_blockers": [
+    {
+      "reason_code": "domain_fsm_legal_walk_missing",
+      "route": "change",
+      "action": "在 tests.md 增加 ≥1 行带 legal/合法路径/happy path 标记的 FSM walk（idle→awaiting_review→approved）"
+    },
+    {
+      "reason_code": "design_md_lint_missing",
+      "route": "design",
+      "action": "对 DESIGN.md 跑 beacon design lint 并写入 .beacon/evidence/design-md-lint/ 绑定本 feature"
+    },
+    {
+      "reason_code": "ui_state_matrix_missing",
+      "route": "change",
+      "action": "新增 features/search-boundary-curation/ui-state-matrix.md，绑定 Domain FSM 状态到 CLI 表面；或在 truth frontmatter 声明 ux_deferred（若确认无 UI）"
+    },
+    {
+      "reason_code": "workspace_dirty_unclassified",
+      "route": "release",
+      "action": "在 feature worktree 分类提交正式证据后再跑 release clean-exit"
+    },
+    {
+      "reason_code": "malformed_ac_cell",
+      "route": "change",
+      "action": "TC-SBC-ILL-001 的 AC 列写成 'AC-SBC-007, AC-SBC-010'，应拆行或改单 AC 引用"
+    }
+  ],
+  "recommended_next_harness": "change",
+  "evidence_refs": [
+    ".beacon/qa/features/search-boundary-curation/scorecard.json",
+    ".beacon/evidence/qa/v0.0.5/search-boundary-curation/scorecard.json",
+    "docs/beacon/v0.0.5/execution/qa-acceptance-brief-search-boundary-curation.md",
+    ".beacon/junit-search-boundary-curation.xml"
+  ]
+}

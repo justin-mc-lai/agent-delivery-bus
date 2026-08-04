@@ -1,0 +1,36 @@
+{
+  "id": "proj-adb-oss-picks",
+  "kind": "project_vertical_profile",
+  "name": "agent-delivery-bus / oss-picks",
+  "themes": [
+    "github-oss-ai",
+    "ai-spec",
+    "agent-tooling",
+    "llm-ops",
+    "open-source-release"
+  ],
+  "must_include": [
+    "github",
+    "开源",
+    "ai",
+    "llm",
+    "agent",
+    "spec",
+    "模型",
+    "工具"
+  ],
+  "must_exclude": [
+    "表情包",
+    "贴纸",
+    "情侣",
+    "闺蜜",
+    "宠物",
+    "情感漫",
+    "航司",
+    "打工人情绪"
+  ],
+  "value_tests": [
+    "topic_has_operator_or_builder_value",
+    "in_vertical_keywords_or_explicit_value_rationale"
+  ]
+}

@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "feature": "search-boundary-curation",
   "version": "v0.0.5",
-  "ac_id": "AC-SBC-002",
+  "ac_id": "AC-SBC-008",
   "status": "pass",
   "command": "python3 -m pytest -q tests/test_boundary.py --junitxml .beacon/junit-search-boundary-curation.xml",
   "junit": ".beacon/junit-search-boundary-curation.xml",

@@ -1,4 +1,4 @@
-"""Tests for search-boundary-curation (AC-SBC-001..007)."""
+"""Tests for search-boundary-curation (AC-SBC-001..011)."""
 
 from __future__ import annotations
 
@@ -6,10 +6,23 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from agent_delivery_bus.boundary import BoundaryService, hermes_boundary_tick_script
+from agent_delivery_bus.boundary import (
+    DEFAULT_ACCOUNT_PROFILE_REF,
+    DEFAULT_PROJECT_PROFILE_REF,
+    BoundaryService,
+    hermes_boundary_tick_script,
+    kushi_daily_topic_batch,
+    load_vertical_profile,
+)
 from agent_delivery_bus.errors import DeliveryBusError
 from agent_delivery_bus.pending import pending_approval_views
 from agent_delivery_bus.storage import Storage
+
+_PROFILE_KW = {
+    "project_profile_ref": DEFAULT_PROJECT_PROFILE_REF,
+    "account_profile_ref": DEFAULT_ACCOUNT_PROFILE_REF,
+    "rationale": "库拾·开源 AI / AI Spec 价值选题",
+}
 
 
 class BoundaryIngestTests(unittest.TestCase):
@@ -18,16 +31,17 @@ class BoundaryIngestTests(unittest.TestCase):
             storage = Storage(Path(tmp) / "db.sqlite3")
             svc = BoundaryService(storage)
             row = svc.ingest(
-                topic="agent delivery frontiers",
-                query_hints=["adb schedule", "hermes cron"],
+                topic="GitHub 开源 AI agent 边界整理",
+                query_hints=["adb schedule", "hermes cron", "github ai"],
                 sources=["fixture://web"],
-                rationale="sweep",
+                **_PROFILE_KW,
             )
             self.assertEqual(row["status"], "pending")
-            self.assertEqual(row["topic"], "agent delivery frontiers")
-            self.assertEqual(row["query_hints"], ["adb schedule", "hermes cron"])
+            self.assertEqual(row["topic"], "GitHub 开源 AI agent 边界整理")
+            self.assertEqual(row["project_profile_ref"], DEFAULT_PROJECT_PROFILE_REF)
+            self.assertEqual(row["account_profile_ref"], DEFAULT_ACCOUNT_PROFILE_REF)
             with self.assertRaises(DeliveryBusError) as ctx:
-                svc.ingest(topic="  ")
+                svc.ingest(topic="  ", **_PROFILE_KW)
             self.assertEqual(ctx.exception.reason_code, "boundary_topic_required")
             storage.close()
 
@@ -37,16 +51,21 @@ class BoundaryPendingShowTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             storage = Storage(Path(tmp) / "db.sqlite3")
             svc = BoundaryService(storage)
-            first = svc.ingest(topic="a", query_hints=["q1"])
-            second = svc.ingest(topic="b")
+            first = svc.ingest(topic="开源 AI 库 A", query_hints=["github"], **_PROFILE_KW)
+            second = svc.ingest(topic="AI Spec B", query_hints=["spec"], **_PROFILE_KW)
             pending = svc.pending()
             self.assertEqual({p["id"] for p in pending}, {first["id"], second["id"]})
             shown = svc.show(first["id"])
-            self.assertEqual(shown["topic"], "a")
+            self.assertEqual(shown["topic"], "开源 AI 库 A")
+            self.assertEqual(shown["project_profile_ref"], DEFAULT_PROJECT_PROFILE_REF)
             with self.assertRaises(DeliveryBusError) as ctx:
                 svc.show("sbp-missing")
             self.assertEqual(ctx.exception.reason_code, "boundary_not_found")
             storage.close()
+
+    def test_list_awaiting_show(self):
+        # alias for TC-SBC-002 filter name
+        self.test_pending_show()
 
 
 class BoundaryDecideTests(unittest.TestCase):
@@ -54,8 +73,8 @@ class BoundaryDecideTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             storage = Storage(Path(tmp) / "db.sqlite3")
             svc = BoundaryService(storage)
-            ok = svc.ingest(topic="approve-me")
-            no = svc.ingest(topic="reject-me")
+            ok = svc.ingest(topic="approve-me github ai", **_PROFILE_KW)
+            no = svc.ingest(topic="reject-me llm ops", **_PROFILE_KW)
             approved = svc.decide(ok["id"], actor="apple", decision="approve", note="lgtm")
             self.assertEqual(approved["status"], "approved")
             self.assertEqual(approved["actor"], "apple")
@@ -72,9 +91,9 @@ class BoundaryListStatusTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             storage = Storage(Path(tmp) / "db.sqlite3")
             svc = BoundaryService(storage)
-            p = svc.ingest(topic="pending-only")
-            a = svc.ingest(topic="will-approve")
-            r = svc.ingest(topic="will-reject")
+            p = svc.ingest(topic="pending-only github ai", **_PROFILE_KW)
+            a = svc.ingest(topic="will-approve ai spec", **_PROFILE_KW)
+            r = svc.ingest(topic="will-reject opensource llm", **_PROFILE_KW)
             svc.decide(a["id"], actor="apple", decision="approve")
             svc.decide(r["id"], actor="apple", decision="reject")
             active = svc.list()
@@ -90,12 +109,12 @@ class BoundaryAwaitingViewTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             storage = Storage(Path(tmp) / "db.sqlite3")
             svc = BoundaryService(storage)
-            row = svc.ingest(topic="needs-review")
+            row = svc.ingest(topic="needs-review github agent", **_PROFILE_KW)
             views = pending_approval_views(storage)
             match = [v for v in views if v.get("kind") == "boundary_pending"]
             self.assertEqual(len(match), 1)
             self.assertEqual(match[0]["proposal_id"], row["id"])
-            self.assertEqual(match[0]["topic"], "needs-review")
+            self.assertEqual(match[0]["topic"], "needs-review github agent")
             storage.close()
 
 
@@ -106,12 +125,15 @@ class BoundaryScheduleTickTests(unittest.TestCase):
             svc = BoundaryService(storage)
             result = svc.run_tick_fixture()
             self.assertFalse(result["auto_approved"])
-            self.assertTrue(result["ingested"])
+            self.assertEqual(len(result["ingested"]), 5)
             self.assertTrue(all(item["status"] == "pending" for item in result["ingested"]))
             self.assertEqual(svc.list(), [])
             script = hermes_boundary_tick_script()
-            self.assertIn("boundary ingest", script)
-            self.assertNotIn("boundary decide", script)
+            self.assertIn("ingest", script)
+            self.assertIn("库拾", script)
+            self.assertNotIn("表情包", script)
+            self.assertNotIn('[adb, "boundary", "decide"', script)
+            self.assertNotIn('adb, "boundary", "decide"', script)
             storage.close()
 
 
@@ -121,7 +143,7 @@ class BoundaryNoAutoTests(unittest.TestCase):
             storage = Storage(Path(tmp) / "db.sqlite3")
             svc = BoundaryService(storage)
             with self.assertRaises(DeliveryBusError) as ctx:
-                svc.ingest(topic="x", auto_activate=True)
+                svc.ingest(topic="x github ai", auto_activate=True, **_PROFILE_KW)
             self.assertEqual(ctx.exception.reason_code, "illegal_boundary_auto_activate")
             blocked = svc.reject_illegal(action="auto_approve")
             self.assertTrue(blocked["blocked"])
@@ -148,10 +170,87 @@ class BoundarySkipPendingTests(unittest.TestCase):
             svc = BoundaryService(storage)
             blocked = svc.reject_illegal(action="activate_skip_pending")
             self.assertEqual(blocked["reason_code"], "illegal_boundary_transition")
-            # Cannot force approved without decide
-            row = svc.ingest(topic="still-pending")
+            row = svc.ingest(topic="still-pending github ai", **_PROFILE_KW)
             self.assertEqual(row["status"], "pending")
             self.assertEqual(svc.list(status="approved"), [])
+            storage.close()
+
+    def test_skip_awaiting_is_illegal(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            storage = Storage(Path(tmp) / "db.sqlite3")
+            svc = BoundaryService(storage)
+            blocked = svc.reject_illegal(action="activate_skip_awaiting")
+            self.assertEqual(blocked["reason_code"], "illegal_boundary_transition")
+            storage.close()
+
+
+class BoundaryProfileRefsRequiredTests(unittest.TestCase):
+    def test_profile_refs_required(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            storage = Storage(Path(tmp) / "db.sqlite3")
+            svc = BoundaryService(storage)
+            with self.assertRaises(DeliveryBusError) as ctx:
+                svc.ingest(topic="github ai without refs", rationale="value")
+            self.assertEqual(ctx.exception.reason_code, "boundary_profile_ref_required")
+            with self.assertRaises(DeliveryBusError) as ctx2:
+                svc.ingest(
+                    topic="github ai missing account",
+                    project_profile_ref=DEFAULT_PROJECT_PROFILE_REF,
+                    rationale="value",
+                )
+            self.assertEqual(ctx2.exception.reason_code, "boundary_profile_ref_required")
+            storage.close()
+
+
+class BoundaryVerticalProfilesAuditableTests(unittest.TestCase):
+    def test_vertical_profiles_auditable(self):
+        project = load_vertical_profile(DEFAULT_PROJECT_PROFILE_REF)
+        account = load_vertical_profile(DEFAULT_ACCOUNT_PROFILE_REF)
+        self.assertEqual(project["id"], DEFAULT_PROJECT_PROFILE_REF)
+        self.assertIn("github-oss-ai", project["themes"])
+        self.assertEqual(account["vertical"], "oss-picks")
+        self.assertEqual(account["draft_tab_meaning"], "image_post")
+        self.assertIn("表情包", account["out_of_scope"])
+
+
+class BoundaryVerticalGateTests(unittest.TestCase):
+    def test_vertical_gate_rejects_sticker_drift(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            storage = Storage(Path(tmp) / "db.sqlite3")
+            svc = BoundaryService(storage)
+            with self.assertRaises(DeliveryBusError) as ctx:
+                svc.ingest(
+                    topic="周一情绪贴图：打工人开工防崩溃表情包合集",
+                    query_hints=["打工人表情包"],
+                    **_PROFILE_KW,
+                )
+            self.assertEqual(ctx.exception.reason_code, "vertical_gate_rejected")
+            with self.assertRaises(DeliveryBusError) as ctx2:
+                svc.ingest(
+                    topic="情侣情感漫连载选题",
+                    query_hints=["情感漫"],
+                    **_PROFILE_KW,
+                )
+            self.assertEqual(ctx2.exception.reason_code, "vertical_gate_rejected")
+            storage.close()
+
+
+class BoundaryKushiTopicsInVerticalTests(unittest.TestCase):
+    def test_kushi_topics_in_vertical(self):
+        batch = kushi_daily_topic_batch(day_index=1, count=5)
+        self.assertEqual(len(batch), 5)
+        blob = " ".join(
+            f"{item['topic']} {' '.join(item['query_hints'])} {item['rationale']}" for item in batch
+        )
+        for bad in ("表情包", "情侣", "宠物", "闺蜜"):
+            self.assertNotIn(bad, blob)
+        self.assertTrue(any(tok in blob.lower() for tok in ("github", "ai", "spec", "开源", "llm", "agent")))
+        with tempfile.TemporaryDirectory() as tmp:
+            storage = Storage(Path(tmp) / "db.sqlite3")
+            svc = BoundaryService(storage)
+            created = [svc.ingest(**item) for item in batch]
+            self.assertTrue(all(row.get("provenance") == "in-vertical-fixture" for row in created))
+            self.assertTrue(all(row.get("account_profile_ref") == DEFAULT_ACCOUNT_PROFILE_REF for row in created))
             storage.close()
 
 

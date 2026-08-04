@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "version": "v0.0.5",
+  "feature": "search-boundary-curation",
+  "feature_slug": "search-boundary-curation",
+  "summary": "Maintains release-facing version aggregate projection guards so QA accepted features are included in version change scope before release check.",
+  "status": "completed",
+  "accepted_at": "2026-08-04T09:10:35.173569+00:00",
+  "revision_id": "R3",
+  "projection_role": {
+    "artifact_role": "version_aggregate_projection",
+    "truth_source": false,
+    "gate_source": false,
+    "lifecycle_stage": false,
+    "release_publish_action": false
+  },
+  "truth_authority": false,
+  "lifecycle_stage": false,
+  "added": [
+    "Feature-level release projection input for QA accepted current feature",
+    "Version aggregate projection inclusion guard and repair metadata",
+    "Repair-only projection rebuild path for release preflight artifacts"
+  ],
+  "removed": [
+    "Manual-only version aggregate projection repair before release check"
+  ],
+  "fixed": [
+    "Release check can route missing current feature projection to an actionable repair path",
+    "Version aggregate projection remains a read model instead of requirement truth"
+  ],
+  "traceability_refs": [
+    "docs/beacon/v0.0.5/change/search-boundary-curation.md",
+    "docs/beacon/v0.0.5/prd/search-boundary-curation.md",
+    "docs/beacon/v0.0.5/user-story/search-boundary-curation.md",
+    "docs/beacon/v0.0.5/qa/test-cases/search-boundary-curation.md",
+    "docs/beacon/v0.0.5/.machine/execution/search-boundary-curation.revision.json",
+    "docs/beacon/v0.0.5/.machine/execution/qa-acceptance-search-boundary-curation.json"
+  ],
+  "generated_at": "2026-08-04T09:21:50.467293+00:00"
+}

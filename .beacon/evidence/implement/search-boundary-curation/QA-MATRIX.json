@@ -1,13 +1,9 @@
 {
-  "schema": "implement-evidence.v1",
+  "schema_version": "1.0",
   "feature": "search-boundary-curation",
   "version": "v0.0.5",
-  "ac": "QA-MATRIX",
-  "status": "pass",
-  "summary": "tests/test_boundary.py covers TC-SBC-001..007 + ILL-001/002",
-  "commands": [
-    "python3 -m pytest -q tests/test_boundary.py --junitxml .beacon/junit-search-boundary-curation.xml"
-  ],
+  "status": "ready_for_qa",
+  "pytest": "15 passed",
   "junit": ".beacon/junit-search-boundary-curation.xml",
-  "generated_at": "2026-08-04T06:44:43.606187+00:00"
+  "generated_at": "2026-08-04T08:37:16.071355+00:00"
 }

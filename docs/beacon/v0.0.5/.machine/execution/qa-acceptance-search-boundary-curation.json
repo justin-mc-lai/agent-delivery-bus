@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "artifact": "qa_acceptance_envelope",
+  "version": "v0.0.5",
+  "feature": "search-boundary-curation",
+  "feature_slug": "search-boundary-curation",
+  "revision_id": "R2",
+  "verdict": "passed",
+  "accepted_at": "2026-08-04T09:10:35.173569+00:00",
+  "accepted_by": "qa",
+  "run_id": "run-20260804T171029508129",
+  "transaction_id": "tx-qa-acceptance-search-boundary-curation-f4191ae06a1d",
+  "source_hash": "sha256:f4191ae06a1d9baf24e06fcd7af493f69a010b2e600a97fbdf908e2d63e412ac",
+  "projection_seq": 1,
+  "source_command": "beacon qa run \"search-boundary-curation\" --project-root /Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.5/search-boundary-curation --version v0.0.5",
+  "requirement_refs": [
+    "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+    "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+    "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md",
+    "docs/beacon/v0.0.5/.machine/execution/search-boundary-curation.revision.json"
+  ],
+  "test_case_refs": [],
+  "evidence_refs": [
+    ".beacon/auto-test-status.json",
+    ".beacon/qa/status.json",
+    ".beacon/coverage-summary.json",
+    ".beacon/release-gate-report.json"
+  ],
+  "story_status": "implemented",
+  "revision_delivery_status": "implemented",
+  "required_ac_count": 0,
+  "required_test_count": 0,
+  "canonical_envelope_ref": "docs/beacon/v0.0.5/.machine/execution/qa-acceptance-search-boundary-curation.json",
+  "markdown_ref": "docs/beacon/v0.0.5/execution/qa-acceptance-brief-search-boundary-curation.md",
+  "transaction_lineage": {
+    "current_transaction_id": "tx-qa-acceptance-search-boundary-curation-f4191ae06a1d",
+    "projection_seq": 1,
+    "source_hash": "sha256:f4191ae06a1d9baf24e06fcd7af493f69a010b2e600a97fbdf908e2d63e412ac",
+    "workflow_memory_ref": ".beacon/memory/workflow-lifecycle.json",
+    "memory_event_id": "",
+    "memory_entry_id": "cad7ec0a-a242-4aa1-bed3-a9c826194c04"
+  },
+  "sink_checksums": {
+    "machine": "sha256:753a4f4f7f5735b8c237b88706a900d381d76b1d23bdf902f18dbd215eceb692",
+    "human": "sha256:4636406a92252dd0646e3d4e316c048d94974e9c289062664c15c44a027e1a86",
+    "runtime": "sha256:78b3fb39d2d49556515314a181aed93b5a8ba6622b4a6304e40176d493626aaf"
+  },
+  "runtime_projection_ref": ".beacon/transactions/qa-acceptance-search-boundary-curation.json",
+  "transaction_status": "applied",
+  "failed_sinks": []
+}

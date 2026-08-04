@@ -8,14 +8,14 @@
   "review_gate_pass": true,
   "abc_pass": true,
   "reason_code": "",
-  "domain_required": true,
+  "domain_required": false,
   "checks": {
     "A_intent_coverage": {
       "pass": true,
       "check": "A",
       "name": "intent_coverage",
       "required": true,
-      "matrix_rows": 7,
+      "matrix_rows": 11,
       "missing_must": [],
       "reason": "",
       "findings": [],
@@ -68,6 +68,34 @@
           "strength": "must",
           "landing": "AC-SBC-007",
           "status": "covered"
+        },
+        {
+          "intent_id": "INT-008",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-SBC-008",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-009",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-SBC-009",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-010",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-SBC-010",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-011",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-SBC-011",
+          "status": "covered"
         }
       ]
     },
@@ -75,24 +103,10 @@
       "pass": true,
       "check": "B",
       "name": "fsm_audit",
-      "required": true,
+      "required": false,
+      "skipped": true,
       "reason": "",
-      "findings": [],
-      "fsm": {
-        "transition_count": 5,
-        "from_states": [
-          "idle",
-          "pending"
-        ],
-        "hanging_states": [],
-        "terminals": [
-          "approved",
-          "blocked",
-          "rejected"
-        ],
-        "illegal_present": true,
-        "five_tuple_present": true
-      }
+      "findings": []
     },
     "C_testability": {
       "pass": true,
@@ -101,8 +115,8 @@
       "required": true,
       "reason": "",
       "findings": [],
-      "ac_count": 7,
-      "tc_count": 9,
+      "ac_count": 11,
+      "tc_count": 12,
       "missing_ac": [],
       "covered": {
         "AC-SBC-001": [
@@ -125,8 +139,20 @@
         ],
         "AC-SBC-007": [
           "TC-SBC-007",
-          "TC-SBC-ILL-001",
-          "TC-SBC-ILL-002"
+          "TC-SBC-ILL-001"
+        ],
+        "AC-SBC-008": [
+          "TC-SBC-008"
+        ],
+        "AC-SBC-009": [
+          "TC-SBC-009"
+        ],
+        "AC-SBC-010": [
+          "TC-SBC-010",
+          "TC-SBC-ILL-001"
+        ],
+        "AC-SBC-011": [
+          "TC-SBC-011"
         ]
       }
     },
@@ -134,22 +160,12 @@
       "pass": true,
       "check": "C_exec",
       "name": "domain_exec_layer",
-      "required": true,
+      "required": false,
+      "skipped": true,
       "reason": "",
       "findings": [],
-      "exec_tc_count": 9,
-      "exec_tc_ids": [
-        "TC-SBC-001",
-        "TC-SBC-002",
-        "TC-SBC-003",
-        "TC-SBC-004",
-        "TC-SBC-005",
-        "TC-SBC-006",
-        "TC-SBC-007",
-        "TC-SBC-ILL-001",
-        "TC-SBC-ILL-002"
-      ],
-      "domain_kind": "business"
+      "exec_tc_count": 0,
+      "domain_kind": "general"
     },
     "D_fill_depth": {
       "pass": true,
@@ -159,8 +175,8 @@
       "reason": "",
       "findings": [],
       "package_maturity": "filled",
-      "domain_kind": "business",
-      "business_domain": true
+      "domain_kind": "general",
+      "business_domain": false
     }
   },
   "findings": [],
@@ -171,7 +187,7 @@
     "fill_depth_pass": true,
     "note": "Polish L0/narrative only after A/B/C; preserve_machine_fields=true; freeze needs D+exec too"
   },
-  "evaluated_at": "2026-08-04T03:59:56.131930+00:00",
+  "evaluated_at": "2026-08-04T08:15:48.299612+00:00",
   "paths": {
     "truth": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
     "tests": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md",

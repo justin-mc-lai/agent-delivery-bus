@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "artifact": "qa_acceptance_runtime_projection",
+  "version": "v0.0.5",
+  "feature": "search-boundary-curation",
+  "feature_slug": "search-boundary-curation",
+  "revision_id": "R2",
+  "verdict": "passed",
+  "transaction_id": "tx-qa-acceptance-search-boundary-curation-f4191ae06a1d",
+  "source_hash": "sha256:f4191ae06a1d9baf24e06fcd7af493f69a010b2e600a97fbdf908e2d63e412ac",
+  "projection_seq": 1,
+  "committed_at": "2026-08-04T09:10:35.186817+00:00",
+  "write_status": "applied",
+  "failed_sinks": [],
+  "machine_ref": "docs/beacon/v0.0.5/.machine/execution/qa-acceptance-search-boundary-curation.json",
+  "markdown_ref": "docs/beacon/v0.0.5/execution/qa-acceptance-brief-search-boundary-curation.md",
+  "runtime_projection_ref": ".beacon/transactions/qa-acceptance-search-boundary-curation.json",
+  "sink_checksums": {
+    "machine": "sha256:753a4f4f7f5735b8c237b88706a900d381d76b1d23bdf902f18dbd215eceb692",
+    "human": "sha256:4636406a92252dd0646e3d4e316c048d94974e9c289062664c15c44a027e1a86",
+    "runtime": "sha256:78b3fb39d2d49556515314a181aed93b5a8ba6622b4a6304e40176d493626aaf"
+  }
+}
