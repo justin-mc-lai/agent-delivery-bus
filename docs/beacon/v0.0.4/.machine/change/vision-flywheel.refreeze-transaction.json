@@ -1,0 +1,1996 @@
+{
+  "schema_version": "1.0",
+  "transaction_id": "tx-change-refreeze-vision-flywheel-20260804t093252z",
+  "feature": "vision-flywheel",
+  "feature_slug": "vision-flywheel",
+  "version": "v0.0.4",
+  "change_reason": "release blockers: FSM walk matrix + ui-state-matrix without weak TC rows",
+  "touched_surfaces": [
+    "change",
+    "truth",
+    "tests",
+    "tasks",
+    "evidence",
+    "requirement_clarity",
+    "freeze",
+    "feature_package_validation"
+  ],
+  "surface_statuses": {
+    "change": {
+      "path": "docs/beacon/v0.0.4/change/vision-flywheel.md",
+      "exists": false,
+      "status": "package_change_optional",
+      "required": false,
+      "authority": "change_record_not_requirement_truth"
+    },
+    "truth": {
+      "path": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+      "exists": true,
+      "status": "present",
+      "required": true,
+      "authority": "markdown_feature_package"
+    },
+    "tests": {
+      "path": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md",
+      "exists": true,
+      "status": "present",
+      "required": true,
+      "authority": "markdown_feature_package"
+    },
+    "tasks": {
+      "path": "docs/beacon/v0.0.4/features/vision-flywheel/tasks.md",
+      "exists": true,
+      "status": "present",
+      "required": true,
+      "authority": "markdown_feature_package"
+    },
+    "evidence": {
+      "path": "docs/beacon/v0.0.4/features/vision-flywheel/evidence.md",
+      "exists": true,
+      "status": "present",
+      "required": true,
+      "authority": "markdown_feature_package"
+    },
+    "requirement_clarity": {
+      "path": "docs/beacon/v0.0.4/.machine/execution/requirement-clarity-vision-flywheel.json",
+      "exists": true,
+      "status": "passed",
+      "required": true
+    },
+    "freeze": {
+      "path": "docs/beacon/v0.0.4/.machine/change/vision-flywheel.refreeze-transaction.json",
+      "exists": true,
+      "status": "complete",
+      "required": true
+    },
+    "feature_package_validation": {
+      "path": "docs/beacon/v0.0.4/.machine/requirement/feature-package-validation.json",
+      "exists": true,
+      "status": "passed",
+      "required": true,
+      "diagnostics": []
+    }
+  },
+  "truth_revision_before": {
+    "revision_id": "R2",
+    "doc_status": "draft",
+    "lifecycle_status": "idle",
+    "baseline_hash": ""
+  },
+  "truth_revision_after": {
+    "revision_id": "R2",
+    "doc_status": "frozen",
+    "lifecycle_status": "frozen",
+    "baseline_hash": "sha256:7270fa2fac52c7fe818c3492d548b2a19fb218e448304229da3480f163958dd0"
+  },
+  "refreeze_status": "complete",
+  "next_route": {
+    "target_surface": "beacon-implement",
+    "command": "beacon implement \"vision-flywheel\" --project /Users/apple/Developer/Personal/products/agent-delivery-bus --version v0.0.4",
+    "why": "refreeze transaction completed; implementation may plan against the refreshed frozen truth"
+  },
+  "blocked_reason": "",
+  "delivery_execution": {
+    "implement_executed": false,
+    "qa_executed": false,
+    "release_executed": false
+  },
+  "created_at": "2026-08-04T09:32:52.282618+00:00",
+  "previous_revision": {
+    "revision_id": "R1",
+    "doc_status": "superseded",
+    "lifecycle_status": "superseded",
+    "baseline_hash": ""
+  },
+  "opened_revision": {
+    "revision_id": "R2",
+    "doc_status": "draft",
+    "lifecycle_status": "idle",
+    "baseline_hash": ""
+  },
+  "story_reopen": {
+    "current_revision_id": "R2",
+    "lifecycle_status": "draft"
+  },
+  "requirement_package": {
+    "schema_version": "1.0",
+    "project_root": "/Users/apple/Developer/Personal/products/agent-delivery-bus",
+    "version": "v0.0.4",
+    "feature": "vision-flywheel",
+    "status": "synced",
+    "authority_state": "feature_package_authoritative",
+    "truth_authority": "markdown_feature_package",
+    "requirement_refs": {
+      "source_of_truth_root": "docs/beacon/v0.0.4/features/vision-flywheel",
+      "prd": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+      "user_story": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+      "test_case": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md",
+      "truth": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+      "tests": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md",
+      "tasks": "docs/beacon/v0.0.4/features/vision-flywheel/tasks.md",
+      "evidence": "docs/beacon/v0.0.4/features/vision-flywheel/evidence.md"
+    },
+    "story_path": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+    "qa_matrix_path": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md",
+    "qa9_matrix_path": "",
+    "story_scenario_map_path": "",
+    "machine_rebuild": {
+      "schema_version": "1.0",
+      "truth_map_contract": "beacon-truth-map-v1",
+      "truth_source_model": "feature_package_authoritative",
+      "truth_package_contract": "beacon-feature-package-v2",
+      "machine_json_role": "generated_state_not_truth",
+      "generated_by": "beacon.truth_map.resolver",
+      "feature": "vision-flywheel",
+      "feature_slug": "vision-flywheel",
+      "version": "v0.0.4",
+      "status": "rebuilt",
+      "blocked": false,
+      "validation_status": "pass",
+      "source_paths": {
+        "truth": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+        "tests": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md",
+        "tasks": "docs/beacon/v0.0.4/features/vision-flywheel/tasks.md",
+        "evidence": "docs/beacon/v0.0.4/features/vision-flywheel/evidence.md"
+      },
+      "source_hashes": {
+        "truth": "349d342995a0540f17654376535c66d1a433a921fd6c8c5aa39fe2ce1e33b97c",
+        "tests": "8146f668a3450643298231c9ad0127a0cc6c166636c205a1a9f678270074f779",
+        "tasks": "f62fd30d0e6fb326d242fa53dfcc5ba7ae5f4a12a4748e6501e6e12205a838e0",
+        "evidence": "767caefbe2d425a2d936a72b67c06c75a3cdab74aa17d47854a22bf2a783abb6"
+      },
+      "plan": {
+        "schema_version": "1.0",
+        "truth_map_contract": "beacon-truth-map-v1",
+        "truth_source_model": "feature_package_authoritative",
+        "truth_package_contract": "beacon-feature-package-v2",
+        "machine_json_role": "generated_state_not_truth",
+        "generated_by": "beacon.truth_map.resolver",
+        "feature": "vision-flywheel",
+        "feature_slug": "vision-flywheel",
+        "version": "v0.0.4",
+        "source_paths": {
+          "truth": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+          "tests": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md",
+          "tasks": "docs/beacon/v0.0.4/features/vision-flywheel/tasks.md",
+          "evidence": "docs/beacon/v0.0.4/features/vision-flywheel/evidence.md"
+        },
+        "outputs": {
+          "truth_map_projection": "docs/beacon/v0.0.4/.machine/requirement/vision-flywheel.truth-map.json",
+          "requirement_package_state": "docs/beacon/v0.0.4/.machine/requirement/vision-flywheel.requirement-package.json",
+          "feature_package_validation": "docs/beacon/v0.0.4/.machine/requirement/feature-package-validation.json"
+        },
+        "runtime_json_exemption": {
+          "role": "runtime_process_record_not_requirement_truth",
+          "applies_to": [
+            ".beacon/runs/**",
+            ".beacon/qa/**",
+            "runtime/process execution records"
+          ],
+          "requires_markdown_twin": false,
+          "requirement_authority": false
+        },
+        "routes": {
+          "doctor_rebuild": {
+            "status": "legacy_output_only",
+            "command": "beacon truth-map rebuild-machine vision-flywheel --version v0.0.4"
+          },
+          "change_absorb": {
+            "status": "package_truth_target_only",
+            "command": "beacon change vision-flywheel --version v0.0.4 --reason absorb-legacy-truth-into-feature-package"
+          }
+        }
+      },
+      "written": [
+        "docs/beacon/v0.0.4/.machine/requirement/vision-flywheel.truth-map.json",
+        "docs/beacon/v0.0.4/.machine/requirement/vision-flywheel.requirement-package.json",
+        "docs/beacon/v0.0.4/.machine/requirement/feature-package-validation.json"
+      ]
+    },
+    "story_sync": {
+      "path": "docs/beacon/v0.0.4/.machine/user-story/vision-flywheel.json",
+      "feature": "vision-flywheel",
+      "version": "v0.0.4",
+      "revision_id": "R2",
+      "ac_count": 1,
+      "test_count": 1,
+      "story_ids": [
+        ""
+      ]
+    }
+  },
+  "requirement_clarity": {
+    "gate": {
+      "schema_version": "1.0",
+      "feature": "vision-flywheel",
+      "feature_slug": "vision-flywheel",
+      "version": "v0.0.4",
+      "runtime_version": "v1.6.11",
+      "runtime_capability_line": "v1.3.3",
+      "required": true,
+      "reason_code": "",
+      "blocked": false,
+      "status": "pass",
+      "findings": [],
+      "report_json_path": "docs/beacon/v0.0.4/.machine/execution/requirement-clarity-vision-flywheel.json",
+      "report_markdown_path": "docs/beacon/v0.0.4/execution/requirement-clarity-vision-flywheel.md",
+      "state_path": ".beacon/state/requirement-clarity-vision-flywheel.json",
+      "diagram_truth": {
+        "schema_version": "1.0",
+        "version": "v0.0.4",
+        "supported": false,
+        "required": false,
+        "ready": false,
+        "diagram_types": [],
+        "state_axes": [],
+        "missing_diagram_types": [],
+        "missing_state_axes": false,
+        "complexity_signals": [],
+        "review_gates": [],
+        "qa_coverage_hints": [],
+        "evidence_lines": {},
+        "generated_at": "2026-08-04T09:32:52.559858+00:00",
+        "feature": "vision-flywheel",
+        "feature_slug": "vision-flywheel",
+        "prd_ref": "docs/beacon/v0.0.4/prd/vision-flywheel.md",
+        "user_story_ref": "docs/beacon/v0.0.4/user-story/vision-flywheel.md"
+      },
+      "domain_fsm_gate": {
+        "schema_version": "1.0",
+        "feature": "vision-flywheel",
+        "feature_slug": "vision-flywheel",
+        "version": "v0.0.4",
+        "truth_path": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+        "tests_path": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md",
+        "required": true,
+        "blocked": false,
+        "status": "pass",
+        "reason_code": "",
+        "findings": [],
+        "requirement": {
+          "required": true,
+          "reason": "explicit_domain_mark",
+          "explicit": true,
+          "partial": true,
+          "complexity": false,
+          "business_signal": false,
+          "version_supported": false
+        },
+        "projection": {
+          "schema_version": "1.0",
+          "domain_fsm_schema": "domain-fsm.v1",
+          "entity_precedence_schema": "entity-precedence.v1",
+          "frontmatter": {
+            "slug": "vision-flywheel",
+            "version": "v0.0.4",
+            "status": "draft",
+            "revision_id": "R1",
+            "language": "zh",
+            "domain_required": "true",
+            "domain_kind": "business",
+            "ux_required": "false",
+            "package_maturity": "filled",
+            "parser_contract": "beacon-feature-package-v2",
+            "materials_status": "current",
+            "truth_source_model": "intent_first",
+            "git_canonical_branch": "main",
+            "program": "personal-production-flywheel",
+            "promotion_ref": "user-ack-愿景立项-2026-08-04",
+            "canonical_refs": {
+              "prd": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+              "user_story": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+              "test_case": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md"
+            }
+          },
+          "frontmatter_errors": [],
+          "has_domain_model_section": true,
+          "has_domain_fsm_section": true,
+          "has_illegal_transition_section": true,
+          "entities": [
+            {
+              "entity": "ScheduleEntry",
+              "key": "slug, command, engine, cron_expr, quota_limit",
+              "precedence": "注册表单一真值；不内嵌 daemon",
+              "requires": "注册表单一真值；不内嵌 daemon"
+            },
+            {
+              "entity": "QuotaLedger",
+              "key": "slug, window, slots_spent, slots_allowed, next_eligible_at",
+              "precedence": "spend-after-validated-writeback",
+              "requires": "spend-after-validated-writeback"
+            },
+            {
+              "entity": "HeartbeatRun",
+              "key": "entry_slug, status, evidence_refs, quota_spent",
+              "precedence": "追加式事件；缺证据保持 reconciling",
+              "requires": "追加式事件；缺证据保持 reconciling"
+            }
+          ],
+          "entity_precedence": [
+            {
+              "entity": "ScheduleEntry",
+              "key": "slug, command, engine, cron_expr, quota_limit",
+              "precedence": "注册表单一真值；不内嵌 daemon",
+              "requires": "注册表单一真值；不内嵌 daemon"
+            },
+            {
+              "entity": "QuotaLedger",
+              "key": "slug, window, slots_spent, slots_allowed, next_eligible_at",
+              "precedence": "spend-after-validated-writeback",
+              "requires": "spend-after-validated-writeback"
+            },
+            {
+              "entity": "HeartbeatRun",
+              "key": "entry_slug, status, evidence_refs, quota_spent",
+              "precedence": "追加式事件；缺证据保持 reconciling",
+              "requires": "追加式事件；缺证据保持 reconciling"
+            }
+          ],
+          "aggregates": [
+            {
+              "name": "ScheduleHeartbeat",
+              "states": [
+                "blocked",
+                "checking",
+                "done",
+                "idle",
+                "running"
+              ],
+              "transitions": [
+                {
+                  "from": "",
+                  "to": "idle",
+                  "guard": "hermes cron or CLI trigger",
+                  "initial": "true"
+                },
+                {
+                  "from": "idle",
+                  "to": "checking",
+                  "guard": "entry registered + quota gate"
+                },
+                {
+                  "from": "checking",
+                  "to": "running",
+                  "guard": "should-run pass"
+                },
+                {
+                  "from": "running",
+                  "to": "done",
+                  "guard": "evidence validated"
+                },
+                {
+                  "from": "checking",
+                  "to": "blocked",
+                  "guard": "quota exhausted / health gate / illegal"
+                },
+                {
+                  "from": "running",
+                  "to": "blocked",
+                  "guard": "quota exhausted / health gate / illegal"
+                }
+              ]
+            }
+          ],
+          "illegal_transition_slots": [
+            {
+              "description": "checking → dispatch · TC-FLY-ILL-001",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "running → approve · TC-FLY-ILL-001",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "idle → running（跳过 should-run）· TC-FLY-ILL-002",
+              "aggregate": "",
+              "source": "truth"
+            }
+          ],
+          "acceptance_criteria": [
+            {
+              "ac_id": "AC-FLY-001",
+              "description": "`adb schedule register` 登记定时任务（slug/command/engine/cron_expr/quota_limit）到调度注册表；重复 slug 幂等更新；未注册引擎拒绝"
+            },
+            {
+              "ac_id": "AC-FLY-002",
+              "description": "`adb schedule list` 输出全部注册条目（含 quota 状态）；`adb schedule show <slug>` 单条目"
+            },
+            {
+              "ac_id": "AC-FLY-003",
+              "description": "`adb schedule should-run <slug>` 确定性门卫链（quota 门卫 → 健康门卫），输出 run/blocked + reason_code；无 LLM 判定"
+            },
+            {
+              "ac_id": "AC-FLY-004",
+              "description": "quota 记账：被触发的执行按来源（heartbeat/controller 白名单）计 slot；配额耗尽 → throttled + blocked；evidence 落盘后才计配额"
+            },
+            {
+              "ac_id": "AC-FLY-005",
+              "description": "心跳运行追加写 dispatch ledger（事件流：entry_slug/status/evidence_refs/quota_spent），可审计"
+            },
+            {
+              "ac_id": "AC-FLY-006",
+              "description": "心跳证据对账：复用 truth-gate closure 逻辑，缺证据保持 reconciling；证据齐才 completed"
+            },
+            {
+              "ac_id": "AC-FLY-007",
+              "description": "心跳不得自动 approve/dispatch（illegal）；违规进入 blocked"
+            }
+          ],
+          "bound_ac_ids": [
+            "AC-FLY-001",
+            "AC-FLY-002",
+            "AC-FLY-003",
+            "AC-FLY-004",
+            "AC-FLY-007"
+          ],
+          "orphan_ac_ids": [],
+          "aggregates_missing_illegal_slots": [],
+          "raw_section_titles": [
+            "人话",
+            "User Intent",
+            "User Intent Snapshot",
+            "Alignment Surface（本 revision 必煮干）",
+            "Phased Backlog（显式不在本包 closure）",
+            "Deferral Ledger",
+            "用户旅程",
+            "失败旅程",
+            "Domain Model",
+            "Intent Coverage Matrix",
+            "Acceptance Criteria",
+            "Domain FSM — ScheduleHeartbeat",
+            "FSM 五元组",
+            "Legal walks",
+            "Illegal transitions",
+            "Public CLI Contract",
+            "Non-goals",
+            "Freeze readiness"
+          ]
+        },
+        "validation": {
+          "schema_version": "1.0",
+          "required": true,
+          "blocked": false,
+          "status": "pass",
+          "reason_code": "",
+          "findings": [],
+          "projection": {
+            "schema_version": "1.0",
+            "domain_fsm_schema": "domain-fsm.v1",
+            "entity_precedence_schema": "entity-precedence.v1",
+            "frontmatter": {
+              "slug": "vision-flywheel",
+              "version": "v0.0.4",
+              "status": "draft",
+              "revision_id": "R1",
+              "language": "zh",
+              "domain_required": "true",
+              "domain_kind": "business",
+              "ux_required": "false",
+              "package_maturity": "filled",
+              "parser_contract": "beacon-feature-package-v2",
+              "materials_status": "current",
+              "truth_source_model": "intent_first",
+              "git_canonical_branch": "main",
+              "program": "personal-production-flywheel",
+              "promotion_ref": "user-ack-愿景立项-2026-08-04",
+              "canonical_refs": {
+                "prd": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+                "user_story": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+                "test_case": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md"
+              }
+            },
+            "frontmatter_errors": [],
+            "has_domain_model_section": true,
+            "has_domain_fsm_section": true,
+            "has_illegal_transition_section": true,
+            "entities": [
+              {
+                "entity": "ScheduleEntry",
+                "key": "slug, command, engine, cron_expr, quota_limit",
+                "precedence": "注册表单一真值；不内嵌 daemon",
+                "requires": "注册表单一真值；不内嵌 daemon"
+              },
+              {
+                "entity": "QuotaLedger",
+                "key": "slug, window, slots_spent, slots_allowed, next_eligible_at",
+                "precedence": "spend-after-validated-writeback",
+                "requires": "spend-after-validated-writeback"
+              },
+              {
+                "entity": "HeartbeatRun",
+                "key": "entry_slug, status, evidence_refs, quota_spent",
+                "precedence": "追加式事件；缺证据保持 reconciling",
+                "requires": "追加式事件；缺证据保持 reconciling"
+              }
+            ],
+            "entity_precedence": [
+              {
+                "entity": "ScheduleEntry",
+                "key": "slug, command, engine, cron_expr, quota_limit",
+                "precedence": "注册表单一真值；不内嵌 daemon",
+                "requires": "注册表单一真值；不内嵌 daemon"
+              },
+              {
+                "entity": "QuotaLedger",
+                "key": "slug, window, slots_spent, slots_allowed, next_eligible_at",
+                "precedence": "spend-after-validated-writeback",
+                "requires": "spend-after-validated-writeback"
+              },
+              {
+                "entity": "HeartbeatRun",
+                "key": "entry_slug, status, evidence_refs, quota_spent",
+                "precedence": "追加式事件；缺证据保持 reconciling",
+                "requires": "追加式事件；缺证据保持 reconciling"
+              }
+            ],
+            "aggregates": [
+              {
+                "name": "ScheduleHeartbeat",
+                "states": [
+                  "blocked",
+                  "checking",
+                  "done",
+                  "idle",
+                  "running"
+                ],
+                "transitions": [
+                  {
+                    "from": "",
+                    "to": "idle",
+                    "guard": "hermes cron or CLI trigger",
+                    "initial": "true"
+                  },
+                  {
+                    "from": "idle",
+                    "to": "checking",
+                    "guard": "entry registered + quota gate"
+                  },
+                  {
+                    "from": "checking",
+                    "to": "running",
+                    "guard": "should-run pass"
+                  },
+                  {
+                    "from": "running",
+                    "to": "done",
+                    "guard": "evidence validated"
+                  },
+                  {
+                    "from": "checking",
+                    "to": "blocked",
+                    "guard": "quota exhausted / health gate / illegal"
+                  },
+                  {
+                    "from": "running",
+                    "to": "blocked",
+                    "guard": "quota exhausted / health gate / illegal"
+                  }
+                ]
+              }
+            ],
+            "illegal_transition_slots": [
+              {
+                "description": "checking → dispatch · TC-FLY-ILL-001",
+                "aggregate": "",
+                "source": "truth"
+              },
+              {
+                "description": "running → approve · TC-FLY-ILL-001",
+                "aggregate": "",
+                "source": "truth"
+              },
+              {
+                "description": "idle → running（跳过 should-run）· TC-FLY-ILL-002",
+                "aggregate": "",
+                "source": "truth"
+              }
+            ],
+            "acceptance_criteria": [
+              {
+                "ac_id": "AC-FLY-001",
+                "description": "`adb schedule register` 登记定时任务（slug/command/engine/cron_expr/quota_limit）到调度注册表；重复 slug 幂等更新；未注册引擎拒绝"
+              },
+              {
+                "ac_id": "AC-FLY-002",
+                "description": "`adb schedule list` 输出全部注册条目（含 quota 状态）；`adb schedule show <slug>` 单条目"
+              },
+              {
+                "ac_id": "AC-FLY-003",
+                "description": "`adb schedule should-run <slug>` 确定性门卫链（quota 门卫 → 健康门卫），输出 run/blocked + reason_code；无 LLM 判定"
+              },
+              {
+                "ac_id": "AC-FLY-004",
+                "description": "quota 记账：被触发的执行按来源（heartbeat/controller 白名单）计 slot；配额耗尽 → throttled + blocked；evidence 落盘后才计配额"
+              },
+              {
+                "ac_id": "AC-FLY-005",
+                "description": "心跳运行追加写 dispatch ledger（事件流：entry_slug/status/evidence_refs/quota_spent），可审计"
+              },
+              {
+                "ac_id": "AC-FLY-006",
+                "description": "心跳证据对账：复用 truth-gate closure 逻辑，缺证据保持 reconciling；证据齐才 completed"
+              },
+              {
+                "ac_id": "AC-FLY-007",
+                "description": "心跳不得自动 approve/dispatch（illegal）；违规进入 blocked"
+              }
+            ],
+            "bound_ac_ids": [
+              "AC-FLY-001",
+              "AC-FLY-002",
+              "AC-FLY-003",
+              "AC-FLY-004",
+              "AC-FLY-007"
+            ],
+            "orphan_ac_ids": [],
+            "aggregates_missing_illegal_slots": [],
+            "raw_section_titles": [
+              "人话",
+              "User Intent",
+              "User Intent Snapshot",
+              "Alignment Surface（本 revision 必煮干）",
+              "Phased Backlog（显式不在本包 closure）",
+              "Deferral Ledger",
+              "用户旅程",
+              "失败旅程",
+              "Domain Model",
+              "Intent Coverage Matrix",
+              "Acceptance Criteria",
+              "Domain FSM — ScheduleHeartbeat",
+              "FSM 五元组",
+              "Legal walks",
+              "Illegal transitions",
+              "Public CLI Contract",
+              "Non-goals",
+              "Freeze readiness"
+            ]
+          },
+          "summary": {
+            "entity_count": 3,
+            "aggregate_count": 1,
+            "illegal_slot_count": 3,
+            "orphan_ac_count": 0,
+            "bound_ac_count": 5
+          }
+        },
+        "recommended_action": ""
+      },
+      "human_closure_contract": {
+        "required": false,
+        "research_path": "docs/beacon/v0.0.4/research/vision-flywheel.md",
+        "research_exists": true,
+        "source_architecture_path": "docs/beacon/v0.0.4/source-architecture/vision-flywheel.md",
+        "source_architecture_exists": false,
+        "required_sections": [
+          "architecture",
+          "business_flow"
+        ],
+        "missing_sections": [
+          "architecture",
+          "business_flow"
+        ],
+        "diagram_types": [],
+        "complexity_signals": []
+      },
+      "requirement_closure_contract": {
+        "required": true,
+        "chain_order": [
+          "research",
+          "prd",
+          "user_story",
+          "test_case",
+          "requirement_clarity",
+          "freeze"
+        ],
+        "human_closure_required": false,
+        "paths": {
+          "research": "docs/beacon/v0.0.4/research/vision-flywheel.md",
+          "prd": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+          "user_story": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+          "test_case": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md"
+        },
+        "exists": {
+          "research": true,
+          "prd": true,
+          "user_story": true,
+          "test_case": true
+        },
+        "required_research_sections": [],
+        "missing_research_sections": [],
+        "ac_projection": {
+          "prd_ac_ids": [],
+          "user_story_ac_ids": [],
+          "test_case_ac_ids": [],
+          "upstream_ac_ids": [],
+          "missing_test_case_ac_ids": []
+        }
+      },
+      "version_projection_truth_contract": {
+        "required": false,
+        "supported": false,
+        "projection_types": [],
+        "research_path": "docs/beacon/v0.0.4/research/vision-flywheel.md",
+        "research_exists": true,
+        "required_fields": [
+          "prd_refs",
+          "user_story_refs",
+          "test_case_refs",
+          "coverage_notes",
+          "out_of_scope_notes"
+        ],
+        "field_presence": {
+          "prd_refs": false,
+          "user_story_refs": false,
+          "test_case_refs": false,
+          "coverage_notes": false,
+          "out_of_scope_notes": false
+        },
+        "missing_fields": [],
+        "required_refs": {
+          "prd_refs": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+          "user_story_refs": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+          "test_case_refs": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md"
+        },
+        "missing_ref_targets": [],
+        "ready": false
+      },
+      "support_write_topology_contract": {
+        "schema_version": "1.0",
+        "supported": true,
+        "status": "pass",
+        "blocked": false,
+        "reason_code": "",
+        "diagnostics": []
+      },
+      "required_artifacts": [],
+      "scanned_files": [
+        "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+        "docs/beacon/v0.0.4/features/vision-flywheel/tests.md",
+        "docs/beacon/v0.0.4/features/vision-flywheel/tasks.md",
+        "docs/beacon/v0.0.4/features/vision-flywheel/evidence.md",
+        "docs/beacon/v0.0.4/research/vision-flywheel.md"
+      ]
+    },
+    "report": {
+      "json": "docs/beacon/v0.0.4/.machine/execution/requirement-clarity-vision-flywheel.json",
+      "markdown": "docs/beacon/v0.0.4/execution/requirement-clarity-vision-flywheel.md"
+    },
+    "writeback": {
+      "schema_version": "1.0",
+      "feature": "vision-flywheel",
+      "feature_slug": "vision-flywheel",
+      "version": "v0.0.4",
+      "status": "pass",
+      "blocked": false,
+      "reason_code": "",
+      "report_json_path": "docs/beacon/v0.0.4/.machine/execution/requirement-clarity-vision-flywheel.json",
+      "report_markdown_path": "docs/beacon/v0.0.4/execution/requirement-clarity-vision-flywheel.md",
+      "finding_count": 0,
+      "run_id": "",
+      "source": "change.refreeze-chain",
+      "written_at": "2026-08-04T09:32:52.567932+00:00",
+      "state_path": ".beacon/state/requirement-clarity-vision-flywheel.json"
+    }
+  },
+  "truth_integrity_gate": {
+    "schema_version": "1.0",
+    "feature": "vision-flywheel",
+    "feature_slug": "vision-flywheel",
+    "version": "v0.0.4",
+    "mode": "block",
+    "truth_status": "draft",
+    "status": "pass",
+    "blocked": false,
+    "reason_code": "",
+    "findings": [],
+    "finding_count": 0,
+    "requirement_clarity": {
+      "schema_version": "1.0",
+      "feature": "vision-flywheel",
+      "feature_slug": "vision-flywheel",
+      "version": "v0.0.4",
+      "runtime_version": "v1.6.11",
+      "runtime_capability_line": "v1.3.3",
+      "required": true,
+      "reason_code": "",
+      "blocked": false,
+      "status": "pass",
+      "findings": [],
+      "report_json_path": "docs/beacon/v0.0.4/.machine/execution/requirement-clarity-vision-flywheel.json",
+      "report_markdown_path": "docs/beacon/v0.0.4/execution/requirement-clarity-vision-flywheel.md",
+      "state_path": ".beacon/state/requirement-clarity-vision-flywheel.json",
+      "diagram_truth": {
+        "schema_version": "1.0",
+        "version": "v0.0.4",
+        "supported": false,
+        "required": false,
+        "ready": false,
+        "diagram_types": [],
+        "state_axes": [],
+        "missing_diagram_types": [],
+        "missing_state_axes": false,
+        "complexity_signals": [],
+        "review_gates": [],
+        "qa_coverage_hints": [],
+        "evidence_lines": {},
+        "generated_at": "2026-08-04T09:32:52.571387+00:00",
+        "feature": "vision-flywheel",
+        "feature_slug": "vision-flywheel",
+        "prd_ref": "docs/beacon/v0.0.4/prd/vision-flywheel.md",
+        "user_story_ref": "docs/beacon/v0.0.4/user-story/vision-flywheel.md"
+      },
+      "domain_fsm_gate": {
+        "schema_version": "1.0",
+        "feature": "vision-flywheel",
+        "feature_slug": "vision-flywheel",
+        "version": "v0.0.4",
+        "truth_path": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+        "tests_path": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md",
+        "required": true,
+        "blocked": false,
+        "status": "pass",
+        "reason_code": "",
+        "findings": [],
+        "requirement": {
+          "required": true,
+          "reason": "explicit_domain_mark",
+          "explicit": true,
+          "partial": true,
+          "complexity": false,
+          "business_signal": false,
+          "version_supported": false
+        },
+        "projection": {
+          "schema_version": "1.0",
+          "domain_fsm_schema": "domain-fsm.v1",
+          "entity_precedence_schema": "entity-precedence.v1",
+          "frontmatter": {
+            "slug": "vision-flywheel",
+            "version": "v0.0.4",
+            "status": "draft",
+            "revision_id": "R1",
+            "language": "zh",
+            "domain_required": "true",
+            "domain_kind": "business",
+            "ux_required": "false",
+            "package_maturity": "filled",
+            "parser_contract": "beacon-feature-package-v2",
+            "materials_status": "current",
+            "truth_source_model": "intent_first",
+            "git_canonical_branch": "main",
+            "program": "personal-production-flywheel",
+            "promotion_ref": "user-ack-愿景立项-2026-08-04",
+            "canonical_refs": {
+              "prd": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+              "user_story": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+              "test_case": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md"
+            }
+          },
+          "frontmatter_errors": [],
+          "has_domain_model_section": true,
+          "has_domain_fsm_section": true,
+          "has_illegal_transition_section": true,
+          "entities": [
+            {
+              "entity": "ScheduleEntry",
+              "key": "slug, command, engine, cron_expr, quota_limit",
+              "precedence": "注册表单一真值；不内嵌 daemon",
+              "requires": "注册表单一真值；不内嵌 daemon"
+            },
+            {
+              "entity": "QuotaLedger",
+              "key": "slug, window, slots_spent, slots_allowed, next_eligible_at",
+              "precedence": "spend-after-validated-writeback",
+              "requires": "spend-after-validated-writeback"
+            },
+            {
+              "entity": "HeartbeatRun",
+              "key": "entry_slug, status, evidence_refs, quota_spent",
+              "precedence": "追加式事件；缺证据保持 reconciling",
+              "requires": "追加式事件；缺证据保持 reconciling"
+            }
+          ],
+          "entity_precedence": [
+            {
+              "entity": "ScheduleEntry",
+              "key": "slug, command, engine, cron_expr, quota_limit",
+              "precedence": "注册表单一真值；不内嵌 daemon",
+              "requires": "注册表单一真值；不内嵌 daemon"
+            },
+            {
+              "entity": "QuotaLedger",
+              "key": "slug, window, slots_spent, slots_allowed, next_eligible_at",
+              "precedence": "spend-after-validated-writeback",
+              "requires": "spend-after-validated-writeback"
+            },
+            {
+              "entity": "HeartbeatRun",
+              "key": "entry_slug, status, evidence_refs, quota_spent",
+              "precedence": "追加式事件；缺证据保持 reconciling",
+              "requires": "追加式事件；缺证据保持 reconciling"
+            }
+          ],
+          "aggregates": [
+            {
+              "name": "ScheduleHeartbeat",
+              "states": [
+                "blocked",
+                "checking",
+                "done",
+                "idle",
+                "running"
+              ],
+              "transitions": [
+                {
+                  "from": "",
+                  "to": "idle",
+                  "guard": "hermes cron or CLI trigger",
+                  "initial": "true"
+                },
+                {
+                  "from": "idle",
+                  "to": "checking",
+                  "guard": "entry registered + quota gate"
+                },
+                {
+                  "from": "checking",
+                  "to": "running",
+                  "guard": "should-run pass"
+                },
+                {
+                  "from": "running",
+                  "to": "done",
+                  "guard": "evidence validated"
+                },
+                {
+                  "from": "checking",
+                  "to": "blocked",
+                  "guard": "quota exhausted / health gate / illegal"
+                },
+                {
+                  "from": "running",
+                  "to": "blocked",
+                  "guard": "quota exhausted / health gate / illegal"
+                }
+              ]
+            }
+          ],
+          "illegal_transition_slots": [
+            {
+              "description": "checking → dispatch · TC-FLY-ILL-001",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "running → approve · TC-FLY-ILL-001",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "idle → running（跳过 should-run）· TC-FLY-ILL-002",
+              "aggregate": "",
+              "source": "truth"
+            }
+          ],
+          "acceptance_criteria": [
+            {
+              "ac_id": "AC-FLY-001",
+              "description": "`adb schedule register` 登记定时任务（slug/command/engine/cron_expr/quota_limit）到调度注册表；重复 slug 幂等更新；未注册引擎拒绝"
+            },
+            {
+              "ac_id": "AC-FLY-002",
+              "description": "`adb schedule list` 输出全部注册条目（含 quota 状态）；`adb schedule show <slug>` 单条目"
+            },
+            {
+              "ac_id": "AC-FLY-003",
+              "description": "`adb schedule should-run <slug>` 确定性门卫链（quota 门卫 → 健康门卫），输出 run/blocked + reason_code；无 LLM 判定"
+            },
+            {
+              "ac_id": "AC-FLY-004",
+              "description": "quota 记账：被触发的执行按来源（heartbeat/controller 白名单）计 slot；配额耗尽 → throttled + blocked；evidence 落盘后才计配额"
+            },
+            {
+              "ac_id": "AC-FLY-005",
+              "description": "心跳运行追加写 dispatch ledger（事件流：entry_slug/status/evidence_refs/quota_spent），可审计"
+            },
+            {
+              "ac_id": "AC-FLY-006",
+              "description": "心跳证据对账：复用 truth-gate closure 逻辑，缺证据保持 reconciling；证据齐才 completed"
+            },
+            {
+              "ac_id": "AC-FLY-007",
+              "description": "心跳不得自动 approve/dispatch（illegal）；违规进入 blocked"
+            }
+          ],
+          "bound_ac_ids": [
+            "AC-FLY-001",
+            "AC-FLY-002",
+            "AC-FLY-003",
+            "AC-FLY-004",
+            "AC-FLY-007"
+          ],
+          "orphan_ac_ids": [],
+          "aggregates_missing_illegal_slots": [],
+          "raw_section_titles": [
+            "人话",
+            "User Intent",
+            "User Intent Snapshot",
+            "Alignment Surface（本 revision 必煮干）",
+            "Phased Backlog（显式不在本包 closure）",
+            "Deferral Ledger",
+            "用户旅程",
+            "失败旅程",
+            "Domain Model",
+            "Intent Coverage Matrix",
+            "Acceptance Criteria",
+            "Domain FSM — ScheduleHeartbeat",
+            "FSM 五元组",
+            "Legal walks",
+            "Illegal transitions",
+            "Public CLI Contract",
+            "Non-goals",
+            "Freeze readiness"
+          ]
+        },
+        "validation": {
+          "schema_version": "1.0",
+          "required": true,
+          "blocked": false,
+          "status": "pass",
+          "reason_code": "",
+          "findings": [],
+          "projection": {
+            "schema_version": "1.0",
+            "domain_fsm_schema": "domain-fsm.v1",
+            "entity_precedence_schema": "entity-precedence.v1",
+            "frontmatter": {
+              "slug": "vision-flywheel",
+              "version": "v0.0.4",
+              "status": "draft",
+              "revision_id": "R1",
+              "language": "zh",
+              "domain_required": "true",
+              "domain_kind": "business",
+              "ux_required": "false",
+              "package_maturity": "filled",
+              "parser_contract": "beacon-feature-package-v2",
+              "materials_status": "current",
+              "truth_source_model": "intent_first",
+              "git_canonical_branch": "main",
+              "program": "personal-production-flywheel",
+              "promotion_ref": "user-ack-愿景立项-2026-08-04",
+              "canonical_refs": {
+                "prd": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+                "user_story": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+                "test_case": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md"
+              }
+            },
+            "frontmatter_errors": [],
+            "has_domain_model_section": true,
+            "has_domain_fsm_section": true,
+            "has_illegal_transition_section": true,
+            "entities": [
+              {
+                "entity": "ScheduleEntry",
+                "key": "slug, command, engine, cron_expr, quota_limit",
+                "precedence": "注册表单一真值；不内嵌 daemon",
+                "requires": "注册表单一真值；不内嵌 daemon"
+              },
+              {
+                "entity": "QuotaLedger",
+                "key": "slug, window, slots_spent, slots_allowed, next_eligible_at",
+                "precedence": "spend-after-validated-writeback",
+                "requires": "spend-after-validated-writeback"
+              },
+              {
+                "entity": "HeartbeatRun",
+                "key": "entry_slug, status, evidence_refs, quota_spent",
+                "precedence": "追加式事件；缺证据保持 reconciling",
+                "requires": "追加式事件；缺证据保持 reconciling"
+              }
+            ],
+            "entity_precedence": [
+              {
+                "entity": "ScheduleEntry",
+                "key": "slug, command, engine, cron_expr, quota_limit",
+                "precedence": "注册表单一真值；不内嵌 daemon",
+                "requires": "注册表单一真值；不内嵌 daemon"
+              },
+              {
+                "entity": "QuotaLedger",
+                "key": "slug, window, slots_spent, slots_allowed, next_eligible_at",
+                "precedence": "spend-after-validated-writeback",
+                "requires": "spend-after-validated-writeback"
+              },
+              {
+                "entity": "HeartbeatRun",
+                "key": "entry_slug, status, evidence_refs, quota_spent",
+                "precedence": "追加式事件；缺证据保持 reconciling",
+                "requires": "追加式事件；缺证据保持 reconciling"
+              }
+            ],
+            "aggregates": [
+              {
+                "name": "ScheduleHeartbeat",
+                "states": [
+                  "blocked",
+                  "checking",
+                  "done",
+                  "idle",
+                  "running"
+                ],
+                "transitions": [
+                  {
+                    "from": "",
+                    "to": "idle",
+                    "guard": "hermes cron or CLI trigger",
+                    "initial": "true"
+                  },
+                  {
+                    "from": "idle",
+                    "to": "checking",
+                    "guard": "entry registered + quota gate"
+                  },
+                  {
+                    "from": "checking",
+                    "to": "running",
+                    "guard": "should-run pass"
+                  },
+                  {
+                    "from": "running",
+                    "to": "done",
+                    "guard": "evidence validated"
+                  },
+                  {
+                    "from": "checking",
+                    "to": "blocked",
+                    "guard": "quota exhausted / health gate / illegal"
+                  },
+                  {
+                    "from": "running",
+                    "to": "blocked",
+                    "guard": "quota exhausted / health gate / illegal"
+                  }
+                ]
+              }
+            ],
+            "illegal_transition_slots": [
+              {
+                "description": "checking → dispatch · TC-FLY-ILL-001",
+                "aggregate": "",
+                "source": "truth"
+              },
+              {
+                "description": "running → approve · TC-FLY-ILL-001",
+                "aggregate": "",
+                "source": "truth"
+              },
+              {
+                "description": "idle → running（跳过 should-run）· TC-FLY-ILL-002",
+                "aggregate": "",
+                "source": "truth"
+              }
+            ],
+            "acceptance_criteria": [
+              {
+                "ac_id": "AC-FLY-001",
+                "description": "`adb schedule register` 登记定时任务（slug/command/engine/cron_expr/quota_limit）到调度注册表；重复 slug 幂等更新；未注册引擎拒绝"
+              },
+              {
+                "ac_id": "AC-FLY-002",
+                "description": "`adb schedule list` 输出全部注册条目（含 quota 状态）；`adb schedule show <slug>` 单条目"
+              },
+              {
+                "ac_id": "AC-FLY-003",
+                "description": "`adb schedule should-run <slug>` 确定性门卫链（quota 门卫 → 健康门卫），输出 run/blocked + reason_code；无 LLM 判定"
+              },
+              {
+                "ac_id": "AC-FLY-004",
+                "description": "quota 记账：被触发的执行按来源（heartbeat/controller 白名单）计 slot；配额耗尽 → throttled + blocked；evidence 落盘后才计配额"
+              },
+              {
+                "ac_id": "AC-FLY-005",
+                "description": "心跳运行追加写 dispatch ledger（事件流：entry_slug/status/evidence_refs/quota_spent），可审计"
+              },
+              {
+                "ac_id": "AC-FLY-006",
+                "description": "心跳证据对账：复用 truth-gate closure 逻辑，缺证据保持 reconciling；证据齐才 completed"
+              },
+              {
+                "ac_id": "AC-FLY-007",
+                "description": "心跳不得自动 approve/dispatch（illegal）；违规进入 blocked"
+              }
+            ],
+            "bound_ac_ids": [
+              "AC-FLY-001",
+              "AC-FLY-002",
+              "AC-FLY-003",
+              "AC-FLY-004",
+              "AC-FLY-007"
+            ],
+            "orphan_ac_ids": [],
+            "aggregates_missing_illegal_slots": [],
+            "raw_section_titles": [
+              "人话",
+              "User Intent",
+              "User Intent Snapshot",
+              "Alignment Surface（本 revision 必煮干）",
+              "Phased Backlog（显式不在本包 closure）",
+              "Deferral Ledger",
+              "用户旅程",
+              "失败旅程",
+              "Domain Model",
+              "Intent Coverage Matrix",
+              "Acceptance Criteria",
+              "Domain FSM — ScheduleHeartbeat",
+              "FSM 五元组",
+              "Legal walks",
+              "Illegal transitions",
+              "Public CLI Contract",
+              "Non-goals",
+              "Freeze readiness"
+            ]
+          },
+          "summary": {
+            "entity_count": 3,
+            "aggregate_count": 1,
+            "illegal_slot_count": 3,
+            "orphan_ac_count": 0,
+            "bound_ac_count": 5
+          }
+        },
+        "recommended_action": ""
+      },
+      "human_closure_contract": {
+        "required": false,
+        "research_path": "docs/beacon/v0.0.4/research/vision-flywheel.md",
+        "research_exists": true,
+        "source_architecture_path": "docs/beacon/v0.0.4/source-architecture/vision-flywheel.md",
+        "source_architecture_exists": false,
+        "required_sections": [
+          "architecture",
+          "business_flow"
+        ],
+        "missing_sections": [
+          "architecture",
+          "business_flow"
+        ],
+        "diagram_types": [],
+        "complexity_signals": []
+      },
+      "requirement_closure_contract": {
+        "required": true,
+        "chain_order": [
+          "research",
+          "prd",
+          "user_story",
+          "test_case",
+          "requirement_clarity",
+          "freeze"
+        ],
+        "human_closure_required": false,
+        "paths": {
+          "research": "docs/beacon/v0.0.4/research/vision-flywheel.md",
+          "prd": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+          "user_story": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+          "test_case": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md"
+        },
+        "exists": {
+          "research": true,
+          "prd": true,
+          "user_story": true,
+          "test_case": true
+        },
+        "required_research_sections": [],
+        "missing_research_sections": [],
+        "ac_projection": {
+          "prd_ac_ids": [],
+          "user_story_ac_ids": [],
+          "test_case_ac_ids": [],
+          "upstream_ac_ids": [],
+          "missing_test_case_ac_ids": []
+        }
+      },
+      "version_projection_truth_contract": {
+        "required": false,
+        "supported": false,
+        "projection_types": [],
+        "research_path": "docs/beacon/v0.0.4/research/vision-flywheel.md",
+        "research_exists": true,
+        "required_fields": [
+          "prd_refs",
+          "user_story_refs",
+          "test_case_refs",
+          "coverage_notes",
+          "out_of_scope_notes"
+        ],
+        "field_presence": {
+          "prd_refs": false,
+          "user_story_refs": false,
+          "test_case_refs": false,
+          "coverage_notes": false,
+          "out_of_scope_notes": false
+        },
+        "missing_fields": [],
+        "required_refs": {
+          "prd_refs": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+          "user_story_refs": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+          "test_case_refs": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md"
+        },
+        "missing_ref_targets": [],
+        "ready": false
+      },
+      "support_write_topology_contract": {
+        "schema_version": "1.0",
+        "supported": true,
+        "status": "pass",
+        "blocked": false,
+        "reason_code": "",
+        "diagnostics": []
+      },
+      "required_artifacts": [],
+      "scanned_files": [
+        "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+        "docs/beacon/v0.0.4/features/vision-flywheel/tests.md",
+        "docs/beacon/v0.0.4/features/vision-flywheel/tasks.md",
+        "docs/beacon/v0.0.4/features/vision-flywheel/evidence.md",
+        "docs/beacon/v0.0.4/research/vision-flywheel.md"
+      ]
+    },
+    "domain_fsm": {
+      "schema_version": "1.0",
+      "feature": "vision-flywheel",
+      "feature_slug": "vision-flywheel",
+      "version": "v0.0.4",
+      "truth_path": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+      "tests_path": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md",
+      "required": true,
+      "blocked": false,
+      "status": "pass",
+      "reason_code": "",
+      "findings": [],
+      "requirement": {
+        "required": true,
+        "reason": "explicit_domain_mark",
+        "explicit": true,
+        "partial": true,
+        "complexity": false,
+        "business_signal": false,
+        "version_supported": false
+      },
+      "projection": {
+        "schema_version": "1.0",
+        "domain_fsm_schema": "domain-fsm.v1",
+        "entity_precedence_schema": "entity-precedence.v1",
+        "frontmatter": {
+          "slug": "vision-flywheel",
+          "version": "v0.0.4",
+          "status": "draft",
+          "revision_id": "R1",
+          "language": "zh",
+          "domain_required": "true",
+          "domain_kind": "business",
+          "ux_required": "false",
+          "package_maturity": "filled",
+          "parser_contract": "beacon-feature-package-v2",
+          "materials_status": "current",
+          "truth_source_model": "intent_first",
+          "git_canonical_branch": "main",
+          "program": "personal-production-flywheel",
+          "promotion_ref": "user-ack-愿景立项-2026-08-04",
+          "canonical_refs": {
+            "prd": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+            "user_story": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+            "test_case": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md"
+          }
+        },
+        "frontmatter_errors": [],
+        "has_domain_model_section": true,
+        "has_domain_fsm_section": true,
+        "has_illegal_transition_section": true,
+        "entities": [
+          {
+            "entity": "ScheduleEntry",
+            "key": "slug, command, engine, cron_expr, quota_limit",
+            "precedence": "注册表单一真值；不内嵌 daemon",
+            "requires": "注册表单一真值；不内嵌 daemon"
+          },
+          {
+            "entity": "QuotaLedger",
+            "key": "slug, window, slots_spent, slots_allowed, next_eligible_at",
+            "precedence": "spend-after-validated-writeback",
+            "requires": "spend-after-validated-writeback"
+          },
+          {
+            "entity": "HeartbeatRun",
+            "key": "entry_slug, status, evidence_refs, quota_spent",
+            "precedence": "追加式事件；缺证据保持 reconciling",
+            "requires": "追加式事件；缺证据保持 reconciling"
+          }
+        ],
+        "entity_precedence": [
+          {
+            "entity": "ScheduleEntry",
+            "key": "slug, command, engine, cron_expr, quota_limit",
+            "precedence": "注册表单一真值；不内嵌 daemon",
+            "requires": "注册表单一真值；不内嵌 daemon"
+          },
+          {
+            "entity": "QuotaLedger",
+            "key": "slug, window, slots_spent, slots_allowed, next_eligible_at",
+            "precedence": "spend-after-validated-writeback",
+            "requires": "spend-after-validated-writeback"
+          },
+          {
+            "entity": "HeartbeatRun",
+            "key": "entry_slug, status, evidence_refs, quota_spent",
+            "precedence": "追加式事件；缺证据保持 reconciling",
+            "requires": "追加式事件；缺证据保持 reconciling"
+          }
+        ],
+        "aggregates": [
+          {
+            "name": "ScheduleHeartbeat",
+            "states": [
+              "blocked",
+              "checking",
+              "done",
+              "idle",
+              "running"
+            ],
+            "transitions": [
+              {
+                "from": "",
+                "to": "idle",
+                "guard": "hermes cron or CLI trigger",
+                "initial": "true"
+              },
+              {
+                "from": "idle",
+                "to": "checking",
+                "guard": "entry registered + quota gate"
+              },
+              {
+                "from": "checking",
+                "to": "running",
+                "guard": "should-run pass"
+              },
+              {
+                "from": "running",
+                "to": "done",
+                "guard": "evidence validated"
+              },
+              {
+                "from": "checking",
+                "to": "blocked",
+                "guard": "quota exhausted / health gate / illegal"
+              },
+              {
+                "from": "running",
+                "to": "blocked",
+                "guard": "quota exhausted / health gate / illegal"
+              }
+            ]
+          }
+        ],
+        "illegal_transition_slots": [
+          {
+            "description": "checking → dispatch · TC-FLY-ILL-001",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "running → approve · TC-FLY-ILL-001",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "idle → running（跳过 should-run）· TC-FLY-ILL-002",
+            "aggregate": "",
+            "source": "truth"
+          }
+        ],
+        "acceptance_criteria": [
+          {
+            "ac_id": "AC-FLY-001",
+            "description": "`adb schedule register` 登记定时任务（slug/command/engine/cron_expr/quota_limit）到调度注册表；重复 slug 幂等更新；未注册引擎拒绝"
+          },
+          {
+            "ac_id": "AC-FLY-002",
+            "description": "`adb schedule list` 输出全部注册条目（含 quota 状态）；`adb schedule show <slug>` 单条目"
+          },
+          {
+            "ac_id": "AC-FLY-003",
+            "description": "`adb schedule should-run <slug>` 确定性门卫链（quota 门卫 → 健康门卫），输出 run/blocked + reason_code；无 LLM 判定"
+          },
+          {
+            "ac_id": "AC-FLY-004",
+            "description": "quota 记账：被触发的执行按来源（heartbeat/controller 白名单）计 slot；配额耗尽 → throttled + blocked；evidence 落盘后才计配额"
+          },
+          {
+            "ac_id": "AC-FLY-005",
+            "description": "心跳运行追加写 dispatch ledger（事件流：entry_slug/status/evidence_refs/quota_spent），可审计"
+          },
+          {
+            "ac_id": "AC-FLY-006",
+            "description": "心跳证据对账：复用 truth-gate closure 逻辑，缺证据保持 reconciling；证据齐才 completed"
+          },
+          {
+            "ac_id": "AC-FLY-007",
+            "description": "心跳不得自动 approve/dispatch（illegal）；违规进入 blocked"
+          }
+        ],
+        "bound_ac_ids": [
+          "AC-FLY-001",
+          "AC-FLY-002",
+          "AC-FLY-003",
+          "AC-FLY-004",
+          "AC-FLY-007"
+        ],
+        "orphan_ac_ids": [],
+        "aggregates_missing_illegal_slots": [],
+        "raw_section_titles": [
+          "人话",
+          "User Intent",
+          "User Intent Snapshot",
+          "Alignment Surface（本 revision 必煮干）",
+          "Phased Backlog（显式不在本包 closure）",
+          "Deferral Ledger",
+          "用户旅程",
+          "失败旅程",
+          "Domain Model",
+          "Intent Coverage Matrix",
+          "Acceptance Criteria",
+          "Domain FSM — ScheduleHeartbeat",
+          "FSM 五元组",
+          "Legal walks",
+          "Illegal transitions",
+          "Public CLI Contract",
+          "Non-goals",
+          "Freeze readiness"
+        ]
+      },
+      "validation": {
+        "schema_version": "1.0",
+        "required": true,
+        "blocked": false,
+        "status": "pass",
+        "reason_code": "",
+        "findings": [],
+        "projection": {
+          "schema_version": "1.0",
+          "domain_fsm_schema": "domain-fsm.v1",
+          "entity_precedence_schema": "entity-precedence.v1",
+          "frontmatter": {
+            "slug": "vision-flywheel",
+            "version": "v0.0.4",
+            "status": "draft",
+            "revision_id": "R1",
+            "language": "zh",
+            "domain_required": "true",
+            "domain_kind": "business",
+            "ux_required": "false",
+            "package_maturity": "filled",
+            "parser_contract": "beacon-feature-package-v2",
+            "materials_status": "current",
+            "truth_source_model": "intent_first",
+            "git_canonical_branch": "main",
+            "program": "personal-production-flywheel",
+            "promotion_ref": "user-ack-愿景立项-2026-08-04",
+            "canonical_refs": {
+              "prd": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+              "user_story": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+              "test_case": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md"
+            }
+          },
+          "frontmatter_errors": [],
+          "has_domain_model_section": true,
+          "has_domain_fsm_section": true,
+          "has_illegal_transition_section": true,
+          "entities": [
+            {
+              "entity": "ScheduleEntry",
+              "key": "slug, command, engine, cron_expr, quota_limit",
+              "precedence": "注册表单一真值；不内嵌 daemon",
+              "requires": "注册表单一真值；不内嵌 daemon"
+            },
+            {
+              "entity": "QuotaLedger",
+              "key": "slug, window, slots_spent, slots_allowed, next_eligible_at",
+              "precedence": "spend-after-validated-writeback",
+              "requires": "spend-after-validated-writeback"
+            },
+            {
+              "entity": "HeartbeatRun",
+              "key": "entry_slug, status, evidence_refs, quota_spent",
+              "precedence": "追加式事件；缺证据保持 reconciling",
+              "requires": "追加式事件；缺证据保持 reconciling"
+            }
+          ],
+          "entity_precedence": [
+            {
+              "entity": "ScheduleEntry",
+              "key": "slug, command, engine, cron_expr, quota_limit",
+              "precedence": "注册表单一真值；不内嵌 daemon",
+              "requires": "注册表单一真值；不内嵌 daemon"
+            },
+            {
+              "entity": "QuotaLedger",
+              "key": "slug, window, slots_spent, slots_allowed, next_eligible_at",
+              "precedence": "spend-after-validated-writeback",
+              "requires": "spend-after-validated-writeback"
+            },
+            {
+              "entity": "HeartbeatRun",
+              "key": "entry_slug, status, evidence_refs, quota_spent",
+              "precedence": "追加式事件；缺证据保持 reconciling",
+              "requires": "追加式事件；缺证据保持 reconciling"
+            }
+          ],
+          "aggregates": [
+            {
+              "name": "ScheduleHeartbeat",
+              "states": [
+                "blocked",
+                "checking",
+                "done",
+                "idle",
+                "running"
+              ],
+              "transitions": [
+                {
+                  "from": "",
+                  "to": "idle",
+                  "guard": "hermes cron or CLI trigger",
+                  "initial": "true"
+                },
+                {
+                  "from": "idle",
+                  "to": "checking",
+                  "guard": "entry registered + quota gate"
+                },
+                {
+                  "from": "checking",
+                  "to": "running",
+                  "guard": "should-run pass"
+                },
+                {
+                  "from": "running",
+                  "to": "done",
+                  "guard": "evidence validated"
+                },
+                {
+                  "from": "checking",
+                  "to": "blocked",
+                  "guard": "quota exhausted / health gate / illegal"
+                },
+                {
+                  "from": "running",
+                  "to": "blocked",
+                  "guard": "quota exhausted / health gate / illegal"
+                }
+              ]
+            }
+          ],
+          "illegal_transition_slots": [
+            {
+              "description": "checking → dispatch · TC-FLY-ILL-001",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "running → approve · TC-FLY-ILL-001",
+              "aggregate": "",
+              "source": "truth"
+            },
+            {
+              "description": "idle → running（跳过 should-run）· TC-FLY-ILL-002",
+              "aggregate": "",
+              "source": "truth"
+            }
+          ],
+          "acceptance_criteria": [
+            {
+              "ac_id": "AC-FLY-001",
+              "description": "`adb schedule register` 登记定时任务（slug/command/engine/cron_expr/quota_limit）到调度注册表；重复 slug 幂等更新；未注册引擎拒绝"
+            },
+            {
+              "ac_id": "AC-FLY-002",
+              "description": "`adb schedule list` 输出全部注册条目（含 quota 状态）；`adb schedule show <slug>` 单条目"
+            },
+            {
+              "ac_id": "AC-FLY-003",
+              "description": "`adb schedule should-run <slug>` 确定性门卫链（quota 门卫 → 健康门卫），输出 run/blocked + reason_code；无 LLM 判定"
+            },
+            {
+              "ac_id": "AC-FLY-004",
+              "description": "quota 记账：被触发的执行按来源（heartbeat/controller 白名单）计 slot；配额耗尽 → throttled + blocked；evidence 落盘后才计配额"
+            },
+            {
+              "ac_id": "AC-FLY-005",
+              "description": "心跳运行追加写 dispatch ledger（事件流：entry_slug/status/evidence_refs/quota_spent），可审计"
+            },
+            {
+              "ac_id": "AC-FLY-006",
+              "description": "心跳证据对账：复用 truth-gate closure 逻辑，缺证据保持 reconciling；证据齐才 completed"
+            },
+            {
+              "ac_id": "AC-FLY-007",
+              "description": "心跳不得自动 approve/dispatch（illegal）；违规进入 blocked"
+            }
+          ],
+          "bound_ac_ids": [
+            "AC-FLY-001",
+            "AC-FLY-002",
+            "AC-FLY-003",
+            "AC-FLY-004",
+            "AC-FLY-007"
+          ],
+          "orphan_ac_ids": [],
+          "aggregates_missing_illegal_slots": [],
+          "raw_section_titles": [
+            "人话",
+            "User Intent",
+            "User Intent Snapshot",
+            "Alignment Surface（本 revision 必煮干）",
+            "Phased Backlog（显式不在本包 closure）",
+            "Deferral Ledger",
+            "用户旅程",
+            "失败旅程",
+            "Domain Model",
+            "Intent Coverage Matrix",
+            "Acceptance Criteria",
+            "Domain FSM — ScheduleHeartbeat",
+            "FSM 五元组",
+            "Legal walks",
+            "Illegal transitions",
+            "Public CLI Contract",
+            "Non-goals",
+            "Freeze readiness"
+          ]
+        },
+        "summary": {
+          "entity_count": 3,
+          "aggregate_count": 1,
+          "illegal_slot_count": 3,
+          "orphan_ac_count": 0,
+          "bound_ac_count": 5
+        }
+      },
+      "recommended_action": ""
+    },
+    "fake_delivery": {
+      "schema_version": "1.0",
+      "status": "pass",
+      "ok": true,
+      "closure_allowed": true,
+      "detected": [],
+      "policy_terms": [
+        "placeholder implementation",
+        "docs-only completion",
+        "fake runner evidence",
+        "zero assertions",
+        "placeholder evidence"
+      ],
+      "reason_code": ""
+    },
+    "feature_package_validation": {
+      "schema_version": "1.0",
+      "feature": "vision-flywheel",
+      "feature_slug": "vision-flywheel",
+      "version": "v0.0.4",
+      "status": "pass",
+      "blocked": false,
+      "reason_code": "",
+      "generated_at": "2026-08-04T09:32:52.588513+00:00",
+      "package_dir": "docs/beacon/v0.0.4/features/vision-flywheel",
+      "truth_frontmatter": {
+        "slug": "vision-flywheel",
+        "version": "v0.0.4",
+        "status": "draft",
+        "revision_id": "R1",
+        "language": "zh",
+        "domain_required": "true",
+        "domain_kind": "business",
+        "ux_required": "false",
+        "package_maturity": "filled",
+        "parser_contract": "beacon-feature-package-v2",
+        "materials_status": "current",
+        "truth_source_model": "intent_first",
+        "git_canonical_branch": "main",
+        "program": "personal-production-flywheel",
+        "promotion_ref": "user-ack-愿景立项-2026-08-04",
+        "canonical_refs": {
+          "prd": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+          "user_story": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
+          "test_case": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md"
+        }
+      },
+      "ac_count": 7,
+      "test_count": 9,
+      "checkbox_count": 9,
+      "evidence_row_count": 4,
+      "gate_authority": "canonical_surfaces_preserved",
+      "checkbox_gate_bypass": false,
+      "task_evidence_gate": {
+        "pass": true,
+        "checked_ok": 9,
+        "checked_bad": 0,
+        "unbound": 0,
+        "findings": [],
+        "reason_code": ""
+      },
+      "evidence_gate_truth": false,
+      "diagnostics": [],
+      "report_path": "docs/beacon/v0.0.4/.machine/requirement/feature-package-validation.json"
+    },
+    "determinism_check": {
+      "placeholder_count": 0,
+      "hollow_template_count": 0
+    },
+    "closure_contract": {
+      "closure_allowed": true,
+      "detected": []
+    },
+    "recommended_action": ""
+  },
+  "truth_frontmatter_sync": {
+    "updated": true,
+    "status": "frozen",
+    "previous_status": "draft",
+    "path": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md"
+  },
+  "revision_delta": {
+    "schema_version": "1.0",
+    "feature": "vision-flywheel",
+    "feature_slug": "vision-flywheel",
+    "version": "v0.0.4",
+    "revision_id": "R2",
+    "source_revision_id": "R1",
+    "status": "not_applicable",
+    "cleanup_required": false,
+    "removed_requirement_count": 0,
+    "added_requirement_count": 0,
+    "retained_requirement_count": 0,
+    "removed_requirement_surfaces": [],
+    "added_requirement_surfaces": [],
+    "retained_requirement_surfaces": [],
+    "current_baseline_hash": "sha256:7270fa2fac52c7fe818c3492d548b2a19fb218e448304229da3480f163958dd0",
+    "source_baseline_hash": "",
+    "story_state_ref": "docs/beacon/v0.0.4/.machine/user-story/vision-flywheel.json",
+    "generated_at": "2026-08-04T09:32:52.593272+00:00",
+    "json_ref": "docs/beacon/v0.0.4/.machine/execution/revision-delta-vision-flywheel.json",
+    "markdown_ref": "docs/beacon/v0.0.4/execution/revision-delta-vision-flywheel.md"
+  },
+  "release_projection_sync": {
+    "status": "pass",
+    "truth_authority": false,
+    "lifecycle_stage": false,
+    "release_publish_action": false,
+    "feature_projection": {
+      "schema_version": "1.0",
+      "status": "pass",
+      "feature": "vision-flywheel",
+      "feature_slug": "vision-flywheel",
+      "version": "v0.0.4",
+      "json_path": "docs/beacon/v0.0.4/.machine/change/vision-flywheel.json",
+      "markdown_path": "docs/beacon/v0.0.4/change/vision-flywheel.md",
+      "json_written": true,
+      "markdown_exists": true,
+      "projection_role": {
+        "artifact_role": "version_aggregate_projection",
+        "truth_source": false,
+        "gate_source": false,
+        "lifecycle_stage": false,
+        "release_publish_action": false
+      },
+      "payload": {
+        "schema_version": "1.0",
+        "version": "v0.0.4",
+        "feature": "vision-flywheel",
+        "feature_slug": "vision-flywheel",
+        "summary": "Maintains release-facing version aggregate projection guards so QA accepted features are included in version change scope before release check.",
+        "status": "completed",
+        "accepted_at": "2026-08-04T03:19:07.292359+00:00",
+        "revision_id": "R2",
+        "projection_role": {
+          "artifact_role": "version_aggregate_projection",
+          "truth_source": false,
+          "gate_source": false,
+          "lifecycle_stage": false,
+          "release_publish_action": false
+        },
+        "truth_authority": false,
+        "lifecycle_stage": false,
+        "added": [
+          "Feature-level release projection input for QA accepted current feature",
+          "Version aggregate projection inclusion guard and repair metadata",
+          "Repair-only projection rebuild path for release preflight artifacts"
+        ],
+        "removed": [
+          "Manual-only version aggregate projection repair before release check"
+        ],
+        "fixed": [
+          "Release check can route missing current feature projection to an actionable repair path",
+          "Version aggregate projection remains a read model instead of requirement truth"
+        ],
+        "traceability_refs": [
+          "docs/beacon/v0.0.4/change/vision-flywheel.md",
+          "docs/beacon/v0.0.4/prd/vision-flywheel.md",
+          "docs/beacon/v0.0.4/user-story/vision-flywheel.md",
+          "docs/beacon/v0.0.4/qa/test-cases/vision-flywheel.md",
+          "docs/beacon/v0.0.4/.machine/execution/vision-flywheel.revision.json",
+          "docs/beacon/v0.0.4/.machine/execution/qa-acceptance-vision-flywheel.json"
+        ],
+        "generated_at": "2026-08-04T09:32:52.593811+00:00"
+      }
+    },
+    "version_aggregate_projection": {
+      "schema_version": "1.0",
+      "status": "pass",
+      "version": "v0.0.4",
+      "markdown_path": "docs/beacon/v0.0.4/change/v0.0.4.md",
+      "json_path": "docs/beacon/v0.0.4/.machine/change/v0.0.4.json",
+      "feature_count": 1,
+      "feature_slugs": [
+        "vision-flywheel"
+      ],
+      "projection_role": {
+        "artifact_role": "version_aggregate_projection",
+        "truth_source": false,
+        "gate_source": false,
+        "lifecycle_stage": false,
+        "release_publish_action": false
+      },
+      "truth_authority": false,
+      "lifecycle_stage": false,
+      "release_publish_action": false,
+      "implementation_order": {
+        "status": "analyzed",
+        "feature_count": 1,
+        "ordered_feature_slugs": [
+          "vision-flywheel"
+        ],
+        "waves": [
+          {
+            "wave": 1,
+            "parallelizable": false,
+            "features": [
+              {
+                "feature": "vision-flywheel",
+                "feature_slug": "vision-flywheel",
+                "depends_on_features": [],
+                "direct_delivery_services": [],
+                "writable_services": [],
+                "parallelizable": true,
+                "reason_code": "parallel_no_conflict"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

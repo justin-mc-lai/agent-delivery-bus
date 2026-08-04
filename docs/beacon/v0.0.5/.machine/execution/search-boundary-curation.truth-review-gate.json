@@ -116,7 +116,7 @@
       "reason": "",
       "findings": [],
       "ac_count": 11,
-      "tc_count": 12,
+      "tc_count": 13,
       "missing_ac": [],
       "covered": {
         "AC-SBC-001": [
@@ -149,7 +149,7 @@
         ],
         "AC-SBC-010": [
           "TC-SBC-010",
-          "TC-SBC-ILL-001"
+          "TC-SBC-ILL-002"
         ],
         "AC-SBC-011": [
           "TC-SBC-011"
@@ -187,7 +187,7 @@
     "fill_depth_pass": true,
     "note": "Polish L0/narrative only after A/B/C; preserve_machine_fields=true; freeze needs D+exec too"
   },
-  "evaluated_at": "2026-08-04T08:15:48.299612+00:00",
+  "evaluated_at": "2026-08-04T09:32:28.657164+00:00",
   "paths": {
     "truth": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
     "tests": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md",

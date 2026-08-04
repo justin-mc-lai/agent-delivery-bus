@@ -1,12 +1,12 @@
 {
   "schema_version": "1.0",
-  "version": "v0.0.5",
-  "feature": "search-boundary-curation",
-  "feature_slug": "search-boundary-curation",
+  "version": "v0.0.4",
+  "feature": "vision-flywheel",
+  "feature_slug": "vision-flywheel",
   "summary": "Maintains release-facing version aggregate projection guards so QA accepted features are included in version change scope before release check.",
   "status": "completed",
-  "accepted_at": "2026-08-04T09:10:35.173569+00:00",
-  "revision_id": "R4",
+  "accepted_at": "2026-08-04T03:19:07.292359+00:00",
+  "revision_id": "R2",
   "projection_role": {
     "artifact_role": "version_aggregate_projection",
     "truth_source": false,
@@ -29,12 +29,12 @@
     "Version aggregate projection remains a read model instead of requirement truth"
   ],
   "traceability_refs": [
-    "docs/beacon/v0.0.5/change/search-boundary-curation.md",
-    "docs/beacon/v0.0.5/prd/search-boundary-curation.md",
-    "docs/beacon/v0.0.5/user-story/search-boundary-curation.md",
-    "docs/beacon/v0.0.5/qa/test-cases/search-boundary-curation.md",
-    "docs/beacon/v0.0.5/.machine/execution/search-boundary-curation.revision.json",
-    "docs/beacon/v0.0.5/.machine/execution/qa-acceptance-search-boundary-curation.json"
+    "docs/beacon/v0.0.4/change/vision-flywheel.md",
+    "docs/beacon/v0.0.4/prd/vision-flywheel.md",
+    "docs/beacon/v0.0.4/user-story/vision-flywheel.md",
+    "docs/beacon/v0.0.4/qa/test-cases/vision-flywheel.md",
+    "docs/beacon/v0.0.4/.machine/execution/vision-flywheel.revision.json",
+    "docs/beacon/v0.0.4/.machine/execution/qa-acceptance-vision-flywheel.json"
   ],
-  "generated_at": "2026-08-04T09:32:51.166051+00:00"
+  "generated_at": "2026-08-04T09:32:52.593811+00:00"
 }

@@ -1,12 +1,12 @@
 # Change Refreeze Summary: search-boundary-curation
 
 - version: `v0.0.5`
-- change_reason: `R3 release coverage: legal walks + ui-state-matrix + design lint + ILL AC split`
+- change_reason: `release blockers: FSM walk matrix + ui-state-matrix without weak TC rows`
 - refreeze_status: `complete`
 - blocked_reason: ``
 - next_route: `beacon-implement`
-- revision_before: `R3`
-- revision_after: `R3`
+- revision_before: `R4`
+- revision_after: `R4`
 
 ## Surface Statuses
 - `change`: `present` (docs/beacon/v0.0.5/change/search-boundary-curation.md)

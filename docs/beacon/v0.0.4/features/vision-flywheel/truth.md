@@ -139,6 +139,12 @@ quota_enabled: true
 | running | fail | always | blocked | emit_reason |
 | running | auto_dispatch_attempt | always | blocked | reject_illegal |
 
+### Legal walks
+
+1. **W-FLY-01** idle → checking → running（should-run pass）· TC-FLY-003
+2. **W-FLY-02** running → done（evidence validated / ledger）· TC-FLY-005
+3. **W-FLY-03** checking → blocked（quota exhausted）· TC-FLY-004
+
 ## Illegal transitions
 
 - checking → dispatch · TC-FLY-ILL-001

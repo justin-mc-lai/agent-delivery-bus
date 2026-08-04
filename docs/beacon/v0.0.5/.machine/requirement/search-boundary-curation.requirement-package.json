@@ -5,7 +5,7 @@
   "truth_package_contract": "beacon-feature-package-v2",
   "machine_json_role": "generated_state_not_truth",
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-08-04T09:22:39.785496+00:00",
+  "generated_at": "2026-08-04T09:32:51.120147+00:00",
   "feature": "search-boundary-curation",
   "feature_slug": "search-boundary-curation",
   "version": "v0.0.5",
@@ -18,15 +18,15 @@
     "evidence": "docs/beacon/v0.0.5/features/search-boundary-curation/evidence.md"
   },
   "source_hashes": {
-    "truth": "af84b718a7210f77bf226e77b7bad61e2f39a139f7c99c3a1dda081cb0b1a273",
-    "tests": "9ad59d60b3cdd6344a10e3d32d31696af8ccc77497a3d67914ad2a161e928c9b",
+    "truth": "ee36cc4122d2e33e81e45409147f0e70b0add9dd402c4a179905caaa4318930b",
+    "tests": "a9d90e0e4b5ecd304049a77fc98579a087645f696176b078b899de41555d1c52",
     "tasks": "a4f3e57c6b81124a59286b1f92405dabc3de2ce64e1492d1bb6d18ae44942530",
     "evidence": "f9f4e9b4d1ee00a3d43aacc47ac140bdd7369a14d92b6addc34c02d3b0f0ee57"
   },
   "truth_frontmatter": {
     "slug": "search-boundary-curation",
     "version": "v0.0.5",
-    "status": "frozen",
+    "status": "draft",
     "language": "zh",
     "package_maturity": "filled",
     "parser_contract": "beacon-feature-package-v2",

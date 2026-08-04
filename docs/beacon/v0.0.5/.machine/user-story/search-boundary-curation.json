@@ -3,9 +3,9 @@
   "feature": "search-boundary-curation",
   "feature_slug": "search-boundary-curation",
   "version": "v0.0.5",
-  "current_revision_id": "R3",
+  "current_revision_id": "R4",
   "lifecycle_status": "frozen",
-  "updated_at": "2026-08-04T09:21:50.429886+00:00",
+  "updated_at": "2026-08-04T09:32:51.124612+00:00",
   "revisions": [
     {
       "revision_id": "R1",
@@ -40,12 +40,26 @@
       "feature_slug": "search-boundary-curation",
       "source_revision_id": "R2",
       "reason": "release coverage gaps: legal FSM walk, ui-state-matrix, design_md_lint, TC-SBC-ILL AC cell",
-      "doc_status": "frozen",
-      "delivery_status": "idle",
+      "doc_status": "superseded",
+      "delivery_status": "superseded",
       "baseline_hash": "sha256:0f74903e7a3106baec896dcaba2dd41e3861c457326a98351aa27abd97e2bdec",
-      "superseded_by": null,
+      "superseded_by": "R4",
       "created_at": "2026-08-04T09:19:48.996973+00:00",
       "frozen_at": "2026-08-04T09:21:50.464848+00:00",
+      "accepted_at": null,
+      "accepted_by": null
+    },
+    {
+      "revision_id": "R4",
+      "feature_slug": "search-boundary-curation",
+      "source_revision_id": "R3",
+      "reason": "fix Domain FSM QA Matrix so truth-review does not treat walk rows as weak TCs",
+      "doc_status": "frozen",
+      "delivery_status": "idle",
+      "baseline_hash": "sha256:f4e2af512fa529f5543fb8faa47f43e12bd73447517785560e0a2fbd91261e6b",
+      "superseded_by": null,
+      "created_at": "2026-08-04T09:30:42.537138+00:00",
+      "frozen_at": "2026-08-04T09:32:51.163253+00:00",
       "accepted_at": null,
       "accepted_by": null
     }
@@ -168,7 +182,7 @@
       "revision_id": "R3",
       "title": "search-boundary-curation",
       "priority": "medium",
-      "status": "frozen",
+      "status": "superseded",
       "items": [
         {
           "id": "AC-001",
@@ -206,6 +220,67 @@
           "verified_by_run_id": null,
           "accepted_at": null,
           "changed_in_revision": "R3",
+          "covers": [
+            "AC-001"
+          ],
+          "story_id": "",
+          "source": "fallback"
+        }
+      ],
+      "research_projection": {
+        "schema_version": "1.0",
+        "feature": "search-boundary-curation",
+        "version": "v0.0.5",
+        "source": "research:/Users/apple/Developer/Personal/products/agent-delivery-bus/docs/beacon/v0.0.5/research/search-boundary-curation.md",
+        "present": true,
+        "section_count": 0,
+        "sections": {},
+        "derived_items": []
+      }
+    },
+    {
+      "story_id": "US-001",
+      "revision_id": "R4",
+      "title": "search-boundary-curation",
+      "priority": "medium",
+      "status": "frozen",
+      "items": [
+        {
+          "id": "AC-001",
+          "kind": "ac",
+          "theme": "general",
+          "text": "Acceptance criteria TBD",
+          "required": true,
+          "status": "draft",
+          "implemented_by_run_id": null,
+          "verified_by_run_id": null,
+          "accepted_at": null,
+          "changed_in_revision": "R4",
+          "story_id": "",
+          "details": [],
+          "source": "fallback"
+        },
+        {
+          "id": "TASK-001",
+          "kind": "task",
+          "text": "Implement current frozen revision",
+          "required": true,
+          "status": "draft",
+          "implemented_by_run_id": null,
+          "verified_by_run_id": null,
+          "accepted_at": null,
+          "changed_in_revision": "R4"
+        },
+        {
+          "id": "TEST-001",
+          "kind": "test",
+          "text": "Verify AC-001 — Acceptance criteria TBD",
+          "required": true,
+          "status": "draft",
+          "implemented_by_run_id": null,
+          "verified_by_run_id": null,
+          "accepted_at": null,
+          "changed_in_revision": "R4",
           "covers": [
             "AC-001"
           ],

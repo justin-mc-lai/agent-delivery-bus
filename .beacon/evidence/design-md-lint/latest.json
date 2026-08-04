@@ -3,8 +3,8 @@
   "status": "pass",
   "blocked": false,
   "reason_code": "",
-  "version": "v0.0.5",
-  "feature": "search-boundary-curation",
+  "version": "v0.0.4",
+  "feature": "vision-flywheel",
   "design_path": "DESIGN.md",
   "runner": "npx @google/design.md lint",
   "exit_code": 0,
@@ -74,5 +74,6 @@
     "exit_code": 0,
     "fallback": ""
   },
-  "generated_at": "2026-08-04T09:21:03.705649Z"
+  "generated_at": "2026-08-04T09:32:00.943161Z",
+  "evidence_path": ".beacon/evidence/design-md-lint/vision-flywheel.json"
 }

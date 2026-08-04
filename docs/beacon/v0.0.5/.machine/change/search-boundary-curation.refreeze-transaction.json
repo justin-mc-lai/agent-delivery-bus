@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0",
-  "transaction_id": "tx-change-refreeze-search-boundary-curation-20260804t092150z",
+  "transaction_id": "tx-change-refreeze-search-boundary-curation-20260804t093250z",
   "feature": "search-boundary-curation",
   "feature_slug": "search-boundary-curation",
   "version": "v0.0.5",
-  "change_reason": "R3 release coverage: legal walks + ui-state-matrix + design lint + ILL AC split",
+  "change_reason": "release blockers: FSM walk matrix + ui-state-matrix without weak TC rows",
   "touched_surfaces": [
     "change",
     "truth",
@@ -72,16 +72,16 @@
     }
   },
   "truth_revision_before": {
-    "revision_id": "R3",
+    "revision_id": "R4",
     "doc_status": "draft",
     "lifecycle_status": "idle",
     "baseline_hash": ""
   },
   "truth_revision_after": {
-    "revision_id": "R3",
+    "revision_id": "R4",
     "doc_status": "frozen",
     "lifecycle_status": "frozen",
-    "baseline_hash": "sha256:0f74903e7a3106baec896dcaba2dd41e3861c457326a98351aa27abd97e2bdec"
+    "baseline_hash": "sha256:f4e2af512fa529f5543fb8faa47f43e12bd73447517785560e0a2fbd91261e6b"
   },
   "refreeze_status": "complete",
   "next_route": {
@@ -95,21 +95,21 @@
     "qa_executed": false,
     "release_executed": false
   },
-  "created_at": "2026-08-04T09:21:50.124902+00:00",
+  "created_at": "2026-08-04T09:32:50.828371+00:00",
   "previous_revision": {
-    "revision_id": "R2",
+    "revision_id": "R3",
     "doc_status": "superseded",
     "lifecycle_status": "superseded",
     "baseline_hash": ""
   },
   "opened_revision": {
-    "revision_id": "R3",
+    "revision_id": "R4",
     "doc_status": "draft",
     "lifecycle_status": "idle",
     "baseline_hash": ""
   },
   "story_reopen": {
-    "current_revision_id": "R3",
+    "current_revision_id": "R4",
     "lifecycle_status": "draft"
   },
   "requirement_package": {
@@ -155,9 +155,9 @@
       },
       "source_hashes": {
         "truth": "ee36cc4122d2e33e81e45409147f0e70b0add9dd402c4a179905caaa4318930b",
-        "tests": "9ad59d60b3cdd6344a10e3d32d31696af8ccc77497a3d67914ad2a161e928c9b",
+        "tests": "a9d90e0e4b5ecd304049a77fc98579a087645f696176b078b899de41555d1c52",
         "tasks": "a4f3e57c6b81124a59286b1f92405dabc3de2ce64e1492d1bb6d18ae44942530",
-        "evidence": "d533351b025c005eb3ea54141a9dce4ad21dea0c0d1c19d0125cd6c00011dcc6"
+        "evidence": "f9f4e9b4d1ee00a3d43aacc47ac140bdd7369a14d92b6addc34c02d3b0f0ee57"
       },
       "plan": {
         "schema_version": "1.0",
@@ -211,7 +211,7 @@
       "path": "docs/beacon/v0.0.5/.machine/user-story/search-boundary-curation.json",
       "feature": "search-boundary-curation",
       "version": "v0.0.5",
-      "revision_id": "R3",
+      "revision_id": "R4",
       "ac_count": 1,
       "test_count": 1,
       "story_ids": [
@@ -249,7 +249,7 @@
         "review_gates": [],
         "qa_coverage_hints": [],
         "evidence_lines": {},
-        "generated_at": "2026-08-04T09:21:50.434947+00:00",
+        "generated_at": "2026-08-04T09:32:51.129139+00:00",
         "feature": "search-boundary-curation",
         "feature_slug": "search-boundary-curation",
         "prd_ref": "docs/beacon/v0.0.5/prd/search-boundary-curation.md",
@@ -1058,7 +1058,7 @@
       "finding_count": 0,
       "run_id": "",
       "source": "change.refreeze-chain",
-      "written_at": "2026-08-04T09:21:50.441395+00:00",
+      "written_at": "2026-08-04T09:32:51.137132+00:00",
       "state_path": ".beacon/state/requirement-clarity-search-boundary-curation.json"
     }
   },
@@ -1103,7 +1103,7 @@
         "review_gates": [],
         "qa_coverage_hints": [],
         "evidence_lines": {},
-        "generated_at": "2026-08-04T09:21:50.444531+00:00",
+        "generated_at": "2026-08-04T09:32:51.141055+00:00",
         "feature": "search-boundary-curation",
         "feature_slug": "search-boundary-curation",
         "prd_ref": "docs/beacon/v0.0.5/prd/search-boundary-curation.md",
@@ -2608,7 +2608,7 @@
       "status": "pass",
       "blocked": false,
       "reason_code": "",
-      "generated_at": "2026-08-04T09:21:50.461314+00:00",
+      "generated_at": "2026-08-04T09:32:51.158477+00:00",
       "package_dir": "docs/beacon/v0.0.5/features/search-boundary-curation",
       "truth_frontmatter": {
         "slug": "search-boundary-curation",
@@ -2664,8 +2664,8 @@
     "feature": "search-boundary-curation",
     "feature_slug": "search-boundary-curation",
     "version": "v0.0.5",
-    "revision_id": "R3",
-    "source_revision_id": "R2",
+    "revision_id": "R4",
+    "source_revision_id": "R3",
     "status": "not_applicable",
     "cleanup_required": false,
     "removed_requirement_count": 0,
@@ -2674,10 +2674,10 @@
     "removed_requirement_surfaces": [],
     "added_requirement_surfaces": [],
     "retained_requirement_surfaces": [],
-    "current_baseline_hash": "sha256:0f74903e7a3106baec896dcaba2dd41e3861c457326a98351aa27abd97e2bdec",
+    "current_baseline_hash": "sha256:f4e2af512fa529f5543fb8faa47f43e12bd73447517785560e0a2fbd91261e6b",
     "source_baseline_hash": "",
     "story_state_ref": "docs/beacon/v0.0.5/.machine/user-story/search-boundary-curation.json",
-    "generated_at": "2026-08-04T09:21:50.466654+00:00",
+    "generated_at": "2026-08-04T09:32:51.165350+00:00",
     "json_ref": "docs/beacon/v0.0.5/.machine/execution/revision-delta-search-boundary-curation.json",
     "markdown_ref": "docs/beacon/v0.0.5/execution/revision-delta-search-boundary-curation.md"
   },
@@ -2711,7 +2711,7 @@
         "summary": "Maintains release-facing version aggregate projection guards so QA accepted features are included in version change scope before release check.",
         "status": "completed",
         "accepted_at": "2026-08-04T09:10:35.173569+00:00",
-        "revision_id": "R3",
+        "revision_id": "R4",
         "projection_role": {
           "artifact_role": "version_aggregate_projection",
           "truth_source": false,
@@ -2741,7 +2741,7 @@
           "docs/beacon/v0.0.5/.machine/execution/search-boundary-curation.revision.json",
           "docs/beacon/v0.0.5/.machine/execution/qa-acceptance-search-boundary-curation.json"
         ],
-        "generated_at": "2026-08-04T09:21:50.467293+00:00"
+        "generated_at": "2026-08-04T09:32:51.166051+00:00"
       }
     },
     "version_aggregate_projection": {

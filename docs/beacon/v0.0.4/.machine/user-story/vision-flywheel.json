@@ -3,21 +3,35 @@
   "feature": "vision-flywheel",
   "feature_slug": "vision-flywheel",
   "version": "v0.0.4",
-  "current_revision_id": "R1",
+  "current_revision_id": "R2",
   "lifecycle_status": "frozen",
-  "updated_at": "2026-08-04T03:19:07.298070+00:00",
+  "updated_at": "2026-08-04T09:32:52.555589+00:00",
   "revisions": [
     {
       "revision_id": "R1",
       "feature_slug": "vision-flywheel",
       "source_revision_id": null,
       "reason": "draft",
-      "doc_status": "frozen",
-      "delivery_status": "idle",
+      "doc_status": "superseded",
+      "delivery_status": "superseded",
       "baseline_hash": "sha256:3648a8646a6f403e1413f18e2b6a9871e4670b71c83a379790610a400acd05ff",
-      "superseded_by": null,
+      "superseded_by": "R2",
       "created_at": "2026-08-04T01:43:24.695991+00:00",
       "frozen_at": "2026-08-04T01:43:24.708493+00:00",
+      "accepted_at": null,
+      "accepted_by": null
+    },
+    {
+      "revision_id": "R2",
+      "feature_slug": "vision-flywheel",
+      "source_revision_id": "R1",
+      "reason": "add Domain FSM legal walks for release_ready domain_fsm_coverage",
+      "doc_status": "frozen",
+      "delivery_status": "idle",
+      "baseline_hash": "sha256:7270fa2fac52c7fe818c3492d548b2a19fb218e448304229da3480f163958dd0",
+      "superseded_by": null,
+      "created_at": "2026-08-04T09:30:43.149386+00:00",
+      "frozen_at": "2026-08-04T09:32:52.591538+00:00",
       "accepted_at": null,
       "accepted_by": null
     }
@@ -28,7 +42,7 @@
       "revision_id": "R1",
       "title": "vision-flywheel",
       "priority": "medium",
-      "status": "accepted",
+      "status": "superseded",
       "items": [
         {
           "id": "AC-001",
@@ -100,6 +114,67 @@
       ],
       "accepted_at": "2026-08-04T03:19:07.292359+00:00",
       "accepted_by": "qa"
+    },
+    {
+      "story_id": "US-001",
+      "revision_id": "R2",
+      "title": "vision-flywheel",
+      "priority": "medium",
+      "status": "frozen",
+      "items": [
+        {
+          "id": "AC-001",
+          "kind": "ac",
+          "theme": "general",
+          "text": "Acceptance criteria TBD",
+          "required": true,
+          "status": "draft",
+          "implemented_by_run_id": null,
+          "verified_by_run_id": null,
+          "accepted_at": null,
+          "changed_in_revision": "R2",
+          "story_id": "",
+          "details": [],
+          "source": "fallback"
+        },
+        {
+          "id": "TASK-001",
+          "kind": "task",
+          "text": "Implement current frozen revision",
+          "required": true,
+          "status": "draft",
+          "implemented_by_run_id": null,
+          "verified_by_run_id": null,
+          "accepted_at": null,
+          "changed_in_revision": "R2"
+        },
+        {
+          "id": "TEST-001",
+          "kind": "test",
+          "text": "Verify AC-001 — Acceptance criteria TBD",
+          "required": true,
+          "status": "draft",
+          "implemented_by_run_id": null,
+          "verified_by_run_id": null,
+          "accepted_at": null,
+          "changed_in_revision": "R2",
+          "covers": [
+            "AC-001"
+          ],
+          "story_id": "",
+          "source": "fallback"
+        }
+      ],
+      "research_projection": {
+        "schema_version": "1.0",
+        "feature": "vision-flywheel",
+        "version": "v0.0.4",
+        "source": "research:/Users/apple/Developer/Personal/products/agent-delivery-bus/docs/beacon/v0.0.4/research/vision-flywheel.md",
+        "present": true,
+        "section_count": 0,
+        "sections": {},
+        "derived_items": []
+      }
     }
   ]
 }

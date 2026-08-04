@@ -1,7 +1,7 @@
 ---
 slug: vision-flywheel
 version: v0.0.4
-materials_status: current
+materials_status: stale
 task_source: acceptance_criteria
 ---
 

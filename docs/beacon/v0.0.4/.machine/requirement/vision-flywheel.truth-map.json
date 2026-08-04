@@ -33,7 +33,7 @@
     "frontmatter": {
       "slug": "vision-flywheel",
       "version": "v0.0.4",
-      "status": "frozen",
+      "status": "draft",
       "revision_id": "R1",
       "language": "zh",
       "domain_required": "true",
@@ -65,9 +65,9 @@
       "evidence": "docs/beacon/v0.0.4/features/vision-flywheel/evidence.md"
     },
     "source_hashes": {
-      "truth": "a4e27e91f970c52e6576953656f602e65002c46793fe0153ba60d924376a2d0c",
-      "tests": "db7a800b44f0733ce7b52eff5e722c70ee720adf0604eeb14f34be349956eef8",
-      "tasks": "1233716780e554bec433668115b23dcea57fc88e0c8a46e6d254deab8b211ab8",
+      "truth": "349d342995a0540f17654376535c66d1a433a921fd6c8c5aa39fe2ce1e33b97c",
+      "tests": "8146f668a3450643298231c9ad0127a0cc6c166636c205a1a9f678270074f779",
+      "tasks": "f62fd30d0e6fb326d242fa53dfcc5ba7ae5f4a12a4748e6501e6e12205a838e0",
       "evidence": "767caefbe2d425a2d936a72b67c06c75a3cdab74aa17d47854a22bf2a783abb6"
     },
     "surfaces": {
@@ -83,7 +83,7 @@
         "filename": "truth.md",
         "path": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
         "exists": true,
-        "source_hash": "a4e27e91f970c52e6576953656f602e65002c46793fe0153ba60d924376a2d0c",
+        "source_hash": "349d342995a0540f17654376535c66d1a433a921fd6c8c5aa39fe2ce1e33b97c",
         "authority": "markdown_feature_package",
         "json_authority": false
       },
@@ -99,7 +99,7 @@
         "filename": "tests.md",
         "path": "docs/beacon/v0.0.4/features/vision-flywheel/tests.md",
         "exists": true,
-        "source_hash": "db7a800b44f0733ce7b52eff5e722c70ee720adf0604eeb14f34be349956eef8",
+        "source_hash": "8146f668a3450643298231c9ad0127a0cc6c166636c205a1a9f678270074f779",
         "authority": "markdown_feature_package",
         "json_authority": false
       },
@@ -115,7 +115,7 @@
         "filename": "tasks.md",
         "path": "docs/beacon/v0.0.4/features/vision-flywheel/tasks.md",
         "exists": true,
-        "source_hash": "1233716780e554bec433668115b23dcea57fc88e0c8a46e6d254deab8b211ab8",
+        "source_hash": "f62fd30d0e6fb326d242fa53dfcc5ba7ae5f4a12a4748e6501e6e12205a838e0",
         "authority": "markdown_feature_package",
         "json_authority": false
       },
@@ -219,7 +219,7 @@
         "truth_authority": true,
         "json_authority": false,
         "generated_governance_state": false,
-        "source_hash": "058410b6896e17abbe2d2678864b9a26297b50e5aecc0e92136c5807ab1b78fc"
+        "source_hash": "0ff563ff4dd92d5d0c4188fbb69bba19a6d69fa3cf91c35dc71daec99c7cdb75"
       },
       "global_boundaries": {
         "schema_version": "1.0",
@@ -374,7 +374,7 @@
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": "075bfc46aa8f26082b82b67a31d3e432c86dc8e03add1bd441b630edadd96da8"
+        "source_hash": "6737c914760042d6f5e6cf471d6830e3114df301e0fdd49e16cdfee1b5ff8e69"
       },
       "evidence_manifest": {
         "schema_version": "1.0",
@@ -391,7 +391,7 @@
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": "6b0a7749cde773737500c1bfe72be4d1b308f6e98f8b8ed6f705d81fe8d9f662"
+        "source_hash": "914b59e3a6951d827e18709de6fe80a4742495d0a3c45d483c1eff9c3aee508f"
       },
       "qa_status": {
         "schema_version": "1.0",
@@ -401,14 +401,14 @@
         "version": "v0.0.4",
         "surface": "qa_status",
         "path": ".beacon/qa/status.json",
-        "exists": false,
+        "exists": true,
         "required": false,
         "role": "generated_governance_state_not_truth",
         "authority": "generated_governance_state_not_truth",
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": ""
+        "source_hash": "11b9264f517b722caa8c23413cae874f5caff12c25138b2dffac45ad67c807e9"
       },
       "release_gate_report": {
         "schema_version": "1.0",
@@ -418,14 +418,14 @@
         "version": "v0.0.4",
         "surface": "release_gate_report",
         "path": ".beacon/release-gate-report.json",
-        "exists": false,
+        "exists": true,
         "required": false,
         "role": "generated_governance_state_not_truth",
         "authority": "generated_governance_state_not_truth",
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": ""
+        "source_hash": "8afddf61e1183232f0a55a42fb180af4003f53623473403e0600ab3acdba9b32"
       }
     },
     "manifest_authority": false,
@@ -624,7 +624,7 @@
         "entrypoint_kind": "llm_skill_guidance",
         "classification": "resolver_guidance_required",
         "exception_kind": "",
-        "exists": false,
+        "exists": true,
         "truth_center_routed": true,
         "explicit_v151_exception": false,
         "fail_closed": true,
@@ -637,7 +637,7 @@
         "entrypoint_kind": "llm_skill_guidance",
         "classification": "resolver_guidance_required",
         "exception_kind": "",
-        "exists": false,
+        "exists": true,
         "truth_center_routed": true,
         "explicit_v151_exception": false,
         "fail_closed": true,
@@ -700,21 +700,11 @@
         "severity": "error",
         "code": "truth_entrypoint_inventory_missing",
         "path": "beacon/utils/acceptance_kit.py"
-      },
-      {
-        "severity": "error",
-        "code": "truth_entrypoint_inventory_missing",
-        "path": "skills/beacon/**/SKILL.md"
-      },
-      {
-        "severity": "error",
-        "code": "truth_entrypoint_inventory_missing",
-        "path": ".agents/skills/**/SKILL.md"
       }
     ]
   },
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-08-04T03:18:01.784658+00:00",
+  "generated_at": "2026-08-04T09:32:52.550949+00:00",
   "truth_authority": false,
   "source_paths": {
     "truth": "docs/beacon/v0.0.4/features/vision-flywheel/truth.md",
@@ -723,9 +713,9 @@
     "evidence": "docs/beacon/v0.0.4/features/vision-flywheel/evidence.md"
   },
   "source_hashes": {
-    "truth": "a4e27e91f970c52e6576953656f602e65002c46793fe0153ba60d924376a2d0c",
-    "tests": "db7a800b44f0733ce7b52eff5e722c70ee720adf0604eeb14f34be349956eef8",
-    "tasks": "1233716780e554bec433668115b23dcea57fc88e0c8a46e6d254deab8b211ab8",
+    "truth": "349d342995a0540f17654376535c66d1a433a921fd6c8c5aa39fe2ce1e33b97c",
+    "tests": "8146f668a3450643298231c9ad0127a0cc6c166636c205a1a9f678270074f779",
+    "tasks": "f62fd30d0e6fb326d242fa53dfcc5ba7ae5f4a12a4748e6501e6e12205a838e0",
     "evidence": "767caefbe2d425a2d936a72b67c06c75a3cdab74aa17d47854a22bf2a783abb6"
   }
 }

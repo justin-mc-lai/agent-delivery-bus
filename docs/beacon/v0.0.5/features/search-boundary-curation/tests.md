@@ -1,7 +1,7 @@
 ---
 slug: search-boundary-curation
 version: v0.0.5
-materials_status: current
+materials_status: stale
 ---
 
 # Tests: search-boundary-curation
@@ -24,13 +24,13 @@ materials_status: current
 
 ## Domain FSM QA Matrix
 
-| AC ID | TC ID | Path type | Assertion |
-|-------|-------|-----------|-----------|
-| AC-SBC-001 | TC-SBC-001 | legal walk idle→awaiting_review | ingest with profiles+VerticalGate allow lands awaiting_review |
-| AC-SBC-003 | TC-SBC-003 | legal walk awaiting_review→approved→active | decide approve with actor activates boundary |
-| AC-SBC-003 | TC-SBC-003 | legal walk awaiting_review→rejected | decide reject with actor records rejection |
-| AC-SBC-007 | TC-SBC-ILL-001 | illegal idle→active without awaiting_review | skip awaiting_review fail-closed |
-| AC-SBC-007 | TC-SBC-007 | illegal awaiting_review→active without decide | no auto-approve / no_auto fail-closed |
-| AC-SBC-010 | TC-SBC-ILL-002 | illegal validating→awaiting_review on vertical_gate_reject | complete drift blocked before awaiting_review |
-| AC-SBC-008 | TC-SBC-008 | illegal validating→awaiting_review on missing_profile_ref | missing profile refs blocked |
-| AC-SBC-011 | TC-SBC-011 | illegal idle→scheduled_tick with sticker_emoji_bank | daily batch stays on oss-picks vertical |
+| Walk ID | AC ID | Path type | Assertion |
+|---------|-------|-----------|-----------|
+| W-SBC-01 | AC-SBC-001 | legal walk idle→awaiting_review | covered by TC-SBC-001 ingest with profiles+VerticalGate allow |
+| W-SBC-02 | AC-SBC-003 | legal walk awaiting_review→approved→active | covered by TC-SBC-003 decide approve with actor |
+| W-SBC-03 | AC-SBC-003 | legal walk awaiting_review→rejected | covered by TC-SBC-003 decide reject with actor |
+| I-SBC-01 | AC-SBC-007 | illegal idle→active without awaiting_review | covered by TC-SBC-ILL-001 |
+| I-SBC-02 | AC-SBC-007 | illegal awaiting_review→active without decide | covered by TC-SBC-007 no_auto |
+| I-SBC-03 | AC-SBC-010 | illegal validating→awaiting_review on vertical_gate_reject | covered by TC-SBC-ILL-002 |
+| I-SBC-04 | AC-SBC-008 | illegal validating→awaiting_review on missing_profile_ref | covered by TC-SBC-008 |
+| I-SBC-05 | AC-SBC-011 | illegal idle→scheduled_tick with sticker_emoji_bank | covered by TC-SBC-011 |

@@ -27,7 +27,7 @@
     "review_gates": [],
     "qa_coverage_hints": [],
     "evidence_lines": {},
-    "generated_at": "2026-08-04T09:21:50.434947+00:00",
+    "generated_at": "2026-08-04T09:32:51.129139+00:00",
     "feature": "search-boundary-curation",
     "feature_slug": "search-boundary-curation",
     "prd_ref": "docs/beacon/v0.0.5/prd/search-boundary-curation.md",
