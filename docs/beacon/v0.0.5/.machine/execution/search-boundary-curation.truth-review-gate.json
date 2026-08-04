@@ -1,0 +1,180 @@
+{
+  "schema": "truth-review-gate.v1",
+  "schema_version": "1.0",
+  "feature": "search-boundary-curation",
+  "version": "v0.0.5",
+  "pass": true,
+  "blocked": false,
+  "review_gate_pass": true,
+  "abc_pass": true,
+  "reason_code": "",
+  "domain_required": true,
+  "checks": {
+    "A_intent_coverage": {
+      "pass": true,
+      "check": "A",
+      "name": "intent_coverage",
+      "required": true,
+      "matrix_rows": 7,
+      "missing_must": [],
+      "reason": "",
+      "findings": [],
+      "matrix": [
+        {
+          "intent_id": "INT-001",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-SBC-001",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-002",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-SBC-002",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-003",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-SBC-003",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-004",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-SBC-004",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-005",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-SBC-005",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-006",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-SBC-006",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-007",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-SBC-007",
+          "status": "covered"
+        }
+      ]
+    },
+    "B_fsm_audit": {
+      "pass": true,
+      "check": "B",
+      "name": "fsm_audit",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "fsm": {
+        "transition_count": 5,
+        "from_states": [
+          "idle",
+          "pending"
+        ],
+        "hanging_states": [],
+        "terminals": [
+          "approved",
+          "blocked",
+          "rejected"
+        ],
+        "illegal_present": true,
+        "five_tuple_present": true
+      }
+    },
+    "C_testability": {
+      "pass": true,
+      "check": "C",
+      "name": "testability",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "ac_count": 7,
+      "tc_count": 9,
+      "missing_ac": [],
+      "covered": {
+        "AC-SBC-001": [
+          "TC-SBC-001"
+        ],
+        "AC-SBC-002": [
+          "TC-SBC-002"
+        ],
+        "AC-SBC-003": [
+          "TC-SBC-003"
+        ],
+        "AC-SBC-004": [
+          "TC-SBC-004"
+        ],
+        "AC-SBC-005": [
+          "TC-SBC-005"
+        ],
+        "AC-SBC-006": [
+          "TC-SBC-006"
+        ],
+        "AC-SBC-007": [
+          "TC-SBC-007",
+          "TC-SBC-ILL-001",
+          "TC-SBC-ILL-002"
+        ]
+      }
+    },
+    "C_domain_exec_layer": {
+      "pass": true,
+      "check": "C_exec",
+      "name": "domain_exec_layer",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "exec_tc_count": 9,
+      "exec_tc_ids": [
+        "TC-SBC-001",
+        "TC-SBC-002",
+        "TC-SBC-003",
+        "TC-SBC-004",
+        "TC-SBC-005",
+        "TC-SBC-006",
+        "TC-SBC-007",
+        "TC-SBC-ILL-001",
+        "TC-SBC-ILL-002"
+      ],
+      "domain_kind": "business"
+    },
+    "D_fill_depth": {
+      "pass": true,
+      "check": "D",
+      "name": "fill_depth",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "package_maturity": "filled",
+      "domain_kind": "business",
+      "business_domain": true
+    }
+  },
+  "findings": [],
+  "humanizer": {
+    "rule": "humanizer_only_after_abc_pass_before_freeze",
+    "abc_pass": true,
+    "allowed_now": true,
+    "fill_depth_pass": true,
+    "note": "Polish L0/narrative only after A/B/C; preserve_machine_fields=true; freeze needs D+exec too"
+  },
+  "evaluated_at": "2026-08-04T03:59:56.131930+00:00",
+  "paths": {
+    "truth": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
+    "tests": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md",
+    "report": "docs/beacon/v0.0.5/.machine/execution/search-boundary-curation.truth-review-gate.json"
+  }
+}
