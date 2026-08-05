@@ -46,7 +46,8 @@ class PendingApprovalsTests(unittest.TestCase):
                 self.assertIn("expires_at", item)
             feishu = render_pending_channel(views, channel="feishu")
             self.assertEqual(feishu["channel"], "feishu")
-            self.assertIn("待人工拍板", feishu["text"])
+            self.assertTrue(feishu["text"].startswith("下一步："))
+            self.assertIn("状态：待拍板", feishu["text"])
             self.assertEqual(issued["state"], "issued")
             storage.close()
 
