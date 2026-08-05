@@ -371,10 +371,11 @@ set -euo pipefail
 ADB_BIN="${ADB_BIN:-adb}"
 SLUG="${1:-search-boundary-curate}"
 DAY_INDEX="${DAY_INDEX:-}"
+FORCE_RUN="${FORCE_RUN:-0}"
 PROJECT_PROFILE_REF="${PROJECT_PROFILE_REF:-proj-adb-oss-picks}"
 ACCOUNT_PROFILE_REF="${ACCOUNT_PROFILE_REF:-acct-kushi-gzh}"
 
-if "$ADB_BIN" schedule show "$SLUG" --json >/dev/null 2>&1; then
+if [[ "$FORCE_RUN" != "1" ]] && "$ADB_BIN" schedule show "$SLUG" --json >/dev/null 2>&1; then
   "$ADB_BIN" schedule should-run "$SLUG" --json | grep -q '"action": "run"' || exit 0
 fi
 
@@ -472,21 +473,19 @@ for item in topics:
     ingested.append(row)
 
 today = datetime.now().strftime("%Y-%m-%d")
+first_id = (ingested[0].get("id") if ingested else None) or "<id>"
 lines = [
-    f"库拾 · GitHub 开源 AI / AI Spec 选题（待审）· {today}",
-    f"今日入库 {len(ingested)} 条 · 均为 awaiting_review · 请人工拍板后生效",
+    f"下一步：对第 1 条拍板（约 1 分钟）",
+    f"adb boundary decide {first_id} --actor you --decision approve --json",
+    "",
+    f"库拾选题 · 今日 {len(ingested)} 条 · {today}",
+    "状态：均为 awaiting_review · 未生效",
     "",
 ]
-for i, row in enumerate(ingested, 1):
+for i, row in enumerate(ingested[:5], 1):
     lines.append(f"{i}. {row.get('topic') or '(no topic)'}")
     lines.append(f"   id={row.get('id') or '-'}")
-lines.extend([
-    "",
-    "拍板命令：",
-    "  adb boundary pending --json",
-    "  adb boundary decide <id> --actor you --decision approve|reject --json",
-    "  adb approvals awaiting --channel feishu --json",
-])
+lines.extend(["", "下一步：approve 或 reject 任意一条 id"])
 print("\n".join(lines))
 PY
 """

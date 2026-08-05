@@ -33,7 +33,7 @@
     "frontmatter": {
       "slug": "search-boundary-curation",
       "version": "v0.0.5",
-      "status": "draft",
+      "status": "frozen",
       "language": "zh",
       "package_maturity": "filled",
       "parser_contract": "beacon-feature-package-v2",
@@ -58,9 +58,9 @@
       "evidence": "docs/beacon/v0.0.5/features/search-boundary-curation/evidence.md"
     },
     "source_hashes": {
-      "truth": "ee36cc4122d2e33e81e45409147f0e70b0add9dd402c4a179905caaa4318930b",
-      "tests": "a9d90e0e4b5ecd304049a77fc98579a087645f696176b078b899de41555d1c52",
-      "tasks": "a4f3e57c6b81124a59286b1f92405dabc3de2ce64e1492d1bb6d18ae44942530",
+      "truth": "af84b718a7210f77bf226e77b7bad61e2f39a139f7c99c3a1dda081cb0b1a273",
+      "tests": "c1d2a905c6ca4ce3afd857284d33edfcbaf513fa244cc2cb149862fb2b7fae39",
+      "tasks": "b45a04d493bc408da40c2acbef20b46e68b3b2008319d0d8b945db7458581ed7",
       "evidence": "f9f4e9b4d1ee00a3d43aacc47ac140bdd7369a14d92b6addc34c02d3b0f0ee57"
     },
     "surfaces": {
@@ -76,7 +76,7 @@
         "filename": "truth.md",
         "path": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
         "exists": true,
-        "source_hash": "ee36cc4122d2e33e81e45409147f0e70b0add9dd402c4a179905caaa4318930b",
+        "source_hash": "af84b718a7210f77bf226e77b7bad61e2f39a139f7c99c3a1dda081cb0b1a273",
         "authority": "markdown_feature_package",
         "json_authority": false
       },
@@ -92,7 +92,7 @@
         "filename": "tests.md",
         "path": "docs/beacon/v0.0.5/features/search-boundary-curation/tests.md",
         "exists": true,
-        "source_hash": "a9d90e0e4b5ecd304049a77fc98579a087645f696176b078b899de41555d1c52",
+        "source_hash": "c1d2a905c6ca4ce3afd857284d33edfcbaf513fa244cc2cb149862fb2b7fae39",
         "authority": "markdown_feature_package",
         "json_authority": false
       },
@@ -108,7 +108,7 @@
         "filename": "tasks.md",
         "path": "docs/beacon/v0.0.5/features/search-boundary-curation/tasks.md",
         "exists": true,
-        "source_hash": "a4f3e57c6b81124a59286b1f92405dabc3de2ce64e1492d1bb6d18ae44942530",
+        "source_hash": "b45a04d493bc408da40c2acbef20b46e68b3b2008319d0d8b945db7458581ed7",
         "authority": "markdown_feature_package",
         "json_authority": false
       },
@@ -384,7 +384,7 @@
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": "fdcdfbaec7db5b36d7023b7682a27ebae2a7c2785fc6779cbfc061e1c1db56c9"
+        "source_hash": "81074d7d37a35f37e4c1503bd02a02ab3b672f6d976d44ec2a301bcb3c0510e1"
       },
       "qa_status": {
         "schema_version": "1.0",
@@ -685,7 +685,7 @@
     ]
   },
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-08-04T09:32:51.119335+00:00",
+  "generated_at": "2026-08-04T10:03:02.026418+00:00",
   "truth_authority": false,
   "source_paths": {
     "truth": "docs/beacon/v0.0.5/features/search-boundary-curation/truth.md",
@@ -694,9 +694,9 @@
     "evidence": "docs/beacon/v0.0.5/features/search-boundary-curation/evidence.md"
   },
   "source_hashes": {
-    "truth": "ee36cc4122d2e33e81e45409147f0e70b0add9dd402c4a179905caaa4318930b",
-    "tests": "a9d90e0e4b5ecd304049a77fc98579a087645f696176b078b899de41555d1c52",
-    "tasks": "a4f3e57c6b81124a59286b1f92405dabc3de2ce64e1492d1bb6d18ae44942530",
+    "truth": "af84b718a7210f77bf226e77b7bad61e2f39a139f7c99c3a1dda081cb0b1a273",
+    "tests": "c1d2a905c6ca4ce3afd857284d33edfcbaf513fa244cc2cb149862fb2b7fae39",
+    "tasks": "b45a04d493bc408da40c2acbef20b46e68b3b2008319d0d8b945db7458581ed7",
     "evidence": "f9f4e9b4d1ee00a3d43aacc47ac140bdd7369a14d92b6addc34c02d3b0f0ee57"
   }
 }

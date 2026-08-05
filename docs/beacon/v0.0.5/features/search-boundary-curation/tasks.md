@@ -1,7 +1,7 @@
 ---
 slug: search-boundary-curation
 version: v0.0.5
-materials_status: stale
+materials_status: current
 task_source: acceptance_criteria
 ---
 
