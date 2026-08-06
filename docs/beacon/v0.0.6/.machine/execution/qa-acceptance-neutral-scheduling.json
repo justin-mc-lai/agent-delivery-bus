@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "artifact": "qa_acceptance_envelope",
+  "version": "v0.0.6",
+  "feature": "neutral-scheduling",
+  "feature_slug": "neutral-scheduling",
+  "revision_id": "R1",
+  "verdict": "passed",
+  "accepted_at": "2026-08-06T03:57:24.976190+00:00",
+  "accepted_by": "qa",
+  "run_id": "run-20260806T115717604285",
+  "transaction_id": "tx-qa-acceptance-neutral-scheduling-4499a5e2397a",
+  "source_hash": "sha256:4499a5e2397ab80c6f2d010ce3ba17f2b0f435f5afc964e9151ee15fd97b25e1",
+  "projection_seq": 1,
+  "source_command": "beacon qa run \"neutral-scheduling\" --project-root $REPO_ROOT/.beacon/worktrees/v0.0.6/neutral-scheduling --version v0.0.6",
+  "requirement_refs": [
+    "docs/beacon/v0.0.6/features/neutral-scheduling/truth.md",
+    "docs/beacon/v0.0.6/features/neutral-scheduling/truth.md",
+    "docs/beacon/v0.0.6/features/neutral-scheduling/tests.md",
+    "docs/beacon/v0.0.6/.machine/execution/neutral-scheduling.revision.json"
+  ],
+  "test_case_refs": [],
+  "evidence_refs": [
+    ".beacon/auto-test-status.json",
+    ".beacon/qa/status.json",
+    ".beacon/coverage-summary.json",
+    ".beacon/release-gate-report.json"
+  ],
+  "story_status": "implemented",
+  "revision_delivery_status": "implemented",
+  "required_ac_count": 0,
+  "required_test_count": 0,
+  "canonical_envelope_ref": "docs/beacon/v0.0.6/.machine/execution/qa-acceptance-neutral-scheduling.json",
+  "markdown_ref": "docs/beacon/v0.0.6/execution/qa-acceptance-brief-neutral-scheduling.md",
+  "transaction_lineage": {
+    "current_transaction_id": "tx-qa-acceptance-neutral-scheduling-4499a5e2397a",
+    "projection_seq": 1,
+    "source_hash": "sha256:4499a5e2397ab80c6f2d010ce3ba17f2b0f435f5afc964e9151ee15fd97b25e1",
+    "workflow_memory_ref": ".beacon/memory/workflow-lifecycle.json",
+    "memory_event_id": "",
+    "memory_entry_id": "92448fcd-7140-42e3-ac87-710d78af8703"
+  },
+  "sink_checksums": {
+    "machine": "sha256:da1a5ef7ea5caa52d638a896b5a45678f5e1cce5a5b3536dad43a8e3200ebb7f",
+    "human": "sha256:8617eefd14021e725d47a193754c4976f13d42a0099c64e0cdcdba4982292d0f",
+    "runtime": "sha256:b0046367e60e9c1cb33c47428a74949bd9e73b37bbb33678565b472cfb7d502e"
+  },
+  "runtime_projection_ref": ".beacon/transactions/qa-acceptance-neutral-scheduling.json",
+  "transaction_status": "applied",
+  "failed_sinks": []
+}

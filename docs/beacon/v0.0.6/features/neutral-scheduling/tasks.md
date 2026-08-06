@@ -18,7 +18,7 @@ task_source: acceptance_criteria
 - [x] TASK-007 Implement AC-NS-007: 本机交付验收：hermes executor + 注册项目可完成 dispatch（plan 或等价非受限 stage）并 reconci... · ac=AC-NS-007 · evidence=`.beacon/evidence/implement/neutral-scheduling/AC-NS-007.json`
 - [x] TASK-008 Implement AC-NS-008: illegal：未知 profile/适配器静默回落、派工单缺 evidence_spec、closure 用无 dispatch_id ... · ac=AC-NS-008 · evidence=`.beacon/evidence/implement/neutral-scheduling/AC-NS-008.json`
 - [x] TASK-009 Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/neutral-scheduling/GATES.json`
-- [ ] TASK-010 Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/neutral-scheduling/QA-MATRIX.json`
+- [x] TASK-010 Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/neutral-scheduling/QA-MATRIX.json`
 
 ## Boundary
 

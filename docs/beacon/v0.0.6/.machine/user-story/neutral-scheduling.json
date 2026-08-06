@@ -5,7 +5,7 @@
   "version": "v0.0.6",
   "current_revision_id": "R1",
   "lifecycle_status": "frozen",
-  "updated_at": "2026-08-06T03:55:03.487739+00:00",
+  "updated_at": "2026-08-06T03:57:24.983033+00:00",
   "revisions": [
     {
       "revision_id": "R1",
@@ -28,7 +28,7 @@
       "revision_id": "R1",
       "title": "neutral-scheduling",
       "priority": "medium",
-      "status": "implemented",
+      "status": "accepted",
       "items": [
         {
           "id": "AC-001",
@@ -50,10 +50,10 @@
           "kind": "task",
           "text": "Implement current frozen revision",
           "required": true,
-          "status": "implemented",
+          "status": "accepted",
           "implemented_by_run_id": "run-20260806T035431Z-49a4",
           "verified_by_run_id": null,
-          "accepted_at": null,
+          "accepted_at": "2026-08-06T03:57:24.976190+00:00",
           "changed_in_revision": "R1"
         },
         {
@@ -63,7 +63,7 @@
           "required": true,
           "status": "passed",
           "implemented_by_run_id": "run-20260806T035431Z-49a4",
-          "verified_by_run_id": "run-20260806T115454725949",
+          "verified_by_run_id": "run-20260806T115717604285",
           "accepted_at": null,
           "changed_in_revision": "R1",
           "covers": [
@@ -94,20 +94,13 @@
         "src/agent_delivery_bus/adapters/hermes.py"
       ],
       "verification_evidence": [
-        ".beacon/qa/features/neutral-scheduling/matrix.qa9.json",
+        ".beacon/auto-test-status.json",
         ".beacon/qa/status.json",
-        ".beacon/qa/current-session.json",
-        ".beacon/evidence/auto-test/run-20260806T115454725949/contract/command.txt",
-        ".beacon/evidence/auto-test/run-20260806T115454725949/contract/stdout.log",
-        ".beacon/evidence/auto-test/run-20260806T115454725949/contract/stderr.log",
-        ".beacon/evidence/auto-test/run-20260806T115454725949/contract/junit.xml",
-        ".beacon/evidence/auto-test/run-20260806T115454725949/contract/result.json",
-        ".beacon/evidence/auto-test/run-20260806T115454725949/qa9/tc-execution-map.json",
-        ".beacon/evidence/auto-test/run-20260806T115454725949/qa9/tc-results.json",
-        ".beacon/evidence/auto-test/run-20260806T115454725949/summary.json",
-        ".beacon/flaky-history.json",
-        ".beacon/evidence-signature-chain.json"
-      ]
+        ".beacon/coverage-summary.json",
+        ".beacon/release-gate-report.json"
+      ],
+      "accepted_at": "2026-08-06T03:57:24.976190+00:00",
+      "accepted_by": "qa"
     }
   ]
 }

@@ -7,13 +7,13 @@
   "source_revision_id": "",
   "reason": "freeze",
   "doc_status": "frozen",
-  "delivery_status": "implemented",
-  "lifecycle_status": "implemented",
+  "delivery_status": "accepted",
+  "lifecycle_status": "accepted",
   "baseline_hash": "sha256:da64898a16aae72d4ea8118194b60ca0a39cb0c2b4a6dbf328cff0e32f098fd9",
   "superseded_by": "",
   "created_at": "2026-08-06T03:36:17.970587+00:00",
   "frozen_at": "2026-08-06T03:41:36.339043+00:00",
-  "accepted_at": "",
+  "accepted_at": "2026-08-06T03:57:24.976190+00:00",
   "last_implementation_run_id": "run-20260806T035431Z-49a4",
   "changed_files": [
     "src/agent_delivery_bus/worker_binding.py",
@@ -22,20 +22,12 @@
     "src/agent_delivery_bus/cli.py",
     "src/agent_delivery_bus/adapters/hermes.py"
   ],
-  "last_verification_run_id": "run-20260806T115454725949",
+  "last_verification_run_id": "run-20260806T115717604285",
   "verification_evidence": [
-    ".beacon/qa/features/neutral-scheduling/matrix.qa9.json",
+    ".beacon/auto-test-status.json",
     ".beacon/qa/status.json",
-    ".beacon/qa/current-session.json",
-    ".beacon/evidence/auto-test/run-20260806T115454725949/contract/command.txt",
-    ".beacon/evidence/auto-test/run-20260806T115454725949/contract/stdout.log",
-    ".beacon/evidence/auto-test/run-20260806T115454725949/contract/stderr.log",
-    ".beacon/evidence/auto-test/run-20260806T115454725949/contract/junit.xml",
-    ".beacon/evidence/auto-test/run-20260806T115454725949/contract/result.json",
-    ".beacon/evidence/auto-test/run-20260806T115454725949/qa9/tc-execution-map.json",
-    ".beacon/evidence/auto-test/run-20260806T115454725949/qa9/tc-results.json",
-    ".beacon/evidence/auto-test/run-20260806T115454725949/summary.json",
-    ".beacon/flaky-history.json",
-    ".beacon/evidence-signature-chain.json"
-  ]
+    ".beacon/coverage-summary.json",
+    ".beacon/release-gate-report.json"
+  ],
+  "accepted_by": "qa"
 }
