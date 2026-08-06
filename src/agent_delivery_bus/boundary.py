@@ -341,19 +341,75 @@ TOPIC_BANK: list[dict[str, Any]] = [
         "query_hints": ["local llm inference", "quantization vram", "opensource runtime"],
         "rationale": "示例号·开源 AI 库｜硬件约束可视化",
     },
+    {
+        "topic": "Agent 编排框架选型：LangGraph / CrewAI / AutoGen 怎么挑",
+        "query_hints": ["langgraph vs crewai", "agent orchestration", "github agent framework"],
+        "rationale": "示例号·oss-picks｜编排层选型对比图",
+    },
+    {
+        "topic": "给 AI 写一份好的系统提示：角色、边界、输出格式三段式",
+        "query_hints": ["system prompt design", "prompt spec", "ai spec prompt"],
+        "rationale": "示例号·AI Spec｜提示词规范可视化",
+    },
+    {
+        "topic": "开源向量库横向对比：chunk 策略与召回率怎么权衡",
+        "query_hints": ["vector database opensource", "chunking strategy", "retrieval recall"],
+        "rationale": "示例号·开源 AI｜检索底座选型图",
+    },
+    {
+        "topic": "AI 应用的观测：OpenTelemetry 追踪一次 Agent 调用全链路",
+        "query_hints": ["opentelemetry agent tracing", "llm observability", "github tracing"],
+        "rationale": "示例号·AI Spec 贴图｜可观测性链路图",
+    },
+    {
+        "topic": "开源 RAG 评测集盘点：问答、引用、幻觉三类指标",
+        "query_hints": ["rag benchmark", "evaluation dataset", "hallucination metric"],
+        "rationale": "示例号·oss-picks｜评测指标信息图",
+    },
+    {
+        "topic": "把工具调用画进状态机：Agent 一次任务的生命周期",
+        "query_hints": ["tool call state machine", "agent lifecycle", "ai spec diagram"],
+        "rationale": "示例号·AI Spec 贴图｜生命周期可视化",
+    },
+    {
+        "topic": "本地模型 vs API：数据隐私、成本、延迟的三岔口怎么选",
+        "query_hints": ["local model vs api", "privacy cost latency", "llm deployment"],
+        "rationale": "示例号·开源 AI 库｜部署选型决策图",
+    },
+    {
+        "topic": "开源 Agent 的评测基准：从工具调用到长任务到底考什么",
+        "query_hints": ["agent benchmark", "tool calling eval", "long horizon tasks"],
+        "rationale": "示例号·oss-picks｜基准解读贴图",
+    },
+    {
+        "topic": "AI Spec 的版本管理：Truth、Change、Release 三账怎么对",
+        "query_hints": ["ai spec versioning", "requirement truth", "beacon spec"],
+        "rationale": "示例号·AI Spec｜工程化规范可视化",
+    },
+    {
+        "topic": "把 Agent 的 memory 画出来：短期上下文、长期知识、工具状态",
+        "query_hints": ["agent memory design", "context management", "ai spec memory"],
+        "rationale": "示例号·AI Spec 贴图｜记忆分层图",
+    },
 ]
 
 
 def daily_topic_batch(*, day_index: int | None = None, count: int = 5) -> list[dict[str, Any]]:
-    """Pick `count` rotating in-vertical topics for 示例号 WeChat image_post editorial."""
+    """Pick `count` rotating in-vertical topics for 示例号 WeChat image_post editorial.
+
+    Rotation window jumps by `count` each day (not by 1), so consecutive days never
+    overlap: with a 20-topic bank and count=5, each topic repeats every 4 days.
+    """
     if day_index is None:
         day_index = datetime.now(timezone.utc).timetuple().tm_yday
     bank = TOPIC_BANK
     if not bank:
         return []
-    start = int(day_index) % len(bank)
+    count = max(1, int(count))
+    # Jump by `count` per day instead of sliding by 1 → no same-day overlap between adjacent batches.
+    start = (int(day_index) * count) % len(bank)
     picked: list[dict[str, Any]] = []
-    for offset in range(max(1, int(count))):
+    for offset in range(count):
         item = dict(bank[(start + offset) % len(bank)])
         item["sources"] = ["demo://wechat-gzh/image_post", "editorial://daily-batch"]
         item["project_profile_ref"] = DEFAULT_PROJECT_PROFILE_REF
