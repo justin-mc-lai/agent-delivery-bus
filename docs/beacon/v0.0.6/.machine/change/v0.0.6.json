@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "version": "v0.0.6",
+  "status": "generated",
+  "artifact_role": "version_aggregate_projection",
+  "projection_role": {
+    "artifact_role": "version_aggregate_projection",
+    "truth_source": false,
+    "gate_source": false,
+    "lifecycle_stage": false,
+    "release_publish_action": false
+  },
+  "truth_authority": false,
+  "lifecycle_stage": false,
+  "release_publish_action": false,
+  "feature_count": 0,
+  "features": [],
+  "implementation_order": {
+    "status": "empty",
+    "feature_count": 0,
+    "ordered_feature_slugs": [],
+    "waves": []
+  },
+  "added": [],
+  "removed": [],
+  "fixed": [],
+  "traceability_refs": [],
+  "generated_at": "2026-08-06 11:58"
+}

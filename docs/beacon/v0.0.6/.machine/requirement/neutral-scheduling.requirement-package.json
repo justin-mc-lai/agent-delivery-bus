@@ -5,7 +5,7 @@
   "truth_package_contract": "beacon-feature-package-v2",
   "machine_json_role": "generated_state_not_truth",
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-08-06T03:53:49.252830+00:00",
+  "generated_at": "2026-08-06T03:58:31.010114+00:00",
   "feature": "neutral-scheduling",
   "feature_slug": "neutral-scheduling",
   "version": "v0.0.6",
@@ -20,7 +20,7 @@
   "source_hashes": {
     "truth": "25c0e88da8cc7766fc7b30756d954c72437a6bc2778a23850d6347d9ba3d2c8d",
     "tests": "fe6142e86e8bcd72dea43bab20b9079a2a5efcea0a55718de66f264aa45bbec2",
-    "tasks": "16ca27022de9f3b879e3ab08af85621ac9a1986a33f572c44aee15cb65aabdb5",
+    "tasks": "704985d4625dc2cb57ab79a90549905443a42d46866daef32c2d0c82eb0a9120",
     "evidence": "4316769d6c63ace6c1413200615fde8037ce7daaf1a6ee6b933a9a7e5753fa42"
   },
   "truth_frontmatter": {
@@ -238,7 +238,7 @@
     {
       "id": "TASK-010",
       "title": "Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/neutral-scheduling/QA-MATRIX.json`",
-      "status": "unchecked"
+      "status": "checked"
     }
   ],
   "checkbox_errors": [],

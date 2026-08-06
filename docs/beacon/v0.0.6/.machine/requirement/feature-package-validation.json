@@ -6,7 +6,7 @@
   "status": "pass",
   "blocked": false,
   "reason_code": "",
-  "generated_at": "2026-08-06T03:53:49.070365+00:00",
+  "generated_at": "2026-08-06T03:58:30.858194+00:00",
   "package_dir": "docs/beacon/v0.0.6/features/neutral-scheduling",
   "truth_frontmatter": {
     "slug": "neutral-scheduling",
@@ -33,7 +33,7 @@
   "checkbox_gate_bypass": false,
   "task_evidence_gate": {
     "pass": true,
-    "checked_ok": 9,
+    "checked_ok": 10,
     "checked_bad": 0,
     "unbound": 0,
     "findings": [],
