@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "artifact": "implementation_writeback_ledger",
+  "feature": "neutral-scheduling",
+  "feature_slug": "neutral-scheduling",
+  "version": "v0.0.6",
+  "entries": [
+    {
+      "recorded_at": "2026-08-06T03:54:31.016553+00:00",
+      "revision_id": "R1",
+      "run_id": "run-20260806T035431Z-49a4",
+      "implemented_item_ids": [
+        "AC-001",
+        "TASK-001",
+        "TEST-001"
+      ],
+      "changed_files": [
+        "src/agent_delivery_bus/worker_binding.py",
+        "src/agent_delivery_bus/service.py",
+        "src/agent_delivery_bus/registry.py",
+        "src/agent_delivery_bus/cli.py",
+        "src/agent_delivery_bus/adapters/hermes.py"
+      ]
+    }
+  ],
+  "last_recorded_at": "2026-08-06T03:54:31.016553+00:00"
+}

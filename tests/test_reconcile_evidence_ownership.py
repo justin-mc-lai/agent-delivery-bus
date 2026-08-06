@@ -30,7 +30,7 @@ class ReconcileEvidenceOwnershipTests(unittest.TestCase):
         )
         return root, project, service, storage, service.executor
 
-    def test_missing_evidence_keeps_reconciling(self):
+    def test_no_evidence_keeps_reconciling(self):
         with tempfile.TemporaryDirectory() as tmp:
             root, project, service, storage, hermes = self._service(tmp)
             issued = service.approvals.issue(

@@ -5,7 +5,7 @@
   "truth_package_contract": "beacon-feature-package-v2",
   "machine_json_role": "generated_state_not_truth",
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-08-06T03:41:36.470729+00:00",
+  "generated_at": "2026-08-06T03:53:49.252830+00:00",
   "feature": "neutral-scheduling",
   "feature_slug": "neutral-scheduling",
   "version": "v0.0.6",
@@ -20,7 +20,7 @@
   "source_hashes": {
     "truth": "25c0e88da8cc7766fc7b30756d954c72437a6bc2778a23850d6347d9ba3d2c8d",
     "tests": "fe6142e86e8bcd72dea43bab20b9079a2a5efcea0a55718de66f264aa45bbec2",
-    "tasks": "b5cf3666f540346c3269bc7cabfc7481430c35ca98f573cea704b79e93f0fa2c",
+    "tasks": "16ca27022de9f3b879e3ab08af85621ac9a1986a33f572c44aee15cb65aabdb5",
     "evidence": "4316769d6c63ace6c1413200615fde8037ce7daaf1a6ee6b933a9a7e5753fa42"
   },
   "truth_frontmatter": {
@@ -193,47 +193,47 @@
     {
       "id": "TASK-001",
       "title": "Implement AC-NS-001: worker binding 改为 profile 制：内置 `beacon` profile 保留现有 `### Beacon work... · ac=AC-NS-001 · evidence=`.beacon/evidence/implement/neutral-scheduling/AC-NS-001.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-002",
       "title": "Implement AC-NS-002: 派工单 body 必含 evidence spec（evidence_dir、glob、dispatch_id 绑定说明），envelop... · ac=AC-NS-002 · evidence=`.beacon/evidence/implement/neutral-scheduling/AC-NS-002.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-003",
       "title": "Implement AC-NS-003: Project 支持 per-project `truth_gate` / `executor` / `binding_profile`，... · ac=AC-NS-003 · evidence=`.beacon/evidence/implement/neutral-scheduling/AC-NS-003.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-004",
       "title": "Implement AC-NS-004: closure 校验证据归属：evidence manifest 中 dispatch_id 必须等于当前 dispatch；缺失、陈旧或... · ac=AC-NS-004 · evidence=`.beacon/evidence/implement/neutral-scheduling/AC-NS-004.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-005",
       "title": "Implement AC-NS-005: 文档中立化：SKILL.md / usage-playbook / README / role-division 研究文档不再宣称 ADB... · ac=AC-NS-005 · evidence=`.beacon/evidence/implement/neutral-scheduling/AC-NS-005.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-006",
       "title": "Implement AC-NS-006: 兼容性：现有 beacon profile 消费者（worker-beacon-binding v0.0.3 契约）关键字段与行为保持；仅... · ac=AC-NS-006 · evidence=`.beacon/evidence/implement/neutral-scheduling/AC-NS-006.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-007",
       "title": "Implement AC-NS-007: 本机交付验收：hermes executor + 注册项目可完成 dispatch（plan 或等价非受限 stage）并 reconci... · ac=AC-NS-007 · evidence=`.beacon/evidence/implement/neutral-scheduling/AC-NS-007.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-008",
       "title": "Implement AC-NS-008: illegal：未知 profile/适配器静默回落、派工单缺 evidence_spec、closure 用无 dispatch_id ... · ac=AC-NS-008 · evidence=`.beacon/evidence/implement/neutral-scheduling/AC-NS-008.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-009",
       "title": "Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/neutral-scheduling/GATES.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-010",

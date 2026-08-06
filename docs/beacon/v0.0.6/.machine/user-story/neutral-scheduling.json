@@ -5,7 +5,7 @@
   "version": "v0.0.6",
   "current_revision_id": "R1",
   "lifecycle_status": "frozen",
-  "updated_at": "2026-08-06T03:41:36.324814+00:00",
+  "updated_at": "2026-08-06T03:55:03.487739+00:00",
   "revisions": [
     {
       "revision_id": "R1",
@@ -28,7 +28,7 @@
       "revision_id": "R1",
       "title": "neutral-scheduling",
       "priority": "medium",
-      "status": "frozen",
+      "status": "implemented",
       "items": [
         {
           "id": "AC-001",
@@ -36,11 +36,11 @@
           "theme": "general",
           "text": "Acceptance criteria TBD",
           "required": true,
-          "status": "draft",
-          "implemented_by_run_id": null,
+          "status": "implemented",
+          "implemented_by_run_id": "run-20260806T035431Z-49a4",
           "verified_by_run_id": null,
           "accepted_at": null,
-          "changed_in_revision": null,
+          "changed_in_revision": "R1",
           "story_id": "",
           "details": [],
           "source": "fallback"
@@ -50,22 +50,22 @@
           "kind": "task",
           "text": "Implement current frozen revision",
           "required": true,
-          "status": "draft",
-          "implemented_by_run_id": null,
+          "status": "implemented",
+          "implemented_by_run_id": "run-20260806T035431Z-49a4",
           "verified_by_run_id": null,
           "accepted_at": null,
-          "changed_in_revision": null
+          "changed_in_revision": "R1"
         },
         {
           "id": "TEST-001",
           "kind": "test",
           "text": "Verify AC-001 — Acceptance criteria TBD",
           "required": true,
-          "status": "draft",
-          "implemented_by_run_id": null,
-          "verified_by_run_id": null,
+          "status": "passed",
+          "implemented_by_run_id": "run-20260806T035431Z-49a4",
+          "verified_by_run_id": "run-20260806T115454725949",
           "accepted_at": null,
-          "changed_in_revision": null,
+          "changed_in_revision": "R1",
           "covers": [
             "AC-001"
           ],
@@ -82,7 +82,32 @@
         "section_count": 0,
         "sections": {},
         "derived_items": []
-      }
+      },
+      "feature": "neutral-scheduling",
+      "feature_slug": "neutral-scheduling",
+      "version": "v0.0.6",
+      "last_changed_files": [
+        "src/agent_delivery_bus/worker_binding.py",
+        "src/agent_delivery_bus/service.py",
+        "src/agent_delivery_bus/registry.py",
+        "src/agent_delivery_bus/cli.py",
+        "src/agent_delivery_bus/adapters/hermes.py"
+      ],
+      "verification_evidence": [
+        ".beacon/qa/features/neutral-scheduling/matrix.qa9.json",
+        ".beacon/qa/status.json",
+        ".beacon/qa/current-session.json",
+        ".beacon/evidence/auto-test/run-20260806T115454725949/contract/command.txt",
+        ".beacon/evidence/auto-test/run-20260806T115454725949/contract/stdout.log",
+        ".beacon/evidence/auto-test/run-20260806T115454725949/contract/stderr.log",
+        ".beacon/evidence/auto-test/run-20260806T115454725949/contract/junit.xml",
+        ".beacon/evidence/auto-test/run-20260806T115454725949/contract/result.json",
+        ".beacon/evidence/auto-test/run-20260806T115454725949/qa9/tc-execution-map.json",
+        ".beacon/evidence/auto-test/run-20260806T115454725949/qa9/tc-results.json",
+        ".beacon/evidence/auto-test/run-20260806T115454725949/summary.json",
+        ".beacon/flaky-history.json",
+        ".beacon/evidence-signature-chain.json"
+      ]
     }
   ]
 }

@@ -37,6 +37,94 @@ class BlockedPreflight:
 
 
 class WorkerBindingContractTests(unittest.TestCase):
+    def test_evidence_spec_in_task_body(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            project = make_project(Path(tmp))
+            body = task_body(
+                project,
+                stage="plan",
+                feature="feature",
+                dispatch_id="adb_evidence_spec_check",
+            )
+            self.assertIn("### Evidence spec", body)
+            self.assertIn("evidence_dir:", body)
+            self.assertIn("glob: *.json", body)
+            self.assertIn("required_files: manifest.json", body)
+            self.assertIn("dispatch_id_binding: true", body)
+            self.assertIn("dispatch_id: adb_evidence_spec_check", body)
+
+    def test_schema_version_1_1(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            project = make_project(Path(tmp))
+            binding = resolve_worker_binding(
+                stage="plan",
+                feature="feature",
+                docs_version=project.docs_version or "",
+            )
+            body = task_body(project, stage="plan", feature="feature")
+            self.assertEqual(binding["schema_version"], "1.1")
+            self.assertIn("schema_version: 1.1", body)
+            self.assertIn("binding_profile: beacon", body)
+
+    def test_missing_evidence_spec_rejected(self):
+        config = {
+            "stages": {
+                "plan": {"skill": "custom-plan", "command": "run-plan {feature}", "public_harness": "plan"}
+            }
+        }
+        with self.assertRaises(DeliveryBusError) as ctx:
+            resolve_worker_binding(
+                stage="plan",
+                feature="feature",
+                binding_profile="generic",
+                profile_config=config,
+            )
+        self.assertEqual(ctx.exception.reason_code, "binding_profile_evidence_spec_required")
+
+    def test_custom_profile_binding_without_beacon_fields(self):
+        config = {
+            "stages": {
+                "plan": {"skill": "custom-plan", "command": "run-plan {feature}", "public_harness": "plan"}
+            },
+            "runner": {"runner_kind": "local_agent", "hermes_assignee": "coding"},
+            "evidence_spec": {
+                "evidence_dir": ".adb/evidence/{stage}/{feature}",
+                "glob": "*.json",
+                "dispatch_id_binding": True,
+            },
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            project = make_project(Path(tmp))
+            binding = resolve_worker_binding(
+                stage="plan",
+                feature="feature",
+                binding_profile="generic",
+                profile_config=config,
+                project_repo=project.repo,
+                dispatch_id="adb_custom",
+            )
+            self.assertEqual(binding["binding_profile"], "generic")
+            self.assertNotIn("beacon_skill", binding)
+            self.assertNotIn("beacon_command", binding)
+            self.assertEqual(binding["skill"], "custom-plan")
+            self.assertEqual(binding["command"], "run-plan feature")
+            self.assertEqual(binding["evidence_spec"]["dispatch_id"], "adb_custom")
+            body = task_body(
+                project,
+                stage="plan",
+                feature="feature",
+                dispatch_id="adb_custom",
+                binding_profile="generic",
+                profile_config=config,
+            )
+            self.assertIn("### Worker binding", body)
+            self.assertNotIn("### Beacon worker binding", body)
+            self.assertNotIn("beacon_skill", body)
+            self.assertNotIn("beacon_command", body)
+            self.assertIn("skill: custom-plan", body)
+            self.assertIn("command: run-plan feature", body)
+            self.assertIn(".adb/evidence/plan/feature", body)
+
     def test_task_body_plan_contains_beacon_skill_binding(self):
         with tempfile.TemporaryDirectory() as tmp:
             project = make_project(Path(tmp))

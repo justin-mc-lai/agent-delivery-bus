@@ -62,7 +62,7 @@
     "source_hashes": {
       "truth": "25c0e88da8cc7766fc7b30756d954c72437a6bc2778a23850d6347d9ba3d2c8d",
       "tests": "fe6142e86e8bcd72dea43bab20b9079a2a5efcea0a55718de66f264aa45bbec2",
-      "tasks": "b5cf3666f540346c3269bc7cabfc7481430c35ca98f573cea704b79e93f0fa2c",
+      "tasks": "16ca27022de9f3b879e3ab08af85621ac9a1986a33f572c44aee15cb65aabdb5",
       "evidence": "4316769d6c63ace6c1413200615fde8037ce7daaf1a6ee6b933a9a7e5753fa42"
     },
     "surfaces": {
@@ -110,7 +110,7 @@
         "filename": "tasks.md",
         "path": "docs/beacon/v0.0.6/features/neutral-scheduling/tasks.md",
         "exists": true,
-        "source_hash": "b5cf3666f540346c3269bc7cabfc7481430c35ca98f573cea704b79e93f0fa2c",
+        "source_hash": "16ca27022de9f3b879e3ab08af85621ac9a1986a33f572c44aee15cb65aabdb5",
         "authority": "markdown_feature_package",
         "json_authority": false
       },
@@ -214,7 +214,7 @@
         "truth_authority": true,
         "json_authority": false,
         "generated_governance_state": false,
-        "source_hash": "4555b373bbc2d9fe79739fa285b6c6c902822355a6d18caa0828c568f58176e9"
+        "source_hash": "0ff563ff4dd92d5d0c4188fbb69bba19a6d69fa3cf91c35dc71daec99c7cdb75"
       },
       "global_boundaries": {
         "schema_version": "1.0",
@@ -369,7 +369,7 @@
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": "e4617dd2499e8af6452592636fecf5494afa0d8fc4d31419d220b6aadfcda6bf"
+        "source_hash": "ad191652fc465056c24d3b886a5dc06cbb1ac10478e81cff410b053fe0cb2dea"
       },
       "evidence_manifest": {
         "schema_version": "1.0",
@@ -386,7 +386,7 @@
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": "f3458eb2e732cc68f668beff9efcd848187f0e3fcbe887dbfc4bb0ae1ac5d892"
+        "source_hash": "ebba0743e579df790229337069447447a9493ad2f6c16c3179bc014f1772af4e"
       },
       "qa_status": {
         "schema_version": "1.0",
@@ -396,14 +396,14 @@
         "version": "v0.0.6",
         "surface": "qa_status",
         "path": ".beacon/qa/status.json",
-        "exists": true,
+        "exists": false,
         "required": false,
         "role": "generated_governance_state_not_truth",
         "authority": "generated_governance_state_not_truth",
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": "11b9264f517b722caa8c23413cae874f5caff12c25138b2dffac45ad67c807e9"
+        "source_hash": ""
       },
       "release_gate_report": {
         "schema_version": "1.0",
@@ -420,7 +420,7 @@
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": "0449857465520bcaffc7d8c74236c148313efeea827a177215152097efac2ee2"
+        "source_hash": "8afddf61e1183232f0a55a42fb180af4003f53623473403e0600ab3acdba9b32"
       }
     },
     "manifest_authority": false,
@@ -619,7 +619,7 @@
         "entrypoint_kind": "llm_skill_guidance",
         "classification": "resolver_guidance_required",
         "exception_kind": "",
-        "exists": true,
+        "exists": false,
         "truth_center_routed": true,
         "explicit_v151_exception": false,
         "fail_closed": true,
@@ -632,7 +632,7 @@
         "entrypoint_kind": "llm_skill_guidance",
         "classification": "resolver_guidance_required",
         "exception_kind": "",
-        "exists": true,
+        "exists": false,
         "truth_center_routed": true,
         "explicit_v151_exception": false,
         "fail_closed": true,
@@ -695,11 +695,21 @@
         "severity": "error",
         "code": "truth_entrypoint_inventory_missing",
         "path": "beacon/utils/acceptance_kit.py"
+      },
+      {
+        "severity": "error",
+        "code": "truth_entrypoint_inventory_missing",
+        "path": "skills/beacon/**/SKILL.md"
+      },
+      {
+        "severity": "error",
+        "code": "truth_entrypoint_inventory_missing",
+        "path": ".agents/skills/**/SKILL.md"
       }
     ]
   },
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-08-06T03:41:36.469690+00:00",
+  "generated_at": "2026-08-06T03:53:49.251888+00:00",
   "truth_authority": false,
   "source_paths": {
     "truth": "docs/beacon/v0.0.6/features/neutral-scheduling/truth.md",
@@ -710,7 +720,7 @@
   "source_hashes": {
     "truth": "25c0e88da8cc7766fc7b30756d954c72437a6bc2778a23850d6347d9ba3d2c8d",
     "tests": "fe6142e86e8bcd72dea43bab20b9079a2a5efcea0a55718de66f264aa45bbec2",
-    "tasks": "b5cf3666f540346c3269bc7cabfc7481430c35ca98f573cea704b79e93f0fa2c",
+    "tasks": "16ca27022de9f3b879e3ab08af85621ac9a1986a33f572c44aee15cb65aabdb5",
     "evidence": "4316769d6c63ace6c1413200615fde8037ce7daaf1a6ee6b933a9a7e5753fa42"
   }
 }

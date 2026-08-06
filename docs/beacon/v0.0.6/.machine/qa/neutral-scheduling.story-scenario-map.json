@@ -1,0 +1,735 @@
+{
+  "schema_version": "1.0",
+  "feature": "neutral-scheduling",
+  "feature_slug": "neutral-scheduling",
+  "version": "v0.0.6",
+  "generated_at": "2026-08-06T03:54:02.295382+00:00",
+  "expansion_profile": "pua-web",
+  "scenario_depth": "standard",
+  "families_required": [
+    "happy",
+    "negative",
+    "boundary",
+    "recovery",
+    "compatibility"
+  ],
+  "stories": [
+    {
+      "ac_id": "AC-001",
+      "theme": "general",
+      "text": "Acceptance criteria TBD",
+      "scenario_ids": [],
+      "scenario_families": [],
+      "required_families": [],
+      "scenarios": []
+    },
+    {
+      "ac_id": "AC-NS-001",
+      "theme": "",
+      "text": "exit_code_0",
+      "scenario_ids": [
+        "SC-AUTO-TC-NS-001"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-NS-001",
+          "source_tc_id": "TC-NS-001",
+          "tc_id": "TC-NS-001-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-NS-002",
+      "theme": "",
+      "text": "exit_code_0",
+      "scenario_ids": [
+        "SC-AUTO-TC-NS-002",
+        "SC-AUTO-TC-EXEC-001"
+      ],
+      "scenario_families": [
+        "primary",
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-NS-002",
+          "source_tc_id": "TC-NS-002",
+          "tc_id": "TC-NS-002-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        },
+        {
+          "scenario_id": "SC-AUTO-TC-EXEC-001",
+          "source_tc_id": "TC-EXEC-001",
+          "tc_id": "TC-EXEC-001-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-NS-003",
+      "theme": "",
+      "text": "exit_code_0",
+      "scenario_ids": [
+        "SC-AUTO-TC-NS-003"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-NS-003",
+          "source_tc_id": "TC-NS-003",
+          "tc_id": "TC-NS-003-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-NS-004",
+      "theme": "",
+      "text": "exit_code_0",
+      "scenario_ids": [
+        "SC-AUTO-TC-NS-004"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-NS-004",
+          "source_tc_id": "TC-NS-004",
+          "tc_id": "TC-NS-004-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-NS-005",
+      "theme": "",
+      "text": "matches_found",
+      "scenario_ids": [
+        "SC-AUTO-TC-NS-005"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-NS-005",
+          "source_tc_id": "TC-NS-005",
+          "tc_id": "TC-NS-005-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-NS-006",
+      "theme": "",
+      "text": "exit_code_0",
+      "scenario_ids": [
+        "SC-AUTO-TC-NS-006"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-NS-006",
+          "source_tc_id": "TC-NS-006",
+          "tc_id": "TC-NS-006-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-NS-007",
+      "theme": "",
+      "text": "exit_code_0",
+      "scenario_ids": [
+        "SC-AUTO-TC-NS-007"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-NS-007",
+          "source_tc_id": "TC-NS-007",
+          "tc_id": "TC-NS-007-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-NS-008",
+      "theme": "",
+      "text": "exit_code_0；未知 profile/适配器 fail-closed",
+      "scenario_ids": [
+        "SC-AUTO-TC-NS-ILL-001",
+        "SC-AUTO-TC-NS-ILL-002",
+        "SC-AUTO-TC-NS-ILL-003",
+        "SC-AUTO-TC-NS-ILL-004"
+      ],
+      "scenario_families": [
+        "primary",
+        "primary",
+        "primary",
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-NS-ILL-001",
+          "source_tc_id": "TC-NS-ILL-001",
+          "tc_id": "TC-NS-ILL-001-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        },
+        {
+          "scenario_id": "SC-AUTO-TC-NS-ILL-002",
+          "source_tc_id": "TC-NS-ILL-002",
+          "tc_id": "TC-NS-ILL-002-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        },
+        {
+          "scenario_id": "SC-AUTO-TC-NS-ILL-003",
+          "source_tc_id": "TC-NS-ILL-003",
+          "tc_id": "TC-NS-ILL-003-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        },
+        {
+          "scenario_id": "SC-AUTO-TC-NS-ILL-004",
+          "source_tc_id": "TC-NS-ILL-004",
+          "tc_id": "TC-NS-ILL-004-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    },
+    {
+      "ac_id": "AC-NS-001..008",
+      "theme": "",
+      "text": "exit_code_0",
+      "scenario_ids": [
+        "SC-AUTO-TC-EXEC-002"
+      ],
+      "scenario_families": [
+        "primary"
+      ],
+      "required_families": [],
+      "scenarios": [
+        {
+          "scenario_id": "SC-AUTO-TC-EXEC-002",
+          "source_tc_id": "TC-EXEC-002",
+          "tc_id": "TC-EXEC-002-PRIMARY",
+          "scenario_family": "primary",
+          "qa_type": "contract",
+          "browser_required": false,
+          "replay_required": false
+        }
+      ]
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario_id": "SC-AUTO-TC-NS-001",
+      "source_tc_id": "TC-NS-001",
+      "tc_id": "TC-NS-001-PRIMARY",
+      "ac_id": "AC-NS-001",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code_0",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_worker_binding.py -k 'profile or generic or neutral' --tb=short --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code_0",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/neutral-scheduling/tc-ns-001/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-NS-002",
+      "source_tc_id": "TC-NS-002",
+      "tc_id": "TC-NS-002-PRIMARY",
+      "ac_id": "AC-NS-002",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code_0",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_worker_binding.py -k 'evidence_spec or schema' --tb=short --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code_0",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/neutral-scheduling/tc-ns-002/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-NS-003",
+      "source_tc_id": "TC-NS-003",
+      "tc_id": "TC-NS-003-PRIMARY",
+      "ac_id": "AC-NS-003",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code_0",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_registry_routing.py --tb=short --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code_0",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/neutral-scheduling/tc-ns-003/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-NS-004",
+      "source_tc_id": "TC-NS-004",
+      "tc_id": "TC-NS-004-PRIMARY",
+      "ac_id": "AC-NS-004",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code_0",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_reconcile_evidence_ownership.py --tb=short --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code_0",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/neutral-scheduling/tc-ns-004/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-NS-005",
+      "source_tc_id": "TC-NS-005",
+      "tc_id": "TC-NS-005-PRIMARY",
+      "ac_id": "AC-NS-005",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "matches_found",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "rg -n '参考实现|reference implementation' README.md docs/usage-playbook.md skills/agent-delivery-bus/SKILL.md docs/beacon-adb-role-division.md",
+      "assertion": "matches_found",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/neutral-scheduling/tc-ns-005/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-NS-006",
+      "source_tc_id": "TC-NS-006",
+      "tc_id": "TC-NS-006-PRIMARY",
+      "ac_id": "AC-NS-006",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code_0",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_worker_binding.py -k beacon --tb=short --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code_0",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/neutral-scheduling/tc-ns-006/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-NS-007",
+      "source_tc_id": "TC-NS-007",
+      "tc_id": "TC-NS-007-PRIMARY",
+      "ac_id": "AC-NS-007",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code_0",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_local_delivery_smoke.py --tb=short --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code_0",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/neutral-scheduling/tc-ns-007/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-NS-ILL-001",
+      "source_tc_id": "TC-NS-ILL-001",
+      "tc_id": "TC-NS-ILL-001-PRIMARY",
+      "ac_id": "AC-NS-008",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code_0；未知 profile/适配器 fail-closed",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_registry_routing.py -k 'unknown or fail_closed' --tb=short --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code_0；未知 profile/适配器 fail-closed",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/neutral-scheduling/tc-ns-ill-001/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-NS-ILL-002",
+      "source_tc_id": "TC-NS-ILL-002",
+      "tc_id": "TC-NS-ILL-002-PRIMARY",
+      "ac_id": "AC-NS-008",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code_0；缺 evidence spec 拒绝 emit",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_worker_binding.py -k 'missing_evidence_spec' --tb=short --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code_0；缺 evidence spec 拒绝 emit",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/neutral-scheduling/tc-ns-ill-002/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-NS-ILL-003",
+      "source_tc_id": "TC-NS-ILL-003",
+      "tc_id": "TC-NS-ILL-003-PRIMARY",
+      "ac_id": "AC-NS-008",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code_0；dispatch_id 不匹配保持 reconciling",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_reconcile_evidence_ownership.py -k 'mismatch or stale' --tb=short --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code_0；dispatch_id 不匹配保持 reconciling",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/neutral-scheduling/tc-ns-ill-003/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-NS-ILL-004",
+      "source_tc_id": "TC-NS-ILL-004",
+      "tc_id": "TC-NS-ILL-004-PRIMARY",
+      "ac_id": "AC-NS-008",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code_0；无证据不判完成",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/test_reconcile_evidence_ownership.py -k 'no_evidence' --tb=short --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code_0；无证据不判完成",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/neutral-scheduling/tc-ns-ill-004/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-EXEC-001",
+      "source_tc_id": "TC-EXEC-001",
+      "tc_id": "TC-EXEC-001-PRIMARY",
+      "ac_id": "AC-NS-002",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "output_ok",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -c \"import agent_delivery_bus, beacon; print('ok')\"",
+      "assertion": "output_ok",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/neutral-scheduling/tc-exec-001/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    },
+    {
+      "scenario_id": "SC-AUTO-TC-EXEC-002",
+      "source_tc_id": "TC-EXEC-002",
+      "tc_id": "TC-EXEC-002-PRIMARY",
+      "ac_id": "AC-NS-001..008",
+      "qa_type": "contract",
+      "layer": "contract",
+      "scenario_family": "primary",
+      "title": "exit_code_0",
+      "browser_required": false,
+      "replay_required": false,
+      "exploratory_runner": "native",
+      "deterministic_runner": "native",
+      "explore_command": "",
+      "replay_command": "",
+      "coverage_axes": [
+        "primary",
+        "contract",
+        "non-browser"
+      ],
+      "depends_on": [],
+      "stop_on_fail": false,
+      "automation": "auto",
+      "command": "python3 -m pytest -q tests/ --tb=short --junitxml \"${BEACON_JUNIT_PATH:-.beacon/junit.xml}\"",
+      "assertion": "exit_code_0",
+      "priority": "P1",
+      "evidence_path": ".beacon/evidence/qa-feature/neutral-scheduling/tc-exec-002/__RUN_ID__.json",
+      "required_files": [
+        "command.txt",
+        "stdout.log",
+        "stderr.log",
+        "result.json",
+        "junit.xml"
+      ]
+    }
+  ]
+}
