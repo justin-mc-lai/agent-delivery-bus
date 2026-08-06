@@ -37,9 +37,9 @@
       "language": "zh",
       "domain_required": "true",
       "ux_required": "false",
+      "package_maturity": "filled",
       "parser_contract": "beacon-feature-package-v2",
       "truth_source_model": "feature_package_authoritative",
-      "package_maturity": "filled",
       "materials_status": "current",
       "canonical_refs": {
         "prd": "docs/beacon/v0.0.6/features/neutral-scheduling/truth.md",
@@ -60,7 +60,7 @@
       "evidence": "docs/beacon/v0.0.6/features/neutral-scheduling/evidence.md"
     },
     "source_hashes": {
-      "truth": "4d4cf0ad1198e793d63816d884177ac8a5fa654689b2f6483d6c3018ee57fc79",
+      "truth": "25c0e88da8cc7766fc7b30756d954c72437a6bc2778a23850d6347d9ba3d2c8d",
       "tests": "fe6142e86e8bcd72dea43bab20b9079a2a5efcea0a55718de66f264aa45bbec2",
       "tasks": "b5cf3666f540346c3269bc7cabfc7481430c35ca98f573cea704b79e93f0fa2c",
       "evidence": "4316769d6c63ace6c1413200615fde8037ce7daaf1a6ee6b933a9a7e5753fa42"
@@ -78,7 +78,7 @@
         "filename": "truth.md",
         "path": "docs/beacon/v0.0.6/features/neutral-scheduling/truth.md",
         "exists": true,
-        "source_hash": "4d4cf0ad1198e793d63816d884177ac8a5fa654689b2f6483d6c3018ee57fc79",
+        "source_hash": "25c0e88da8cc7766fc7b30756d954c72437a6bc2778a23850d6347d9ba3d2c8d",
         "authority": "markdown_feature_package",
         "json_authority": false
       },
@@ -214,7 +214,7 @@
         "truth_authority": true,
         "json_authority": false,
         "generated_governance_state": false,
-        "source_hash": "0ff563ff4dd92d5d0c4188fbb69bba19a6d69fa3cf91c35dc71daec99c7cdb75"
+        "source_hash": "4555b373bbc2d9fe79739fa285b6c6c902822355a6d18caa0828c568f58176e9"
       },
       "global_boundaries": {
         "schema_version": "1.0",
@@ -369,7 +369,7 @@
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": "9f37d70ef96430944be80b86aedd0a8d646463d33f266b66f5aa8af3e2db739a"
+        "source_hash": "e4617dd2499e8af6452592636fecf5494afa0d8fc4d31419d220b6aadfcda6bf"
       },
       "evidence_manifest": {
         "schema_version": "1.0",
@@ -386,7 +386,7 @@
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": "32375fab43ef249a639e846e35e109dbadf214962514a4f8de3575b8d4ac0862"
+        "source_hash": "f3458eb2e732cc68f668beff9efcd848187f0e3fcbe887dbfc4bb0ae1ac5d892"
       },
       "qa_status": {
         "schema_version": "1.0",
@@ -699,7 +699,7 @@
     ]
   },
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-08-06T03:36:18.099040+00:00",
+  "generated_at": "2026-08-06T03:41:36.469690+00:00",
   "truth_authority": false,
   "source_paths": {
     "truth": "docs/beacon/v0.0.6/features/neutral-scheduling/truth.md",
@@ -708,7 +708,7 @@
     "evidence": "docs/beacon/v0.0.6/features/neutral-scheduling/evidence.md"
   },
   "source_hashes": {
-    "truth": "4d4cf0ad1198e793d63816d884177ac8a5fa654689b2f6483d6c3018ee57fc79",
+    "truth": "25c0e88da8cc7766fc7b30756d954c72437a6bc2778a23850d6347d9ba3d2c8d",
     "tests": "fe6142e86e8bcd72dea43bab20b9079a2a5efcea0a55718de66f264aa45bbec2",
     "tasks": "b5cf3666f540346c3269bc7cabfc7481430c35ca98f573cea704b79e93f0fa2c",
     "evidence": "4316769d6c63ace6c1413200615fde8037ce7daaf1a6ee6b933a9a7e5753fa42"

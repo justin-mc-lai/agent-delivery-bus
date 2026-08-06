@@ -6,7 +6,7 @@
   "status": "pass",
   "blocked": false,
   "reason_code": "",
-  "generated_at": "2026-08-06T03:36:17.974327+00:00",
+  "generated_at": "2026-08-06T03:41:36.344662+00:00",
   "package_dir": "docs/beacon/v0.0.6/features/neutral-scheduling",
   "truth_frontmatter": {
     "slug": "neutral-scheduling",
@@ -15,9 +15,9 @@
     "language": "zh",
     "domain_required": "true",
     "ux_required": "false",
+    "package_maturity": "filled",
     "parser_contract": "beacon-feature-package-v2",
     "truth_source_model": "feature_package_authoritative",
-    "package_maturity": "filled",
     "materials_status": "current",
     "canonical_refs": {
       "prd": "docs/beacon/v0.0.6/features/neutral-scheduling/truth.md",

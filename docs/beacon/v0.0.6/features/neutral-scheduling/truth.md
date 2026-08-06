@@ -5,9 +5,9 @@ status: frozen
 language: zh
 domain_required: true
 ux_required: false
+package_maturity: filled
 parser_contract: beacon-feature-package-v2
 truth_source_model: feature_package_authoritative
-package_maturity: filled
 materials_status: current
 canonical_refs:
   prd: docs/beacon/v0.0.6/features/neutral-scheduling/truth.md
@@ -15,7 +15,7 @@ canonical_refs:
   test_case: docs/beacon/v0.0.6/features/neutral-scheduling/tests.md
 ---
 
-# Requirement Truth: neutral-scheduling (v0.0.6)
+# Requirement Truth: neutral-scheduling
 
 ## 人话
 
@@ -45,9 +45,9 @@ release_gate: human always
 ## 用户旅程
 
 1. 触发：项目注册时声明 `truth_gate` / `executor` / `binding_profile`（可省略，回落全局默认）。
-2. 关键操作：`adb dispatch` 生成派工单，内含 binding manifest（profile、skill/command、runner）与 evidence spec（证据目录、glob、dispatch 绑定）。
-3. 结果：worker 按 profile 执行并把证据写入声明路径；`adb reconcile` 用该项目 truth gate 的 closure 校验，证据绑定本次 dispatch 后 completed。
-4. 异常：未知 profile / 未知适配器 → fail-closed（blocked，不派发）；证据缺失或 dispatch_id 不匹配 → 保持 reconciling；beacon 未安装时 beacon profile preflight 阻断并给出修复动作。
+1. 关键操作：`adb dispatch` 生成派工单，内含 binding manifest（profile、skill/command、runner）与 evidence spec（证据目录、glob、dispatch 绑定）。
+1. 结果：worker 按 profile 执行并把证据写入声明路径；`adb reconcile` 用该项目 truth gate 的 closure 校验，证据绑定本次 dispatch 后 completed。
+1. 异常：未知 profile / 未知适配器 → fail-closed（blocked，不派发）；证据缺失或 dispatch_id 不匹配 → 保持 reconciling；beacon 未安装时 beacon profile preflight 阻断并给出修复动作。
 
 ## First principles
 
@@ -55,15 +55,18 @@ release_gate: human always
 - 不可变：派工单必须有 evidence spec；closure 必须绑定 dispatch_id；release 永远人工门；旧 beacon profile 契约不得静默破坏。
 - 可推翻假设：非 beacon profile 的具体字段形态可由项目声明扩展，但信封 schema 必须版本化。
 
-## Domain Model
+## Intent Coverage Matrix
 
-| Entity | Key fields | Notes |
-|--------|------------|-------|
-| BindingProfile | slug, schema_version, stage_map(beacon_skill/command), runner, evidence_spec | beacon 为内置参考 profile；自定义 profile 由项目 registry 声明 |
-| DispatchEnvelope | project_slug, stage, feature, idempotency_key, approval state, binding manifest, evidence spec | 派工单即强规则接口 |
-| EvidenceSpec | evidence_dir, glob, required_files, dispatch_id_binding | 写入任务 body，closure 按此校验 |
-| ProjectRouting | truth_gate, executor, binding_profile, global fallback | 每项目可路由到不同适配器 |
-| EvidenceManifest | dispatch_id, stage, feature, files[] | closure 通过 manifest 确认归属 |
+| intent_id | source | strength | landing | status |
+|-----------|--------|----------|---------|--------|
+| INT-001 | user | must | AC-NS-001 | covered |
+| INT-002 | user | must | AC-NS-002 | covered |
+| INT-003 | user | must | AC-NS-003 | covered |
+| INT-004 | user | must | AC-NS-004 | covered |
+| INT-005 | user | must | AC-NS-005 | covered |
+| INT-006 | user | must | AC-NS-006 | covered |
+| INT-007 | user | must | AC-NS-007 | covered |
+| INT-008 | user | must | AC-NS-008 | covered |
 
 ## Acceptance Criteria
 
@@ -80,13 +83,13 @@ release_gate: human always
 
 ## Domain Model
 
-| Entity | Key fields | Invariant / requires |
-|--------|------------|----------------------|
-| BindingProfile | slug, schema_version, stage_map, runner, evidence_spec | beacon 为内置参考 profile；自定义 profile 由项目 registry 声明；显式声明不得被全局默认覆盖 |
-| DispatchEnvelope | project_slug, stage, feature, idempotency_key, approval state, binding manifest, evidence spec | 派工单即强规则接口；schema_version 1.1；必含 evidence_spec |
-| EvidenceSpec | evidence_dir, glob, required_files, dispatch_id_binding | 写入任务 body；closure 按此校验 |
-| ProjectRouting | truth_gate, executor, binding_profile, global_fallback | 每项目可路由到不同适配器；未知适配器 fail-closed |
-| EvidenceManifest | dispatch_id, stage, feature, files[] | closure 通过 manifest 确认归属；无绑定不得判完成 |
+| Entity | Key fields | Notes |
+|--------|------------|-------|
+| BindingProfile | slug, schema_version, stage_map(beacon_skill/command), runner, evidence_spec | beacon 为内置参考 profile；自定义 profile 由项目 registry 声明 |
+| DispatchEnvelope | project_slug, stage, feature, idempotency_key, approval state, binding manifest, evidence spec | 派工单即强规则接口 |
+| EvidenceSpec | evidence_dir, glob, required_files, dispatch_id_binding | 写入任务 body，closure 按此校验 |
+| ProjectRouting | truth_gate, executor, binding_profile, global fallback | 每项目可路由到不同适配器 |
+| EvidenceManifest | dispatch_id, stage, feature, files[] | closure 通过 manifest 确认归属 |
 
 ## Entity Precedence
 
@@ -133,19 +136,6 @@ release_gate: human always
 - profile_resolved → binding_emitted without evidence_spec（派工单缺 evidence spec）· TC-NS-ILL-002
 - evidence_pending → closure_verified with dispatch_id mismatch（旧证据/无 manifest 冒充完成）· TC-NS-ILL-003
 - binding_emitted → closure_verified without evidence（无证据直接判完成）· TC-NS-ILL-004
-
-## Intent Coverage Matrix
-
-| intent_id | source | strength | landing | status |
-|-----------|--------|----------|---------|--------|
-| INT-001 | user | must | AC-NS-001 | covered |
-| INT-002 | user | must | AC-NS-002 | covered |
-| INT-003 | user | must | AC-NS-003 | covered |
-| INT-004 | user | must | AC-NS-004 | covered |
-| INT-005 | user | must | AC-NS-005 | covered |
-| INT-006 | user | must | AC-NS-006 | covered |
-| INT-007 | user | must | AC-NS-007 | covered |
-| INT-008 | user | must | AC-NS-008 | covered |
 
 ## Non-goals
 

@@ -5,7 +5,7 @@
   "truth_package_contract": "beacon-feature-package-v2",
   "machine_json_role": "generated_state_not_truth",
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-08-06T03:36:18.099867+00:00",
+  "generated_at": "2026-08-06T03:41:36.470729+00:00",
   "feature": "neutral-scheduling",
   "feature_slug": "neutral-scheduling",
   "version": "v0.0.6",
@@ -18,7 +18,7 @@
     "evidence": "docs/beacon/v0.0.6/features/neutral-scheduling/evidence.md"
   },
   "source_hashes": {
-    "truth": "4d4cf0ad1198e793d63816d884177ac8a5fa654689b2f6483d6c3018ee57fc79",
+    "truth": "25c0e88da8cc7766fc7b30756d954c72437a6bc2778a23850d6347d9ba3d2c8d",
     "tests": "fe6142e86e8bcd72dea43bab20b9079a2a5efcea0a55718de66f264aa45bbec2",
     "tasks": "b5cf3666f540346c3269bc7cabfc7481430c35ca98f573cea704b79e93f0fa2c",
     "evidence": "4316769d6c63ace6c1413200615fde8037ce7daaf1a6ee6b933a9a7e5753fa42"
@@ -30,9 +30,9 @@
     "language": "zh",
     "domain_required": "true",
     "ux_required": "false",
+    "package_maturity": "filled",
     "parser_contract": "beacon-feature-package-v2",
     "truth_source_model": "feature_package_authoritative",
-    "package_maturity": "filled",
     "materials_status": "current",
     "canonical_refs": {
       "prd": "docs/beacon/v0.0.6/features/neutral-scheduling/truth.md",

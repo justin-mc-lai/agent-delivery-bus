@@ -27,7 +27,7 @@
     "review_gates": [],
     "qa_coverage_hints": [],
     "evidence_lines": {},
-    "generated_at": "2026-08-06T03:36:17.766561+00:00",
+    "generated_at": "2026-08-06T03:41:36.135316+00:00",
     "feature": "neutral-scheduling",
     "feature_slug": "neutral-scheduling",
     "prd_ref": "docs/beacon/v0.0.6/prd/neutral-scheduling.md",
@@ -65,9 +65,9 @@
         "language": "zh",
         "domain_required": "true",
         "ux_required": "false",
+        "package_maturity": "filled",
         "parser_contract": "beacon-feature-package-v2",
         "truth_source_model": "feature_package_authoritative",
-        "package_maturity": "filled",
         "materials_status": "current",
         "canonical_refs": {
           "prd": "docs/beacon/v0.0.6/features/neutral-scheduling/truth.md",
@@ -109,36 +109,6 @@
           "key": "dispatch_id, stage, feature, files[]",
           "precedence": "closure 通过 manifest 确认归属",
           "requires": "closure 通过 manifest 确认归属"
-        },
-        {
-          "entity": "BindingProfile",
-          "key": "slug, schema_version, stage_map, runner, evidence_spec",
-          "precedence": "beacon 为内置参考 profile；自定义 profile 由项目 registry 声明；显式声明不得被全局默认覆盖",
-          "requires": "beacon 为内置参考 profile；自定义 profile 由项目 registry 声明；显式声明不得被全局默认覆盖"
-        },
-        {
-          "entity": "DispatchEnvelope",
-          "key": "project_slug, stage, feature, idempotency_key, approval state, binding manifest, evidence spec",
-          "precedence": "派工单即强规则接口；schema_version 1.1；必含 evidence_spec",
-          "requires": "派工单即强规则接口；schema_version 1.1；必含 evidence_spec"
-        },
-        {
-          "entity": "EvidenceSpec",
-          "key": "evidence_dir, glob, required_files, dispatch_id_binding",
-          "precedence": "写入任务 body；closure 按此校验",
-          "requires": "写入任务 body；closure 按此校验"
-        },
-        {
-          "entity": "ProjectRouting",
-          "key": "truth_gate, executor, binding_profile, global_fallback",
-          "precedence": "每项目可路由到不同适配器；未知适配器 fail-closed",
-          "requires": "每项目可路由到不同适配器；未知适配器 fail-closed"
-        },
-        {
-          "entity": "EvidenceManifest",
-          "key": "dispatch_id, stage, feature, files[]",
-          "precedence": "closure 通过 manifest 确认归属；无绑定不得判完成",
-          "requires": "closure 通过 manifest 确认归属；无绑定不得判完成"
         },
         {
           "entity": "BindingProfile",
@@ -201,36 +171,6 @@
           "key": "dispatch_id, stage, feature, files[]",
           "precedence": "closure 通过 manifest 确认归属",
           "requires": "closure 通过 manifest 确认归属"
-        },
-        {
-          "entity": "BindingProfile",
-          "key": "slug, schema_version, stage_map, runner, evidence_spec",
-          "precedence": "beacon 为内置参考 profile；自定义 profile 由项目 registry 声明；显式声明不得被全局默认覆盖",
-          "requires": "beacon 为内置参考 profile；自定义 profile 由项目 registry 声明；显式声明不得被全局默认覆盖"
-        },
-        {
-          "entity": "DispatchEnvelope",
-          "key": "project_slug, stage, feature, idempotency_key, approval state, binding manifest, evidence spec",
-          "precedence": "派工单即强规则接口；schema_version 1.1；必含 evidence_spec",
-          "requires": "派工单即强规则接口；schema_version 1.1；必含 evidence_spec"
-        },
-        {
-          "entity": "EvidenceSpec",
-          "key": "evidence_dir, glob, required_files, dispatch_id_binding",
-          "precedence": "写入任务 body；closure 按此校验",
-          "requires": "写入任务 body；closure 按此校验"
-        },
-        {
-          "entity": "ProjectRouting",
-          "key": "truth_gate, executor, binding_profile, global_fallback",
-          "precedence": "每项目可路由到不同适配器；未知适配器 fail-closed",
-          "requires": "每项目可路由到不同适配器；未知适配器 fail-closed"
-        },
-        {
-          "entity": "EvidenceManifest",
-          "key": "dispatch_id, stage, feature, files[]",
-          "precedence": "closure 通过 manifest 确认归属；无绑定不得判完成",
-          "requires": "closure 通过 manifest 确认归属；无绑定不得判完成"
         },
         {
           "entity": "BindingProfile",
@@ -375,7 +315,7 @@
         "User Intent Snapshot",
         "用户旅程",
         "First principles",
-        "Domain Model",
+        "Intent Coverage Matrix",
         "Acceptance Criteria",
         "Domain Model",
         "Entity Precedence",
@@ -383,7 +323,6 @@
         "FSM 五元组",
         "Legal walks",
         "Illegal transitions",
-        "Intent Coverage Matrix",
         "Non-goals",
         "Freeze readiness"
       ]
@@ -406,9 +345,9 @@
           "language": "zh",
           "domain_required": "true",
           "ux_required": "false",
+          "package_maturity": "filled",
           "parser_contract": "beacon-feature-package-v2",
           "truth_source_model": "feature_package_authoritative",
-          "package_maturity": "filled",
           "materials_status": "current",
           "canonical_refs": {
             "prd": "docs/beacon/v0.0.6/features/neutral-scheduling/truth.md",
@@ -450,36 +389,6 @@
             "key": "dispatch_id, stage, feature, files[]",
             "precedence": "closure 通过 manifest 确认归属",
             "requires": "closure 通过 manifest 确认归属"
-          },
-          {
-            "entity": "BindingProfile",
-            "key": "slug, schema_version, stage_map, runner, evidence_spec",
-            "precedence": "beacon 为内置参考 profile；自定义 profile 由项目 registry 声明；显式声明不得被全局默认覆盖",
-            "requires": "beacon 为内置参考 profile；自定义 profile 由项目 registry 声明；显式声明不得被全局默认覆盖"
-          },
-          {
-            "entity": "DispatchEnvelope",
-            "key": "project_slug, stage, feature, idempotency_key, approval state, binding manifest, evidence spec",
-            "precedence": "派工单即强规则接口；schema_version 1.1；必含 evidence_spec",
-            "requires": "派工单即强规则接口；schema_version 1.1；必含 evidence_spec"
-          },
-          {
-            "entity": "EvidenceSpec",
-            "key": "evidence_dir, glob, required_files, dispatch_id_binding",
-            "precedence": "写入任务 body；closure 按此校验",
-            "requires": "写入任务 body；closure 按此校验"
-          },
-          {
-            "entity": "ProjectRouting",
-            "key": "truth_gate, executor, binding_profile, global_fallback",
-            "precedence": "每项目可路由到不同适配器；未知适配器 fail-closed",
-            "requires": "每项目可路由到不同适配器；未知适配器 fail-closed"
-          },
-          {
-            "entity": "EvidenceManifest",
-            "key": "dispatch_id, stage, feature, files[]",
-            "precedence": "closure 通过 manifest 确认归属；无绑定不得判完成",
-            "requires": "closure 通过 manifest 确认归属；无绑定不得判完成"
           },
           {
             "entity": "BindingProfile",
@@ -542,36 +451,6 @@
             "key": "dispatch_id, stage, feature, files[]",
             "precedence": "closure 通过 manifest 确认归属",
             "requires": "closure 通过 manifest 确认归属"
-          },
-          {
-            "entity": "BindingProfile",
-            "key": "slug, schema_version, stage_map, runner, evidence_spec",
-            "precedence": "beacon 为内置参考 profile；自定义 profile 由项目 registry 声明；显式声明不得被全局默认覆盖",
-            "requires": "beacon 为内置参考 profile；自定义 profile 由项目 registry 声明；显式声明不得被全局默认覆盖"
-          },
-          {
-            "entity": "DispatchEnvelope",
-            "key": "project_slug, stage, feature, idempotency_key, approval state, binding manifest, evidence spec",
-            "precedence": "派工单即强规则接口；schema_version 1.1；必含 evidence_spec",
-            "requires": "派工单即强规则接口；schema_version 1.1；必含 evidence_spec"
-          },
-          {
-            "entity": "EvidenceSpec",
-            "key": "evidence_dir, glob, required_files, dispatch_id_binding",
-            "precedence": "写入任务 body；closure 按此校验",
-            "requires": "写入任务 body；closure 按此校验"
-          },
-          {
-            "entity": "ProjectRouting",
-            "key": "truth_gate, executor, binding_profile, global_fallback",
-            "precedence": "每项目可路由到不同适配器；未知适配器 fail-closed",
-            "requires": "每项目可路由到不同适配器；未知适配器 fail-closed"
-          },
-          {
-            "entity": "EvidenceManifest",
-            "key": "dispatch_id, stage, feature, files[]",
-            "precedence": "closure 通过 manifest 确认归属；无绑定不得判完成",
-            "requires": "closure 通过 manifest 确认归属；无绑定不得判完成"
           },
           {
             "entity": "BindingProfile",
@@ -716,7 +595,7 @@
           "User Intent Snapshot",
           "用户旅程",
           "First principles",
-          "Domain Model",
+          "Intent Coverage Matrix",
           "Acceptance Criteria",
           "Domain Model",
           "Entity Precedence",
@@ -724,13 +603,12 @@
           "FSM 五元组",
           "Legal walks",
           "Illegal transitions",
-          "Intent Coverage Matrix",
           "Non-goals",
           "Freeze readiness"
         ]
       },
       "summary": {
-        "entity_count": 15,
+        "entity_count": 10,
         "aggregate_count": 1,
         "illegal_slot_count": 4,
         "orphan_ac_count": 0,
