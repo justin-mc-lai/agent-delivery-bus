@@ -1,0 +1,289 @@
+{
+  "schema_version": "1.0",
+  "truth_map_contract": "beacon-truth-map-v1",
+  "truth_source_model": "feature_package_authoritative",
+  "truth_package_contract": "beacon-feature-package-v2",
+  "machine_json_role": "generated_state_not_truth",
+  "generated_by": "beacon.truth_map.resolver",
+  "generated_at": "2026-08-06T03:36:18.099867+00:00",
+  "feature": "neutral-scheduling",
+  "feature_slug": "neutral-scheduling",
+  "version": "v0.0.6",
+  "truth_authority": false,
+  "json_authority": false,
+  "source_paths": {
+    "truth": "docs/beacon/v0.0.6/features/neutral-scheduling/truth.md",
+    "tests": "docs/beacon/v0.0.6/features/neutral-scheduling/tests.md",
+    "tasks": "docs/beacon/v0.0.6/features/neutral-scheduling/tasks.md",
+    "evidence": "docs/beacon/v0.0.6/features/neutral-scheduling/evidence.md"
+  },
+  "source_hashes": {
+    "truth": "4d4cf0ad1198e793d63816d884177ac8a5fa654689b2f6483d6c3018ee57fc79",
+    "tests": "fe6142e86e8bcd72dea43bab20b9079a2a5efcea0a55718de66f264aa45bbec2",
+    "tasks": "b5cf3666f540346c3269bc7cabfc7481430c35ca98f573cea704b79e93f0fa2c",
+    "evidence": "4316769d6c63ace6c1413200615fde8037ce7daaf1a6ee6b933a9a7e5753fa42"
+  },
+  "truth_frontmatter": {
+    "slug": "neutral-scheduling",
+    "version": "v0.0.6",
+    "status": "frozen",
+    "language": "zh",
+    "domain_required": "true",
+    "ux_required": "false",
+    "parser_contract": "beacon-feature-package-v2",
+    "truth_source_model": "feature_package_authoritative",
+    "package_maturity": "filled",
+    "materials_status": "current",
+    "canonical_refs": {
+      "prd": "docs/beacon/v0.0.6/features/neutral-scheduling/truth.md",
+      "user_story": "docs/beacon/v0.0.6/features/neutral-scheduling/truth.md",
+      "test_case": "docs/beacon/v0.0.6/features/neutral-scheduling/tests.md"
+    }
+  },
+  "frontmatter_errors": [],
+  "acceptance_criteria": [
+    {
+      "ac_id": "AC-NS-001",
+      "theme": "worker binding 改为 profile 制：内置 `beacon` profile 保留现有 `### Beacon worker binding` 段与字段；自定义 profile（如 `generic`）由项目声明 skill/command/runner，产出派工单不得包含 `beacon_skill`/`beacon_command` 字段",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-NS-002",
+      "theme": "派工单 body 必含 evidence spec（evidence_dir、glob、dispatch_id 绑定说明），envelope schema_version 升级（1.0→1.1）且旧 schema 解析兼容",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-NS-003",
+      "theme": "Project 支持 per-project `truth_gate` / `executor` / `binding_profile`，缺失时回落全局配置；未知适配器/profile fail-closed，CLI 按项目解析",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-NS-004",
+      "theme": "closure 校验证据归属：evidence manifest 中 dispatch_id 必须等于当前 dispatch；缺失、陈旧或无绑定证据 → closure 不通过并保持 reconciling",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-NS-005",
+      "theme": "文档中立化：SKILL.md / usage-playbook / README / role-division 研究文档不再宣称 ADB 依赖 Beacon，统一表述为\"通用调度层 + Beacon 参考实现\"",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-NS-006",
+      "theme": "兼容性：现有 beacon profile 消费者（worker-beacon-binding v0.0.3 契约）关键字段与行为保持；仅新增字段/版本，不破坏既有派工单解析",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-NS-007",
+      "theme": "本机交付验收：hermes executor + 注册项目可完成 dispatch（plan 或等价非受限 stage）并 reconcile；受限 stage 仍要求 approval token",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-NS-008",
+      "theme": "illegal：未知 profile/适配器静默回落、派工单缺 evidence_spec、closure 用无 dispatch_id 归属证据判完成 → fail-closed",
+      "description": ""
+    }
+  ],
+  "test_rows": [
+    {
+      "ac_id": "AC-NS-001",
+      "tc_id": "TC-NS-001",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_worker_binding.py -k 'profile or generic or neutral' --tb=short`",
+      "assertion": "exit_code_0",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-NS-002",
+      "tc_id": "TC-NS-002",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_worker_binding.py -k 'evidence_spec or schema' --tb=short`",
+      "assertion": "exit_code_0",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-NS-003",
+      "tc_id": "TC-NS-003",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_registry_routing.py --tb=short`",
+      "assertion": "exit_code_0",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-NS-004",
+      "tc_id": "TC-NS-004",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_reconcile_evidence_ownership.py --tb=short`",
+      "assertion": "exit_code_0",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-NS-005",
+      "tc_id": "TC-NS-005",
+      "layer": "",
+      "command": "`rg -n '参考实现|reference implementation' README.md docs/usage-playbook.md skills/agent-delivery-bus/SKILL.md docs/beacon-adb-role-division.md`",
+      "assertion": "matches_found",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-NS-006",
+      "tc_id": "TC-NS-006",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_worker_binding.py -k beacon --tb=short`",
+      "assertion": "exit_code_0",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-NS-007",
+      "tc_id": "TC-NS-007",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_local_delivery_smoke.py --tb=short`",
+      "assertion": "exit_code_0",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-NS-008",
+      "tc_id": "TC-NS-ILL-001",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_registry_routing.py -k 'unknown or fail_closed' --tb=short`",
+      "assertion": "exit_code_0；未知 profile/适配器 fail-closed",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-NS-008",
+      "tc_id": "TC-NS-ILL-002",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_worker_binding.py -k 'missing_evidence_spec' --tb=short`",
+      "assertion": "exit_code_0；缺 evidence spec 拒绝 emit",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-NS-008",
+      "tc_id": "TC-NS-ILL-003",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_reconcile_evidence_ownership.py -k 'mismatch or stale' --tb=short`",
+      "assertion": "exit_code_0；dispatch_id 不匹配保持 reconciling",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-NS-008",
+      "tc_id": "TC-NS-ILL-004",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_reconcile_evidence_ownership.py -k 'no_evidence' --tb=short`",
+      "assertion": "exit_code_0；无证据不判完成",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-NS-002",
+      "tc_id": "TC-EXEC-001",
+      "layer": "",
+      "command": "`python3 -c \"import agent_delivery_bus, beacon; print('ok')\"`",
+      "assertion": "output_ok",
+      "evidence_path": ""
+    },
+    {
+      "ac_id": "AC-NS-001..008",
+      "tc_id": "TC-EXEC-002",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/ --tb=short`",
+      "assertion": "exit_code_0",
+      "evidence_path": ""
+    }
+  ],
+  "task_rows": [
+    {
+      "id": "TASK-001",
+      "title": "Implement AC-NS-001: worker binding 改为 profile 制：内置 `beacon` profile 保留现有 `### Beacon work... · ac=AC-NS-001 · evidence=`.beacon/evidence/implement/neutral-scheduling/AC-NS-001.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-002",
+      "title": "Implement AC-NS-002: 派工单 body 必含 evidence spec（evidence_dir、glob、dispatch_id 绑定说明），envelop... · ac=AC-NS-002 · evidence=`.beacon/evidence/implement/neutral-scheduling/AC-NS-002.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-003",
+      "title": "Implement AC-NS-003: Project 支持 per-project `truth_gate` / `executor` / `binding_profile`，... · ac=AC-NS-003 · evidence=`.beacon/evidence/implement/neutral-scheduling/AC-NS-003.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-004",
+      "title": "Implement AC-NS-004: closure 校验证据归属：evidence manifest 中 dispatch_id 必须等于当前 dispatch；缺失、陈旧或... · ac=AC-NS-004 · evidence=`.beacon/evidence/implement/neutral-scheduling/AC-NS-004.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-005",
+      "title": "Implement AC-NS-005: 文档中立化：SKILL.md / usage-playbook / README / role-division 研究文档不再宣称 ADB... · ac=AC-NS-005 · evidence=`.beacon/evidence/implement/neutral-scheduling/AC-NS-005.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-006",
+      "title": "Implement AC-NS-006: 兼容性：现有 beacon profile 消费者（worker-beacon-binding v0.0.3 契约）关键字段与行为保持；仅... · ac=AC-NS-006 · evidence=`.beacon/evidence/implement/neutral-scheduling/AC-NS-006.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-007",
+      "title": "Implement AC-NS-007: 本机交付验收：hermes executor + 注册项目可完成 dispatch（plan 或等价非受限 stage）并 reconci... · ac=AC-NS-007 · evidence=`.beacon/evidence/implement/neutral-scheduling/AC-NS-007.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-008",
+      "title": "Implement AC-NS-008: illegal：未知 profile/适配器静默回落、派工单缺 evidence_spec、closure 用无 dispatch_id ... · ac=AC-NS-008 · evidence=`.beacon/evidence/implement/neutral-scheduling/AC-NS-008.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-009",
+      "title": "Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/neutral-scheduling/GATES.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-010",
+      "title": "Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/neutral-scheduling/QA-MATRIX.json`",
+      "status": "unchecked"
+    }
+  ],
+  "checkbox_errors": [],
+  "evidence_rows": [
+    {
+      "surface": "truth",
+      "authority": "requirement_truth",
+      "canonical_artifact": "docs/beacon/v0.0.6/features/neutral-scheduling/truth.md",
+      "status": "draft",
+      "route": "truth"
+    },
+    {
+      "surface": "tests",
+      "authority": "test_truth",
+      "canonical_artifact": "docs/beacon/v0.0.6/features/neutral-scheduling/tests.md",
+      "status": "draft",
+      "route": "qa"
+    },
+    {
+      "surface": "plan",
+      "authority": "support_advisory",
+      "canonical_artifact": "docs/beacon/v0.0.6/programs/neutral-scheduling/program-manifest.md",
+      "status": "indexed",
+      "route": "truth"
+    },
+    {
+      "surface": "research",
+      "authority": "support_advisory",
+      "canonical_artifact": "docs/beacon/v0.0.6/research/neutral-scheduling.md",
+      "status": "indexed",
+      "route": "truth"
+    },
+    {
+      "surface": "implement",
+      "authority": "support_advisory",
+      "canonical_artifact": ".beacon/evidence/implement/neutral-scheduling/",
+      "status": "present",
+      "route": "implement"
+    },
+    {
+      "surface": "qa",
+      "authority": "qa_verdict",
+      "canonical_artifact": ".beacon/evidence/qa/v0.0.6/neutral-scheduling/scorecard.json",
+      "status": "re-run after freeze",
+      "route": "qa"
+    }
+  ]
+}

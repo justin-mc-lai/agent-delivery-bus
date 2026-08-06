@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "feature": "neutral-scheduling",
+  "feature_slug": "neutral-scheduling",
+  "version": "v0.0.6",
+  "revision_id": "R1",
+  "source_revision_id": "",
+  "reason": "freeze",
+  "doc_status": "frozen",
+  "delivery_status": "idle",
+  "lifecycle_status": "idle",
+  "baseline_hash": "sha256:7948bcda48dbffc7ceaffba75b1d9c71fddf18581a2edd49746849e6763d95c3",
+  "superseded_by": "",
+  "created_at": "2026-08-06T03:36:17.970587+00:00",
+  "frozen_at": "2026-08-06T03:36:17.971235+00:00",
+  "accepted_at": ""
+}
