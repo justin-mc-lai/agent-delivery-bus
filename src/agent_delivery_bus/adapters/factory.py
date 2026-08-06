@@ -12,6 +12,8 @@ from .hermes import HermesAdapter
 from .memory import AgentMemoryAdapter, InMemoryMemoryAdapter
 from .null import NullExecutor, NullTruthGate
 from .spi import ExecutorAdapter, MemoryAdapter, TruthGateAdapter
+from ..registry import Project
+from ..worker_binding import DEFAULT_BINDING_PROFILE
 
 
 EXECUTOR_ADAPTERS = {
@@ -94,3 +96,77 @@ def adapters_from_config(raw: dict[str, Any] | None = None, *, runner: CommandRu
         "truth_gate_name": truth_name,
         "memory_name": memory_name,
     }
+
+
+class AdapterResolver:
+    """Per-project adapter routing with global fallback.
+
+    The registry may declare ``truth_gate`` / ``executor`` / ``binding_profile``
+    per project; unset fields fall back to the global config. Instances are
+    cached by adapter name so stateful backends (e.g. NullExecutor boards) stay
+    consistent across dispatch and reconcile.
+    """
+
+    def __init__(self, raw: dict[str, Any] | None = None, *, runner: CommandRunner | None = None):
+        config = raw or {}
+        adapters = config.get("adapters") if isinstance(config.get("adapters"), dict) else {}
+        self.runner = runner
+        self.global_executor = str(adapters.get("executor") or config.get("executor") or "null")
+        self.global_truth_gate = str(adapters.get("truth_gate") or config.get("truth_gate") or "null")
+        self.global_binding_profile = str(
+            adapters.get("binding_profile") or config.get("binding_profile") or DEFAULT_BINDING_PROFILE
+        )
+        self.global_memory = str(adapters.get("memory") or config.get("memory") or "inprocess")
+        self._executors: dict[str, ExecutorAdapter] = {}
+        self._gates: dict[str, TruthGateAdapter] = {}
+        self._memory: MemoryAdapter | None = None
+
+    def _executor(self, name: str) -> ExecutorAdapter:
+        key = (name or "null").strip().lower()
+        instance = self._executors.get(key)
+        if instance is None:
+            instance = create_executor(key, runner=self.runner)
+            self._executors[key] = instance
+        return instance
+
+    def _truth_gate(self, name: str) -> TruthGateAdapter:
+        key = (name or "null").strip().lower()
+        instance = self._gates.get(key)
+        if instance is None:
+            instance = create_truth_gate(key, runner=self.runner)
+            self._gates[key] = instance
+        return instance
+
+    def for_project(self, project: Project | None = None) -> dict[str, Any]:
+        executor_name = (
+            (project.executor or self.global_executor).strip().lower()
+            if project is not None
+            else self.global_executor
+        )
+        truth_name = (
+            (project.truth_gate or self.global_truth_gate).strip().lower()
+            if project is not None
+            else self.global_truth_gate
+        )
+        profile = (
+            (project.binding_profile or self.global_binding_profile).strip()
+            if project is not None
+            else self.global_binding_profile
+        )
+        profile = profile or DEFAULT_BINDING_PROFILE
+        return {
+            "executor": self._executor(executor_name),
+            "truth_gate": self._truth_gate(truth_name),
+            "binding_profile": profile,
+            "memory": self._memory_instance(),
+            "executor_name": executor_name,
+            "truth_gate_name": truth_name,
+        }
+
+    def global_adapters(self) -> dict[str, Any]:
+        return self.for_project(None)
+
+    def _memory_instance(self) -> MemoryAdapter:
+        if self._memory is None:
+            self._memory = create_memory(self.global_memory)
+        return self._memory

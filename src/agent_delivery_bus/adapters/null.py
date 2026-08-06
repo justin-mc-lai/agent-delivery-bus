@@ -200,7 +200,15 @@ class NullTruthGate:
             )
         return checks
 
-    def closure(self, project: Project, *, stage: str, feature: str) -> dict[str, Any]:
+    def closure(
+        self,
+        project: Project,
+        *,
+        stage: str,
+        feature: str,
+        dispatch_id: str = "",
+        evidence_spec: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         if self.auto_pass:
             return {"pass": True, "evidence": ["null-truth-gate:auto-pass"]}
         evidence = Path(project.repo) / ".adb" / "evidence" / stage / f"{feature}.json"

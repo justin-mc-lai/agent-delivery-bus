@@ -25,8 +25,22 @@ class TruthGateAdapter(Protocol):
     def preflight_checks(self, project: Project, *, stage: str) -> list[dict[str, Any]]:
         """Return ordered readiness checks. First failure blocks dispatch."""
 
-    def closure(self, project: Project, *, stage: str, feature: str) -> dict[str, Any]:
-        """Return ``{"pass": bool, ...}`` for stage evidence completeness."""
+    def closure(
+        self,
+        project: Project,
+        *,
+        stage: str,
+        feature: str,
+        dispatch_id: str = "",
+        evidence_spec: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Return ``{"pass": bool, ...}`` for stage evidence completeness.
+
+        v1.1 contract: when ``dispatch_id`` is provided, closure MUST reject
+        evidence that is not owned by that dispatch (missing/stale manifest).
+        ``evidence_spec`` carries the evidence_dir/glob contract emitted in the
+        task body.
+        """
 
 
 @runtime_checkable

@@ -115,7 +115,15 @@ class BeaconAdapter:
             "stderr": result.stderr[-2000:],
         }
 
-    def closure(self, project: Project, *, stage: str, feature: str) -> dict[str, Any]:
+    def closure(
+        self,
+        project: Project,
+        *,
+        stage: str,
+        feature: str,
+        dispatch_id: str = "",
+        evidence_spec: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         root = Path(project.repo)
         docs = Path(project.docs_root) if project.docs_root else root / "docs" / "beacon"
         version = project.docs_version
@@ -130,7 +138,30 @@ class BeaconAdapter:
             return {"pass": bool(present), "evidence": present}
         if stage == "implement":
             evidence_dir = root / ".beacon" / "evidence" / "implement" / feature
+            declared = (evidence_spec or {}).get("evidence_dir") or ""
+            if declared:
+                candidate = Path(declared)
+                evidence_dir = candidate if candidate.is_absolute() else root / candidate
             present = [str(path) for path in evidence_dir.glob("*.json")] if evidence_dir.is_dir() else []
+            if dispatch_id:
+                manifest = evidence_dir / "manifest.json"
+                manifest_ok = False
+                if manifest.is_file():
+                    try:
+                        payload = json.loads(manifest.read_text(encoding="utf-8"))
+                        manifest_ok = str(payload.get("dispatch_id") or "") == str(dispatch_id)
+                    except (json.JSONDecodeError, OSError):
+                        manifest_ok = False
+                if not manifest_ok:
+                    return {
+                        "pass": False,
+                        "reason_code": "evidence_ownership_mismatch",
+                        "evidence": present,
+                        "dispatch_id": dispatch_id,
+                        "resume_action": (
+                            "write evidence/manifest.json with the matching dispatch_id, then reconcile again"
+                        ),
+                    }
             return {"pass": bool(present), "evidence": present}
         if stage == "qa":
             qa_candidates = list((docs / version / ".machine" / "qa").glob(f"{feature}*.json"))

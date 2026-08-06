@@ -226,7 +226,13 @@ class HermesAdapter:
         if result.returncode != 0:
             raise CommandFailed("hermes_task_show_failed", f"Failed to show Hermes task {task_id}")
         payload = result.json()
-        return payload if isinstance(payload, dict) else {"raw": payload}
+        if not isinstance(payload, dict):
+            return {"raw": payload}
+        task = payload.get("task") if isinstance(payload.get("task"), dict) else payload
+        if isinstance(payload.get("latest_summary"), dict):
+            task = dict(task)
+            task["latest_summary"] = payload["latest_summary"]
+        return task
 
     def find_by_idempotency(self, board: str, key: str) -> dict[str, Any] | None:
         for task in self.list_tasks(board):

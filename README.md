@@ -54,6 +54,9 @@ Authority split:
 - **Adapter SPI**: `TruthGateAdapter` + `ExecutorAdapter`
 - **Demo adapters**: `null` (no external deps)
 - **Example adapters**: Beacon, Hermes
+- **Neutral by design**: ADB schedules through a strong-rule dispatch envelope
+  (binding profile + evidence spec) and never requires a specific truth gate;
+  Beacon is the built-in reference implementation/profile, not a dependency
 - **Skills**: control-plane skill + collaboration-rules template
 - **Runtime deps**: none (Python stdlib + SQLite)
 
@@ -96,6 +99,31 @@ Implement your own backends against:
 
 - `agent_delivery_bus.adapters.spi.ExecutorAdapter`
 - `agent_delivery_bus.adapters.spi.TruthGateAdapter`
+
+Per-project routing overrides the global pair (falls back when unset):
+
+```json
+{
+  "adapters": {"executor": "hermes", "truth_gate": "beacon"},
+  "projects": [
+    {
+      "slug": "other-agent-project",
+      "repo": "/path/to/project",
+      "executor": "hermes",
+      "truth_gate": "custom",
+      "binding_profile": "generic",
+      "metadata": {
+        "binding_profile": {
+          "stages": {
+            "implement": {"skill": "my-impl", "command": "run-impl {feature}", "public_harness": "implement"}
+          },
+          "evidence_spec": {"evidence_dir": ".adb/evidence", "glob": "*.json", "dispatch_id_binding": true}
+        }
+      }
+    }
+  ]
+}
+```
 
 ### What it does / does not do
 
@@ -180,6 +208,8 @@ flowchart TD
 - **Adapter SPI**：`TruthGateAdapter` + `ExecutorAdapter`
 - **演示适配器**：`null`（零外部依赖）
 - **示例适配器**：Beacon、Hermes
+- **天然中立**：ADB 通过强规则派发信封（binding profile + evidence spec）调度，
+  不要求特定 truth gate；Beacon 是内置参考实现（参考 profile），不是依赖
 - **Skill**：控制面 skill + 协作规则模板
 - **运行时依赖**：无
 

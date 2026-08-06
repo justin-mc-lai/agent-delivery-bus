@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from typing import Any
+from typing import Any, Callable
 
 from .adapters.memory import InMemoryMemoryAdapter
 from .adapters.spi import ExecutorAdapter, MemoryAdapter, TruthGateAdapter
@@ -14,9 +14,11 @@ from .preflight import Preflight
 from .registry import Project, ProjectRegistry
 from .storage import Storage
 from .worker_binding import (
+    DEFAULT_BINDING_PROFILE,
     ENABLED_STAGES,
     assert_stage_enabled,
     format_binding_section,
+    format_evidence_spec_section,
     resolve_worker_binding,
 )
 
@@ -25,7 +27,13 @@ TERMINAL_EXECUTOR_SUCCESS = {"done", "completed", "success", "succeeded"}
 TERMINAL_EXECUTOR_FAILURE = {"blocked", "failed", "cancelled", "archived"}
 
 
-def normalized_request(project: Project, *, stage: str, feature: str) -> dict[str, Any]:
+def normalized_request(
+    project: Project,
+    *,
+    stage: str,
+    feature: str,
+    binding_profile: str = "",
+) -> dict[str, Any]:
     return {
         "schema_version": "1.0",
         "project_slug": project.slug,
@@ -33,6 +41,7 @@ def normalized_request(project: Project, *, stage: str, feature: str) -> dict[st
         "docs_version": project.docs_version,
         "stage": stage.strip().lower(),
         "feature": feature.strip(),
+        "binding_profile": binding_profile or DEFAULT_BINDING_PROFILE,
     }
 
 
@@ -47,11 +56,18 @@ def task_body(
     stage: str,
     feature: str,
     memory_summary: str = "",
+    dispatch_id: str = "",
+    binding_profile: str = "",
+    profile_config: dict[str, Any] | None = None,
 ) -> str:
     binding = resolve_worker_binding(
         stage=stage,
         feature=feature,
         docs_version=project.docs_version or "",
+        binding_profile=binding_profile,
+        profile_config=profile_config,
+        project_repo=project.repo,
+        dispatch_id=dispatch_id,
     )
     approval_note = (
         "A matching one-time approval was reserved by Agent Delivery Bus."
@@ -71,6 +87,8 @@ def task_body(
         "Worker success is an execution receipt only; Agent Delivery Bus will reconcile truth-gate evidence separately.",
         "",
         format_binding_section(binding),
+        "",
+        format_evidence_spec_section(binding.get("evidence_spec") or {}),
     ]
     if memory_summary.strip():
         lines.extend(["", "### Scoped memory recall", memory_summary.strip()])
@@ -87,6 +105,7 @@ class DeliveryService:
         executor: ExecutorAdapter | None = None,
         truth_gate: TruthGateAdapter | None = None,
         memory: MemoryAdapter | None = None,
+        adapter_resolver: Callable[[Project], dict[str, Any]] | None = None,
         # Backward-compatible aliases
         hermes: ExecutorAdapter | None = None,
         beacon: TruthGateAdapter | None = None,
@@ -100,9 +119,22 @@ class DeliveryService:
         # Compatibility attributes for older call sites/tests.
         self.hermes = self.executor
         self.beacon = self.truth_gate
+        self.adapter_resolver = adapter_resolver
         self.memory = memory or InMemoryMemoryAdapter()
         self.preflight = preflight or Preflight(self.truth_gate, self.executor)
         self.approvals = ApprovalService(storage)
+
+    def _adapters_for(self, project: Project) -> dict[str, Any]:
+        """Resolve per-project adapters, falling back to the global pair."""
+        if self.adapter_resolver is not None:
+            return self.adapter_resolver(project)
+        return {
+            "executor": self.executor,
+            "truth_gate": self.truth_gate,
+            "binding_profile": project.binding_profile or DEFAULT_BINDING_PROFILE,
+            "executor_name": getattr(self.executor, "name", ""),
+            "truth_gate_name": getattr(self.truth_gate, "name", ""),
+        }
 
     def _recall_for_dispatch(self, project: Project, *, stage: str, feature: str) -> dict[str, Any]:
         query = f"{project.slug} {stage} {feature}".strip()
@@ -162,10 +194,25 @@ class DeliveryService:
             raise DeliveryBusError("feature_required", "feature is required")
         stage = assert_stage_enabled(stage)
 
-        request = normalized_request(project, stage=stage, feature=feature)
+        adapters = self._adapters_for(project)
+        executor = adapters["executor"]
+        truth_gate = adapters["truth_gate"]
+        binding_profile = str(adapters["binding_profile"] or "")
+        profile_config = project.metadata.get("binding_profile")
+        profile_config = profile_config if isinstance(profile_config, dict) else None
+
+        request = normalized_request(
+            project,
+            stage=stage,
+            feature=feature,
+            binding_profile=binding_profile,
+        )
         digest = request_digest(request)
         idempotency_key = forced_idempotency_key or f"adb-v1-{digest}"
-        preflight = self.preflight.run(project, stage=stage)
+        if self.adapter_resolver is not None:
+            preflight = Preflight(truth_gate, executor).run(project, stage=stage)
+        else:
+            preflight = self.preflight.run(project, stage=stage)
         if dry_run:
             return {
                 "status": "blocked" if preflight["blocked"] else "pass",
@@ -175,8 +222,8 @@ class DeliveryService:
                 "dry_run": True,
                 "request": request,
                 "idempotency_key": idempotency_key,
-                "board": self.executor.board_for(project),
-                "workspace": self.executor.workspace_for(project, stage=stage),
+                "board": executor.board_for(project),
+                "workspace": executor.workspace_for(project, stage=stage),
                 "preflight": preflight,
             }
 
@@ -324,8 +371,8 @@ class DeliveryService:
             }
 
         try:
-            self.executor.ensure_board(project)
-            receipt = self.executor.create_task(
+            executor.ensure_board(project)
+            receipt = executor.create_task(
                 project,
                 stage=stage,
                 feature=feature,
@@ -334,6 +381,9 @@ class DeliveryService:
                     stage=stage,
                     feature=feature,
                     memory_summary=str(memory.get("summary") or ""),
+                    dispatch_id=dispatch_id,
+                    binding_profile=binding_profile,
+                    profile_config=profile_config,
                 ),
                 idempotency_key=idempotency_key,
             )
@@ -403,10 +453,13 @@ class DeliveryService:
     def reconcile(self, dispatch_id: str) -> dict[str, Any]:
         dispatch = self.storage.get_dispatch(dispatch_id)
         project = self.registry.resolve(slug=dispatch["project_slug"])
-        board = dispatch.get("executor_board") or self.executor.board_for(project)
+        adapters = self._adapters_for(project)
+        executor = adapters["executor"]
+        truth_gate = adapters["truth_gate"]
+        board = dispatch.get("executor_board") or executor.board_for(project)
         task_id = dispatch.get("executor_task_id")
         if not task_id:
-            task = self.executor.find_by_idempotency(board, dispatch["idempotency_key"])
+            task = executor.find_by_idempotency(board, dispatch["idempotency_key"])
             if task is None:
                 return {
                     "status": "reconciling",
@@ -427,7 +480,7 @@ class DeliveryService:
             )
             if dispatch.get("approval_id"):
                 self.approvals.finalize(dispatch["approval_id"], dispatch_id=dispatch_id)
-        task = self.executor.show_task(board, task_id)
+        task = executor.show_task(board, task_id)
         status = str(task.get("status") or task.get("state") or "").lower()
         if status in TERMINAL_EXECUTOR_FAILURE:
             if dispatch["state"] == "dispatched":
@@ -464,10 +517,11 @@ class DeliveryService:
                 event_type="worker_succeeded",
                 payload={"task": task},
             )
-        closure = self.truth_gate.closure(
+        closure = truth_gate.closure(
             project,
             stage=dispatch["stage"],
             feature=dispatch["feature"],
+            dispatch_id=dispatch_id,
         )
         if not closure.get("pass"):
             return {

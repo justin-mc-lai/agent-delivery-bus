@@ -67,7 +67,7 @@ adb schedule should-run daily-oss-pick --json   # 手动试问：现在能跑吗
 |------|------|--------|
 | 监工 | `adb` | 审批、幂等、证据对账（治理） |
 | 工人 | `hermes kanban` + coding profile | 领任务、在隔离 worktree 干活、交回执 |
-| 派工单 | hermes kanban task body | 内嵌 Beacon skill 指令（worker-beacon-binding 契约） |
+| 派工单 | hermes kanban task body | 内嵌 binding profile + evidence spec（Beacon 为内置参考 profile，可替换） |
 | 验收 | `adb reconcile` | 对账证据（truth-gate closure），证据齐才 completed |
 
 ### 2.2 标准开发流程（以 beacon 项目加功能为例）
@@ -88,6 +88,9 @@ adb dispatch --project beacon --stage implement --feature my-feature \
 #     ### Beacon worker binding
 #     stage: implement → beacon implement skill
 #     runner_kind: local_agent · allowed_profiles: (coding, codex)
+#     ### Evidence spec
+#     evidence_dir: <repo>/.beacon/evidence/implement/my-feature
+#     dispatch_id_binding: true → 证据 manifest 必须绑定本次 dispatch
 
 # ④ 工人干活（hermes 侧自动或手动）
 hermes kanban list --status todo          # 看待领任务
@@ -97,8 +100,44 @@ hermes kanban dispatch <task-id>          # 派工人执行（worktree 隔离 + 
 
 # ⑤ 对账验收（证据齐才 completed）
 adb reconcile <dispatch-id> --json
-#  → truth-gate 查 .beacon/evidence/implement/my-feature/*.json
+#  → truth-gate 查 .beacon/evidence/implement/my-feature/*.json（含 dispatch_id 归属校验）
 #  → 证据齐 → completed；缺证据 → 保持 reconciling
+```
+
+### 2.2.1 中立接入：非 Beacon 项目/其他 agent
+
+ADB 本身不要求项目使用 Beacon。项目在 `config/projects.json` 声明自己的
+`truth_gate` / `executor` / `binding_profile`（未声明则回落全局配置），
+派工单按项目 profile 生成 skill/command 与 evidence spec，closure 由该项目
+的 truth gate 决定（Beacon 只是内置参考实现之一）：
+
+```json
+{
+  "projects": [
+    {
+      "slug": "other-agent-project",
+      "repo": "/path/to/project",
+      "docs_root": "docs/truth",
+      "docs_version": "v1.0.0",
+      "truth_gate": "custom",
+      "executor": "hermes",
+      "binding_profile": "generic",
+      "metadata": {
+        "binding_profile": {
+          "stages": {
+            "implement": {"skill": "my-impl", "command": "run-impl {feature}", "public_harness": "implement"}
+          },
+          "runner": {"runner_kind": "local_agent", "hermes_assignee": "coding"},
+          "evidence_spec": {
+            "evidence_dir": ".adb/evidence/implement/{feature}",
+            "glob": "*.json",
+            "dispatch_id_binding": true
+          }
+        }
+      }
+    }
+  ]
+}
 ```
 
 ### 2.3 轻量路径：不经过 ADB 直接派（日常小活）

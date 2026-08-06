@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from .adapters.factory import adapters_from_config
+from .adapters.factory import AdapterResolver
 from .approvals import ApprovalService
 from .assign import AssignmentScorer
 from .boundary import BoundaryService, hermes_boundary_tick_script
@@ -559,7 +559,8 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
     registry = ProjectRegistry.load(args.config)
     storage = Storage(args.db)
     try:
-        wired = adapters_from_config(registry.raw)
+        resolver = AdapterResolver(registry.raw)
+        wired = resolver.global_adapters()
         executor = wired["executor"]
         truth_gate = wired["truth_gate"]
         preflight = Preflight(truth_gate, executor)
@@ -570,6 +571,7 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
             executor=executor,
             truth_gate=truth_gate,
             memory=wired["memory"],
+            adapter_resolver=resolver.for_project,
         )
         approvals = ApprovalService(storage)
         scorer = AssignmentScorer(registry)
@@ -586,7 +588,14 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
 
         if args.command == "doctor":
             projects = [registry.resolve(slug=args.project)] if args.project else registry.list(dispatchable_only=True)
-            results = [preflight.run(project, stage="plan") for project in projects]
+            results = []
+            for project in projects:
+                project_adapters = resolver.for_project(project)
+                results.append(
+                    Preflight(project_adapters["truth_gate"], project_adapters["executor"]).run(
+                        project, stage="plan"
+                    )
+                )
             blocked = any(item["blocked"] for item in results)
             return envelope(
                 status="blocked" if blocked else "pass",
@@ -606,11 +615,12 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
             rows = []
             for project in projects:
                 dispatches = storage.list_dispatches(project_slug=project.slug)
+                project_adapters = resolver.for_project(project)
                 rows.append(
                     _summarize_project(
                         project=project,
                         dispatches=dispatches,
-                        executor=executor,
+                        executor=project_adapters["executor"],
                         sync_boards=bool(getattr(args, "sync_boards", False)),
                     )
                 )
@@ -642,10 +652,11 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                 )
                 rows = []
                 for project in projects:
+                    project_adapters = resolver.for_project(project)
                     rows.append(
                         build_board_status(
                             project=project,
-                            executor=executor,
+                            executor=project_adapters["executor"],
                             dispatches=storage.list_dispatches(project_slug=project.slug),
                             sync_board=bool(getattr(args, "sync_board", False)),
                             limit=int(getattr(args, "limit", 8) or 0),

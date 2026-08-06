@@ -123,7 +123,16 @@ class FakeTruthGate:
     def preflight_checks(self, project: Project, *, stage: str):
         return []
 
-    def closure(self, project: Project, *, stage: str, feature: str):
+    def closure(
+        self,
+        project: Project,
+        *,
+        stage: str,
+        feature: str,
+        dispatch_id: str = "",
+        evidence_spec: dict[str, Any] | None = None,
+    ):
+        del dispatch_id, evidence_spec
         return {"pass": self.closure_pass, "evidence": ["fixture"] if self.closure_pass else []}
 
 

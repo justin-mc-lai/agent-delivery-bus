@@ -59,8 +59,12 @@ bin/adb boards status --project <slug> --json
 bin/adb approvals awaiting --channel feishu --json
 ```
 
-Dispatch task bodies embed stage→Beacon skill binding for the local Hermes `coding`
-(or Codex) runner. `goal` is not an enabled dispatch stage by default.
+Dispatch task bodies embed the project's stage→worker binding profile plus an
+evidence spec for the local Hermes `coding` (or Codex) runner. `beacon` is the
+built-in reference profile; any truth-gate system may be used as long as the
+project declares its profile/adapters through the registry contract (Beacon is
+the reference implementation, not a dependency). `goal` is not an enabled
+dispatch stage by default.
 
 ### Confirm gate (Hermes skill contract)
 

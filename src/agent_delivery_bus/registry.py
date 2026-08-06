@@ -23,6 +23,9 @@ class Project:
     dispatchable: bool
     docs_root: str = ""
     docs_version: str = ""
+    truth_gate: str = ""
+    executor: str = ""
+    binding_profile: str = ""
     metadata: dict[str, Any] = field(default_factory=dict)
 
     # Backward-compatible aliases used by older local configs and tests.
@@ -44,6 +47,9 @@ class Project:
             "dispatchable": self.dispatchable,
             "docs_root": self.docs_root,
             "docs_version": self.docs_version,
+            "truth_gate": self.truth_gate,
+            "executor": self.executor,
+            "binding_profile": self.binding_profile,
         }
         # Keep legacy keys for older consumers and example Beacon adapters.
         if self.docs_root:
@@ -118,6 +124,9 @@ class ProjectRegistry:
                 or row.get("current_docs_version")
                 or ""
             ).strip()
+            truth_gate = str(row.get("truth_gate") or "").strip()
+            executor = str(row.get("executor") or "").strip()
+            binding_profile = str(row.get("binding_profile") or "").strip()
             if not slug or slug in seen:
                 raise DeliveryBusError("project_slug_duplicate", f"Missing or duplicate project slug: {slug!r}")
             if project_class not in ALLOWED_CLASSES:
@@ -149,6 +158,9 @@ class ProjectRegistry:
                     dispatchable=bool(row.get("dispatchable", True)),
                     docs_root=str(Path(docs_root).expanduser().resolve()) if docs_root else "",
                     docs_version=version,
+                    truth_gate=truth_gate,
+                    executor=executor,
+                    binding_profile=binding_profile,
                     metadata=dict(metadata),
                 )
             )

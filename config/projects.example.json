@@ -8,7 +8,8 @@
   "notes": {
     "knowledge_os": "Keep inspiration/knowledge/collaboration-rule folders outside this registry. Register only software delivery targets here.",
     "local_config": "Copy this file to config/projects.json and point repo/docs paths at your machine. Use executor/truth_gate hermes+beacon for real delivery.",
-    "null_demo": "null adapters let you exercise approve/dispatch/reconcile without Hermes or Beacon installed."
+    "null_demo": "null adapters let you exercise approve/dispatch/reconcile without Hermes or Beacon installed.",
+    "neutral_contract": "Per-project truth_gate/executor/binding_profile override the global adapters block; unset fields fall back to global. binding_profile 'beacon' is the built-in reference profile; custom profiles declare metadata['binding_profile'] with stages/runner/evidence_spec."
   },
   "projects": [
     {
