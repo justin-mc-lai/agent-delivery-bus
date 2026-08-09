@@ -71,6 +71,7 @@ class NullExecutor:
         feature: str,
         body: str,
         idempotency_key: str,
+        assignee: str = "coding",
     ) -> dict[str, Any]:
         existing = self.find_by_idempotency(self.board_for(project), idempotency_key)
         if existing is not None:

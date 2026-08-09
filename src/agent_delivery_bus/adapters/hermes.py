@@ -88,6 +88,9 @@ class HermesAdapter:
         return board_slug(project.slug)
 
     def workspace_for(self, project: Project, *, stage: str) -> str:
+        declared = str((project.metadata or {}).get("workspace_kind") or "").strip().lower()
+        if declared == "dir":
+            return f"dir:{project.repo}"
         if stage == "implement":
             return f"worktree:{project.repo}"
         return f"dir:{project.repo}"
@@ -140,6 +143,7 @@ class HermesAdapter:
         feature: str,
         body: str,
         idempotency_key: str,
+        assignee: str = "coding",
     ) -> dict[str, Any]:
         slug = self.board_for(project)
         workspace = self.workspace_for(project, stage=stage)
@@ -154,7 +158,7 @@ class HermesAdapter:
                 "--body",
                 body,
                 "--assignee",
-                "coding",
+                assignee,
                 "--workspace",
                 workspace,
                 "--idempotency-key",

@@ -88,10 +88,20 @@ class FakeExecutor:
     def ensure_board(self, project: Project) -> dict[str, Any]:
         return {"slug": self.board_for(project)}
 
-    def create_task(self, project: Project, *, stage: str, feature: str, body: str, idempotency_key: str):
+    def create_task(
+        self,
+        project: Project,
+        *,
+        stage: str,
+        feature: str,
+        body: str,
+        idempotency_key: str,
+        assignee: str = "coding",
+    ):
         self.create_count += 1
         self.last_body = body
         self.bodies.append(body)
+        self.last_assignee = assignee
         task_id = f"task-{self.create_count}"
         task = {
             "id": task_id,

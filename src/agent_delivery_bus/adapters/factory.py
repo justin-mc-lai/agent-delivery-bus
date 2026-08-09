@@ -8,6 +8,7 @@ from typing import Any
 from ..errors import DeliveryBusError
 from ..process import CommandRunner
 from .beacon import BeaconAdapter
+from .content import ContentTruthGate
 from .hermes import HermesAdapter
 from .memory import AgentMemoryAdapter, InMemoryMemoryAdapter
 from .null import NullExecutor, NullTruthGate
@@ -23,6 +24,7 @@ EXECUTOR_ADAPTERS = {
 
 TRUTH_GATE_ADAPTERS = {
     "beacon": BeaconAdapter,
+    "content": ContentTruthGate,
     "null": NullTruthGate,
 }
 
@@ -60,6 +62,8 @@ def create_truth_gate(name: str = "null", *, runner: CommandRunner | None = None
         )
     if cls is BeaconAdapter:
         return cls(runner=runner) if runner is not None else cls()
+    if cls is ContentTruthGate:
+        return cls()
     if cls is NullTruthGate:
         return cls()
     return cls(runner=runner) if runner is not None else cls()

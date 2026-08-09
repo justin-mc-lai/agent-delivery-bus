@@ -372,6 +372,16 @@ class DeliveryService:
 
         try:
             executor.ensure_board(project)
+            binding = resolve_worker_binding(
+                stage=stage,
+                feature=feature,
+                docs_version=project.docs_version or "",
+                binding_profile=binding_profile,
+                profile_config=profile_config,
+                project_repo=project.repo,
+                dispatch_id=dispatch_id,
+            )
+            runner_profile = str(binding.get("runner_profile") or "coding")
             receipt = executor.create_task(
                 project,
                 stage=stage,
@@ -386,6 +396,7 @@ class DeliveryService:
                     profile_config=profile_config,
                 ),
                 idempotency_key=idempotency_key,
+                assignee=runner_profile,
             )
             dispatch = self.storage.transition(
                 dispatch_id,

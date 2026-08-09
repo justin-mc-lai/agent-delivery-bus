@@ -73,8 +73,13 @@ class ExecutorAdapter(Protocol):
         feature: str,
         body: str,
         idempotency_key: str,
+        assignee: str = "coding",
     ) -> dict[str, Any]:
-        """Create or reuse a task. Must return board and task_id."""
+        """Create or reuse a task. Must return board and task_id.
+
+        ``assignee`` selects the local runner profile (e.g. ``coding`` or
+        ``codex``) when the executor backend supports named workers.
+        """
 
     def show_task(self, board: str, task_id: str) -> dict[str, Any]:
         """Fetch current remote task state."""
