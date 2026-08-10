@@ -26,6 +26,9 @@ KNOWN_ACTIONS = (
     "boards",
     "status",
     "projects",
+    "register",
+    "delete",
+    "restore",
 )
 
 # Verbs / stage words that are not project aliases.
@@ -42,6 +45,16 @@ _STOPWORDS = {
     "开始",
     "做",
     "跑",
+    "项目",
+    "新",
+    "登记",
+    "注册",
+    "新增",
+    "立项",
+    "删除",
+    "移除",
+    "归档",
+    "恢复",
     *KNOWN_STAGES,
     *KNOWN_ACTIONS,
 }
@@ -113,6 +126,17 @@ class IntentParser:
             )
 
         candidates = self._match_projects(tokens, text)
+        if action == "register":
+            # Registration targets a NEW project; no existing project resolution.
+            return self._resolved(
+                utterance=text,
+                action="register",
+                stage="",
+                feature=feature,
+                project_slug="",
+                candidates=[],
+                confidence=0.9,
+            )
         if not require_project and not candidates:
             return self._resolved(
                 utterance=text,
@@ -183,6 +207,14 @@ class IntentParser:
         mapping = (
             ("派工", "dispatch"),
             ("调度", "dispatch"),
+            ("登记", "register"),
+            ("注册", "register"),
+            ("新增", "register"),
+            ("立项", "register"),
+            ("删除", "delete"),
+            ("移除", "delete"),
+            ("归档", "delete"),
+            ("恢复", "restore"),
             ("批准", "approve"),
             ("拍板", "approve"),
             ("候选", "assign"),
@@ -262,6 +294,14 @@ class IntentParser:
 
     def _match_projects(self, tokens: list[str], text: str) -> list[dict[str, str]]:
         found: dict[str, dict[str, str]] = {}
+        # Fixed index tokens ("5", "#5") match project.index (machine-enforced numbering).
+        for token in tokens:
+            digits = token.lstrip("#")
+            if not digits.isdigit():
+                continue
+            for project in self.registry.list():
+                if project.index == int(digits):
+                    found.setdefault(project.slug, {"slug": project.slug, "matched": f"#{digits}"})
         # Token exact matches against slug/alias.
         for token in tokens:
             for slug in self._token_project_hits(token):

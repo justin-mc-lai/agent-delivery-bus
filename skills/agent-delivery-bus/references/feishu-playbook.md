@@ -30,6 +30,26 @@
 | 审批 / 同意 / 放行 | `adb approve` → `adb dispatch` |
 | 验收 / 对账 / 结果 | `adb task show` / `adb reconcile` |
 | 状态 / 待审 / 列表 / 看板 | `adb fleet` / `adb projects list` / `adb approvals awaiting --channel feishu` |
+| 登记 / 注册 / 新增 / 立项 | `adb projects register --slug ... --class ... --repo ...` |
+| 删除 / 移除 / 归档 | `adb projects delete <编号|slug> --yes`（需确认） |
+| 恢复 | `adb projects restore <编号|slug>` |
+
+## 项目管理状态机
+
+```text
+register（编号 = max+1，只追加不改号）
+        ↓
+    active（可派发，编号固定）
+        │ delete（软删除，需确认 --yes）
+        ↓
+    archived（不可派发，编号保留）
+        │ restore
+        └─────────────→ active
+```
+
+- 编号唯一、不可变、不重用；`adb projects list --numbered` 输出即机器强制编号。
+- delete 是软删除（归档），可 restore；未确认（无 --yes）一律拒绝。
+- archived 项目 dispatch 被拒（project_not_dispatchable）。
 
 ## 固定流程
 
@@ -43,6 +63,9 @@
 - 用户：`1 的 worker-beacon-binding 派活 plan` → 回显信封 → 确认 → dispatch（plan 免审批）
 - 用户：`待审有什么` → 飞书待审卡片（只读）
 - 用户：`adb 验收刚才那个` → task show + reconcile
+- 用户：`登记新项目 my-tool，class managed，repo /path/to/my-tool` → 回显待登记信息 → 确认 → register（自动分配编号）
+- 用户：`删除项目 5` → 回显 `#5 content-creator 将归档` → 确认 → delete --yes
+- 用户：`恢复项目 5` → restore
 
 ## 护栏
 

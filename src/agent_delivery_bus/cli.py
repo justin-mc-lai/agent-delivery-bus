@@ -15,7 +15,7 @@ from .install import install_skill
 from .intent import IntentParser
 from .pending import pending_approval_views, render_pending_channel
 from .preflight import Preflight
-from .registry import ProjectRegistry
+from .registry import ALLOWED_CLASSES, ProjectRegistry
 from .schedule import ScheduleService, hermes_cron_tick_script
 from .service import DeliveryService
 from .storage import Storage
@@ -69,13 +69,36 @@ def build_parser() -> argparse.ArgumentParser:
     projects_sub = projects.add_subparsers(dest="projects_command", required=True)
     projects_list = projects_sub.add_parser("list")
     projects_list.add_argument("--dispatchable-only", action="store_true")
+    projects_list.add_argument("--numbered", action="store_true", help="prefix rows with fixed [#N] index")
     projects_list.add_argument("--json", action="store_true")
     projects_resolve = projects_sub.add_parser("resolve")
     group = projects_resolve.add_mutually_exclusive_group(required=True)
     group.add_argument("--slug")
     group.add_argument("--alias")
     group.add_argument("--path")
+    group.add_argument("--index", type=int)
     projects_resolve.add_argument("--json", action="store_true")
+    projects_register = projects_sub.add_parser("register", help="register a new project (index auto-assigned)")
+    projects_register.add_argument("--slug", required=True)
+    projects_register.add_argument("--title", default="")
+    projects_register.add_argument(
+        "--class", dest="project_class", required=True, choices=sorted(ALLOWED_CLASSES)
+    )
+    projects_register.add_argument("--repo", required=True)
+    projects_register.add_argument("--aliases", default="", help="comma-separated aliases")
+    projects_register.add_argument("--docs-root", default="")
+    projects_register.add_argument("--docs-version", default="")
+    projects_register.add_argument("--truth-gate", default="")
+    projects_register.add_argument("--executor", default="")
+    projects_register.add_argument("--binding-profile", default="")
+    projects_register.add_argument("--json", action="store_true")
+    projects_delete = projects_sub.add_parser("delete", help="soft-delete (archive) a project by index/slug")
+    projects_delete.add_argument("target")
+    projects_delete.add_argument("--yes", action="store_true", help="required confirmation for deletion")
+    projects_delete.add_argument("--json", action="store_true")
+    projects_restore = projects_sub.add_parser("restore", help="restore an archived project by index/slug")
+    projects_restore.add_argument("target")
+    projects_restore.add_argument("--json", action="store_true")
 
     doctor = sub.add_parser("doctor")
     doctor.add_argument("--project")
@@ -579,11 +602,59 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
         if args.command == "projects":
             if args.projects_command == "list":
                 rows = [item.to_dict() for item in registry.list(dispatchable_only=args.dispatchable_only)]
-                return envelope(status="pass", data={"projects": rows, "adapters": {
-                    "executor": wired["executor_name"],
-                    "truth_gate": wired["truth_gate_name"],
-                }})
-            project = registry.resolve(slug=args.slug, alias=args.alias, path=args.path)
+                payload = {
+                    "projects": rows,
+                    "adapters": {
+                        "executor": wired["executor_name"],
+                        "truth_gate": wired["truth_gate_name"],
+                    },
+                }
+                if args.numbered:
+                    payload["numbered"] = True
+                    payload["text"] = "\n".join(
+                        f"[#{row['index']}] {row['slug']} — {row['title']}"
+                        for row in rows
+                    )
+                return envelope(status="pass", data=payload)
+            if args.projects_command == "register":
+                aliases = tuple(item.strip() for item in args.aliases.split(",") if item.strip())
+                project = registry.register(
+                    slug=args.slug,
+                    title=args.title,
+                    project_class=args.project_class,
+                    repo=args.repo,
+                    aliases=aliases,
+                    docs_root=args.docs_root,
+                    docs_version=args.docs_version,
+                    truth_gate=args.truth_gate,
+                    executor=args.executor,
+                    binding_profile=args.binding_profile,
+                )
+                payload = project.to_dict()
+                payload["text"] = f"项目已登记：#{project.index} {project.slug}（{project.title}）"
+                return envelope(status="pass", data=payload)
+            if args.projects_command == "delete":
+                if not args.yes:
+                    return envelope(
+                        status="blocked",
+                        blocked=True,
+                        reason_code="project_delete_confirmation_required",
+                        resume_action="show the target to the human and re-run with --yes after confirmation",
+                        data={"target": args.target},
+                    )
+                project = registry.delete(args.target)
+                payload = {"project": project.to_dict(), "deleted": True}
+                payload["text"] = (
+                    f"项目已归档（软删除）：{project.slug}（#{project.index}），"
+                    "编号保留、不可派发；可用 restore 恢复"
+                )
+                return envelope(status="pass", data=payload)
+            if args.projects_command == "restore":
+                project = registry.restore(args.target)
+                payload = {"project": project.to_dict(), "restored": True}
+                payload["text"] = f"项目已恢复：{project.slug}（#{project.index}），可派发"
+                return envelope(status="pass", data=payload)
+            project = registry.resolve(slug=args.slug, alias=args.alias, path=args.path, index=args.index)
             return envelope(status="pass", data=project.to_dict())
 
         if args.command == "doctor":

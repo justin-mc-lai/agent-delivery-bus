@@ -42,7 +42,12 @@ scheduler, the worker, or the delivery gate.
 
 ```bash
 bin/adb projects list --json
+bin/adb projects list --numbered --json
 bin/adb projects resolve --slug <slug> --json
+bin/adb projects resolve --index <N> --json
+bin/adb projects register --slug <slug> --class <platform|managed|knowledge> --repo <path> [--aliases a,b] [--truth-gate <g>] [--executor <e>] [--binding-profile <p>] --json
+bin/adb projects delete <index|slug> --yes --json   # soft delete: archive, keep index
+bin/adb projects restore <index|slug> --json
 bin/adb doctor --project <slug> --json
 bin/adb intent parse --utterance "<natural language>" --json
 bin/adb intent parse --utterance "<natural language>" --project <slug> --json
@@ -76,6 +81,10 @@ dispatch stage by default.
 
 Read [references/contracts.md](references/contracts.md) before performing a real
 dispatch or interpreting reconciliation.
+
+Project lifecycle: `register` auto-assigns index = max+1 (never reused);
+`delete` soft-archives (dispatchable=false, index kept); `restore` reactivates.
+Project management writes also require explicit human confirmation.
 
 Feishu chat playbook (numbered project table + trigger words + dialog flow):
 [references/feishu-playbook.md](references/feishu-playbook.md). Pinnable

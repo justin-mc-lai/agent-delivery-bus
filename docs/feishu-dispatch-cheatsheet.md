@@ -28,3 +28,12 @@
 ## 护栏
 
 implement/freeze 需审批；release 永不自动；审批 token 不进聊天。
+
+## 项目管理
+
+- 登记：`adb projects register --slug <slug> --class <platform|managed|knowledge> --repo <path>`
+- 列表（机器编号）：`adb projects list --numbered`
+- 删除（软删除，需确认）：`adb projects delete <编号|slug> --yes`
+- 恢复：`adb projects restore <编号|slug>`
+
+编号只追加不改号；删除后编号保留、项目不可派发、可恢复。
