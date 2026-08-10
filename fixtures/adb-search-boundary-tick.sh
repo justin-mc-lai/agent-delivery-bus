@@ -14,7 +14,25 @@ if [[ "$FORCE_RUN" != "1" ]] && "$ADB_BIN" schedule show "$SLUG" --json >/dev/nu
 fi
 
 export ADB_BIN SLUG DAY_INDEX PROJECT_PROFILE_REF ACCOUNT_PROFILE_REF
-python3 - <<'PY'
+
+# Resolve a Python that can import agent_delivery_bus. Cron runs under launchd,
+# whose PATH puts the Hermes venv first; that venv has NO adb package and would
+# silently fall back to hardcoded topics (the daily-duplicate bug).
+PYTHON_BIN="${PYTHON_BIN:-}"
+if [ -z "$PYTHON_BIN" ]; then
+  for cand in /usr/bin/python3 python3; do
+    if "$cand" -c "import agent_delivery_bus" >/dev/null 2>&1; then
+      PYTHON_BIN="$cand"
+      break
+    fi
+  done
+fi
+if [ -z "$PYTHON_BIN" ]; then
+  echo "ERROR: no python3 with agent_delivery_bus; refusing fallback topics" >&2
+  exit 1
+fi
+
+"$PYTHON_BIN" - <<'PY'
 import json, os, subprocess, sys
 from datetime import datetime, timezone
 
@@ -27,58 +45,19 @@ if day_index is not None and str(day_index).strip():
 else:
     day_index = datetime.now(timezone.utc).timetuple().tm_yday
 
-topics = []
 try:
     from agent_delivery_bus.boundary import daily_topic_batch
     topics = daily_topic_batch(day_index=day_index, count=5)
-except Exception:
-    topics = [
-        {
-            "topic": "本周值得盯的 GitHub 开源 AI Agent 框架更新",
-            "query_hints": ["github ai agent", "开源 agent framework"],
-            "sources": ["demo://wechat-gzh/image_post"],
-            "rationale": "示例号·AI Spec 贴图｜开源雷达",
-            "project_profile_ref": project_ref,
-            "account_profile_ref": account_ref,
-            "provenance": "in-vertical-fixture",
-        },
-        {
-            "topic": "把一条 AI Spec 画成信息图：输入/工具/护栏",
-            "query_hints": ["ai spec diagram", "agent spec 信息图"],
-            "sources": ["demo://wechat-gzh/image_post"],
-            "rationale": "示例号·image_post｜规范可视化",
-            "project_profile_ref": project_ref,
-            "account_profile_ref": account_ref,
-            "provenance": "in-vertical-fixture",
-        },
-        {
-            "topic": "开源 LLM Ops 小工具：评测/追踪/成本",
-            "query_hints": ["llm ops opensource", "github llm toolkit"],
-            "sources": ["demo://wechat-gzh/image_post"],
-            "rationale": "示例号·oss-picks｜实用开源清单",
-            "project_profile_ref": project_ref,
-            "account_profile_ref": account_ref,
-            "provenance": "in-vertical-fixture",
-        },
-        {
-            "topic": "从 README 到可复现：开源 AI 库最小跑通清单",
-            "query_hints": ["reproducible ai repo", "github quickstart"],
-            "sources": ["demo://wechat-gzh/image_post"],
-            "rationale": "示例号·开源 AI 库｜上手摩擦↓",
-            "project_profile_ref": project_ref,
-            "account_profile_ref": account_ref,
-            "provenance": "in-vertical-fixture",
-        },
-        {
-            "topic": "Agent 工具调用失败怎么写进 Spec",
-            "query_hints": ["agent tool error spec", "retry boundary"],
-            "sources": ["demo://wechat-gzh/image_post"],
-            "rationale": "示例号·AI Spec｜失败路径可视化",
-            "project_profile_ref": project_ref,
-            "account_profile_ref": account_ref,
-            "provenance": "in-vertical-fixture",
-        },
-    ]
+except Exception as exc:  # noqa: BLE001 - fail closed, never repeat stale topics
+    import traceback
+
+    traceback.print_exc()
+    print(
+        f"ERROR: daily_topic_batch failed ({exc!r}); "
+        "refusing to send fallback duplicates",
+        file=sys.stderr,
+    )
+    sys.exit(1)
 
 ingested = []
 for item in topics:

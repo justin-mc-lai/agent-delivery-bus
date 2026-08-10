@@ -136,6 +136,18 @@ class BoundaryScheduleTickTests(unittest.TestCase):
             self.assertNotIn('adb, "boundary", "decide"', script)
             storage.close()
 
+    def test_tick_script_resolves_python_and_fails_closed_no_fallback(self):
+        script = hermes_boundary_tick_script()
+        # Cron PATH puts the Hermes venv first (no adb package); the script must
+        # resolve an interpreter that can import agent_delivery_bus.
+        self.assertIn('PYTHON_BIN="${PYTHON_BIN:-}"', script)
+        self.assertIn('"$PYTHON_BIN" - <<', script)
+        # Silent hardcoded fallback was the daily-duplicate root cause; it must
+        # not exist anymore and failure must exit non-zero.
+        self.assertNotIn("本周值得盯的 GitHub 开源 AI Agent 框架更新", script)
+        self.assertIn("refusing to send fallback duplicates", script)
+        self.assertIn("sys.exit(1)", script)
+
 
 class BoundaryNoAutoTests(unittest.TestCase):
     def test_no_auto_approve_on_ingest(self):
