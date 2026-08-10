@@ -3,9 +3,9 @@ schema_version: "1.0"
 project_root: "."
 topology_kind: "single_repo"
 default_execution_service: "agent-delivery-bus"
-transaction_id: "tx-project-governance-fd23272ee20f6a3f"
-committed_at: "2026-08-06T03:41:36.476777+00:00"
-source_hash: "fd23272ee20f6a3f55274b59ac17757fa9f6e83d06ddfd23c6d8855752a1251a"
+transaction_id: "tx-project-governance-f091dbea4b584106"
+committed_at: "2026-08-10T08:49:31.796924+00:00"
+source_hash: "f091dbea4b5841063e50316955139839c6f8ff1c160f342af02354f0200f0896"
 event_type: "freeze-version-contract"
 parser_contract: "beacon-project-governance-v1"
 ---
@@ -127,4 +127,22 @@ parser_contract: "beacon-project-governance-v1"
 - merge_direction_policy: `master->beacon/v0.0.6`
 - merge_direction_policy: `beacon/v0.0.6->uat`
 - forbidden_directions: `uat->beacon/v0.0.6`
+- forbidden_directions: `uat_as_feature_base`
+
+### v0.0.7
+- participating_services: `agent-delivery-bus`
+- branch_guard_mode: `strict`
+- validation_state: `active`
+- per_service_canonical_branch:
+  - `agent-delivery-bus`: `beacon/v0.0.7`
+- truth_canonical: `main`
+- branch_governance_template: `standard-feature`
+- previous_version_baseline_branch: `main`
+- next_version_feature_branch: `beacon/v0.0.7/<feature-slug>`
+- worktree_mode: `dedicated`
+- worktree_path: `.beacon/worktrees/v0.0.7`
+- require_workspace_admission: `true`
+- merge_direction_policy: `master->beacon/v0.0.7`
+- merge_direction_policy: `beacon/v0.0.7->uat`
+- forbidden_directions: `uat->beacon/v0.0.7`
 - forbidden_directions: `uat_as_feature_base`
