@@ -301,6 +301,7 @@ def _summarize_project(*, project, dispatches, executor, sync_boards: bool = Fal
         health = "idle"
 
     return {
+        "index": project.index,
         "slug": project.slug,
         "title": project.title,
         "class": project.project_class,
@@ -330,8 +331,8 @@ def render_fleet_text(payload: dict[str, Any]) -> str:
         f"adapters: executor={payload.get('executor')} truth_gate={payload.get('truth_gate')}",
         f"projects: {payload.get('project_count')}  active={payload.get('active_projects')}  attention={payload.get('attention_projects')}  idle={payload.get('idle_projects')}",
         "",
-        f"{'PROJECT':<22} {'HEALTH':<10} {'BOARD':<18} {'LOCAL':<16} {'KANBAN':<16} BLOCKED",
-        f"{'-'*22} {'-'*10} {'-'*18} {'-'*16} {'-'*16} {'-'*24}",
+        f"{'IDX':<5} {'PROJECT':<22} {'HEALTH':<10} {'BOARD':<18} {'LOCAL':<16} {'KANBAN':<16} BLOCKED",
+        f"{'-'*5} {'-'*22} {'-'*10} {'-'*18} {'-'*16} {'-'*16} {'-'*24}",
     ]
     for row in payload.get("projects", []):
         local = row.get("local") or {}
@@ -343,7 +344,7 @@ def render_fleet_text(payload: dict[str, Any]) -> str:
             board = f"{board}!"
         blocked = str((local.get("latest_blocked_reason") or row.get("board_error") or "-"))[:24]
         lines.append(
-            f"{str(row.get('slug') or ''):<22} {str(row.get('health') or ''):<10} {board:<18} {local_txt:<16} {kanban_txt:<16} {blocked}"
+            f"{str(row.get('index') or '?'):<5} {str(row.get('slug') or ''):<22} {str(row.get('health') or ''):<10} {board:<18} {local_txt:<16} {kanban_txt:<16} {blocked}"
         )
     return "\n".join(lines)
 
@@ -632,6 +633,11 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                     payload["numbered"] = True
                     payload["text"] = "\n".join(
                         f"[#{row['index']}] {row['slug']} — {row['title']}"
+                        for row in rows
+                    )
+                else:
+                    payload["text"] = "\n".join(
+                        f"{row['index']:<5} {row['slug']:<28} {row['title']}"
                         for row in rows
                     )
                 return envelope(status="pass", data=payload)
