@@ -27,11 +27,13 @@ from .workflows import (
     draft_apply,
     get_workflow,
     ingest_request,
+    invalidate_verified,
     install_workflow,
     remove_workflow,
     verify_workflow,
     workflow_names,
 )
+from .worker_binding import DEFAULT_BINDING_PROFILE
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -697,8 +699,14 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                 }
                 if args.numbered:
                     payload["numbered"] = True
+                    global_profile = (
+                        registry.raw.get("adapters", {}).get("binding_profile")
+                        if isinstance(registry.raw.get("adapters"), dict)
+                        else ""
+                    )
                     payload["text"] = "\n".join(
-                        f"[#{row['index']}] {row['slug']} — {row['title']}"
+                        f"[#{row['index']}] {row['slug']} — {row['title']} "
+                        f"(wf={row.get('binding_profile') or global_profile or DEFAULT_BINDING_PROFILE})"
                         for row in rows
                     )
                 else:
@@ -722,7 +730,18 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                     binding_profile=args.binding_profile,
                 )
                 payload = project.to_dict()
-                payload["text"] = f"项目已登记：#{project.index} {project.slug}（{project.title}）"
+                global_profile = (
+                    registry.raw.get("adapters", {}).get("binding_profile")
+                    if isinstance(registry.raw.get("adapters"), dict)
+                    else ""
+                )
+                effective = project.binding_profile or global_profile or DEFAULT_BINDING_PROFILE
+                payload["effective_binding_profile"] = effective
+                payload["text"] = (
+                    f"项目已登记：#{project.index} {project.slug}（{project.title}）；"
+                    f"绑定工作流：{effective}（未指定时默认第一方 beacon 生命周期；"
+                    "可用 --binding-profile 指定其他工作流）"
+                )
                 return envelope(status="pass", data=payload)
             if args.projects_command == "delete":
                 if not args.yes:
@@ -797,6 +816,8 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                         data={"name": args.name},
                     )
                 installed = install_workflow(registry.raw, name=args.name, preset=args.preset)
+                if args.force:
+                    invalidate_verified(ROOT, args.name)
                 registry.save()
                 payload = dict(installed)
                 payload["name"] = args.name
@@ -812,6 +833,10 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                         data={"name": args.name},
                     )
                 removed = remove_workflow(registry.raw, args.name)
+                invalidate_verified(ROOT, args.name)
+                draft_path = ROOT / ".beacon" / "state" / "workflows" / args.name / "draft.json"
+                if draft_path.is_file():
+                    draft_path.unlink()
                 registry.save()
                 return envelope(
                     status="pass",
@@ -868,6 +893,7 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                         data={"name": args.name},
                     )
                 result = confirm_install(name=args.name, root=ROOT, raw=registry.raw)
+                invalidate_verified(ROOT, args.name)
                 registry.save()
                 payload = dict(result)
                 payload["text"] = f"工作流已安装：{args.name}（commit={result['workflow'].get('commit')}）"

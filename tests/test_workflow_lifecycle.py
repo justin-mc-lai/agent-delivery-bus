@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import contextlib
+import io
 import tempfile
 import unittest
 from pathlib import Path
@@ -19,7 +21,10 @@ from agent_delivery_bus.workflows import (
     confirm_install,
     draft_apply,
     ingest_request,
+    invalidate_verified,
+    is_verified,
     install_workflow,
+    remove_workflow,
     validate_fill_response,
     verify_workflow,
     workflow_names,
@@ -215,6 +220,82 @@ class VerifyAndTraceTests(unittest.TestCase):
             report = verify_workflow(name="sp", raw=raw, root=root, executor=hermes)
             self.assertFalse(report["pass"])
             self.assertTrue(any(c["name"] == "skills" and not c["pass"] for c in report["checks"]))
+
+    def test_verify_marker_invalidated_on_workflow_change(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            raw = {"workflows": {"sp": build_preset("superpowers")}}
+            hermes = FakeHermes()
+            hermes.skills_available = lambda skills: {"missing": [], "installed": list(skills)}
+            report = verify_workflow(name="sp", raw=raw, root=root, executor=hermes)
+            self.assertTrue(report["pass"])
+            self.assertTrue(is_verified(root, "sp", workflow=raw["workflows"]["sp"]))
+            # Changing the workflow (re-install/confirm) invalidates the marker.
+            raw["workflows"]["sp"]["stages"]["plan"]["command"] = "superpowers plan v2 {feature}"
+            self.assertFalse(is_verified(root, "sp", workflow=raw["workflows"]["sp"]))
+            invalidate_verified(root, "sp")
+            self.assertFalse(is_verified(root, "sp", workflow=raw["workflows"]["sp"]))
+            # Re-verify restores it.
+            report = verify_workflow(name="sp", raw=raw, root=root, executor=hermes)
+            self.assertTrue(report["pass"])
+            self.assertTrue(is_verified(root, "sp", workflow=raw["workflows"]["sp"]))
+
+    def test_remove_invalidates_marker(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config = write_registry(root / "projects.json", [make_project(root)])
+            raw = json.loads(config.read_text(encoding="utf-8"))
+            raw["workflows"] = {"sp": build_preset("superpowers")}
+            config.write_text(json.dumps(raw, ensure_ascii=False), encoding="utf-8")
+            hermes = FakeHermes()
+            hermes.skills_available = lambda skills: {"missing": [], "installed": list(skills)}
+            verify_workflow(name="sp", raw=raw, root=root, executor=hermes)
+            self.assertTrue(is_verified(root, "sp"))
+            remove_workflow(raw, "sp")
+            invalidate_verified(root, "sp")
+            self.assertFalse(is_verified(root, "sp"))
+            code = main(
+                [
+                    "--config", str(config), "--db", ":memory:",
+                    "workflow", "remove", "sp", "--yes", "--json",
+                ]
+            )
+            self.assertEqual(code, 0)
+
+    def test_cli_register_reports_effective_workflow(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config = write_registry(root / "projects.json", [make_project(root)])
+            new_repo = root / "new-app"
+            new_repo.mkdir()
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                code = main(
+                    [
+                        "--config", str(config), "--db", ":memory:",
+                        "projects", "register", "--slug", "new-app",
+                        "--class", "managed", "--repo", str(new_repo), "--json",
+                    ]
+                )
+            self.assertEqual(code, 0)
+            payload = json.loads(out.getvalue())
+            self.assertEqual(payload["data"]["effective_binding_profile"], "beacon")
+            self.assertIn("默认第一方 beacon 生命周期", payload["data"]["text"])
+
+    def test_cli_list_numbered_shows_workflow(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config = write_registry(root / "projects.json", [make_project(root)])
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                main(
+                    [
+                        "--config", str(config), "--db", ":memory:",
+                        "projects", "list", "--numbered", "--json",
+                    ]
+                )
+            payload = json.loads(out.getvalue())
+            self.assertIn("wf=beacon", payload["data"]["text"])
 
     def test_trace_debug_replay_cli(self):
         with tempfile.TemporaryDirectory() as tmp:

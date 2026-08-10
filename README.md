@@ -194,6 +194,10 @@ Natural language: `登记新项目 my-app，class managed，repo /path/to/my-app
 envelope → confirm → registered. `binding_profile` decides which workflow the
 project uses; the beacon lifecycle (plan/truth/implement/qa/freeze/goal) is the
 first-party default, presets/ingested workflows are opt-in per project.
+When `--binding-profile` is omitted, the new project uses the first-party
+beacon lifecycle by default; `adb projects register` prints the effective
+binding (`effective_binding_profile`) so the default is never silent. A
+configured workflow must pass `adb workflow verify` before real dispatch.
 
 ### Binding an open-source workflow skill
 
@@ -384,6 +388,9 @@ adb projects delete 9 --yes           # 按编号软删除；restore 9 可恢复
 草稿 → 确认 → 登记完成。`binding_profile` 决定项目用哪个工作流：
 beacon 生命周期（plan/truth/implement/qa/freeze/goal）是第一方默认，
 预设/接入的工作流按项目可选绑定。
+未指定 `--binding-profile` 时，新项目默认使用第一方 beacon 生命周期；
+`adb projects register` 会明确输出 `effective_binding_profile`，默认不静默。
+配置过的工作流必须先 `adb workflow verify` 通过才能真实派发。
 
 ### 绑定开源工作流 skill
 

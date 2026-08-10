@@ -439,13 +439,30 @@ def verify_workflow(
         marker = Path(root) / ".beacon" / "state" / "workflows" / name / "verified.json"
         marker.parent.mkdir(parents=True, exist_ok=True)
         marker.write_text(
-            json.dumps({"workflow": name, "verified": True, "at": _now()}, ensure_ascii=False, indent=2),
+            json.dumps(
+                {
+                    "workflow": name,
+                    "verified": True,
+                    "hash": _workflow_hash(workflow),
+                    "at": _now(),
+                },
+                ensure_ascii=False,
+                indent=2,
+            ),
             encoding="utf-8",
         )
     return report
 
 
-def is_verified(root: Path, name: str) -> bool:
+def _workflow_hash(workflow: dict[str, Any]) -> str:
+    import hashlib
+
+    canonical = json.dumps(workflow, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:16]
+
+
+def is_verified(root: Path, name: str, workflow: dict[str, Any] | None = None) -> bool:
+    """Verified marker must match the CURRENT workflow hash (stale marker = not verified)."""
     marker = Path(root) / ".beacon" / "state" / "workflows" / name / "verified.json"
     if not marker.is_file():
         return False
@@ -453,4 +470,17 @@ def is_verified(root: Path, name: str) -> bool:
         payload = json.loads(marker.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, OSError):
         return False
-    return bool(payload.get("verified"))
+    if not bool(payload.get("verified")):
+        return False
+    if workflow is not None:
+        return str(payload.get("hash") or "") == _workflow_hash(workflow)
+    return True
+
+
+def invalidate_verified(root: Path, name: str) -> None:
+    """Invalidate the verified marker (workflow changed or removed)."""
+    marker = Path(root) / ".beacon" / "state" / "workflows" / name / "verified.json"
+    try:
+        marker.unlink()
+    except FileNotFoundError:
+        pass

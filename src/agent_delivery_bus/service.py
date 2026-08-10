@@ -461,7 +461,7 @@ class DeliveryService:
             if (
                 self.workflow_root is not None
                 and binding_profile in workflows_cfg
-                and not _workflow_verified(self.workflow_root, binding_profile)
+                and not _workflow_verified(self.workflow_root, binding_profile, workflow=profile_config)
             ):
                 if dispatch["state"] == "queued":
                     dispatch = self.storage.transition(

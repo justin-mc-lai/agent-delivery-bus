@@ -35,6 +35,8 @@ implement/freeze 需审批；release 永不自动；审批 token 不进聊天。
 - 恢复：`adb projects restore <编号|slug>`
 
 编号只追加不改号；删除后编号保留、项目不可派发、可恢复。
+未指定 `--binding-profile` 的新项目默认使用第一方 beacon 生命周期；
+register 输出会显示 effective_binding_profile。
 
 ## 工作流
 

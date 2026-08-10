@@ -58,6 +58,8 @@ register（编号 = max+1，只追加不改号）
   force-load 进 worker，目标设备缺 skill 会 fail-closed。
 - 关键词：渠道统一查 `adb intent keywords --json`（飞书/微信/Line 同表）。
 - 接入开源库：adb 只盘点并出题，宿主 agent 回填 response，校验→草案→确认→verify→绑定。
+- 新增项目：未指定 `--binding-profile` 默认绑定第一方 beacon 生命周期；
+  `adb projects register` 输出会显示 effective_binding_profile；配置工作流需先 verify 才能真实派发。
 
 ## 固定流程
 
