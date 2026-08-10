@@ -39,7 +39,10 @@ implement/freeze 需审批；release 永不自动；审批 token 不进聊天。
 ## 工作流
 
 - 列出：`adb workflow list`
-- 安装预设（aider / openhands）：`adb workflow install --name <名> --preset <aider|openhands>`
+- 安装预设（superpowers / openspec）：`adb workflow install --name <名> --preset <superpowers|openspec>`
 - 删除（需确认）：`adb workflow remove <名> --yes`
+- 接入开源库：`adb workflow ingest --source <url|路径> --name <名>` → 宿主回填 → `draft apply` → `confirm`
+- 验证/排查：`adb workflow verify` / `trace` / `debug`
 
-私有工作流只放本地注册表；派发任务会强制加载绑定 skill，缺 skill 不派发。
+私有工作流只放本地注册表；派发任务会强制加载绑定 skill，缺 skill 不派发；
+渠道关键词统一查 `adb intent keywords --json`。

@@ -104,20 +104,35 @@ Implement your own backends against:
 
 ADB is workflow-agnostic. Two popular open-source workflows ship as presets:
 
-- `aider` — pair-programming AI with an enforced test command
-- `openhands` — autonomous long-horizon software agent
+- `superpowers` — open-source Claude Code skill framework (skill workflows)
+- `openspec` — open-source spec-driven development workflow
 
 ```bash
 adb workflow list --json
-adb workflow install --name my-aider --preset aider --json
-adb workflow show my-aider --json
-adb workflow remove my-aider --yes --json
+adb workflow install --name my-spec --preset openspec --json
+adb workflow show my-spec --json
+adb workflow remove my-spec --yes --json
 ```
 
-Private/company workflows (e.g. a goal harness) stay in the local project
-registry only and never ship as presets. A dispatched task force-loads the
-bound workflow skill into the worker (`hermes --skill`), and preflight fails
-closed when the target device has not installed the bound skill.
+Generic adaptation of any open-source repo (host-agent mode — adb never calls
+an external LLM; the host agent fills the analysis response):
+
+```bash
+adb workflow ingest --source https://github.com/org/repo --name my-wf
+# host agent reads the repo, fills workflow-analysis-response.v1
+adb workflow draft apply --name my-wf --request-json ... --response-json ...
+adb workflow draft show --name my-wf
+adb workflow confirm --name my-wf --yes
+adb workflow verify --name my-wf --project <slug>
+adb workflow trace --name my-wf
+adb workflow debug --name my-wf
+```
+
+Channels resolve one canonical keyword map: `adb intent keywords --json`
+(Feishu / WeChat / Line agnostic). The beacon lifecycle
+(plan/truth/implement/qa/freeze/goal) is ADB's first-party capability and is
+NOT a preset; dispatched tasks force-load the bound skill into the worker
+(`hermes --skill`), and preflight fails closed when the device lacks it.
 
 Per-project routing overrides the global pair (falls back when unset):
 
@@ -262,18 +277,21 @@ bin/adb fleet --json
 
 ADB 与工作流解耦，内置 2 个热门开源预设：
 
-- `aider` — 带强制测试命令的结对编程 AI
-- `openhands` — 自治长任务软件代理
+- `superpowers` — 开源 Claude Code skill 框架（skill 工作流）
+- `openspec` — 开源 spec 驱动开发工作流
 
 ```bash
 adb workflow list --json
-adb workflow install --name my-aider --preset aider --json
-adb workflow show my-aider --json
-adb workflow remove my-aider --yes --json
+adb workflow install --name my-spec --preset openspec --json
+adb workflow show my-spec --json
+adb workflow remove my-spec --yes --json
 ```
 
-私有/公司工作流只放本地注册表，不进开源预设；派发任务会把绑定 skill
-force-load 进 worker（`hermes --skill`），目标设备缺 skill 时 preflight fail-closed。
+任意开源库通用适配（host-agent 模式，adb 不调外部 LLM）：`ingest` 盘点 →
+宿主 agent 回填 → `draft apply` → 确认 → `verify` → 绑定派发；全程
+`trace/debug` 可查。渠道统一查 `adb intent keywords --json` 规范关键词表。
+beacon 生命周期（plan/truth/implement/qa/freeze/goal）是 ADB 第一方能力，
+不是预设；派发任务 force-load 绑定 skill，缺 skill 时 preflight fail-closed。
 
 ### 知识库边界
 

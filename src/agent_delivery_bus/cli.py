@@ -13,6 +13,7 @@ from .boundary import BoundaryService, hermes_boundary_tick_script
 from .errors import DeliveryBusError
 from .install import install_skill
 from .intent import IntentParser
+from .keywords import canonical_keywords
 from .pending import pending_approval_views, render_pending_channel
 from .preflight import Preflight
 from .registry import ALLOWED_CLASSES, ProjectRegistry
@@ -21,9 +22,14 @@ from .service import DeliveryService
 from .storage import Storage
 from .workflows import (
     PRESET_SOURCE as wf_presets,
+    TraceWriter,
+    confirm_install,
+    draft_apply,
     get_workflow,
+    ingest_request,
     install_workflow,
     remove_workflow,
+    verify_workflow,
     workflow_names,
 )
 
@@ -123,6 +129,39 @@ def build_parser() -> argparse.ArgumentParser:
     workflow_remove.add_argument("name")
     workflow_remove.add_argument("--yes", action="store_true")
     workflow_remove.add_argument("--json", action="store_true")
+    workflow_ingest = workflow_sub.add_parser("ingest", help="inventory a repo and emit an analysis request")
+    workflow_ingest.add_argument("--source", required=True, help="local path or git URL (read-only)")
+    workflow_ingest.add_argument("--name", default="")
+    workflow_ingest.add_argument("--json", action="store_true")
+    workflow_draft = workflow_sub.add_parser("draft", help="host-agent fill: apply/show a workflow draft")
+    workflow_draft_sub = workflow_draft.add_subparsers(dest="workflow_draft_command", required=True)
+    draft_apply_p = workflow_draft_sub.add_parser("apply")
+    draft_apply_p.add_argument("--name", required=True)
+    draft_apply_p.add_argument("--request-json", required=True)
+    draft_apply_p.add_argument("--response-json", required=True)
+    draft_apply_p.add_argument("--json", action="store_true")
+    draft_show_p = workflow_draft_sub.add_parser("show")
+    draft_show_p.add_argument("--name", required=True)
+    draft_show_p.add_argument("--json", action="store_true")
+    workflow_confirm = workflow_sub.add_parser("confirm", help="install a confirmed draft into the registry")
+    workflow_confirm.add_argument("--name", required=True)
+    workflow_confirm.add_argument("--yes", action="store_true")
+    workflow_confirm.add_argument("--json", action="store_true")
+    workflow_verify = workflow_sub.add_parser("verify", help="acceptance probe for a workflow")
+    workflow_verify.add_argument("--name", required=True)
+    workflow_verify.add_argument("--project", default="")
+    workflow_verify.add_argument("--json", action="store_true")
+    workflow_trace = workflow_sub.add_parser("trace", help="read the workflow JSONL trace")
+    workflow_trace.add_argument("--name", required=True)
+    workflow_trace.add_argument("--id", default="")
+    workflow_trace.add_argument("--json", action="store_true")
+    workflow_debug = workflow_sub.add_parser("debug", help="aggregate trace + dispatch status for diagnosis")
+    workflow_debug.add_argument("--name", required=True)
+    workflow_debug.add_argument("--json", action="store_true")
+    workflow_replay = workflow_sub.add_parser("replay", help="re-emit the analysis request for host re-fill")
+    workflow_replay.add_argument("--name", required=True)
+    workflow_replay.add_argument("--id", default="")
+    workflow_replay.add_argument("--json", action="store_true")
 
     doctor = sub.add_parser("doctor")
     doctor.add_argument("--project")
@@ -173,6 +212,8 @@ def build_parser() -> argparse.ArgumentParser:
     intent_parse.add_argument("--utterance", required=True)
     intent_parse.add_argument("--project", default="", help="optional forced project slug")
     intent_parse.add_argument("--json", action="store_true")
+    intent_keywords = intent_sub.add_parser("keywords", help="channel-agnostic canonical keyword map (machine-readable)")
+    intent_keywords.add_argument("--json", action="store_true")
 
     dispatch = sub.add_parser("dispatch")
     dispatch.add_argument("--project", required=True)
@@ -779,6 +820,139 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                         "text": f"工作流已移除：{args.name}",
                     },
                 )
+            if args.workflow_command == "ingest":
+                name = args.name or Path(args.source).stem
+                result = ingest_request(name=name, source=args.source, root=ROOT, workdir=ROOT)
+                payload = dict(result)
+                payload["text"] = (
+                    f"分析请求已生成：{result['request_path']}（anchors={result['anchors_count']}，"
+                    f"commit={result['commit']}）。请宿主 agent 阅读仓库后回填 response 并执行 "
+                    "`adb workflow draft apply`。"
+                )
+                return envelope(status="pass", data=payload)
+            if args.workflow_command == "draft":
+                if args.workflow_draft_command == "apply":
+                    request = json.loads(Path(args.request_json).read_text(encoding="utf-8"))
+                    response = json.loads(Path(args.response_json).read_text(encoding="utf-8"))
+                    result = draft_apply(
+                        name=args.name,
+                        root=ROOT,
+                        request=request,
+                        response=response,
+                    )
+                    payload = dict(result)
+                    payload["text"] = f"草案已生成：{result['draft_path']}（trace={result['trace_id']}）"
+                    return envelope(status="pass", data=payload)
+                if args.workflow_draft_command == "show":
+                    draft_path = ROOT / ".beacon" / "state" / "workflows" / args.name / "draft.json"
+                    if not draft_path.is_file():
+                        return envelope(
+                            status="blocked",
+                            blocked=True,
+                            reason_code="workflow_draft_missing",
+                            resume_action="run `adb workflow draft apply` after host fill",
+                            data={"name": args.name},
+                        )
+                    return envelope(
+                        status="pass",
+                        data=json.loads(draft_path.read_text(encoding="utf-8")),
+                    )
+            if args.workflow_command == "confirm":
+                if not args.yes:
+                    return envelope(
+                        status="blocked",
+                        blocked=True,
+                        reason_code="workflow_confirm_required",
+                        resume_action="show the draft to the human and re-run with --yes",
+                        data={"name": args.name},
+                    )
+                result = confirm_install(name=args.name, root=ROOT, raw=registry.raw)
+                registry.save()
+                payload = dict(result)
+                payload["text"] = f"工作流已安装：{args.name}（commit={result['workflow'].get('commit')}）"
+                return envelope(status="pass", data=payload)
+            if args.workflow_command == "verify":
+                project_obj = registry.resolve(slug=args.project) if args.project else None
+                project_adapters = resolver.for_project(project_obj) if project_obj else resolver.global_adapters()
+                executor = project_adapters["executor"]
+                report = verify_workflow(
+                    name=args.name,
+                    raw=registry.raw,
+                    root=ROOT,
+                    executor=executor,
+                    project=project_obj,
+                    service=service if project_obj else None,
+                )
+                payload = dict(report)
+                payload["text"] = "verify: " + ("pass" if report["pass"] else "fail")
+                return envelope(
+                    status="pass" if report["pass"] else "blocked",
+                    blocked=not report["pass"],
+                    reason_code="" if report["pass"] else "workflow_verify_failed",
+                    data=payload,
+                )
+            if args.workflow_command == "trace":
+                paths = TraceWriter.all(ROOT, args.name)
+                if not paths:
+                    return envelope(
+                        status="blocked",
+                        blocked=True,
+                        reason_code="workflow_trace_missing",
+                        data={"name": args.name},
+                    )
+                rows = sorted(
+                    [event for path in paths for event in TraceWriter.read(path)],
+                    key=lambda event: str(event.get("ts") or ""),
+                )
+                return envelope(
+                    status="pass",
+                    data={"trace_files": [p.stem for p in paths], "events": rows},
+                )
+            if args.workflow_command == "debug":
+                paths = TraceWriter.all(ROOT, args.name)
+                events = sorted(
+                    [event for path in paths for event in TraceWriter.read(path)],
+                    key=lambda event: str(event.get("ts") or ""),
+                )
+                dispatches = [
+                    row
+                    for row in storage.list_dispatches()
+                    if str((row.get("request") or {}).get("binding_profile") or "") == args.name
+                ]
+                payload = {
+                    "workflow": args.name,
+                    "trace_files": [p.stem for p in paths],
+                    "events": [e.get("event") for e in events],
+                    "dispatches": [
+                        {"id": d["dispatch_id"], "stage": d["stage"], "state": d["state"]}
+                        for d in dispatches[-5:]
+                    ],
+                    "dispatch_count": len(dispatches),
+                }
+                payload["text"] = (
+                    f"workflow={args.name} trace_files={len(paths)} "
+                    f"events={len(events)} dispatches={len(dispatches)}"
+                )
+                return envelope(status="pass", data=payload)
+            if args.workflow_command == "replay":
+                request_path = (
+                    ROOT / ".beacon" / "state" / "workflows" / "_ingest" / f"{args.name}.request.json"
+                )
+                if not request_path.is_file():
+                    return envelope(
+                        status="blocked",
+                        blocked=True,
+                        reason_code="workflow_request_missing",
+                        resume_action="run `adb workflow ingest` first",
+                        data={"name": args.name},
+                    )
+                request = json.loads(request_path.read_text(encoding="utf-8"))
+                payload = dict(request)
+                payload["text"] = (
+                    f"请宿主 agent 重新阅读 {request['source']}（commit={request['commit']}）"
+                    "并回填 workflow-analysis-response.v1，然后 `adb workflow draft apply`。"
+                )
+                return envelope(status="pass", data=payload)
 
         if args.command == "doctor":
             projects = [registry.resolve(slug=args.project)] if args.project else registry.list(dispatchable_only=True)
@@ -915,6 +1089,17 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                     resume_action=str(parsed.get("resume_action") or ""),
                     data=parsed.get("data"),
                 )
+            if args.intent_command == "keywords":
+                keywords = canonical_keywords()
+                payload = dict(keywords)
+                payload["text"] = (
+                    "渠道无关规范关键词表（飞书/微信/Line 同表）："
+                    + "; ".join(
+                        f"{stage}={'/'.join(aliases['channel'])}"
+                        for stage, aliases in keywords["stages"].items()
+                    )
+                )
+                return envelope(status="pass", data=payload)
             raise DeliveryBusError("intent_command_invalid", f"Unknown intent command: {args.intent_command}")
 
         if args.command == "dispatch":

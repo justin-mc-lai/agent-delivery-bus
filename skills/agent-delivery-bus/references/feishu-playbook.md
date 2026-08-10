@@ -31,9 +31,11 @@
 | 登记 / 注册 / 新增 / 立项 | `adb projects register --slug ... --class ... --repo ...` |
 | 删除 / 移除 / 归档 | `adb projects delete <编号|slug> --yes`（需确认） |
 | 恢复 | `adb projects restore <编号|slug>` |
-| 安装 / 登记工作流 | `adb workflow install --name <名> --preset <aider|openhands>` |
+| 安装 / 登记工作流 | `adb workflow install --name <名> --preset <superpowers|openspec>` |
 | 列出工作流 / 预设 | `adb workflow list` |
 | 删除工作流 | `adb workflow remove <名> --yes`（需确认） |
+| 接入 / 适配开源库 | `adb workflow ingest --source <url|路径> --name <名>`（宿主 agent 回填后 draft apply） |
+| 验证 / 排查工作流 | `adb workflow verify` / `adb workflow trace` / `adb workflow debug` |
 
 ## 项目管理状态机
 
@@ -54,6 +56,8 @@ register（编号 = max+1，只追加不改号）
 - 工作流与调度解耦：预设只有开源第三方（aider/openhands）；私有工作流
   （如 beacon-goal）只放本地注册表，不进预设。派发会把绑定 skill
   force-load 进 worker，目标设备缺 skill 会 fail-closed。
+- 关键词：渠道统一查 `adb intent keywords --json`（飞书/微信/Line 同表）。
+- 接入开源库：adb 只盘点并出题，宿主 agent 回填 response，校验→草案→确认→verify→绑定。
 
 ## 固定流程
 
@@ -70,9 +74,11 @@ register（编号 = max+1，只追加不改号）
 - 用户：`登记新项目 my-tool，class managed，repo /path/to/my-tool` → 回显待登记信息 → 确认 → register（自动分配编号）
 - 用户：`删除项目 2` → 回显 `#2 demo-content 将归档` → 确认 → delete --yes
 - 用户：`恢复项目 2` → restore
-- 用户：`安装工作流 aider，名字 my-aider` → 回显待安装 → 确认 → install
+- 用户：`安装工作流 openspec，名字 my-spec` → 回显待安装 → 确认 → install
 - 用户：`列出工作流` → 预设 + 本地工作流列表
-- 用户：`删除工作流 my-aider` → 回显 → 确认 → remove --yes
+- 用户：`删除工作流 my-spec` → 回显 → 确认 → remove --yes
+- 用户：`接入工作流 https://github.com/xxx/yyy，名字 my-wf` → ingest → 宿主回填 → 确认 → 安装
+- 用户：`验证工作流 my-wf` → verify 报告
 
 ## 护栏
 

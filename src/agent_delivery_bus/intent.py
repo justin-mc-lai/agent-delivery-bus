@@ -14,7 +14,7 @@ from .registry import ProjectRegistry
 SCHEMA_VERSION = "1.0"
 ENVELOPE_SCHEMA = "adb-intent-envelope.v1"
 
-KNOWN_STAGES = ("plan", "implement", "qa", "freeze", "release")
+KNOWN_STAGES = ("plan", "truth", "implement", "qa", "freeze", "release")
 KNOWN_ACTIONS = (
     "parse",
     "assign",
@@ -276,6 +276,8 @@ class IntentParser:
                 return stage
         zh = {
             "规划": "plan",
+            "需求": "truth",
+            "冻结需求": "truth",
             "实现": "implement",
             "验收": "qa",
             "冻结": "freeze",

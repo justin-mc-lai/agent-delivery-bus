@@ -26,23 +26,23 @@ from .helpers import FakeHermes, PassingPreflight, make_project, write_registry
 
 class WorkflowRegistryTests(unittest.TestCase):
     def test_presets_are_open_source_and_exclude_private_workflows(self):
-        self.assertEqual(sorted(PRESET_SOURCE), ["aider", "openhands"])
+        self.assertEqual(sorted(PRESET_SOURCE), ["openspec", "superpowers"])
         self.assertNotIn("beacon", PRESET_SOURCE)
         self.assertNotIn("beacon-goal", PRESET_SOURCE)
-        aider = build_preset("aider")
-        self.assertEqual(aider["skills"], ["aider"])
+        aider = build_preset("superpowers")
+        self.assertEqual(aider["skills"], ["superpowers"])
         self.assertIn("implement", aider["stages"])
         self.assertTrue(aider["evidence_spec"]["dispatch_id_binding"])
 
     def test_install_show_remove_roundtrip(self):
         raw: dict = {}
-        installed = install_workflow(raw, name="my-aider", preset="aider")
-        self.assertEqual(installed["skills"], ["aider"])
-        self.assertEqual(workflow_names(raw), ["aider", "my-aider", "openhands"])
-        self.assertEqual(get_workflow(raw, "my-aider")["stages"]["implement"]["skill"], "aider")
-        removed = remove_workflow(raw, "my-aider")
-        self.assertEqual(removed["name"], "Aider")
-        self.assertNotIn("my-aider", workflow_names(raw))
+        installed = install_workflow(raw, name="my-superpowers", preset="superpowers")
+        self.assertEqual(installed["skills"], ["superpowers"])
+        self.assertEqual(workflow_names(raw), ["my-superpowers", "openspec", "superpowers"])
+        self.assertEqual(get_workflow(raw, "my-superpowers")["stages"]["implement"]["skill"], "superpowers")
+        removed = remove_workflow(raw, "my-superpowers")
+        self.assertEqual(removed["name"], "Superpowers")
+        self.assertNotIn("my-superpowers", workflow_names(raw))
 
     def test_unknown_preset_fails_closed(self):
         with self.assertRaises(Exception) as ctx:
@@ -67,20 +67,20 @@ class WorkflowCliTests(unittest.TestCase):
                 main(
                     [
                         "--config", str(config), "--db", ":memory:",
-                        "workflow", "install", "--name", "my-aider", "--preset", "aider", "--json",
+                        "workflow", "install", "--name", "my-superpowers", "--preset", "superpowers", "--json",
                     ]
                 ),
                 0,
             )
             self.assertEqual(
-                main(["--config", str(config), "--db", ":memory:", "workflow", "show", "my-aider", "--json"]),
+                main(["--config", str(config), "--db", ":memory:", "workflow", "show", "my-superpowers", "--json"]),
                 0,
             )
             self.assertEqual(
                 main(
                     [
                         "--config", str(config), "--db", ":memory:",
-                        "workflow", "remove", "my-aider", "--json",
+                        "workflow", "remove", "my-superpowers", "--json",
                     ]
                 ),
                 2,  # confirmation required
@@ -89,13 +89,13 @@ class WorkflowCliTests(unittest.TestCase):
                 main(
                     [
                         "--config", str(config), "--db", ":memory:",
-                        "workflow", "remove", "my-aider", "--yes", "--json",
+                        "workflow", "remove", "my-superpowers", "--yes", "--json",
                     ]
                 ),
                 0,
             )
             registry = ProjectRegistry.load(config)
-            self.assertNotIn("my-aider", workflow_names(registry.raw))
+            self.assertNotIn("my-superpowers", workflow_names(registry.raw))
 
 
 class WorkflowIntentTests(unittest.TestCase):
@@ -114,9 +114,9 @@ class WorkflowIntentTests(unittest.TestCase):
             listed = parser.parse("列出工作流")
             self.assertEqual(listed["data"]["envelope"]["action"], "workflow_list")
 
-            removed = parser.parse("删除工作流 my-aider")
+            removed = parser.parse("删除工作流 my-superpowers")
             self.assertEqual(removed["data"]["envelope"]["action"], "workflow_remove")
-            self.assertEqual(removed["data"]["envelope"]["feature"], "my-aider")
+            self.assertEqual(removed["data"]["envelope"]["feature"], "my-superpowers")
 
 
 class GatedExecutor(FakeHermes):
@@ -135,12 +135,12 @@ class WorkflowSkillGateTests(unittest.TestCase):
             project = make_project(root)
             config = write_registry(root / "projects.json", [project])
             raw = json.loads(config.read_text(encoding="utf-8"))
-            raw["workflows"] = {"my-aider": build_preset("aider")}
-            raw["projects"][0]["binding_profile"] = "my-aider"
+            raw["workflows"] = {"my-superpowers": build_preset("superpowers")}
+            raw["projects"][0]["binding_profile"] = "my-superpowers"
             config.write_text(json.dumps(raw, ensure_ascii=False), encoding="utf-8")
             registry = ProjectRegistry.load(config)
             storage = Storage(":memory:")
-            hermes = GatedExecutor(missing=("aider",))
+            hermes = GatedExecutor(missing=("superpowers",))
             service = DeliveryService(
                 registry,
                 storage,
@@ -151,7 +151,7 @@ class WorkflowSkillGateTests(unittest.TestCase):
             result = service.dispatch(project_slug="demo", stage="plan", feature="feature")
             self.assertEqual(result["status"], "blocked")
             self.assertEqual(result["reason_code"], "binding_skill_missing")
-            self.assertEqual(result["missing_skills"], ["aider"])
+            self.assertEqual(result["missing_skills"], ["superpowers"])
             self.assertEqual(hermes.create_count, 0)
             storage.close()
 
@@ -161,8 +161,8 @@ class WorkflowSkillGateTests(unittest.TestCase):
             project = make_project(root)
             config = write_registry(root / "projects.json", [project])
             raw = json.loads(config.read_text(encoding="utf-8"))
-            raw["workflows"] = {"my-aider": build_preset("aider")}
-            raw["projects"][0]["binding_profile"] = "my-aider"
+            raw["workflows"] = {"my-superpowers": build_preset("superpowers")}
+            raw["projects"][0]["binding_profile"] = "my-superpowers"
             config.write_text(json.dumps(raw, ensure_ascii=False), encoding="utf-8")
             registry = ProjectRegistry.load(config)
             storage = Storage(":memory:")
@@ -176,7 +176,7 @@ class WorkflowSkillGateTests(unittest.TestCase):
             )
             result = service.dispatch(project_slug="demo", stage="plan", feature="feature")
             self.assertEqual(result["status"], "dispatched")
-            self.assertIn("aider", hermes.last_skills)
+            self.assertIn("superpowers", hermes.last_skills)
             self.assertIn("### Worker binding", hermes.last_body)
             self.assertNotIn("beacon_skill", hermes.last_body)
             storage.close()

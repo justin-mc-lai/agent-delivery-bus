@@ -15,7 +15,7 @@ from .errors import DeliveryBusError
 
 
 # goal is intentionally absent until an explicit promote/change.
-ENABLED_STAGES = frozenset({"plan", "implement", "qa", "freeze", "goal"})
+ENABLED_STAGES = frozenset({"plan", "truth", "implement", "qa", "freeze", "goal"})
 DEFERRED_STAGES = frozenset()
 
 # Local Hermes coding profile (or explicit Codex / equivalent). No cloud scheduler.
@@ -42,6 +42,13 @@ STAGE_BEACON_BINDING: dict[str, dict[str, str]] = {
         "beacon_skill": "beacon-plan",
         "public_harness": "plan",
         "beacon_command_template": 'beacon workflow run plan "{feature}" --project . --version {docs_version}',
+    },
+    "truth": {
+        "beacon_skill": "beacon-truth",
+        "public_harness": "truth",
+        "beacon_command_template": (
+            'beacon truth gen "{feature}" --project . --version {docs_version} --intent-first'
+        ),
     },
     "implement": {
         "beacon_skill": "beacon-implement",
