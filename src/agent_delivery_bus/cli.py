@@ -680,6 +680,7 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
             truth_gate=truth_gate,
             memory=wired["memory"],
             adapter_resolver=resolver.for_project,
+            workflow_root=ROOT,
         )
         approvals = ApprovalService(storage)
         scorer = AssignmentScorer(registry)

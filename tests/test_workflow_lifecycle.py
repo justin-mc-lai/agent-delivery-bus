@@ -9,6 +9,7 @@ from pathlib import Path
 
 from agent_delivery_bus.cli import main
 from agent_delivery_bus.errors import DeliveryBusError
+from agent_delivery_bus.worker_binding import resolve_worker_binding
 from agent_delivery_bus.registry import ProjectRegistry
 from agent_delivery_bus.service import DeliveryService
 from agent_delivery_bus.storage import Storage
@@ -95,6 +96,42 @@ class PresetTests(unittest.TestCase):
         self.assertIn("sp", workflow_names(raw))
 
 
+class BeaconStageTests(unittest.TestCase):
+    def test_beacon_stages_force_load(self):
+        expected = {
+            "plan": "beacon-plan",
+            "truth": "beacon-truth",
+            "implement": "beacon-implement",
+            "qa": "beacon-qa",
+            "freeze": "beacon-truth",
+            "goal": "beacon-goal",
+        }
+        for stage, skill in expected.items():
+            binding = resolve_worker_binding(stage=stage, feature="f", docs_version="v0.0.7")
+            self.assertEqual(binding["skills"], [skill], stage)
+
+    def test_missing_skill_blocks(self):
+        class MissingSkillExecutor(FakeHermes):
+            def skills_available(self, skills):
+                return {"missing": list(skills), "installed": []}
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            project = make_project(root)
+            registry = ProjectRegistry.load(write_registry(root / "projects.json", [project]))
+            storage = Storage(":memory:")
+            service = DeliveryService(
+                registry,
+                storage,
+                preflight=PassingPreflight(),
+                executor=MissingSkillExecutor(),
+                truth_gate=FakeBeacon(),
+            )
+            result = service.dispatch(project_slug="demo", stage="plan", feature="feature")
+            self.assertEqual(result["reason_code"], "binding_skill_missing")
+            storage.close()
+
+
 class IngestHostFillTests(unittest.TestCase):
     def _ingest(self, tmp: str):
         root = Path(tmp)
@@ -139,7 +176,7 @@ class IngestHostFillTests(unittest.TestCase):
             self.assertFalse(validation["pass"])
             self.assertTrue(any("dangerous" in p for p in validation["problems"]))
 
-    def test_no_evidence_field_rejected(self):
+    def test_no_evidence_confirm_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             repo = fake_repo(root)
@@ -150,6 +187,17 @@ class IngestHostFillTests(unittest.TestCase):
             validation = validate_fill_response(request, response)
             self.assertFalse(validation["pass"])
             self.assertTrue(any("no anchor evidence" in p for p in validation["problems"]))
+
+    def test_bad_repo_fails_closed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            empty = root / "empty-repo"
+            empty.mkdir()
+            result = ingest_request(name="empty-wf", source=str(empty), root=root, workdir=root)
+            request = json.loads(Path(result["request_path"]).read_text(encoding="utf-8"))
+            self.assertEqual(result["anchors_count"], 0)
+            validation = validate_fill_response(request, host_response("empty-wf"))
+            self.assertFalse(validation["pass"])
 
 
 class VerifyAndTraceTests(unittest.TestCase):
@@ -219,6 +267,22 @@ class VerifyAndTraceTests(unittest.TestCase):
             # json decode failure must not silently pass validation-style flow
             self.assertEqual(rows, [])
 
+    def test_install_without_confirm_requires_yes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            repo = fake_repo(root)
+            config = write_registry(root / "projects.json", [make_project(root)])
+            result = ingest_request(name="cwf", source=str(repo), root=root, workdir=root)
+            request = json.loads(Path(result["request_path"]).read_text(encoding="utf-8"))
+            draft_apply(name="cwf", root=root, request=request, response=host_response("cwf"))
+            code = main(
+                [
+                    "--config", str(config), "--db", ":memory:",
+                    "workflow", "confirm", "--name", "cwf", "--json",
+                ]
+            )
+            self.assertEqual(code, 2)  # confirmation required
+
 
 class DispatchReconcileTests(unittest.TestCase):
     def test_bound_workflow_dispatch_reconcile_closed_loop(self):
@@ -240,7 +304,19 @@ class DispatchReconcileTests(unittest.TestCase):
                 preflight=PassingPreflight(),
                 executor=hermes,
                 truth_gate=FakeBeacon(closure_pass=True),
+                workflow_root=root,
             )
+            blocked = service.dispatch(project_slug="demo", stage="plan", feature="feature")
+            self.assertEqual(blocked["reason_code"], "workflow_verify_required")
+            report = verify_workflow(
+                name="my-wf",
+                raw=registry.raw,
+                root=root,
+                executor=hermes,
+                project=registry.resolve(slug="demo"),
+                service=service,
+            )
+            self.assertTrue(report["pass"], report)
             dispatched = service.dispatch(project_slug="demo", stage="plan", feature="feature")
             self.assertEqual(dispatched["status"], "dispatched")
             self.assertIn("openspec", hermes.last_skills)

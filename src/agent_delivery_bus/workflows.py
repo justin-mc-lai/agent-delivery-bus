@@ -435,4 +435,22 @@ def verify_workflow(
     report = {"workflow": name, "pass": all(c["pass"] for c in checks), "checks": checks}
     trace = TraceWriter(root, name)
     trace.event("verify", pass_=report["pass"], checks=checks)
+    if report["pass"]:
+        marker = Path(root) / ".beacon" / "state" / "workflows" / name / "verified.json"
+        marker.parent.mkdir(parents=True, exist_ok=True)
+        marker.write_text(
+            json.dumps({"workflow": name, "verified": True, "at": _now()}, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
     return report
+
+
+def is_verified(root: Path, name: str) -> bool:
+    marker = Path(root) / ".beacon" / "state" / "workflows" / name / "verified.json"
+    if not marker.is_file():
+        return False
+    try:
+        payload = json.loads(marker.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return False
+    return bool(payload.get("verified"))

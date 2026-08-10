@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from pathlib import Path
 from typing import Any, Callable
 
 from .adapters.memory import InMemoryMemoryAdapter
@@ -21,6 +22,7 @@ from .worker_binding import (
     format_evidence_spec_section,
     resolve_worker_binding,
 )
+from .workflows import is_verified as _workflow_verified
 
 
 TERMINAL_EXECUTOR_SUCCESS = {"done", "completed", "success", "succeeded"}
@@ -106,6 +108,7 @@ class DeliveryService:
         truth_gate: TruthGateAdapter | None = None,
         memory: MemoryAdapter | None = None,
         adapter_resolver: Callable[[Project], dict[str, Any]] | None = None,
+        workflow_root: Path | None = None,
         # Backward-compatible aliases
         hermes: ExecutorAdapter | None = None,
         beacon: TruthGateAdapter | None = None,
@@ -120,6 +123,7 @@ class DeliveryService:
         self.hermes = self.executor
         self.beacon = self.truth_gate
         self.adapter_resolver = adapter_resolver
+        self.workflow_root = workflow_root
         self.memory = memory or InMemoryMemoryAdapter()
         self.preflight = preflight or Preflight(self.truth_gate, self.executor)
         self.approvals = ApprovalService(storage)
@@ -213,10 +217,14 @@ class DeliveryService:
         executor = adapters["executor"]
         truth_gate = adapters["truth_gate"]
         binding_profile = str(adapters["binding_profile"] or "")
+        workflows_cfg = (
+            self.registry.raw.get("workflows")
+            if isinstance(self.registry.raw.get("workflows"), dict)
+            else {}
+        )
         profile_config = project.metadata.get("binding_profile")
         if not isinstance(profile_config, dict):
-            workflows = self.registry.raw.get("workflows") if isinstance(self.registry.raw, dict) else {}
-            profile_config = workflows.get(binding_profile) if isinstance(workflows, dict) else None
+            profile_config = workflows_cfg.get(binding_profile) if isinstance(workflows_cfg, dict) else None
         profile_config = profile_config if isinstance(profile_config, dict) else None
 
         request = normalized_request(
@@ -449,6 +457,27 @@ class DeliveryService:
                     ),
                     "dispatch": dispatch,
                     "missing_skills": missing,
+                }
+            if (
+                self.workflow_root is not None
+                and binding_profile in workflows_cfg
+                and not _workflow_verified(self.workflow_root, binding_profile)
+            ):
+                if dispatch["state"] == "queued":
+                    dispatch = self.storage.transition(
+                        dispatch_id,
+                        expected_from="queued",
+                        to_state="blocked",
+                        event_type="workflow_verify_required",
+                        reason_code="workflow_verify_required",
+                        resume_action=f"run `adb workflow verify --name {binding_profile}` before real dispatch",
+                    )
+                return {
+                    "status": "blocked",
+                    "blocked": True,
+                    "reason_code": "workflow_verify_required",
+                    "resume_action": f"run `adb workflow verify --name {binding_profile}` before real dispatch",
+                    "dispatch": dispatch,
                 }
             receipt = executor.create_task(
                 project,
