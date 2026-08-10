@@ -574,6 +574,23 @@ def render_board_status_text(payload: dict[str, Any]) -> str:
     return "\n".join(lines).rstrip() + "\n"
 
 
+def _resolve_project_ref(registry: ProjectRegistry, raw: str | None) -> str | None:
+    """Map a user-supplied project reference to a canonical slug.
+
+    Accepts a numeric index (``--project 5`` / ``--slug 5``), a slug, or an
+    alias. Returns the canonical slug, or None when raw is empty.
+    """
+    if not raw:
+        return None
+    text = str(raw).strip()
+    if text.isdigit():
+        return registry.resolve(index=int(text)).slug
+    try:
+        return registry.resolve(slug=text).slug
+    except DeliveryBusError:
+        return registry.resolve(alias=text).slug
+
+
 def execute(args: argparse.Namespace) -> dict[str, Any]:
     if args.command == "install-skills":
         skill = ROOT / "skills" / "agent-delivery-bus"
@@ -582,6 +599,8 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
     registry = ProjectRegistry.load(args.config)
     storage = Storage(args.db)
     try:
+        # 统一把 --project 的纯数字编号解析为 canonical slug（dispatch/approve/assign/task 等共用）。
+        args.project = _resolve_project_ref(registry, getattr(args, "project", None)) or ""
         resolver = AdapterResolver(registry.raw)
         wired = resolver.global_adapters()
         executor = wired["executor"]

@@ -38,6 +38,13 @@ class RegistryTests(unittest.TestCase):
             self.assertEqual(rc, 0)
             rc = main(["--config", str(registry_path), "projects", "resolve", "--index", "2", "--json"])
             self.assertEqual(rc, 0)
+            # _resolve_project_ref: 数字编号 → canonical slug（dispatch --project 复用同一逻辑）
+            from agent_delivery_bus.cli import _resolve_project_ref
+            self.assertEqual(_resolve_project_ref(registry, "1"), "beacon")
+            self.assertEqual(_resolve_project_ref(registry, "2"), "managed")
+            self.assertEqual(_resolve_project_ref(registry, "managed"), "managed")
+            self.assertEqual(_resolve_project_ref(registry, "managed-alias"), "managed")
+            self.assertIsNone(_resolve_project_ref(registry, None))
 
     def test_duplicate_slug_and_alias_conflict_fail_closed(self):
         with tempfile.TemporaryDirectory() as tmp:
