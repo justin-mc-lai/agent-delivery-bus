@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "artifact": "implementation_writeback_ledger",
+  "feature": "workflow-lifecycle",
+  "feature_slug": "workflow-lifecycle",
+  "version": "v0.0.7",
+  "entries": [
+    {
+      "recorded_at": "2026-08-10T09:02:09.817851+00:00",
+      "revision_id": "R1",
+      "run_id": "run-20260810T090209Z-8216",
+      "implemented_item_ids": [
+        "AC-001",
+        "TEST-001",
+        "TASK-001"
+      ],
+      "changed_files": [
+        "src/agent_delivery_bus/workflows.py",
+        "src/agent_delivery_bus/keywords.py",
+        "src/agent_delivery_bus/worker_binding.py",
+        "src/agent_delivery_bus/cli.py",
+        "src/agent_delivery_bus/service.py",
+        "src/agent_delivery_bus/intent.py"
+      ]
+    }
+  ],
+  "last_recorded_at": "2026-08-10T09:02:09.817851+00:00"
+}

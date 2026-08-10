@@ -17,8 +17,8 @@ task_source: acceptance_criteria
 - [x] TASK-006 Implement AC-WF-006: `adb workflow verify <name>` 验收探针：skill 存在、命令模板可解析、evidence_spec 合法、各... · ac=AC-WF-006 · evidence=`.beacon/evidence/implement/workflow-lifecycle/AC-WF-006.json`
 - [x] TASK-007 Implement AC-WF-007: 工作流绑定后 dispatch→reconcile 闭环；坏库/无锚点字段/危险命令 → fail-closed 不安装 · ac=AC-WF-007 · evidence=`.beacon/evidence/implement/workflow-lifecycle/AC-WF-007.json`
 - [x] TASK-008 Implement AC-WF-008: illegal：无确认安装、危险命令、无证据字段、伪造 trace → fail-closed · ac=AC-WF-008 · evidence=`.beacon/evidence/implement/workflow-lifecycle/AC-WF-008.json`
-- [ ] TASK-009 Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/workflow-lifecycle/GATES.json`
-- [ ] TASK-010 Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/workflow-lifecycle/QA-MATRIX.json`
+- [x] TASK-009 Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/workflow-lifecycle/GATES.json`
+- [x] TASK-010 Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/workflow-lifecycle/QA-MATRIX.json`
 
 ## Boundary
 

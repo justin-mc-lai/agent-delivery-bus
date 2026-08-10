@@ -195,7 +195,7 @@
     "fill_depth_pass": true,
     "note": "Polish L0/narrative only after A/B/C; preserve_machine_fields=true; freeze needs D+exec too"
   },
-  "evaluated_at": "2026-08-10T08:49:31.655513+00:00",
+  "evaluated_at": "2026-08-10T09:03:14.748942+00:00",
   "paths": {
     "truth": "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
     "tests": "docs/beacon/v0.0.7/features/workflow-lifecycle/tests.md",

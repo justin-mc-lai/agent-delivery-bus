@@ -7,11 +7,28 @@
   "source_revision_id": "",
   "reason": "freeze",
   "doc_status": "frozen",
-  "delivery_status": "idle",
-  "lifecycle_status": "idle",
+  "delivery_status": "accepted",
+  "lifecycle_status": "accepted",
   "baseline_hash": "sha256:39b0da8848608b6d53e469c9c604bf39e4f8b41fdec49e77947371afb139a726",
   "superseded_by": "",
   "created_at": "2026-08-10T08:48:36.011451+00:00",
   "frozen_at": "2026-08-10T08:49:31.656684+00:00",
-  "accepted_at": ""
+  "accepted_at": "2026-08-10T09:03:22.187479+00:00",
+  "last_implementation_run_id": "run-20260810T090209Z-8216",
+  "changed_files": [
+    "src/agent_delivery_bus/workflows.py",
+    "src/agent_delivery_bus/keywords.py",
+    "src/agent_delivery_bus/worker_binding.py",
+    "src/agent_delivery_bus/cli.py",
+    "src/agent_delivery_bus/service.py",
+    "src/agent_delivery_bus/intent.py"
+  ],
+  "last_verification_run_id": "run-20260810T170315848744",
+  "verification_evidence": [
+    ".beacon/auto-test-status.json",
+    ".beacon/qa/status.json",
+    ".beacon/coverage-summary.json",
+    ".beacon/release-gate-report.json"
+  ],
+  "accepted_by": "qa"
 }

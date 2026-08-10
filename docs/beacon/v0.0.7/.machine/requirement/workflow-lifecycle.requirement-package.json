@@ -5,7 +5,7 @@
   "truth_package_contract": "beacon-feature-package-v2",
   "machine_json_role": "generated_state_not_truth",
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-08-10T08:49:31.792723+00:00",
+  "generated_at": "2026-08-10T09:03:14.082795+00:00",
   "feature": "workflow-lifecycle",
   "feature_slug": "workflow-lifecycle",
   "version": "v0.0.7",
@@ -20,7 +20,7 @@
   "source_hashes": {
     "truth": "0924bf0e65683e93f4dbbd4bfaca2a5152a79846c97ce82ee0fed4f12212eede",
     "tests": "1a862bbd65939e552a2d7d56ff687d6ebe8835cd8c8dce662ac7e0866a1894a6",
-    "tasks": "c105668ec221477550c38e1ba1de6673e013cda82b19f2b65eaf56fae5278c1d",
+    "tasks": "74c7679615f82e97720912c9c08ea8f202671744787ad8d9f32a373a4ee9034a",
     "evidence": "b20d3f25b7a53467cff62fd82310da21dbe1bf6ef19d09b24e7166a141252fba"
   },
   "truth_frontmatter": {
@@ -179,42 +179,42 @@
     {
       "id": "TASK-001",
       "title": "Implement AC-WF-001: beacon 生命周期六阶段（plan/truth/implement/qa/freeze/goal）可经 adb 派发，worker 任... · ac=AC-WF-001 · evidence=`.beacon/evidence/implement/workflow-lifecycle/AC-WF-001.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-002",
       "title": "Implement AC-WF-002: 规范关键词表唯一真值；`adb intent keywords --json` 输出机器可读；飞书/微信/Line 同一句话得到同一 en... · ac=AC-WF-002 · evidence=`.beacon/evidence/implement/workflow-lifecycle/AC-WF-002.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-003",
       "title": "Implement AC-WF-003: openspec` 可安装并可被项目绑定；预设为 skill 工作流形状（stages→skill/command/evidence） · ac=AC-WF-003 · evidence=`.beacon/evidence/implement/workflow-lifecycle/AC-WF-003.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-004",
       "title": "Implement AC-WF-004: URL>` 只读盘点 → 产出 analysis request（anchors+commit）→ 宿主 agent 回填 respons... · ac=AC-WF-004 · evidence=`.beacon/evidence/implement/workflow-lifecycle/AC-WF-004.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-005",
       "title": "Implement AC-WF-005: 全程 JSONL trace（inventory/analysis_request/host_fill/validation/instal... · ac=AC-WF-005 · evidence=`.beacon/evidence/implement/workflow-lifecycle/AC-WF-005.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-006",
       "title": "Implement AC-WF-006: `adb workflow verify <name>` 验收探针：skill 存在、命令模板可解析、evidence_spec 合法、各... · ac=AC-WF-006 · evidence=`.beacon/evidence/implement/workflow-lifecycle/AC-WF-006.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-007",
       "title": "Implement AC-WF-007: 工作流绑定后 dispatch→reconcile 闭环；坏库/无锚点字段/危险命令 → fail-closed 不安装 · ac=AC-WF-007 · evidence=`.beacon/evidence/implement/workflow-lifecycle/AC-WF-007.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-008",
       "title": "Implement AC-WF-008: illegal：无确认安装、危险命令、无证据字段、伪造 trace → fail-closed · ac=AC-WF-008 · evidence=`.beacon/evidence/implement/workflow-lifecycle/AC-WF-008.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-009",

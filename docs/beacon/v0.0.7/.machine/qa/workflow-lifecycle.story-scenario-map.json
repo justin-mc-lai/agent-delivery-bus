@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "feature": "workflow-lifecycle",
+  "feature_slug": "workflow-lifecycle",
+  "version": "v0.0.7",
+  "generated_at": "2026-08-10T09:03:15.502442+00:00",
+  "expansion_profile": "pua-web",
+  "scenario_depth": "standard",
+  "families_required": [
+    "happy",
+    "negative",
+    "boundary",
+    "recovery",
+    "compatibility"
+  ],
+  "stories": [
+    {
+      "ac_id": "AC-001",
+      "theme": "general",
+      "text": "Acceptance criteria TBD",
+      "scenario_ids": [],
+      "scenario_families": [],
+      "required_families": [],
+      "scenarios": []
+    }
+  ],
+  "scenarios": []
+}

@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "artifact": "qa_acceptance_envelope",
+  "version": "v0.0.7",
+  "feature": "workflow-lifecycle",
+  "feature_slug": "workflow-lifecycle",
+  "revision_id": "R1",
+  "verdict": "passed",
+  "accepted_at": "2026-08-10T09:03:22.187479+00:00",
+  "accepted_by": "qa",
+  "run_id": "run-20260810T170315848744",
+  "transaction_id": "tx-qa-acceptance-workflow-lifecycle-478fad77c877",
+  "source_hash": "sha256:478fad77c8775479d9f723b85664ae66448f6d81eb90a19ac48117bf7a1936f8",
+  "projection_seq": 1,
+  "source_command": "beacon qa run \"workflow-lifecycle\" --project-root /Users/apple/Developer/Personal/products/agent-delivery-bus/.beacon/worktrees/v0.0.7/workflow-lifecycle --version v0.0.7",
+  "requirement_refs": [
+    "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
+    "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
+    "docs/beacon/v0.0.7/features/workflow-lifecycle/tests.md",
+    "docs/beacon/v0.0.7/.machine/execution/workflow-lifecycle.revision.json"
+  ],
+  "test_case_refs": [],
+  "evidence_refs": [
+    ".beacon/auto-test-status.json",
+    ".beacon/qa/status.json",
+    ".beacon/coverage-summary.json",
+    ".beacon/release-gate-report.json"
+  ],
+  "story_status": "implemented",
+  "revision_delivery_status": "implemented",
+  "required_ac_count": 0,
+  "required_test_count": 0,
+  "canonical_envelope_ref": "docs/beacon/v0.0.7/.machine/execution/qa-acceptance-workflow-lifecycle.json",
+  "markdown_ref": "docs/beacon/v0.0.7/execution/qa-acceptance-brief-workflow-lifecycle.md",
+  "transaction_lineage": {
+    "current_transaction_id": "tx-qa-acceptance-workflow-lifecycle-478fad77c877",
+    "projection_seq": 1,
+    "source_hash": "sha256:478fad77c8775479d9f723b85664ae66448f6d81eb90a19ac48117bf7a1936f8",
+    "workflow_memory_ref": ".beacon/memory/workflow-lifecycle.json",
+    "memory_event_id": "",
+    "memory_entry_id": "4356d1c9-b882-4909-a322-4fc515cfa9e7"
+  },
+  "sink_checksums": {
+    "machine": "sha256:8b238910a2eaa5769681e33dbd7709131e3e8427390aa0882fb50aee3e085c13",
+    "human": "sha256:4813be8eb0161b3d0c8538e63fa0463094a103bbe2cb6fe5b4e4981f9d4711d5",
+    "runtime": "sha256:9ef86c86302d5b48146da1adb73a58703e4482ca5da33afbb87be989b8b748c0"
+  },
+  "runtime_projection_ref": ".beacon/transactions/qa-acceptance-workflow-lifecycle.json",
+  "transaction_status": "applied",
+  "failed_sinks": []
+}

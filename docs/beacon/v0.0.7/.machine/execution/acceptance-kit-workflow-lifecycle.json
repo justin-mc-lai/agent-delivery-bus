@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "feature": "workflow-lifecycle",
+  "feature_slug": "workflow-lifecycle",
+  "version": "v0.0.7",
+  "verdict": "passed",
+  "layers": {
+    "skill-contract": {
+      "status": "pass",
+      "source_truth_ref": "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
+      "evidence_ref": "docs/beacon/v0.0.7/.machine/execution/qa-acceptance-workflow-lifecycle.json"
+    },
+    "scenario-suite": {
+      "status": "pass",
+      "source_truth_ref": "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
+      "evidence_ref": "docs/beacon/v0.0.7/execution/qa-acceptance-brief-workflow-lifecycle.md"
+    },
+    "trace-scorecard": {
+      "status": "pass",
+      "source_truth_ref": "docs/beacon/v0.0.7/features/workflow-lifecycle/tests.md",
+      "evidence_ref": "docs/beacon/v0.0.7/features/workflow-lifecycle/tests.md"
+    },
+    "real-project-proof": {
+      "status": "pass",
+      "source_truth_ref": ".beacon/transactions/qa-acceptance-workflow-lifecycle.json",
+      "evidence_ref": ".beacon/transactions/qa-acceptance-workflow-lifecycle.json"
+    }
+  },
+  "real_project_proof": {
+    "status": "pass",
+    "evidence_refs": [
+      ".beacon/transactions/qa-acceptance-workflow-lifecycle.json",
+      "docs/beacon/v0.0.7/execution/qa-acceptance-brief-workflow-lifecycle.md",
+      "docs/beacon/v0.0.7/.machine/execution/qa-acceptance-workflow-lifecycle.json",
+      ".beacon/auto-test-status.json",
+      ".beacon/qa/status.json",
+      ".beacon/coverage-summary.json",
+      ".beacon/release-gate-report.json"
+    ],
+    "source": "qa_acceptance_envelope"
+  },
+  "regression_pass": true
+}
