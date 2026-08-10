@@ -2,7 +2,7 @@
 
 **日期**：2026-08-05
 **目的**：固化 Beacon 与 agent-delivery-bus（ADB）在个人 AI 生产飞轮中的定位、分工与协作契约，避免后续演进中职责漂移。
-**来源**：vision-first-principles.md（三环一总线）、beacon-loop-capability-next-2026-08.md（loop 完善见解）、worker-beacon-binding truth（v0.0.3 冻结）。
+**来源**：三环一总线（vision-first-principles）、beacon-loop-capability-next-2026-08.md（loop 完善见解）、worker-beacon-binding truth（v0.0.3 冻结）。
 
 ---
 
@@ -52,7 +52,7 @@ beacon QA/release（最终判定）
 1. **truth_gate adapter = beacon（默认参考实现，非唯一）**：Beacon 是 TruthGate SPI 的默认参考 adapter（`adapters/beacon.py`），preflight 跑 `beacon doctor verify-context --strict` + 声明版本一致；验收时查 `<repo>/.beacon/evidence/implement/<feature>/*.json`。任何实现 TruthGate SPI 的系统都可替换。
 2. **worker binding 是 profile 制，beacon 是内置参考 profile**：dispatch 任务 body 含 binding manifest（beacon profile 输出 `### Beacon worker binding` 段，stage → beacon plan/implement/qa 模板，兼容 worker-beacon-binding v0.0.3）+ evidence spec；项目可通过 registry 声明自定义 profile，ADB 不要求必须用 Beacon。
 3. **两道门不互相替代**：ADB approval token（能不能派）+ beacon release gate（算不算发布）都过才算完。
-4. **truth 包随项目走**：beacon 流程在任何仓库可跑（ADB、content-creator、content-sync 均有 `docs/beacon/`）；ADB 的 truth 包在 ADB 仓库 `docs/beacon/<version>/` 下，由 beacon 流程管理。
+4. **truth 包随项目走**：beacon 流程在任何仓库可跑（ADB 及各类内容/产品项目均有 `docs/beacon/`）；ADB 的 truth 包在 ADB 仓库 `docs/beacon/<version>/` 下，由 beacon 流程管理。
 
 ## 4. 分界线（一句话规则）
 
@@ -80,7 +80,7 @@ beacon QA/release（最终判定）
 
 | 下一步 | 落点 | 依据 |
 |---|---|---|
-| 反馈环（指标采集→analyze→回流） | content-creator（beacon 定标准，ADB 提供心跳） | beacon-loop-capability-next 见解 2 |
+| 反馈环（指标采集→analyze→回流） | 内容创作项目（beacon 定标准，ADB 提供心跳） | beacon-loop-capability-next 见解 2 |
 | 心跳交接契约 + evidence_threshold 触发 | ADB（v0.0.6） | 见解 1 |
 | hard lease、无进展退避、事件溯源 | ADB（v0.0.6-0.0.7） | 见解 3/4/5 |
 | pi 执行器（driver_pi） | ADB（执行器抽象） | 见解 6 |

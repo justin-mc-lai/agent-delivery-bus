@@ -289,113 +289,113 @@ class BoundaryService:
         return {"ingested": created, "auto_approved": False}
 
 
-# 示例号 · GitHub 开源 AI / AI Spec 向日批题库（按日轮转取 5 条；不爬网、不 auto-approve）
+# 示例 · 开源 AI / AI Spec 日批题库（按日轮转取 5 条；不爬网、不 auto-approve）
 TOPIC_BANK: list[dict[str, Any]] = [
     {
         "topic": "本周值得盯的 GitHub 开源 AI Agent 框架更新",
         "query_hints": ["github ai agent", "开源 agent framework", "llm agent release"],
-        "rationale": "示例号·AI Spec 贴图｜给建造者可执行的开源雷达",
+        "rationale": "示例·AI Spec 贴图｜给建造者可执行的开源雷达",
     },
     {
         "topic": "把一条 AI Spec 画成信息图：输入/工具/护栏三块怎么拆",
         "query_hints": ["ai spec diagram", "agent spec 信息图", "tool guardrail"],
-        "rationale": "示例号·贴图=image_post｜把规范变成可转发图",
+        "rationale": "示例·贴图=image_post｜把规范变成可转发图",
     },
     {
         "topic": "开源 LLM Ops 小工具：评测/追踪/成本一眼看懂",
         "query_hints": ["llm ops opensource", "eval tracing cost", "github llm toolkit"],
-        "rationale": "示例号·oss-picks｜运维向实用开源清单",
+        "rationale": "示例·oss-picks｜运维向实用开源清单",
     },
     {
         "topic": "从 README 到可复现：开源 AI 库最小跑通清单",
         "query_hints": ["reproducible ai repo", "github quickstart", "oss onboarding"],
-        "rationale": "示例号·开源 AI 库｜降低读者上手摩擦",
+        "rationale": "示例·开源 AI 库｜降低读者上手摩擦",
     },
     {
         "topic": "Agent 工具调用失败怎么写进 Spec：错误码与重试边界",
         "query_hints": ["agent tool error spec", "retry boundary", "ai spec failure"],
-        "rationale": "示例号·AI Spec｜把失败路径画清楚",
+        "rationale": "示例·AI Spec｜把失败路径画清楚",
     },
     {
         "topic": "多模型路由开源方案对比：何时该切便宜模型",
         "query_hints": ["multi model router", "github llm router", "cost aware routing"],
-        "rationale": "示例号·oss-picks｜成本与质量权衡图",
+        "rationale": "示例·oss-picks｜成本与质量权衡图",
     },
     {
         "topic": "开源 RAG 管线一周进展：切片、召回、引用三件套",
         "query_hints": ["opensource rag", "github retrieval", "citation pipeline"],
-        "rationale": "示例号·开源 AI｜检索链路可视化贴图",
+        "rationale": "示例·开源 AI｜检索链路可视化贴图",
     },
     {
         "topic": "把 MCP / Tool Schema 画成人话：字段、权限、副作用",
         "query_hints": ["mcp schema", "tool schema spec", "agent permission"],
-        "rationale": "示例号·AI Spec 贴图｜协议层可读化",
+        "rationale": "示例·AI Spec 贴图｜协议层可读化",
     },
     {
         "topic": "GitHub 上的 Prompt/Eval 数据集：怎么挑、怎么标注边界",
         "query_hints": ["prompt eval dataset", "github benchmark", "annotation boundary"],
-        "rationale": "示例号·oss-picks｜数据集选型信息图",
+        "rationale": "示例·oss-picks｜数据集选型信息图",
     },
     {
         "topic": "本地可跑的开源推理栈：量化、显存、吞吐一张图说清",
         "query_hints": ["local llm inference", "quantization vram", "opensource runtime"],
-        "rationale": "示例号·开源 AI 库｜硬件约束可视化",
+        "rationale": "示例·开源 AI 库｜硬件约束可视化",
     },
     {
         "topic": "Agent 编排框架选型：LangGraph / CrewAI / AutoGen 怎么挑",
         "query_hints": ["langgraph vs crewai", "agent orchestration", "github agent framework"],
-        "rationale": "示例号·oss-picks｜编排层选型对比图",
+        "rationale": "示例·oss-picks｜编排层选型对比图",
     },
     {
         "topic": "给 AI 写一份好的系统提示：角色、边界、输出格式三段式",
         "query_hints": ["system prompt design", "prompt spec", "ai spec prompt"],
-        "rationale": "示例号·AI Spec｜提示词规范可视化",
+        "rationale": "示例·AI Spec｜提示词规范可视化",
     },
     {
         "topic": "开源向量库横向对比：chunk 策略与召回率怎么权衡",
         "query_hints": ["vector database opensource", "chunking strategy", "retrieval recall"],
-        "rationale": "示例号·开源 AI｜检索底座选型图",
+        "rationale": "示例·开源 AI｜检索底座选型图",
     },
     {
         "topic": "AI 应用的观测：OpenTelemetry 追踪一次 Agent 调用全链路",
         "query_hints": ["opentelemetry agent tracing", "llm observability", "github tracing"],
-        "rationale": "示例号·AI Spec 贴图｜可观测性链路图",
+        "rationale": "示例·AI Spec 贴图｜可观测性链路图",
     },
     {
         "topic": "开源 RAG 评测集盘点：问答、引用、幻觉三类指标",
         "query_hints": ["rag benchmark", "evaluation dataset", "hallucination metric"],
-        "rationale": "示例号·oss-picks｜评测指标信息图",
+        "rationale": "示例·oss-picks｜评测指标信息图",
     },
     {
         "topic": "把工具调用画进状态机：Agent 一次任务的生命周期",
         "query_hints": ["tool call state machine", "agent lifecycle", "ai spec diagram"],
-        "rationale": "示例号·AI Spec 贴图｜生命周期可视化",
+        "rationale": "示例·AI Spec 贴图｜生命周期可视化",
     },
     {
         "topic": "本地模型 vs API：数据隐私、成本、延迟的三岔口怎么选",
         "query_hints": ["local model vs api", "privacy cost latency", "llm deployment"],
-        "rationale": "示例号·开源 AI 库｜部署选型决策图",
+        "rationale": "示例·开源 AI 库｜部署选型决策图",
     },
     {
         "topic": "开源 Agent 的评测基准：从工具调用到长任务到底考什么",
         "query_hints": ["agent benchmark", "tool calling eval", "long horizon tasks"],
-        "rationale": "示例号·oss-picks｜基准解读贴图",
+        "rationale": "示例·oss-picks｜基准解读贴图",
     },
     {
         "topic": "AI Spec 的版本管理：Truth、Change、Release 三账怎么对",
         "query_hints": ["ai spec versioning", "requirement truth", "beacon spec"],
-        "rationale": "示例号·AI Spec｜工程化规范可视化",
+        "rationale": "示例·AI Spec｜工程化规范可视化",
     },
     {
         "topic": "把 Agent 的 memory 画出来：短期上下文、长期知识、工具状态",
         "query_hints": ["agent memory design", "context management", "ai spec memory"],
-        "rationale": "示例号·AI Spec 贴图｜记忆分层图",
+        "rationale": "示例·AI Spec 贴图｜记忆分层图",
     },
 ]
 
 
 def daily_topic_batch(*, day_index: int | None = None, count: int = 5) -> list[dict[str, Any]]:
-    """Pick `count` rotating in-vertical topics for 示例号 WeChat image_post editorial.
+    """Pick `count` rotating in-vertical topics for 示例内容号 WeChat image_post editorial.
 
     Rotation window jumps by `count` each day (not by 1), so consecutive days never
     overlap: with a 20-topic bank and count=5, each topic repeats every 4 days.
@@ -421,7 +421,7 @@ def daily_topic_batch(*, day_index: int | None = None, count: int = 5) -> list[d
 
 def hermes_boundary_tick_script() -> str:
     return r"""#!/bin/bash
-# Hermes cron tick → 示例号公众号 AI Spec/开源选题 · 每日 5 条进 ADB 待审（不 auto-approve）
+# Hermes cron tick → 内容号 AI Spec/开源选题 · 每日 5 条进 ADB 待审（不 auto-approve）
 # stdout 交给 Hermes --no-agent 直推飞书
 set -euo pipefail
 ADB_BIN="${ADB_BIN:-adb}"
@@ -513,7 +513,7 @@ lines = [
     f"下一步：对第 1 条拍板（约 1 分钟）",
     f"adb boundary decide {first_id} --actor you --decision approve --json",
     "",
-    f"示例号选题 · 今日 {len(ingested)} 条 · {today}",
+    f"每日选题 · 今日 {len(ingested)} 条 · {today}",
     "状态：均为 awaiting_review · 未生效",
     "",
 ]

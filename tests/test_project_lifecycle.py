@@ -175,16 +175,16 @@ class ProjectLifecycleIntentTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             registry = indexed_registry(
                 Path(tmp) / "projects.json",
-                ["beacon", demo, "milemon", "rolo", "creator"],
+                ["beacon", "alpha", "beta", "gamma", "delta"],
             )
             parsed = IntentParser(registry).parse("删除 5")
             self.assertFalse(parsed["blocked"], parsed)
             env = parsed["data"]["envelope"]
             self.assertEqual(env["action"], "delete")
-            self.assertEqual(env["project_slug"], "creator")
+            self.assertEqual(env["project_slug"], "delta")
             restored = IntentParser(registry).parse("恢复 5")
             self.assertEqual(restored["data"]["envelope"]["action"], "restore")
-            self.assertEqual(restored["data"]["envelope"]["project_slug"], "creator")
+            self.assertEqual(restored["data"]["envelope"]["project_slug"], "delta")
 
 
 class ProjectLifecycleCliTests(unittest.TestCase):

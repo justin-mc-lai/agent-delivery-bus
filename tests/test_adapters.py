@@ -46,18 +46,18 @@ class HermesAdapterTests(unittest.TestCase):
             repo = root / "content-project"
             repo.mkdir()
             project = Project(
-                slug="content-creator",
-                title="content-creator",
+                slug="demo-content",
+                title="demo-content",
                 project_class="managed",
                 repo=str(repo),
                 aliases=("creator",),
                 dispatchable=True,
-                binding_profile="selfmedia-codex",
+                binding_profile="demo-content",
                 metadata={"workspace_kind": "dir"},
             )
             runner = RecordingRunner(
                 [
-                    CommandResult(("boards",), 0, json.dumps([{"slug": "adb-content-creator", "archived": False}]), ""),
+                    CommandResult(("boards",), 0, json.dumps([{"slug": "adb-demo-content", "archived": False}]), ""),
                     CommandResult(("create",), 0, json.dumps({"id": "task-1"}), ""),
                 ]
             )

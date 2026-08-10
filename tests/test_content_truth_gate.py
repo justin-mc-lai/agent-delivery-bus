@@ -10,17 +10,23 @@ from agent_delivery_bus.registry import Project
 
 def make_project(root: Path) -> Project:
     return Project(
-        slug="content-creator",
-        title="content-creator",
+        slug="demo-content",
+        title="demo-content",
         project_class="managed",
         repo=str(root),
         aliases=("creator",),
         dispatchable=True,
-        docs_root=str(root / "docs" / "beacon"),
-        docs_version="v0.0.5",
         truth_gate="content",
         executor="hermes",
-        binding_profile="selfmedia-codex",
+        binding_profile="demo-content",
+        metadata={
+            "content_layout": {
+                "vertical": "oss-picks",
+                "account": "demo-gzh",
+                "presentation_template": "image-post-v1",
+                "account_template": "gzh",
+            }
+        },
     )
 
 
@@ -63,7 +69,7 @@ class ContentTruthGateTests(unittest.TestCase):
     def test_implement_closure_requires_presentation_render_and_qa(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            pres = root / "content" / "presentations" / "oss-picks" / "anydoc" / "wechat-gzh-image-post-v1"
+            pres = root / "content" / "presentations" / "oss-picks" / "anydoc" / "image-post-v1"
             for rel in (
                 "presentation.yaml",
                 "caption-short.md",
@@ -77,7 +83,7 @@ class ContentTruthGateTests(unittest.TestCase):
                 path = pres / rel
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text("x\n", encoding="utf-8")
-            renders = root / "content" / "renders" / "demo-gzh" / "wechat-gzh" / "assets" / "anydoc-v1"
+            renders = root / "content" / "renders" / "demo-gzh" / "gzh" / "assets" / "anydoc-v1"
             renders.mkdir(parents=True)
             (renders / "01-cover.jpg").write_bytes(b"jpeg")
             (renders / "02-article.png").write_bytes(b"png")
@@ -92,7 +98,7 @@ class ContentTruthGateTests(unittest.TestCase):
     def test_qa_closure_requires_uploadable_conclusion(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            qa = root / "content" / "presentations" / "oss-picks" / "anydoc" / "wechat-gzh-image-post-v1" / "qa"
+            qa = root / "content" / "presentations" / "oss-picks" / "anydoc" / "image-post-v1" / "qa"
             qa.mkdir(parents=True)
             for name in ("visual-qa.md", "anti-slop.md", "value-gate.md", "release-approval.md"):
                 (qa / name).write_text("x\n", encoding="utf-8")

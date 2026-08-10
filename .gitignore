@@ -114,3 +114,16 @@ src/*.egg-info/
 # Machine-local registry
 # Python packaging
 # Vendored host skills and runtime scratch should stay local
+
+# Private/local-only artifacts (kept on disk, not shipped in the OSS repo)
+/.beacon/
+/docs/vision-first-principles.md
+/docs/beacon/v0.0.1/
+/docs/beacon/v0.0.2/
+/docs/beacon/v0.0.3/
+/docs/beacon/v0.0.4/
+/docs/beacon/v0.0.5/
+
+# Private working files (thesis/research) — never ship to the OSS repo
+/docs/new/
+/docs/research/

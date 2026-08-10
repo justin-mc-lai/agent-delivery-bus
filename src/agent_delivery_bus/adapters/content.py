@@ -1,4 +1,4 @@
-"""Content-pipeline truth gate for content-creator style projects.
+"""Content-pipeline truth gate for article/selfmedia style projects.
 
 Beacon's closure semantics model software-delivery governance (truth.md /
 revision packages). Content projects deliver article packages instead, so the
@@ -46,12 +46,18 @@ class ContentTruthGate:
         root = Path(project.repo)
         feature = (feature or "").strip().lstrip("/")
         stage = (stage or "").strip().lower()
-        master_dir = root / "content" / "masters" / "oss-picks" / feature
-        pres_dir = (
-            root / "content" / "presentations" / "oss-picks" / feature / "wechat-gzh-image-post-v1"
-        )
+        layout = project.metadata.get("content_layout")
+        layout = layout if isinstance(layout, dict) else {}
+        vertical = str(layout.get("vertical") or "default")
+        account = str(layout.get("account") or "default-account")
+        presentation_template = str(layout.get("presentation_template") or "default-image-post-v1")
+        account_template = str(layout.get("account_template") or "default")
+        master_dir = root / "content" / "masters" / vertical / feature
+        pres_dir = root / "content" / "presentations" / vertical / feature / presentation_template
         qa_dir = pres_dir / "qa"
-        render_dir = root / "content" / "renders" / "demo-gzh" / "wechat-gzh" / "assets" / f"{feature}-v1"
+        render_dir = (
+            root / "content" / "renders" / account / account_template / "assets" / f"{feature}-v1"
+        )
 
         evidence_dir = self._evidence_dir(project, stage, feature, evidence_spec)
         manifest_ok, manifest_path = self._manifest_ok(evidence_dir, dispatch_id)

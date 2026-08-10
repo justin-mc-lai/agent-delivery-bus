@@ -1,5 +1,5 @@
 #!/bin/bash
-# Hermes cron tick → 示例号公众号 AI Spec/开源选题 · 每日 5 条进 ADB 待审（不 auto-approve）
+# Hermes cron tick → 内容号 AI Spec/开源选题 · 每日 5 条进 ADB 待审（不 auto-approve）
 # stdout 交给 Hermes --no-agent 直推飞书
 set -euo pipefail
 ADB_BIN="${ADB_BIN:-adb}"
@@ -91,7 +91,7 @@ lines = [
     f"下一步：对第 1 条拍板（约 1 分钟）",
     f"adb boundary decide {first_id} --actor you --decision approve --json",
     "",
-    f"示例号选题 · 今日 {len(ingested)} 条 · {today}",
+    f"每日选题 · 今日 {len(ingested)} 条 · {today}",
     "状态：均为 awaiting_review · 未生效",
     "",
 ]

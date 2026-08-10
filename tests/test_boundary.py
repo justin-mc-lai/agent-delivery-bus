@@ -21,7 +21,7 @@ from agent_delivery_bus.storage import Storage
 _PROFILE_KW = {
     "project_profile_ref": DEFAULT_PROJECT_PROFILE_REF,
     "account_profile_ref": DEFAULT_ACCOUNT_PROFILE_REF,
-    "rationale": "示例号·开源 AI / AI Spec 价值选题",
+    "rationale": "示例·开源 AI / AI Spec 价值选题",
 }
 
 
@@ -130,7 +130,7 @@ class BoundaryScheduleTickTests(unittest.TestCase):
             self.assertEqual(svc.list(), [])
             script = hermes_boundary_tick_script()
             self.assertIn("ingest", script)
-            self.assertIn("示例号", script)
+            self.assertIn("每日选题", script)
             self.assertNotIn("表情包", script)
             self.assertNotIn('[adb, "boundary", "decide"', script)
             self.assertNotIn('adb, "boundary", "decide"', script)
@@ -247,8 +247,8 @@ class BoundaryVerticalGateTests(unittest.TestCase):
             storage.close()
 
 
-class BoundaryDemoTopicsInVerticalTests(unittest.TestCase):
-    def test_demo_topics_in_vertical(self):
+class BoundaryTopicsInVerticalTests(unittest.TestCase):
+    def test_topics_in_vertical(self):
         batch = daily_topic_batch(day_index=1, count=5)
         self.assertEqual(len(batch), 5)
         blob = " ".join(
