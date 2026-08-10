@@ -78,7 +78,7 @@ adb dispatch --project beacon --stage plan --feature my-feature --json
 #  → preflight 检查（目录存在/git/beacon truth 上下文）→ 建 hermes kanban 任务
 
 # ② 审批 implement（受限阶段，需要一次性 token）
-adb approve --actor justin --project beacon --stage implement --feature my-feature
+adb approve --actor you --project beacon --stage implement --feature my-feature
 #  → 输出一次性 token（默认 900s 有效）
 
 # ③ 派发 implement（带 token）

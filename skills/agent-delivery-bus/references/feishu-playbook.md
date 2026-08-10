@@ -2,18 +2,16 @@
 
 飞书聊天里用自然语言指挥 adb 的固定契约。编号 2026-08-10 冻结，只追加不改号。
 
-## 固定编号速查卡
+## 固定编号速查卡（示例；以本地注册表为准）
 
 | # | slug | 别名 |
 |---|------|------|
-| 1 | beacon | 灯塔 / beacon-core / beacon源码 |
-| 2 | justin-ecommerce | demo / 电商 / demo-market / liuzai |
-| 3 | milemon | 外贸站 / wordpress / b2b |
-| 4 | rolo | demo-project / demo-team / 公司项目 |
-| 5 | content-creator | creator-demo / creator |
-| 6 | content-sync | 自媒体 / content-pilot / pi |
-| 7 | shopxo_canada | shopxo / 商城 / demo-store |
-| 8 | tool-station-network | 工具站 / 浏览器插件 / fehelper |
+| 1 | demo-app | app / demo |
+| 2 | demo-content | content / creator |
+| 3 | demo-web | web / site |
+| 4 | demo-ai | ai / agent |
+
+真实编号 = `adb projects list --numbered` 输出（机器强制，只追加不改号）。
 
 ## 触发词门
 
@@ -59,13 +57,13 @@ register（编号 = max+1，只追加不改号）
 
 ## 示例对话
 
-- 用户：`adb 派发 5 的 anydoc implement` → 回显信封 → 确认 → approve + dispatch
-- 用户：`1 的 worker-beacon-binding 派活 plan` → 回显信封 → 确认 → dispatch（plan 免审批）
+- 用户：`adb 派发 2 的 demo-feature implement` → 回显信封 → 确认 → approve + dispatch
+- 用户：`1 的 demo-feature 派活 plan` → 回显信封 → 确认 → dispatch（plan 免审批）
 - 用户：`待审有什么` → 飞书待审卡片（只读）
 - 用户：`adb 验收刚才那个` → task show + reconcile
 - 用户：`登记新项目 my-tool，class managed，repo /path/to/my-tool` → 回显待登记信息 → 确认 → register（自动分配编号）
-- 用户：`删除项目 5` → 回显 `#5 content-creator 将归档` → 确认 → delete --yes
-- 用户：`恢复项目 5` → restore
+- 用户：`删除项目 2` → 回显 `#2 demo-content 将归档` → 确认 → delete --yes
+- 用户：`恢复项目 2` → restore
 
 ## 护栏
 

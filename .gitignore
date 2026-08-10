@@ -67,6 +67,7 @@ __pycache__/
 *.py[cod]
 # BEACON:GITIGNORE:END
 
+
 # Beacon local runtime state
 .agents/
 .beacon/analysis/
