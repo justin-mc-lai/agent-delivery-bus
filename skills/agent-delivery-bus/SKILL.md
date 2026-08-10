@@ -77,6 +77,10 @@ dispatch stage by default.
 Read [references/contracts.md](references/contracts.md) before performing a real
 dispatch or interpreting reconciliation.
 
+Feishu chat playbook (numbered project table + trigger words + dialog flow):
+[references/feishu-playbook.md](references/feishu-playbook.md). Pinnable
+cheatsheet: `docs/feishu-dispatch-cheatsheet.md`.
+
 ## Required reporting
 
 Return the resolved project, stage, feature, dry-run/real mode, preflight result,
