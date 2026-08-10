@@ -5,7 +5,7 @@
   "truth_package_contract": "beacon-feature-package-v2",
   "machine_json_role": "generated_state_not_truth",
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-08-10T09:03:14.082795+00:00",
+  "generated_at": "2026-08-10T09:03:46.733436+00:00",
   "feature": "workflow-lifecycle",
   "feature_slug": "workflow-lifecycle",
   "version": "v0.0.7",
@@ -20,7 +20,7 @@
   "source_hashes": {
     "truth": "0924bf0e65683e93f4dbbd4bfaca2a5152a79846c97ce82ee0fed4f12212eede",
     "tests": "1a862bbd65939e552a2d7d56ff687d6ebe8835cd8c8dce662ac7e0866a1894a6",
-    "tasks": "74c7679615f82e97720912c9c08ea8f202671744787ad8d9f32a373a4ee9034a",
+    "tasks": "81058763a2a8045322ed4a1c96aa8eb900c75325028e08ed5fb7d040df721816",
     "evidence": "b20d3f25b7a53467cff62fd82310da21dbe1bf6ef19d09b24e7166a141252fba"
   },
   "truth_frontmatter": {
@@ -219,12 +219,12 @@
     {
       "id": "TASK-009",
       "title": "Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/workflow-lifecycle/GATES.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-010",
       "title": "Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/workflow-lifecycle/QA-MATRIX.json`",
-      "status": "unchecked"
+      "status": "checked"
     }
   ],
   "checkbox_errors": [],

@@ -6,7 +6,7 @@
   "status": "pass",
   "blocked": false,
   "reason_code": "",
-  "generated_at": "2026-08-10T09:03:13.937415+00:00",
+  "generated_at": "2026-08-10T09:03:46.590541+00:00",
   "package_dir": "docs/beacon/v0.0.7/features/workflow-lifecycle",
   "truth_frontmatter": {
     "slug": "workflow-lifecycle",
@@ -33,7 +33,7 @@
   "checkbox_gate_bypass": false,
   "task_evidence_gate": {
     "pass": true,
-    "checked_ok": 8,
+    "checked_ok": 10,
     "checked_bad": 0,
     "unbound": 0,
     "findings": [],

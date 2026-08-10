@@ -62,7 +62,7 @@
     "source_hashes": {
       "truth": "0924bf0e65683e93f4dbbd4bfaca2a5152a79846c97ce82ee0fed4f12212eede",
       "tests": "1a862bbd65939e552a2d7d56ff687d6ebe8835cd8c8dce662ac7e0866a1894a6",
-      "tasks": "74c7679615f82e97720912c9c08ea8f202671744787ad8d9f32a373a4ee9034a",
+      "tasks": "81058763a2a8045322ed4a1c96aa8eb900c75325028e08ed5fb7d040df721816",
       "evidence": "b20d3f25b7a53467cff62fd82310da21dbe1bf6ef19d09b24e7166a141252fba"
     },
     "surfaces": {
@@ -110,7 +110,7 @@
         "filename": "tasks.md",
         "path": "docs/beacon/v0.0.7/features/workflow-lifecycle/tasks.md",
         "exists": true,
-        "source_hash": "74c7679615f82e97720912c9c08ea8f202671744787ad8d9f32a373a4ee9034a",
+        "source_hash": "81058763a2a8045322ed4a1c96aa8eb900c75325028e08ed5fb7d040df721816",
         "authority": "markdown_feature_package",
         "json_authority": false
       },
@@ -386,7 +386,7 @@
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": "f1c8e37a3e432a56cb884699b24e5406b02d20e5eab6c363fc03457098be6370"
+        "source_hash": "af4d6f77d491e41f86c970b09ff1e6a0c3b07c2123aac1c04a9ab2261a2b7646"
       },
       "qa_status": {
         "schema_version": "1.0",
@@ -396,14 +396,14 @@
         "version": "v0.0.7",
         "surface": "qa_status",
         "path": ".beacon/qa/status.json",
-        "exists": false,
+        "exists": true,
         "required": false,
         "role": "generated_governance_state_not_truth",
         "authority": "generated_governance_state_not_truth",
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": ""
+        "source_hash": "3ad5c5b8374d4b21a4095f5308c99c564e73ac3e63bed488b03a6f713d9bf603"
       },
       "release_gate_report": {
         "schema_version": "1.0",
@@ -413,14 +413,14 @@
         "version": "v0.0.7",
         "surface": "release_gate_report",
         "path": ".beacon/release-gate-report.json",
-        "exists": false,
+        "exists": true,
         "required": false,
         "role": "generated_governance_state_not_truth",
         "authority": "generated_governance_state_not_truth",
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": ""
+        "source_hash": "3555079be58026a3aecc3c79f00813363c7aa12f61d4f2d4fc5fa6dfc134dbad"
       }
     },
     "manifest_authority": false,
@@ -709,7 +709,7 @@
     ]
   },
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-08-10T09:03:14.081930+00:00",
+  "generated_at": "2026-08-10T09:03:46.732585+00:00",
   "truth_authority": false,
   "source_paths": {
     "truth": "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
@@ -720,7 +720,7 @@
   "source_hashes": {
     "truth": "0924bf0e65683e93f4dbbd4bfaca2a5152a79846c97ce82ee0fed4f12212eede",
     "tests": "1a862bbd65939e552a2d7d56ff687d6ebe8835cd8c8dce662ac7e0866a1894a6",
-    "tasks": "74c7679615f82e97720912c9c08ea8f202671744787ad8d9f32a373a4ee9034a",
+    "tasks": "81058763a2a8045322ed4a1c96aa8eb900c75325028e08ed5fb7d040df721816",
     "evidence": "b20d3f25b7a53467cff62fd82310da21dbe1bf6ef19d09b24e7166a141252fba"
   }
 }
