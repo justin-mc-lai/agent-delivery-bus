@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "feature": "workflow-lifecycle",
+  "feature_slug": "workflow-lifecycle",
+  "version": "v0.0.7",
+  "status": "pass",
+  "blocked": false,
+  "reason_code": "",
+  "generated_at": "2026-08-10T08:49:31.660123+00:00",
+  "package_dir": "docs/beacon/v0.0.7/features/workflow-lifecycle",
+  "truth_frontmatter": {
+    "slug": "workflow-lifecycle",
+    "version": "v0.0.7",
+    "status": "frozen",
+    "language": "zh",
+    "domain_required": "true",
+    "ux_required": "false",
+    "package_maturity": "filled",
+    "parser_contract": "beacon-feature-package-v2",
+    "truth_source_model": "feature_package_authoritative",
+    "materials_status": "current",
+    "canonical_refs": {
+      "prd": "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
+      "user_story": "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
+      "test_case": "docs/beacon/v0.0.7/features/workflow-lifecycle/tests.md"
+    }
+  },
+  "ac_count": 8,
+  "test_count": 10,
+  "checkbox_count": 10,
+  "evidence_row_count": 5,
+  "gate_authority": "canonical_surfaces_preserved",
+  "checkbox_gate_bypass": false,
+  "task_evidence_gate": {
+    "pass": true,
+    "checked_ok": 0,
+    "checked_bad": 0,
+    "unbound": 0,
+    "findings": [],
+    "reason_code": ""
+  },
+  "evidence_gate_truth": false,
+  "diagnostics": []
+}

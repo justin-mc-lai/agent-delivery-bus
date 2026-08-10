@@ -1,0 +1,204 @@
+{
+  "schema": "truth-review-gate.v1",
+  "schema_version": "1.0",
+  "feature": "workflow-lifecycle",
+  "version": "v0.0.7",
+  "pass": true,
+  "blocked": false,
+  "review_gate_pass": true,
+  "abc_pass": true,
+  "reason_code": "",
+  "domain_required": true,
+  "checks": {
+    "A_intent_coverage": {
+      "pass": true,
+      "check": "A",
+      "name": "intent_coverage",
+      "required": true,
+      "matrix_rows": 8,
+      "missing_must": [],
+      "reason": "",
+      "findings": [],
+      "matrix": [
+        {
+          "intent_id": "INT-001",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-WF-001",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-002",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-WF-002",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-003",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-WF-003",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-004",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-WF-004",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-005",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-WF-005",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-006",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-WF-006",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-007",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-WF-007",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-008",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-WF-008",
+          "status": "covered"
+        }
+      ]
+    },
+    "B_fsm_audit": {
+      "pass": true,
+      "check": "B",
+      "name": "fsm_audit",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "fsm": {
+        "transition_count": 8,
+        "from_states": [
+          "bound",
+          "confirmed",
+          "dispatched",
+          "filled",
+          "installed",
+          "requested",
+          "validated",
+          "verified"
+        ],
+        "hanging_states": [],
+        "terminals": [
+          "reconciled"
+        ],
+        "illegal_present": true,
+        "five_tuple_present": true
+      }
+    },
+    "C_testability": {
+      "pass": true,
+      "check": "C",
+      "name": "testability",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "ac_count": 8,
+      "tc_count": 15,
+      "missing_ac": [],
+      "covered": {
+        "AC-WF-001": [
+          "TC-WF-001",
+          "TC-EXEC-001",
+          "TC-EXEC-002"
+        ],
+        "AC-WF-002": [
+          "TC-WF-002"
+        ],
+        "AC-WF-003": [
+          "TC-WF-003"
+        ],
+        "AC-WF-004": [
+          "TC-WF-004"
+        ],
+        "AC-WF-005": [
+          "TC-WF-005"
+        ],
+        "AC-WF-006": [
+          "TC-WF-006"
+        ],
+        "AC-WF-007": [
+          "TC-WF-007"
+        ],
+        "AC-WF-008": [
+          "TC-WF-008",
+          "TC-WF-ILL-001",
+          "TC-WF-ILL-002",
+          "TC-WF-ILL-003",
+          "TC-WF-ILL-004",
+          "TC-WF-ILL-005"
+        ]
+      }
+    },
+    "C_domain_exec_layer": {
+      "pass": true,
+      "check": "C_exec",
+      "name": "domain_exec_layer",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "exec_tc_count": 14,
+      "exec_tc_ids": [
+        "TC-WF-001",
+        "TC-WF-002",
+        "TC-WF-003",
+        "TC-WF-004",
+        "TC-WF-005",
+        "TC-WF-006",
+        "TC-WF-007",
+        "TC-WF-008",
+        "TC-EXEC-002",
+        "TC-WF-ILL-001",
+        "TC-WF-ILL-002",
+        "TC-WF-ILL-003",
+        "TC-WF-ILL-004",
+        "TC-WF-ILL-005"
+      ],
+      "domain_kind": "business"
+    },
+    "D_fill_depth": {
+      "pass": true,
+      "check": "D",
+      "name": "fill_depth",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "package_maturity": "filled",
+      "domain_kind": "business",
+      "business_domain": true
+    }
+  },
+  "findings": [],
+  "humanizer": {
+    "rule": "humanizer_only_after_abc_pass_before_freeze",
+    "abc_pass": true,
+    "allowed_now": true,
+    "fill_depth_pass": true,
+    "note": "Polish L0/narrative only after A/B/C; preserve_machine_fields=true; freeze needs D+exec too"
+  },
+  "evaluated_at": "2026-08-10T08:49:31.655513+00:00",
+  "paths": {
+    "truth": "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
+    "tests": "docs/beacon/v0.0.7/features/workflow-lifecycle/tests.md",
+    "report": "docs/beacon/v0.0.7/.machine/execution/workflow-lifecycle.truth-review-gate.json"
+  }
+}

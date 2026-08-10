@@ -1,0 +1,268 @@
+{
+  "schema_version": "1.0",
+  "truth_map_contract": "beacon-truth-map-v1",
+  "truth_source_model": "feature_package_authoritative",
+  "truth_package_contract": "beacon-feature-package-v2",
+  "machine_json_role": "generated_state_not_truth",
+  "generated_by": "beacon.truth_map.resolver",
+  "generated_at": "2026-08-10T08:49:31.792723+00:00",
+  "feature": "workflow-lifecycle",
+  "feature_slug": "workflow-lifecycle",
+  "version": "v0.0.7",
+  "truth_authority": false,
+  "json_authority": false,
+  "source_paths": {
+    "truth": "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
+    "tests": "docs/beacon/v0.0.7/features/workflow-lifecycle/tests.md",
+    "tasks": "docs/beacon/v0.0.7/features/workflow-lifecycle/tasks.md",
+    "evidence": "docs/beacon/v0.0.7/features/workflow-lifecycle/evidence.md"
+  },
+  "source_hashes": {
+    "truth": "0924bf0e65683e93f4dbbd4bfaca2a5152a79846c97ce82ee0fed4f12212eede",
+    "tests": "1a862bbd65939e552a2d7d56ff687d6ebe8835cd8c8dce662ac7e0866a1894a6",
+    "tasks": "c105668ec221477550c38e1ba1de6673e013cda82b19f2b65eaf56fae5278c1d",
+    "evidence": "b20d3f25b7a53467cff62fd82310da21dbe1bf6ef19d09b24e7166a141252fba"
+  },
+  "truth_frontmatter": {
+    "slug": "workflow-lifecycle",
+    "version": "v0.0.7",
+    "status": "frozen",
+    "language": "zh",
+    "domain_required": "true",
+    "ux_required": "false",
+    "package_maturity": "filled",
+    "parser_contract": "beacon-feature-package-v2",
+    "truth_source_model": "feature_package_authoritative",
+    "materials_status": "current",
+    "canonical_refs": {
+      "prd": "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
+      "user_story": "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
+      "test_case": "docs/beacon/v0.0.7/features/workflow-lifecycle/tests.md"
+    }
+  },
+  "frontmatter_errors": [],
+  "acceptance_criteria": [
+    {
+      "ac_id": "AC-WF-001",
+      "theme": "beacon 生命周期六阶段（plan/truth/implement/qa/freeze/goal）可经 adb 派发，worker 任务 force-load 对应 beacon skill；设备缺 skill → binding_skill_missing fail-closed",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-WF-002",
+      "theme": "规范关键词表唯一真值；`adb intent keywords --json` 输出机器可读；飞书/微信/Line 同一句话得到同一 envelope",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-WF-003",
+      "theme": "`adb workflow install --preset superpowers",
+      "description": "openspec` 可安装并可被项目绑定；预设为 skill 工作流形状（stages→skill/command/evidence）"
+    },
+    {
+      "ac_id": "AC-WF-004",
+      "theme": "`adb workflow ingest <本地路径",
+      "description": "URL>` 只读盘点 → 产出 analysis request（anchors+commit）→ 宿主 agent 回填 response → 校验 → draft → 人工确认 → install（记录 commit+trace_id）"
+    },
+    {
+      "ac_id": "AC-WF-005",
+      "theme": "全程 JSONL trace（inventory/analysis_request/host_fill/validation/install/dispatch/reconcile）；`adb workflow trace/debug/replay` 可用",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-WF-006",
+      "theme": "`adb workflow verify <name>` 验收探针：skill 存在、命令模板可解析、evidence_spec 合法、各 stage dry-run preflight pass",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-WF-007",
+      "theme": "工作流绑定后 dispatch→reconcile 闭环；坏库/无锚点字段/危险命令 → fail-closed 不安装",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-WF-008",
+      "theme": "illegal：无确认安装、危险命令、无证据字段、伪造 trace → fail-closed",
+      "description": ""
+    }
+  ],
+  "test_rows": [
+    {
+      "ac_id": "AC-WF-001",
+      "tc_id": "TC-WF-001",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_workflow_lifecycle.py -k 'beacon_stages or force_load or missing_skill' --tb=short`",
+      "assertion": "exit_code_0；六阶段 force-load；缺 skill fail-closed",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-WF-002",
+      "tc_id": "TC-WF-002",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_keywords.py --tb=short`",
+      "assertion": "exit_code_0；三渠道同 envelope；`adb intent keywords --json` 可输出",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-WF-003",
+      "tc_id": "TC-WF-003",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_workflow_lifecycle.py -k presets --tb=short`",
+      "assertion": "exit_code_0；superpowers/openspec 可装可绑",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-WF-004",
+      "tc_id": "TC-WF-004",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_workflow_lifecycle.py -k 'ingest or host_fill or draft_confirm' --tb=short`",
+      "assertion": "exit_code_0；ingest→request→回填→校验→draft→confirm→install",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-WF-005",
+      "tc_id": "TC-WF-005",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_workflow_lifecycle.py -k 'trace or debug or replay' --tb=short`",
+      "assertion": "exit_code_0；JSONL trace 事件齐全；trace/debug/replay 可用",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-WF-006",
+      "tc_id": "TC-WF-006",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_workflow_lifecycle.py -k verify --tb=short`",
+      "assertion": "exit_code_0；verify 探针全过",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-WF-007",
+      "tc_id": "TC-WF-007",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_workflow_lifecycle.py -k 'dispatch_reconcile or bad_repo' --tb=short`",
+      "assertion": "exit_code_0；闭环完成；坏库 fail-closed",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-WF-008",
+      "tc_id": "TC-WF-008",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_workflow_lifecycle.py -k 'illegal or dangerous' --tb=short`",
+      "assertion": "exit_code_0；无确认/危险命令/无证据/伪造 trace 全拒",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-WF-001..008",
+      "tc_id": "TC-EXEC-001",
+      "layer": "",
+      "command": "`python3 -c \"import agent_delivery_bus, beacon; print('ok')\"`",
+      "assertion": "output_ok",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-WF-001..008",
+      "tc_id": "TC-EXEC-002",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/ --tb=short`",
+      "assertion": "exit_code_0",
+      "evidence_path": "",
+      "source": ""
+    }
+  ],
+  "task_rows": [
+    {
+      "id": "TASK-001",
+      "title": "Implement AC-WF-001: beacon 生命周期六阶段（plan/truth/implement/qa/freeze/goal）可经 adb 派发，worker 任... · ac=AC-WF-001 · evidence=`.beacon/evidence/implement/workflow-lifecycle/AC-WF-001.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-002",
+      "title": "Implement AC-WF-002: 规范关键词表唯一真值；`adb intent keywords --json` 输出机器可读；飞书/微信/Line 同一句话得到同一 en... · ac=AC-WF-002 · evidence=`.beacon/evidence/implement/workflow-lifecycle/AC-WF-002.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-003",
+      "title": "Implement AC-WF-003: openspec` 可安装并可被项目绑定；预设为 skill 工作流形状（stages→skill/command/evidence） · ac=AC-WF-003 · evidence=`.beacon/evidence/implement/workflow-lifecycle/AC-WF-003.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-004",
+      "title": "Implement AC-WF-004: URL>` 只读盘点 → 产出 analysis request（anchors+commit）→ 宿主 agent 回填 respons... · ac=AC-WF-004 · evidence=`.beacon/evidence/implement/workflow-lifecycle/AC-WF-004.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-005",
+      "title": "Implement AC-WF-005: 全程 JSONL trace（inventory/analysis_request/host_fill/validation/instal... · ac=AC-WF-005 · evidence=`.beacon/evidence/implement/workflow-lifecycle/AC-WF-005.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-006",
+      "title": "Implement AC-WF-006: `adb workflow verify <name>` 验收探针：skill 存在、命令模板可解析、evidence_spec 合法、各... · ac=AC-WF-006 · evidence=`.beacon/evidence/implement/workflow-lifecycle/AC-WF-006.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-007",
+      "title": "Implement AC-WF-007: 工作流绑定后 dispatch→reconcile 闭环；坏库/无锚点字段/危险命令 → fail-closed 不安装 · ac=AC-WF-007 · evidence=`.beacon/evidence/implement/workflow-lifecycle/AC-WF-007.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-008",
+      "title": "Implement AC-WF-008: illegal：无确认安装、危险命令、无证据字段、伪造 trace → fail-closed · ac=AC-WF-008 · evidence=`.beacon/evidence/implement/workflow-lifecycle/AC-WF-008.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-009",
+      "title": "Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/workflow-lifecycle/GATES.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-010",
+      "title": "Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/workflow-lifecycle/QA-MATRIX.json`",
+      "status": "unchecked"
+    }
+  ],
+  "checkbox_errors": [],
+  "evidence_rows": [
+    {
+      "surface": "truth",
+      "authority": "requirement_truth",
+      "canonical_artifact": "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
+      "status": "draft",
+      "route": "truth"
+    },
+    {
+      "surface": "tests",
+      "authority": "test_truth",
+      "canonical_artifact": "docs/beacon/v0.0.7/features/workflow-lifecycle/tests.md",
+      "status": "draft",
+      "route": "qa"
+    },
+    {
+      "surface": "plan",
+      "authority": "support_advisory",
+      "canonical_artifact": "docs/beacon/v0.0.7/programs/workflow-lifecycle/program-manifest.md",
+      "status": "indexed",
+      "route": "truth"
+    },
+    {
+      "surface": "implement",
+      "authority": "support_advisory",
+      "canonical_artifact": ".beacon/evidence/implement/workflow-lifecycle/",
+      "status": "present",
+      "route": "implement"
+    },
+    {
+      "surface": "qa",
+      "authority": "qa_verdict",
+      "canonical_artifact": ".beacon/evidence/qa/v0.0.7/workflow-lifecycle/scorecard.json",
+      "status": "re-run after freeze",
+      "route": "qa"
+    }
+  ]
+}

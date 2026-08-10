@@ -1,0 +1,846 @@
+{
+  "schema_version": "1.0",
+  "feature": "workflow-lifecycle",
+  "feature_slug": "workflow-lifecycle",
+  "version": "v0.0.7",
+  "runtime_version": "v1.6.12",
+  "runtime_capability_line": "v1.3.3",
+  "required": true,
+  "reason_code": "",
+  "blocked": false,
+  "status": "pass",
+  "findings": [],
+  "report_json_path": "docs/beacon/v0.0.7/.machine/execution/requirement-clarity-workflow-lifecycle.json",
+  "report_markdown_path": "docs/beacon/v0.0.7/execution/requirement-clarity-workflow-lifecycle.md",
+  "state_path": ".beacon/state/requirement-clarity-workflow-lifecycle.json",
+  "diagram_truth": {
+    "schema_version": "1.0",
+    "version": "v0.0.7",
+    "supported": false,
+    "required": false,
+    "ready": false,
+    "diagram_types": [],
+    "state_axes": [],
+    "missing_diagram_types": [],
+    "missing_state_axes": false,
+    "complexity_signals": [],
+    "review_gates": [],
+    "qa_coverage_hints": [],
+    "evidence_lines": {},
+    "generated_at": "2026-08-10T08:49:31.475644+00:00",
+    "feature": "workflow-lifecycle",
+    "feature_slug": "workflow-lifecycle",
+    "prd_ref": "docs/beacon/v0.0.7/prd/workflow-lifecycle.md",
+    "user_story_ref": "docs/beacon/v0.0.7/user-story/workflow-lifecycle.md"
+  },
+  "domain_fsm_gate": {
+    "schema_version": "1.0",
+    "feature": "workflow-lifecycle",
+    "feature_slug": "workflow-lifecycle",
+    "version": "v0.0.7",
+    "truth_path": "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
+    "tests_path": "docs/beacon/v0.0.7/features/workflow-lifecycle/tests.md",
+    "required": true,
+    "blocked": false,
+    "status": "pass",
+    "reason_code": "",
+    "findings": [],
+    "requirement": {
+      "required": true,
+      "reason": "explicit_domain_mark",
+      "explicit": true,
+      "partial": true,
+      "complexity": false,
+      "business_signal": true,
+      "version_supported": false
+    },
+    "projection": {
+      "schema_version": "1.0",
+      "domain_fsm_schema": "domain-fsm.v1",
+      "entity_precedence_schema": "entity-precedence.v1",
+      "frontmatter": {
+        "slug": "workflow-lifecycle",
+        "version": "v0.0.7",
+        "status": "frozen",
+        "language": "zh",
+        "domain_required": "true",
+        "ux_required": "false",
+        "package_maturity": "filled",
+        "parser_contract": "beacon-feature-package-v2",
+        "truth_source_model": "feature_package_authoritative",
+        "materials_status": "current",
+        "canonical_refs": {
+          "prd": "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
+          "user_story": "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
+          "test_case": "docs/beacon/v0.0.7/features/workflow-lifecycle/tests.md"
+        }
+      },
+      "frontmatter_errors": [],
+      "has_domain_model_section": true,
+      "has_domain_fsm_section": true,
+      "has_illegal_transition_section": true,
+      "entities": [
+        {
+          "entity": "WorkflowBinding",
+          "key": "name, source, commit, stages, runner, evidence_spec, skills",
+          "precedence": "stages 非空；evidence_spec 必填；skills 可校验",
+          "requires": "stages 非空；evidence_spec 必填；skills 可校验"
+        },
+        {
+          "entity": "StageBinding",
+          "key": "stage, skill, command, public_harness",
+          "precedence": "命令模板变量可解析；skill 存在于绑定中",
+          "requires": "命令模板变量可解析；skill 存在于绑定中"
+        },
+        {
+          "entity": "KeywordMap",
+          "key": "stage, aliases(zh/en/channel)",
+          "precedence": "单真值；渠道不各自硬编码",
+          "requires": "单真值；渠道不各自硬编码"
+        },
+        {
+          "entity": "AnalysisRequest",
+          "key": "anchors[], schema, prompt, source_commit",
+          "precedence": "只读盘点产物",
+          "requires": "只读盘点产物"
+        },
+        {
+          "entity": "HostFillResponse",
+          "key": "fields with evidence refs",
+          "precedence": "每字段必须引用 anchors 内文件",
+          "requires": "每字段必须引用 anchors 内文件"
+        },
+        {
+          "entity": "WorkflowDraft",
+          "key": "response, validation, status",
+          "precedence": "未确认不可安装",
+          "requires": "未确认不可安装"
+        },
+        {
+          "entity": "WorkflowTrace",
+          "key": "events[] (inventory/request/host_fill/validation/install/dispatch/reconcile)",
+          "precedence": "JSONL 追加式；可回放",
+          "requires": "JSONL 追加式；可回放"
+        },
+        {
+          "entity": "KeywordMap",
+          "key": "1",
+          "precedence": "版本化规范表",
+          "requires": "版本化规范表"
+        },
+        {
+          "entity": "WorkflowBinding",
+          "key": "2",
+          "precedence": "预设或本地配置",
+          "requires": "预设或本地配置"
+        },
+        {
+          "entity": "AnalysisRequest",
+          "key": "3",
+          "precedence": "源码盘点",
+          "requires": "源码盘点"
+        },
+        {
+          "entity": "HostFillResponse",
+          "key": "4",
+          "precedence": "AnalysisRequest + 锚点文件",
+          "requires": "AnalysisRequest + 锚点文件"
+        },
+        {
+          "entity": "WorkflowDraft",
+          "key": "5",
+          "precedence": "校验通过",
+          "requires": "校验通过"
+        },
+        {
+          "entity": "WorkflowTrace",
+          "key": "6",
+          "precedence": "全程事件",
+          "requires": "全程事件"
+        }
+      ],
+      "entity_precedence": [
+        {
+          "entity": "WorkflowBinding",
+          "key": "name, source, commit, stages, runner, evidence_spec, skills",
+          "precedence": "stages 非空；evidence_spec 必填；skills 可校验",
+          "requires": "stages 非空；evidence_spec 必填；skills 可校验"
+        },
+        {
+          "entity": "StageBinding",
+          "key": "stage, skill, command, public_harness",
+          "precedence": "命令模板变量可解析；skill 存在于绑定中",
+          "requires": "命令模板变量可解析；skill 存在于绑定中"
+        },
+        {
+          "entity": "KeywordMap",
+          "key": "stage, aliases(zh/en/channel)",
+          "precedence": "单真值；渠道不各自硬编码",
+          "requires": "单真值；渠道不各自硬编码"
+        },
+        {
+          "entity": "AnalysisRequest",
+          "key": "anchors[], schema, prompt, source_commit",
+          "precedence": "只读盘点产物",
+          "requires": "只读盘点产物"
+        },
+        {
+          "entity": "HostFillResponse",
+          "key": "fields with evidence refs",
+          "precedence": "每字段必须引用 anchors 内文件",
+          "requires": "每字段必须引用 anchors 内文件"
+        },
+        {
+          "entity": "WorkflowDraft",
+          "key": "response, validation, status",
+          "precedence": "未确认不可安装",
+          "requires": "未确认不可安装"
+        },
+        {
+          "entity": "WorkflowTrace",
+          "key": "events[] (inventory/request/host_fill/validation/install/dispatch/reconcile)",
+          "precedence": "JSONL 追加式；可回放",
+          "requires": "JSONL 追加式；可回放"
+        },
+        {
+          "entity": "KeywordMap",
+          "key": "1",
+          "precedence": "版本化规范表",
+          "requires": "版本化规范表"
+        },
+        {
+          "entity": "WorkflowBinding",
+          "key": "2",
+          "precedence": "预设或本地配置",
+          "requires": "预设或本地配置"
+        },
+        {
+          "entity": "AnalysisRequest",
+          "key": "3",
+          "precedence": "源码盘点",
+          "requires": "源码盘点"
+        },
+        {
+          "entity": "HostFillResponse",
+          "key": "4",
+          "precedence": "AnalysisRequest + 锚点文件",
+          "requires": "AnalysisRequest + 锚点文件"
+        },
+        {
+          "entity": "WorkflowDraft",
+          "key": "5",
+          "precedence": "校验通过",
+          "requires": "校验通过"
+        },
+        {
+          "entity": "WorkflowTrace",
+          "key": "6",
+          "precedence": "全程事件",
+          "requires": "全程事件"
+        }
+      ],
+      "aggregates": [
+        {
+          "name": "WorkflowLifecycle",
+          "states": [
+            "bound",
+            "confirmed",
+            "dispatched",
+            "draft",
+            "filled",
+            "installed",
+            "reconciled",
+            "requested",
+            "validated",
+            "verified"
+          ],
+          "transitions": [
+            {
+              "from": "",
+              "to": "requested",
+              "guard": "source 可读、盘点完成",
+              "initial": "true"
+            },
+            {
+              "from": "requested",
+              "to": "filled",
+              "guard": "host_fill_response schema 合法"
+            },
+            {
+              "from": "filled",
+              "to": "validated",
+              "guard": "字段有证据 + 命令安全 + 模板可解析"
+            },
+            {
+              "from": "validated",
+              "to": "draft",
+              "guard": "校验通过"
+            },
+            {
+              "from": "draft",
+              "to": "confirmed",
+              "guard": "人工确认"
+            },
+            {
+              "from": "confirmed",
+              "to": "installed",
+              "guard": "写入 config workflows，记录 commit+trace_id"
+            },
+            {
+              "from": "installed",
+              "to": "verified",
+              "guard": "verify 探针全过"
+            },
+            {
+              "from": "verified",
+              "to": "bound",
+              "guard": "项目 binding_profile=workflow"
+            },
+            {
+              "from": "bound",
+              "to": "dispatched",
+              "guard": "skill 就绪 + preflight pass"
+            },
+            {
+              "from": "dispatched",
+              "to": "reconciled",
+              "guard": "closure 证据通过"
+            }
+          ]
+        }
+      ],
+      "illegal_transition_slots": [
+        {
+          "description": "filled → confirmed without validate（无证据字段直接安装）· TC-WF-ILL-001",
+          "aggregate": "",
+          "source": "truth"
+        },
+        {
+          "description": "draft → installed without human confirm · TC-WF-ILL-002",
+          "aggregate": "",
+          "source": "truth"
+        },
+        {
+          "description": "validated → installed with dangerous command（rm -rf 等）· TC-WF-ILL-003",
+          "aggregate": "",
+          "source": "truth"
+        },
+        {
+          "description": "installed → dispatched without verify · TC-WF-ILL-004",
+          "aggregate": "",
+          "source": "truth"
+        },
+        {
+          "description": "任何阶段伪造/缺失 trace 事件 · TC-WF-ILL-005",
+          "aggregate": "",
+          "source": "truth"
+        }
+      ],
+      "acceptance_criteria": [
+        {
+          "ac_id": "AC-WF-001",
+          "description": "beacon 生命周期六阶段（plan/truth/implement/qa/freeze/goal）可经 adb 派发，worker 任务 force-load 对应 beacon skill；设备缺 skill → binding_skill_missing fail-closed"
+        },
+        {
+          "ac_id": "AC-WF-002",
+          "description": "规范关键词表唯一真值；`adb intent keywords --json` 输出机器可读；飞书/微信/Line 同一句话得到同一 envelope"
+        },
+        {
+          "ac_id": "AC-WF-003",
+          "description": "openspec` 可安装并可被项目绑定；预设为 skill 工作流形状（stages→skill/command/evidence）"
+        },
+        {
+          "ac_id": "AC-WF-004",
+          "description": "URL>` 只读盘点 → 产出 analysis request（anchors+commit）→ 宿主 agent 回填 response → 校验 → draft → 人工确认 → install（记录 commit+trace_id）"
+        },
+        {
+          "ac_id": "AC-WF-005",
+          "description": "全程 JSONL trace（inventory/analysis_request/host_fill/validation/install/dispatch/reconcile）；`adb workflow trace/debug/replay` 可用"
+        },
+        {
+          "ac_id": "AC-WF-006",
+          "description": "`adb workflow verify <name>` 验收探针：skill 存在、命令模板可解析、evidence_spec 合法、各 stage dry-run preflight pass"
+        },
+        {
+          "ac_id": "AC-WF-007",
+          "description": "工作流绑定后 dispatch→reconcile 闭环；坏库/无锚点字段/危险命令 → fail-closed 不安装"
+        },
+        {
+          "ac_id": "AC-WF-008",
+          "description": "illegal：无确认安装、危险命令、无证据字段、伪造 trace → fail-closed"
+        }
+      ],
+      "bound_ac_ids": [
+        "AC-WF-004",
+        "AC-WF-008"
+      ],
+      "orphan_ac_ids": [],
+      "aggregates_missing_illegal_slots": [],
+      "raw_section_titles": [
+        "人话",
+        "User Intent Snapshot",
+        "用户旅程",
+        "First principles",
+        "Domain Model",
+        "Entity Precedence",
+        "Domain FSM — WorkflowLifecycle",
+        "FSM 五元组",
+        "Legal walks",
+        "Illegal transitions",
+        "Acceptance Criteria",
+        "Intent Coverage Matrix",
+        "Non-goals",
+        "Freeze readiness"
+      ]
+    },
+    "validation": {
+      "schema_version": "1.0",
+      "required": true,
+      "blocked": false,
+      "status": "pass",
+      "reason_code": "",
+      "findings": [],
+      "projection": {
+        "schema_version": "1.0",
+        "domain_fsm_schema": "domain-fsm.v1",
+        "entity_precedence_schema": "entity-precedence.v1",
+        "frontmatter": {
+          "slug": "workflow-lifecycle",
+          "version": "v0.0.7",
+          "status": "frozen",
+          "language": "zh",
+          "domain_required": "true",
+          "ux_required": "false",
+          "package_maturity": "filled",
+          "parser_contract": "beacon-feature-package-v2",
+          "truth_source_model": "feature_package_authoritative",
+          "materials_status": "current",
+          "canonical_refs": {
+            "prd": "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
+            "user_story": "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
+            "test_case": "docs/beacon/v0.0.7/features/workflow-lifecycle/tests.md"
+          }
+        },
+        "frontmatter_errors": [],
+        "has_domain_model_section": true,
+        "has_domain_fsm_section": true,
+        "has_illegal_transition_section": true,
+        "entities": [
+          {
+            "entity": "WorkflowBinding",
+            "key": "name, source, commit, stages, runner, evidence_spec, skills",
+            "precedence": "stages 非空；evidence_spec 必填；skills 可校验",
+            "requires": "stages 非空；evidence_spec 必填；skills 可校验"
+          },
+          {
+            "entity": "StageBinding",
+            "key": "stage, skill, command, public_harness",
+            "precedence": "命令模板变量可解析；skill 存在于绑定中",
+            "requires": "命令模板变量可解析；skill 存在于绑定中"
+          },
+          {
+            "entity": "KeywordMap",
+            "key": "stage, aliases(zh/en/channel)",
+            "precedence": "单真值；渠道不各自硬编码",
+            "requires": "单真值；渠道不各自硬编码"
+          },
+          {
+            "entity": "AnalysisRequest",
+            "key": "anchors[], schema, prompt, source_commit",
+            "precedence": "只读盘点产物",
+            "requires": "只读盘点产物"
+          },
+          {
+            "entity": "HostFillResponse",
+            "key": "fields with evidence refs",
+            "precedence": "每字段必须引用 anchors 内文件",
+            "requires": "每字段必须引用 anchors 内文件"
+          },
+          {
+            "entity": "WorkflowDraft",
+            "key": "response, validation, status",
+            "precedence": "未确认不可安装",
+            "requires": "未确认不可安装"
+          },
+          {
+            "entity": "WorkflowTrace",
+            "key": "events[] (inventory/request/host_fill/validation/install/dispatch/reconcile)",
+            "precedence": "JSONL 追加式；可回放",
+            "requires": "JSONL 追加式；可回放"
+          },
+          {
+            "entity": "KeywordMap",
+            "key": "1",
+            "precedence": "版本化规范表",
+            "requires": "版本化规范表"
+          },
+          {
+            "entity": "WorkflowBinding",
+            "key": "2",
+            "precedence": "预设或本地配置",
+            "requires": "预设或本地配置"
+          },
+          {
+            "entity": "AnalysisRequest",
+            "key": "3",
+            "precedence": "源码盘点",
+            "requires": "源码盘点"
+          },
+          {
+            "entity": "HostFillResponse",
+            "key": "4",
+            "precedence": "AnalysisRequest + 锚点文件",
+            "requires": "AnalysisRequest + 锚点文件"
+          },
+          {
+            "entity": "WorkflowDraft",
+            "key": "5",
+            "precedence": "校验通过",
+            "requires": "校验通过"
+          },
+          {
+            "entity": "WorkflowTrace",
+            "key": "6",
+            "precedence": "全程事件",
+            "requires": "全程事件"
+          }
+        ],
+        "entity_precedence": [
+          {
+            "entity": "WorkflowBinding",
+            "key": "name, source, commit, stages, runner, evidence_spec, skills",
+            "precedence": "stages 非空；evidence_spec 必填；skills 可校验",
+            "requires": "stages 非空；evidence_spec 必填；skills 可校验"
+          },
+          {
+            "entity": "StageBinding",
+            "key": "stage, skill, command, public_harness",
+            "precedence": "命令模板变量可解析；skill 存在于绑定中",
+            "requires": "命令模板变量可解析；skill 存在于绑定中"
+          },
+          {
+            "entity": "KeywordMap",
+            "key": "stage, aliases(zh/en/channel)",
+            "precedence": "单真值；渠道不各自硬编码",
+            "requires": "单真值；渠道不各自硬编码"
+          },
+          {
+            "entity": "AnalysisRequest",
+            "key": "anchors[], schema, prompt, source_commit",
+            "precedence": "只读盘点产物",
+            "requires": "只读盘点产物"
+          },
+          {
+            "entity": "HostFillResponse",
+            "key": "fields with evidence refs",
+            "precedence": "每字段必须引用 anchors 内文件",
+            "requires": "每字段必须引用 anchors 内文件"
+          },
+          {
+            "entity": "WorkflowDraft",
+            "key": "response, validation, status",
+            "precedence": "未确认不可安装",
+            "requires": "未确认不可安装"
+          },
+          {
+            "entity": "WorkflowTrace",
+            "key": "events[] (inventory/request/host_fill/validation/install/dispatch/reconcile)",
+            "precedence": "JSONL 追加式；可回放",
+            "requires": "JSONL 追加式；可回放"
+          },
+          {
+            "entity": "KeywordMap",
+            "key": "1",
+            "precedence": "版本化规范表",
+            "requires": "版本化规范表"
+          },
+          {
+            "entity": "WorkflowBinding",
+            "key": "2",
+            "precedence": "预设或本地配置",
+            "requires": "预设或本地配置"
+          },
+          {
+            "entity": "AnalysisRequest",
+            "key": "3",
+            "precedence": "源码盘点",
+            "requires": "源码盘点"
+          },
+          {
+            "entity": "HostFillResponse",
+            "key": "4",
+            "precedence": "AnalysisRequest + 锚点文件",
+            "requires": "AnalysisRequest + 锚点文件"
+          },
+          {
+            "entity": "WorkflowDraft",
+            "key": "5",
+            "precedence": "校验通过",
+            "requires": "校验通过"
+          },
+          {
+            "entity": "WorkflowTrace",
+            "key": "6",
+            "precedence": "全程事件",
+            "requires": "全程事件"
+          }
+        ],
+        "aggregates": [
+          {
+            "name": "WorkflowLifecycle",
+            "states": [
+              "bound",
+              "confirmed",
+              "dispatched",
+              "draft",
+              "filled",
+              "installed",
+              "reconciled",
+              "requested",
+              "validated",
+              "verified"
+            ],
+            "transitions": [
+              {
+                "from": "",
+                "to": "requested",
+                "guard": "source 可读、盘点完成",
+                "initial": "true"
+              },
+              {
+                "from": "requested",
+                "to": "filled",
+                "guard": "host_fill_response schema 合法"
+              },
+              {
+                "from": "filled",
+                "to": "validated",
+                "guard": "字段有证据 + 命令安全 + 模板可解析"
+              },
+              {
+                "from": "validated",
+                "to": "draft",
+                "guard": "校验通过"
+              },
+              {
+                "from": "draft",
+                "to": "confirmed",
+                "guard": "人工确认"
+              },
+              {
+                "from": "confirmed",
+                "to": "installed",
+                "guard": "写入 config workflows，记录 commit+trace_id"
+              },
+              {
+                "from": "installed",
+                "to": "verified",
+                "guard": "verify 探针全过"
+              },
+              {
+                "from": "verified",
+                "to": "bound",
+                "guard": "项目 binding_profile=workflow"
+              },
+              {
+                "from": "bound",
+                "to": "dispatched",
+                "guard": "skill 就绪 + preflight pass"
+              },
+              {
+                "from": "dispatched",
+                "to": "reconciled",
+                "guard": "closure 证据通过"
+              }
+            ]
+          }
+        ],
+        "illegal_transition_slots": [
+          {
+            "description": "filled → confirmed without validate（无证据字段直接安装）· TC-WF-ILL-001",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "draft → installed without human confirm · TC-WF-ILL-002",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "validated → installed with dangerous command（rm -rf 等）· TC-WF-ILL-003",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "installed → dispatched without verify · TC-WF-ILL-004",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "任何阶段伪造/缺失 trace 事件 · TC-WF-ILL-005",
+            "aggregate": "",
+            "source": "truth"
+          }
+        ],
+        "acceptance_criteria": [
+          {
+            "ac_id": "AC-WF-001",
+            "description": "beacon 生命周期六阶段（plan/truth/implement/qa/freeze/goal）可经 adb 派发，worker 任务 force-load 对应 beacon skill；设备缺 skill → binding_skill_missing fail-closed"
+          },
+          {
+            "ac_id": "AC-WF-002",
+            "description": "规范关键词表唯一真值；`adb intent keywords --json` 输出机器可读；飞书/微信/Line 同一句话得到同一 envelope"
+          },
+          {
+            "ac_id": "AC-WF-003",
+            "description": "openspec` 可安装并可被项目绑定；预设为 skill 工作流形状（stages→skill/command/evidence）"
+          },
+          {
+            "ac_id": "AC-WF-004",
+            "description": "URL>` 只读盘点 → 产出 analysis request（anchors+commit）→ 宿主 agent 回填 response → 校验 → draft → 人工确认 → install（记录 commit+trace_id）"
+          },
+          {
+            "ac_id": "AC-WF-005",
+            "description": "全程 JSONL trace（inventory/analysis_request/host_fill/validation/install/dispatch/reconcile）；`adb workflow trace/debug/replay` 可用"
+          },
+          {
+            "ac_id": "AC-WF-006",
+            "description": "`adb workflow verify <name>` 验收探针：skill 存在、命令模板可解析、evidence_spec 合法、各 stage dry-run preflight pass"
+          },
+          {
+            "ac_id": "AC-WF-007",
+            "description": "工作流绑定后 dispatch→reconcile 闭环；坏库/无锚点字段/危险命令 → fail-closed 不安装"
+          },
+          {
+            "ac_id": "AC-WF-008",
+            "description": "illegal：无确认安装、危险命令、无证据字段、伪造 trace → fail-closed"
+          }
+        ],
+        "bound_ac_ids": [
+          "AC-WF-004",
+          "AC-WF-008"
+        ],
+        "orphan_ac_ids": [],
+        "aggregates_missing_illegal_slots": [],
+        "raw_section_titles": [
+          "人话",
+          "User Intent Snapshot",
+          "用户旅程",
+          "First principles",
+          "Domain Model",
+          "Entity Precedence",
+          "Domain FSM — WorkflowLifecycle",
+          "FSM 五元组",
+          "Legal walks",
+          "Illegal transitions",
+          "Acceptance Criteria",
+          "Intent Coverage Matrix",
+          "Non-goals",
+          "Freeze readiness"
+        ]
+      },
+      "summary": {
+        "entity_count": 13,
+        "aggregate_count": 1,
+        "illegal_slot_count": 5,
+        "orphan_ac_count": 0,
+        "bound_ac_count": 2
+      }
+    },
+    "recommended_action": ""
+  },
+  "human_closure_contract": {
+    "required": false,
+    "research_path": "docs/beacon/v0.0.7/research/workflow-lifecycle.md",
+    "research_exists": false,
+    "source_architecture_path": "docs/beacon/v0.0.7/source-architecture/workflow-lifecycle.md",
+    "source_architecture_exists": false,
+    "required_sections": [
+      "architecture",
+      "business_flow"
+    ],
+    "missing_sections": [
+      "architecture",
+      "business_flow"
+    ],
+    "diagram_types": [],
+    "complexity_signals": []
+  },
+  "requirement_closure_contract": {
+    "required": true,
+    "chain_order": [
+      "research",
+      "prd",
+      "user_story",
+      "test_case",
+      "requirement_clarity",
+      "freeze"
+    ],
+    "human_closure_required": false,
+    "paths": {
+      "research": "docs/beacon/v0.0.7/research/workflow-lifecycle.md",
+      "prd": "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
+      "user_story": "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
+      "test_case": "docs/beacon/v0.0.7/features/workflow-lifecycle/tests.md"
+    },
+    "exists": {
+      "research": false,
+      "prd": true,
+      "user_story": true,
+      "test_case": true
+    },
+    "required_research_sections": [],
+    "missing_research_sections": [],
+    "ac_projection": {
+      "prd_ac_ids": [],
+      "user_story_ac_ids": [],
+      "test_case_ac_ids": [],
+      "upstream_ac_ids": [],
+      "missing_test_case_ac_ids": []
+    }
+  },
+  "version_projection_truth_contract": {
+    "required": false,
+    "supported": false,
+    "projection_types": [],
+    "research_path": "docs/beacon/v0.0.7/research/workflow-lifecycle.md",
+    "research_exists": false,
+    "required_fields": [
+      "prd_refs",
+      "user_story_refs",
+      "test_case_refs",
+      "coverage_notes",
+      "out_of_scope_notes"
+    ],
+    "field_presence": {
+      "prd_refs": false,
+      "user_story_refs": false,
+      "test_case_refs": false,
+      "coverage_notes": false,
+      "out_of_scope_notes": false
+    },
+    "missing_fields": [],
+    "required_refs": {
+      "prd_refs": "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
+      "user_story_refs": "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
+      "test_case_refs": "docs/beacon/v0.0.7/features/workflow-lifecycle/tests.md"
+    },
+    "missing_ref_targets": [],
+    "ready": false
+  },
+  "support_write_topology_contract": {
+    "schema_version": "1.0",
+    "supported": true,
+    "status": "pass",
+    "blocked": false,
+    "reason_code": "",
+    "diagnostics": []
+  },
+  "required_artifacts": [],
+  "scanned_files": [
+    "docs/beacon/v0.0.7/features/workflow-lifecycle/truth.md",
+    "docs/beacon/v0.0.7/features/workflow-lifecycle/tests.md",
+    "docs/beacon/v0.0.7/features/workflow-lifecycle/tasks.md",
+    "docs/beacon/v0.0.7/features/workflow-lifecycle/evidence.md"
+  ]
+}
