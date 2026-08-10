@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import re
+from pathlib import Path
 from shutil import which
 from typing import Any
 
@@ -144,9 +145,17 @@ class HermesAdapter:
         body: str,
         idempotency_key: str,
         assignee: str = "coding",
+        skills: list[str] | None = None,
     ) -> dict[str, Any]:
         slug = self.board_for(project)
         workspace = self.workspace_for(project, stage=stage)
+        task_skills = ["agent-delivery-bus"]
+        for skill in skills or []:
+            if skill and skill not in task_skills:
+                task_skills.append(skill)
+        skill_args: list[str] = []
+        for skill in task_skills:
+            skill_args.extend(["--skill", skill])
         result = self.runner.run(
             [
                 "hermes",
@@ -167,8 +176,7 @@ class HermesAdapter:
                 "2h",
                 "--max-retries",
                 "2",
-                "--skill",
-                "agent-delivery-bus",
+                *skill_args,
                 "--created-by",
                 "agent-delivery-bus",
                 "--json",
@@ -196,6 +204,19 @@ class HermesAdapter:
                 data={"payload": payload},
             )
         return {"board": slug, "task_id": task_id, "payload": payload}
+
+    def skills_available(self, skills: list[str]) -> dict[str, list[str]]:
+        """Return missing skill names (searches local Hermes/Codex skill trees)."""
+        homes = [Path.home() / ".hermes" / "skills", Path.home() / ".codex" / "skills"]
+        installed: set[str] = set()
+        for root in homes:
+            if not root.is_dir():
+                continue
+            for skill_dir in root.rglob("*"):
+                if skill_dir.is_dir() and (skill_dir / "SKILL.md").is_file():
+                    installed.add(skill_dir.name)
+        missing = [s for s in skills if s and s not in installed]
+        return {"missing": missing, "installed": sorted(installed)}
 
     def stats(self, board: str) -> dict[str, Any]:
         result = self.runner.run(

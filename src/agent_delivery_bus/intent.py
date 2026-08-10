@@ -29,6 +29,9 @@ KNOWN_ACTIONS = (
     "register",
     "delete",
     "restore",
+    "workflow_install",
+    "workflow_list",
+    "workflow_remove",
 )
 
 # Verbs / stage words that are not project aliases.
@@ -55,6 +58,12 @@ _STOPWORDS = {
     "移除",
     "归档",
     "恢复",
+    "工作流",
+    "预设",
+    "安装",
+    "配置",
+    "列出",
+    "workflow",
     *KNOWN_STAGES,
     *KNOWN_ACTIONS,
 }
@@ -126,6 +135,16 @@ class IntentParser:
             )
 
         candidates = self._match_projects(tokens, text)
+        if action in {"workflow_install", "workflow_remove", "workflow_list"}:
+            return self._resolved(
+                utterance=text,
+                action=action,
+                stage="",
+                feature=feature,
+                project_slug="",
+                candidates=[],
+                confidence=0.9,
+            )
         if action == "register":
             # Registration targets a NEW project; no existing project resolution.
             return self._resolved(
@@ -198,6 +217,17 @@ class IntentParser:
 
     def _detect_action(self, tokens: list[str], text: str) -> str:
         lowered = text.casefold()
+        lowered_words = {token.casefold() for token in tokens}
+        if "workflow" in lowered_words or "工作流" in text:
+            if any(w in lowered_words for w in ("install",)) or any(
+                needle in text for needle in ("安装", "登记", "配置")
+            ):
+                return "workflow_install"
+            if any(w in lowered_words for w in ("remove", "delete")) or any(
+                needle in text for needle in ("删除", "移除")
+            ):
+                return "workflow_remove"
+            return "workflow_list"
         # Prefer explicit English action tokens.
         for token in tokens:
             key = token.casefold()

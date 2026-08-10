@@ -136,6 +136,21 @@ class DeliveryService:
             "truth_gate_name": getattr(self.truth_gate, "name", ""),
         }
 
+    @staticmethod
+    def _missing_skills(executor: ExecutorAdapter, skills: list[str]) -> list[str]:
+        """Fail-closed: if the executor can verify bound skills, require them."""
+        if not skills:
+            return []
+        check = getattr(executor, "skills_available", None)
+        if not callable(check):
+            return []
+        try:
+            result = check(skills)
+        except Exception:  # noqa: BLE001 - unknown state is treated as missing
+            return list(skills)
+        missing = result.get("missing") if isinstance(result, dict) else None
+        return [str(s) for s in (missing or []) if s]
+
     def _recall_for_dispatch(self, project: Project, *, stage: str, feature: str) -> dict[str, Any]:
         query = f"{project.slug} {stage} {feature}".strip()
         return self.memory.recall(project_slug=project.slug, query=query, limit=8)
@@ -199,6 +214,9 @@ class DeliveryService:
         truth_gate = adapters["truth_gate"]
         binding_profile = str(adapters["binding_profile"] or "")
         profile_config = project.metadata.get("binding_profile")
+        if not isinstance(profile_config, dict):
+            workflows = self.registry.raw.get("workflows") if isinstance(self.registry.raw, dict) else {}
+            profile_config = workflows.get(binding_profile) if isinstance(workflows, dict) else None
         profile_config = profile_config if isinstance(profile_config, dict) else None
 
         request = normalized_request(
@@ -214,6 +232,32 @@ class DeliveryService:
         else:
             preflight = self.preflight.run(project, stage=stage)
         if dry_run:
+            skills = resolve_worker_binding(
+                stage=stage,
+                feature=feature,
+                docs_version=project.docs_version or "",
+                binding_profile=binding_profile,
+                profile_config=profile_config,
+                project_repo=project.repo,
+                dispatch_id="",
+            ).get("skills") or []
+            missing = self._missing_skills(executor, skills)
+            if missing:
+                return {
+                    "status": "blocked",
+                    "blocked": True,
+                    "reason_code": "binding_skill_missing",
+                    "resume_action": (
+                        f"install worker skill(s) on the executor device: {', '.join(missing)}"
+                    ),
+                    "dry_run": True,
+                    "request": request,
+                    "idempotency_key": idempotency_key,
+                    "board": executor.board_for(project),
+                    "workspace": executor.workspace_for(project, stage=stage),
+                    "preflight": preflight,
+                    "missing_skills": missing,
+                }
             return {
                 "status": "blocked" if preflight["blocked"] else "pass",
                 "blocked": preflight["blocked"],
@@ -382,6 +426,30 @@ class DeliveryService:
                 dispatch_id=dispatch_id,
             )
             runner_profile = str(binding.get("runner_profile") or "coding")
+            missing = self._missing_skills(executor, binding.get("skills") or [])
+            if missing:
+                if dispatch["state"] == "queued":
+                    dispatch = self.storage.transition(
+                        dispatch_id,
+                        expected_from="queued",
+                        to_state="blocked",
+                        event_type="binding_skill_missing",
+                        reason_code="binding_skill_missing",
+                        resume_action=(
+                            f"install worker skill(s) on the executor device: {', '.join(missing)}"
+                        ),
+                        payload={"missing_skills": missing},
+                    )
+                return {
+                    "status": "blocked",
+                    "blocked": True,
+                    "reason_code": "binding_skill_missing",
+                    "resume_action": (
+                        f"install worker skill(s) on the executor device: {', '.join(missing)}"
+                    ),
+                    "dispatch": dispatch,
+                    "missing_skills": missing,
+                }
             receipt = executor.create_task(
                 project,
                 stage=stage,
@@ -397,6 +465,7 @@ class DeliveryService:
                 ),
                 idempotency_key=idempotency_key,
                 assignee=runner_profile,
+                skills=binding.get("skills") or [],
             )
             dispatch = self.storage.transition(
                 dispatch_id,

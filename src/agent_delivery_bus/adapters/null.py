@@ -72,7 +72,9 @@ class NullExecutor:
         body: str,
         idempotency_key: str,
         assignee: str = "coding",
+        skills: list[str] | None = None,
     ) -> dict[str, Any]:
+        del skills
         existing = self.find_by_idempotency(self.board_for(project), idempotency_key)
         if existing is not None:
             return {

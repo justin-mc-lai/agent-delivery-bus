@@ -48,6 +48,10 @@ bin/adb projects resolve --index <N> --json
 bin/adb projects register --slug <slug> --class <platform|managed|knowledge> --repo <path> [--aliases a,b] [--truth-gate <g>] [--executor <e>] [--binding-profile <p>] --json
 bin/adb projects delete <index|slug> --yes --json   # soft delete: archive, keep index
 bin/adb projects restore <index|slug> --json
+bin/adb workflow list --json
+bin/adb workflow install --name <name> --preset <aider|openhands> --json
+bin/adb workflow show <name> --json
+bin/adb workflow remove <name> --yes --json
 bin/adb doctor --project <slug> --json
 bin/adb intent parse --utterance "<natural language>" --json
 bin/adb intent parse --utterance "<natural language>" --project <slug> --json
@@ -85,6 +89,12 @@ dispatch or interpreting reconciliation.
 Project lifecycle: `register` auto-assigns index = max+1 (never reused);
 `delete` soft-archives (dispatchable=false, index kept); `restore` reactivates.
 Project management writes also require explicit human confirmation.
+
+Workflows are third-party enforced pipelines (presets: `aider`, `openhands`;
+private workflows live only in the local registry). Dispatched tasks
+force-load the bound skill into the worker (`hermes --skill ...`); preflight
+blocks dispatch when the device lacks the bound skill. `goal` is an enabled
+stage: it binds the project's goal workflow (e.g. a local beacon-goal harness).
 
 Feishu chat playbook (numbered project table + trigger words + dialog flow):
 [references/feishu-playbook.md](references/feishu-playbook.md). Pinnable

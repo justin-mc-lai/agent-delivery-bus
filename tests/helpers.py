@@ -97,11 +97,13 @@ class FakeExecutor:
         body: str,
         idempotency_key: str,
         assignee: str = "coding",
+        skills: list[str] | None = None,
     ):
         self.create_count += 1
         self.last_body = body
         self.bodies.append(body)
         self.last_assignee = assignee
+        self.last_skills = list(skills or [])
         task_id = f"task-{self.create_count}"
         task = {
             "id": task_id,

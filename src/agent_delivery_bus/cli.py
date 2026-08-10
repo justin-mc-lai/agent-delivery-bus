@@ -19,6 +19,13 @@ from .registry import ALLOWED_CLASSES, ProjectRegistry
 from .schedule import ScheduleService, hermes_cron_tick_script
 from .service import DeliveryService
 from .storage import Storage
+from .workflows import (
+    PRESET_SOURCE as wf_presets,
+    get_workflow,
+    install_workflow,
+    remove_workflow,
+    workflow_names,
+)
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -99,6 +106,23 @@ def build_parser() -> argparse.ArgumentParser:
     projects_restore = projects_sub.add_parser("restore", help="restore an archived project by index/slug")
     projects_restore.add_argument("target")
     projects_restore.add_argument("--json", action="store_true")
+
+    workflow = sub.add_parser("workflow", help="manage third-party enforced workflows (presets + local)")
+    workflow_sub = workflow.add_subparsers(dest="workflow_command", required=True)
+    workflow_list = workflow_sub.add_parser("list", help="list presets and configured workflows")
+    workflow_list.add_argument("--json", action="store_true")
+    workflow_show = workflow_sub.add_parser("show", help="show one workflow by name")
+    workflow_show.add_argument("name")
+    workflow_show.add_argument("--json", action="store_true")
+    workflow_install = workflow_sub.add_parser("install", help="install a preset as a named workflow")
+    workflow_install.add_argument("--name", required=True)
+    workflow_install.add_argument("--preset", required=True, choices=sorted(wf_presets))
+    workflow_install.add_argument("--force", action="store_true", help="overwrite an existing workflow")
+    workflow_install.add_argument("--json", action="store_true")
+    workflow_remove = workflow_sub.add_parser("remove", help="remove a configured workflow")
+    workflow_remove.add_argument("name")
+    workflow_remove.add_argument("--yes", action="store_true")
+    workflow_remove.add_argument("--json", action="store_true")
 
     doctor = sub.add_parser("doctor")
     doctor.add_argument("--project")
@@ -688,6 +712,73 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                 resolved_slug = None
             project = registry.resolve(slug=resolved_slug, alias=args.alias, path=args.path, index=resolved_index)
             return envelope(status="pass", data=project.to_dict())
+
+        if args.command == "workflow":
+            if args.workflow_command == "list":
+                configured = (
+                    registry.raw.get("workflows")
+                    if isinstance(registry.raw.get("workflows"), dict)
+                    else {}
+                )
+                rows = []
+                for name in workflow_names(registry.raw):
+                    wf = get_workflow(registry.raw, name)
+                    rows.append(
+                        {
+                            "name": name,
+                            "source": "preset" if name in wf_presets else "configured",
+                            "description": wf.get("description", ""),
+                            "skills": wf.get("skills", []),
+                        }
+                    )
+                payload = {"workflows": rows, "presets": sorted(wf_presets)}
+                payload["text"] = "\n".join(
+                    f"{'[预设]' if row['source'] == 'preset' else '[本地]'} {row['name']} — {row['description']}"
+                    for row in rows
+                )
+                return envelope(status="pass", data=payload)
+            if args.workflow_command == "show":
+                wf = get_workflow(registry.raw, args.name)
+                return envelope(status="pass", data=wf)
+            if args.workflow_command == "install":
+                workflows_cfg = (
+                    registry.raw.get("workflows")
+                    if isinstance(registry.raw.get("workflows"), dict)
+                    else {}
+                )
+                if args.name in workflows_cfg and not args.force:
+                    return envelope(
+                        status="blocked",
+                        blocked=True,
+                        reason_code="workflow_exists",
+                        resume_action="re-run with --force to overwrite",
+                        data={"name": args.name},
+                    )
+                installed = install_workflow(registry.raw, name=args.name, preset=args.preset)
+                registry.save()
+                payload = dict(installed)
+                payload["name"] = args.name
+                payload["text"] = f"工作流已安装：{args.name}（preset={args.preset}）"
+                return envelope(status="pass", data=payload)
+            if args.workflow_command == "remove":
+                if not args.yes:
+                    return envelope(
+                        status="blocked",
+                        blocked=True,
+                        reason_code="workflow_remove_confirmation_required",
+                        resume_action="re-run with --yes after human confirmation",
+                        data={"name": args.name},
+                    )
+                removed = remove_workflow(registry.raw, args.name)
+                registry.save()
+                return envelope(
+                    status="pass",
+                    data={
+                        "removed": args.name,
+                        "workflow": removed,
+                        "text": f"工作流已移除：{args.name}",
+                    },
+                )
 
         if args.command == "doctor":
             projects = [registry.resolve(slug=args.project)] if args.project else registry.list(dispatchable_only=True)

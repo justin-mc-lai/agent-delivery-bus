@@ -213,8 +213,8 @@ class WorkerBindingContractTests(unittest.TestCase):
             self.assertIn("beacon_skill: beacon-implement", hermes.last_body)
             storage.close()
 
-    def test_goal_deferred_from_enabled_stages(self):
-        self.assertNotIn("goal", ENABLED_STAGES)
+    def test_goal_stage_enabled_and_dispatched(self):
+        self.assertIn("goal", ENABLED_STAGES)
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             project = make_project(root)
@@ -228,10 +228,11 @@ class WorkerBindingContractTests(unittest.TestCase):
                 executor=hermes,
                 truth_gate=FakeBeacon(),
             )
-            with self.assertRaises(DeliveryBusError) as raised:
-                service.dispatch(project_slug="demo", stage="goal", feature="feature")
-            self.assertEqual(raised.exception.reason_code, "goal_stage_deferred")
-            self.assertEqual(hermes.create_count, 0)
+            dispatched = service.dispatch(project_slug="demo", stage="goal", feature="feature")
+            self.assertEqual(dispatched["status"], "dispatched")
+            self.assertEqual(hermes.create_count, 1)
+            self.assertIn("beacon-goal", hermes.last_skills)
+            self.assertIn("beacon_skill: beacon-goal", hermes.last_body)
             storage.close()
 
     def test_illegal_skip_approve_fail_closed(self):
@@ -256,8 +257,8 @@ class WorkerBindingContractTests(unittest.TestCase):
             self.assertEqual(hermes.create_count, 0)
             storage.close()
 
-    def test_illegal_goal_enable_without_promote(self):
-        with self.assertRaises(DeliveryBusError) as raised:
-            resolve_worker_binding(stage="goal", feature="feature", docs_version="v0.0.3")
-        self.assertEqual(raised.exception.reason_code, "goal_stage_deferred")
-        self.assertNotIn("goal", ENABLED_STAGES)
+    def test_goal_binding_uses_beacon_goal_skill(self):
+        binding = resolve_worker_binding(stage="goal", feature="feature", docs_version="v0.0.6")
+        self.assertEqual(binding["beacon_skill"], "beacon-goal")
+        self.assertEqual(binding["skills"], ["beacon-goal"])
+        self.assertIn("beacon goal run", binding["beacon_command"])

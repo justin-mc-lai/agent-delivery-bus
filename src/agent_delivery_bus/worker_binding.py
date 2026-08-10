@@ -15,8 +15,8 @@ from .errors import DeliveryBusError
 
 
 # goal is intentionally absent until an explicit promote/change.
-ENABLED_STAGES = frozenset({"plan", "implement", "qa", "freeze"})
-DEFERRED_STAGES = frozenset({"goal"})
+ENABLED_STAGES = frozenset({"plan", "implement", "qa", "freeze", "goal"})
+DEFERRED_STAGES = frozenset()
 
 # Local Hermes coding profile (or explicit Codex / equivalent). No cloud scheduler.
 DEFAULT_RUNNER_PROFILE = {
@@ -31,6 +31,13 @@ BINDING_SCHEMA_VERSION = "1.1"
 
 # Built-in reference profile: stage → Beacon skill / command.
 STAGE_BEACON_BINDING: dict[str, dict[str, str]] = {
+    "goal": {
+        "beacon_skill": "beacon-goal",
+        "public_harness": "goal",
+        "beacon_command_template": (
+            'beacon goal run "{feature}" --project . --version {docs_version} --auto-tick'
+        ),
+    },
     "plan": {
         "beacon_skill": "beacon-plan",
         "public_harness": "plan",
@@ -207,6 +214,7 @@ def resolve_worker_binding(
             "runner": dict(DEFAULT_RUNNER_PROFILE),
             "runner_profile": DEFAULT_RUNNER_PROFILE["hermes_assignee"],
             "evidence_spec": evidence_spec,
+            "skills": [meta["beacon_skill"]],
         }
     stages = cfg["stages"]  # type: ignore[index]
     meta = stages.get(normalized)
@@ -234,6 +242,7 @@ def resolve_worker_binding(
             or DEFAULT_RUNNER_PROFILE["hermes_assignee"]
         ),
         "evidence_spec": evidence_spec,
+        "skills": [str(meta.get("skill") or "")] if meta.get("skill") else [],
     }
 
 

@@ -35,3 +35,11 @@ implement/freeze 需审批；release 永不自动；审批 token 不进聊天。
 - 恢复：`adb projects restore <编号|slug>`
 
 编号只追加不改号；删除后编号保留、项目不可派发、可恢复。
+
+## 工作流
+
+- 列出：`adb workflow list`
+- 安装预设（aider / openhands）：`adb workflow install --name <名> --preset <aider|openhands>`
+- 删除（需确认）：`adb workflow remove <名> --yes`
+
+私有工作流只放本地注册表；派发任务会强制加载绑定 skill，缺 skill 不派发。

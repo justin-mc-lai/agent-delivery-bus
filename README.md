@@ -100,6 +100,25 @@ Implement your own backends against:
 - `agent_delivery_bus.adapters.spi.ExecutorAdapter`
 - `agent_delivery_bus.adapters.spi.TruthGateAdapter`
 
+### Workflow presets (third-party enforced workflows)
+
+ADB is workflow-agnostic. Two popular open-source workflows ship as presets:
+
+- `aider` — pair-programming AI with an enforced test command
+- `openhands` — autonomous long-horizon software agent
+
+```bash
+adb workflow list --json
+adb workflow install --name my-aider --preset aider --json
+adb workflow show my-aider --json
+adb workflow remove my-aider --yes --json
+```
+
+Private/company workflows (e.g. a goal harness) stay in the local project
+registry only and never ship as presets. A dispatched task force-loads the
+bound workflow skill into the worker (`hermes --skill`), and preflight fails
+closed when the target device has not installed the bound skill.
+
 Per-project routing overrides the global pair (falls back when unset):
 
 ```json
@@ -238,6 +257,23 @@ bin/adb fleet --json
   }
 }
 ```
+
+### 工作流预设（第三方强制工作流）
+
+ADB 与工作流解耦，内置 2 个热门开源预设：
+
+- `aider` — 带强制测试命令的结对编程 AI
+- `openhands` — 自治长任务软件代理
+
+```bash
+adb workflow list --json
+adb workflow install --name my-aider --preset aider --json
+adb workflow show my-aider --json
+adb workflow remove my-aider --yes --json
+```
+
+私有/公司工作流只放本地注册表，不进开源预设；派发任务会把绑定 skill
+force-load 进 worker（`hermes --skill`），目标设备缺 skill 时 preflight fail-closed。
 
 ### 知识库边界
 
