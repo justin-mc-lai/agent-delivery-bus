@@ -654,7 +654,14 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                 payload = {"project": project.to_dict(), "restored": True}
                 payload["text"] = f"项目已恢复：{project.slug}（#{project.index}），可派发"
                 return envelope(status="pass", data=payload)
-            project = registry.resolve(slug=args.slug, alias=args.alias, path=args.path, index=args.index)
+            # --slug 支持纯数字：自动解释为项目编号（index），与 --index 等价。
+            # 优先级：显式 --index > --path > --alias > --slug（数字→index，否则当 slug）。
+            resolved_index = args.index
+            resolved_slug = args.slug
+            if resolved_slug is not None and str(resolved_slug).strip().isdigit() and resolved_index is None:
+                resolved_index = int(str(resolved_slug).strip())
+                resolved_slug = None
+            project = registry.resolve(slug=resolved_slug, alias=args.alias, path=args.path, index=resolved_index)
             return envelope(status="pass", data=project.to_dict())
 
         if args.command == "doctor":
