@@ -127,3 +127,6 @@ src/*.egg-info/
 # Private working files (thesis/research) — never ship to the OSS repo
 /docs/new/
 /docs/research/
+
+# Local backup noise
+*.bak-*
