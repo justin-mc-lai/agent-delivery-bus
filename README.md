@@ -159,6 +159,63 @@ Per-project routing overrides the global pair (falls back when unset):
 }
 ```
 
+### Natural-language dispatch (end-to-end)
+
+Talk to any channel hosting the ADB skill (Feishu / WeChat / Line / Codex / Claude).
+One canonical keyword map serves every channel: `adb intent keywords --json`.
+
+```text
+You:    "adb 派发 1 的 order-page 实现"          (or: adb dispatch 1 order-page implement)
+Agent:  adb intent parse → shows dispatch envelope (#project / stage / feature / approval risk)
+        → waits for confirmation (never dispatches without it)
+You:    "确认"
+Agent:  restricted stages (implement/freeze): adb approve --actor you ...
+        → adb dispatch --dry-run → adb dispatch
+        (hermes task force-loads the bound skill; missing skill → binding_skill_missing)
+Worker: executes the skill workflow, writes evidence + manifest (dispatch_id)
+You:    "验收" / adb reconcile → completed only when evidence closure passes
+Release: always a human gate, never automatic
+```
+
+Query intents (待审 / 状态 / fleet) run read-only without confirmation. A configured
+workflow must pass `adb workflow verify` before any real dispatch
+(`workflow_verify_required` otherwise).
+
+### Registering a new project
+
+```bash
+adb projects register --slug my-app --class managed --repo /path/to/my-app \
+  --aliases app,myapp --truth-gate null --executor hermes --binding-profile openspec
+adb projects list --numbered          # index auto-assigned (max+1, never reused)
+adb projects delete 9 --yes           # soft delete by index; restore 9 to bring back
+```
+
+Natural language: `登记新项目 my-app，class managed，repo /path/to/my-app` →
+envelope → confirm → registered. `binding_profile` decides which workflow the
+project uses; the beacon lifecycle (plan/truth/implement/qa/freeze/goal) is the
+first-party default, presets/ingested workflows are opt-in per project.
+
+### Binding an open-source workflow skill
+
+```bash
+# 1) Use a preset (peer skill workflows, not CLI tools)
+adb workflow install --name my-spec --preset openspec --json
+
+# 2) Adapt any open-source repo (host-agent mode: adb inventories, the host
+#    agent — the LLM running adb — fills the analysis response)
+adb workflow ingest --source https://github.com/org/repo --name my-wf
+adb workflow draft apply --name my-wf --request-json <req> --response-json <resp>
+adb workflow confirm --name my-wf --yes
+adb workflow verify --name my-wf --project <slug>
+
+# 3) Bind to a project (real dispatch is blocked until verify passes)
+adb projects register --slug app2 --class managed --repo /path/app2 --binding-profile my-wf
+```
+
+Natural language: `接入工作流 https://github.com/org/repo，名字 my-wf` → ingest →
+host agent fills the response → confirm → verify → bind. JSONL traces are kept
+for debugging: `adb workflow trace --name my-wf` / `adb workflow debug --name my-wf`.
+
 ### What it does / does not do
 
 **Does**
@@ -292,6 +349,62 @@ adb workflow remove my-spec --yes --json
 `trace/debug` 可查。渠道统一查 `adb intent keywords --json` 规范关键词表。
 beacon 生命周期（plan/truth/implement/qa/freeze/goal）是 ADB 第一方能力，
 不是预设；派发任务 force-load 绑定 skill，缺 skill 时 preflight fail-closed。
+
+### 自然语言调度派发（完整流程）
+
+在任意承载 ADB skill 的渠道说话（飞书 / 微信 / Line / Codex / Claude），
+所有渠道共用同一张关键词表：`adb intent keywords --json`。
+
+```text
+你：    "adb 派发 1 的 order-page 实现"
+agent： adb intent parse → 回显派工单草稿（#项目 / 阶段 / 活儿 / 审批风险）
+        → 等你确认（未确认绝不派发）
+你：    "确认"
+agent： 受限阶段（实现/冻结）先 adb approve --actor you ...
+        → adb dispatch --dry-run → adb dispatch
+        （hermes 任务强制加载绑定 skill；缺 skill → binding_skill_missing）
+worker：按 skill 工作流执行，写证据 + manifest（dispatch_id）
+你：    "验收" / adb reconcile → 证据 closure 通过才算 completed
+发布：  永远是人工门，绝不自动
+```
+
+查询类意图（待审 / 状态 / fleet）只读执行，不需要确认。配置过的工作流必须
+先 `adb workflow verify` 通过才能真实派发（否则 `workflow_verify_required`）。
+
+### 绑定新增项目
+
+```bash
+adb projects register --slug my-app --class managed --repo /path/to/my-app \
+  --aliases app,myapp --truth-gate null --executor hermes --binding-profile openspec
+adb projects list --numbered          # 编号自动分配（max+1，不重用）
+adb projects delete 9 --yes           # 按编号软删除；restore 9 可恢复
+```
+
+自然语言：`登记新项目 my-app，class managed，repo /path/to/my-app` →
+草稿 → 确认 → 登记完成。`binding_profile` 决定项目用哪个工作流：
+beacon 生命周期（plan/truth/implement/qa/freeze/goal）是第一方默认，
+预设/接入的工作流按项目可选绑定。
+
+### 绑定开源工作流 skill
+
+```bash
+# 1) 用预设（对标的 skill 工作流，不是 CLI 工具）
+adb workflow install --name my-spec --preset openspec --json
+
+# 2) 适配任意开源库（host-agent 模式：adb 只盘点，宿主 agent——承载 adb 的
+#    LLM——负责回填分析响应）
+adb workflow ingest --source https://github.com/org/repo --name my-wf
+adb workflow draft apply --name my-wf --request-json <req> --response-json <resp>
+adb workflow confirm --name my-wf --yes
+adb workflow verify --name my-wf --project <slug>
+
+# 3) 绑定到项目（verify 通过前不允许真实派发）
+adb projects register --slug app2 --class managed --repo /path/app2 --binding-profile my-wf
+```
+
+自然语言：`接入工作流 https://github.com/org/repo，名字 my-wf` → ingest →
+宿主 agent 回填 → 确认 → verify → 绑定。全程 JSONL trace 可排查：
+`adb workflow trace --name my-wf` / `adb workflow debug --name my-wf`。
 
 ### 知识库边界
 
