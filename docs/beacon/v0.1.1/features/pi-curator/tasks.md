@@ -17,7 +17,7 @@ task_source: acceptance_criteria
 - [x] TASK-006 Implement AC-PC-006: pi-beacon 扩展包：`skills/pi-beacon/extension.ts`（registerTool adb_dispat... · ac=AC-PC-006 · evidence=`.beacon/evidence/implement/pi-curator/AC-PC-006.json`
 - [x] TASK-007 Implement AC-PC-007: 定时整合：复用 ScheduleService should_run/quota 与 boundary cron 形态；curator 不... · ac=AC-PC-007 · evidence=`.beacon/evidence/implement/pi-curator/AC-PC-007.json`
 - [x] TASK-008 Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/pi-curator/GATES.json`
-- [ ] TASK-009 Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/pi-curator/QA-MATRIX.json`
+- [x] TASK-009 Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/pi-curator/QA-MATRIX.json`
 
 ## Boundary
 
