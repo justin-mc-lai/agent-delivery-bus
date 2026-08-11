@@ -1,11 +1,12 @@
-"""ExecutorAdapter for the pi agent (oh-my-pi ``omp`` CLI).
+"""ExecutorAdapter for the pi agent (``@earendil-works/pi-coding-agent`` CLI).
 
 Driver_pi contract (v0.1.0):
-- preflight requires the ``omp`` binary; ``omp --smoke-test`` is the health
-  probe. Missing/unhealthy CLI -> ``pi_cli_unavailable`` / ``pi_smoke_failed``,
-  never a silent fallback to hermes.
-- create_task launches ``omp -p --cwd <workspace> --mode json`` with the ADB
-  task body as the prompt. Idempotency is kept in a local run ledger
+- preflight requires the ``pi`` binary (https://github.com/earendil-works/pi);
+  ``pi --version`` is the health probe. Missing/unhealthy CLI ->
+  ``pi_cli_unavailable`` / ``pi_version_failed``, never a silent fallback to
+  hermes.
+- create_task launches ``pi -p --mode json`` in the project workspace with the
+  ADB task body as the prompt. Idempotency is kept in a local run ledger
   (``~/.adb/pi/<board>/<idempotency-key>.json``), so the same key reuses the
   same receipt without launching a second session.
 - The adapter never passes ``--auto-approve`` / ``--yolo``; auto approval is a
@@ -27,7 +28,7 @@ from ..registry import Project
 from .spi import as_check
 
 
-PI_CLI_DEFAULT = "omp"
+PI_CLI_DEFAULT = "pi"
 
 
 def board_slug(project_slug: str) -> str:
@@ -109,16 +110,6 @@ class PiExecutorAdapter:
                 detail={"stderr": version.stderr[-1000:]},
             )
         )
-        smoke = self.runner.run([cli, "--smoke-test"], timeout=60)
-        checks.append(
-            as_check(
-                "pi_smoke",
-                smoke.returncode == 0,
-                reason_code="pi_smoke_failed",
-                resume_action="run `omp --smoke-test` manually and repair the runtime",
-                detail={"stderr": smoke.stderr[-1000:]},
-            )
-        )
         return checks
 
     def health(self, *, profile: str = "coding") -> dict[str, Any]:
@@ -179,23 +170,13 @@ class PiExecutorAdapter:
             )
         workspace = self.workspace_for(project, stage=stage).split(":", 1)[-1]
         task_id = f"pi_{uuid.uuid4().hex[:16]}"
-        command = [
-            self._cli(),
-            "-p",
-            "--cwd",
-            workspace,
-            "--mode",
-            "json",
-            "--max-time",
-            "2h",
-            body,
-        ]
-        result = self.runner.run(command, timeout=60)
+        command = [self._cli(), "-p", "--mode", "json", body]
+        result = self.runner.run(command, cwd=workspace, timeout=600)
         if result.returncode != 0:
             raise CommandFailed(
                 "pi_dispatch_failed",
-                "omp launch failed",
-                resume_action="inspect `omp` output, then retry the same idempotency key",
+                "pi launch failed",
+                resume_action="inspect `pi` output, then retry the same idempotency key",
                 data={"stderr": result.stderr[-2000:], "stdout": result.stdout[-2000:]},
             )
         session_ref = ""
@@ -211,6 +192,13 @@ class PiExecutorAdapter:
                     )
             except json.JSONDecodeError:
                 session_ref = result.stdout.strip()[-200:]
+        failed = (
+            result.returncode != 0
+            or "Request timed out" in result.stdout
+            or '"stopReason":"error"' in result.stdout
+            or '"finalError"' in result.stdout
+            or "agent_settled" in result.stdout
+        )
         receipt = {
             "board": board,
             "task_id": task_id,
@@ -218,7 +206,7 @@ class PiExecutorAdapter:
             "project_slug": project.slug,
             "stage": stage,
             "feature": feature,
-            "status": "running",
+            "status": "failed" if failed else "done",
             "session_ref": session_ref,
             "assignee": assignee,
             "skills": list(skills or []),

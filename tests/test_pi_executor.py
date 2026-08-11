@@ -31,8 +31,9 @@ class FakeRunner:
         self.calls: list[list[str]] = []
         self.result = result or FakeResult()
 
-    def run(self, command: list[str], timeout: int = 30):  # noqa: ARG002
+    def run(self, command: list[str], timeout: int = 30, cwd=None):  # noqa: ARG002
         self.calls.append(list(command))
+        self.last_cwd = cwd
         return self.result
 
 
@@ -139,10 +140,23 @@ class PiExecutorContractTests(unittest.TestCase):
             )
             self.assertTrue(receipt["task_id"].startswith("pi_"))
             self.assertEqual(receipt["board"], "adb-pi-demo")
-            self.assertEqual(receipt["status"], "running")
+            self.assertEqual(receipt["status"], "done")
             body_cmd = next(cmd for cmd in runner.calls if "-p" in cmd)
             self.assertIn("### Evidence spec", body_cmd[-1])
             self.assertEqual(adapter.find_by_idempotency("adb-pi-demo", "key-1")["task_id"], receipt["task_id"])
+
+    def test_create_task_marks_failed_on_llm_timeout(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            project = make_project(root)
+            runner = FakeRunner(FakeResult(stdout='{"type":"agent_end","message":{},"stopReason":"error","errorMessage":"Request timed out."}\n{"type":"agent_settled"}'))
+            adapter = PiExecutorAdapter(
+                runner=runner,
+                which_command=lambda _name: "/usr/local/bin/pi",
+                ledger=PiRunLedger(root / "ledger"),
+            )
+            receipt = adapter.create_task(project, stage="goal", feature="f", body="b", idempotency_key="k")
+            self.assertEqual(receipt["status"], "failed")
 
     def test_create_task_idempotent(self):
         with tempfile.TemporaryDirectory() as tmp:
