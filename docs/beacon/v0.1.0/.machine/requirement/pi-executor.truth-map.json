@@ -62,8 +62,8 @@
     "source_hashes": {
       "truth": "e6d28f437081de043687cedf16271880ead6d87cdfb5d880a7278ae976487d24",
       "tests": "833ed6174148bd7f110df76ae93d8902247355bb9d5a8d60330903d70a528549",
-      "tasks": "e04d32f5c65f71df340ae7950671356566b8e3b6a43247117ad59dd1197f4d7e",
-      "evidence": "73edbff42067fca4be9d9f43ea8f166ac42acfa1e7c3d9aa9e96bbb6ec3fbcb9"
+      "tasks": "c04a0fb6d01783763ca1f74fd21efd5ca03d5a865d3b3dbfe724bfde7bd36acf",
+      "evidence": "db901f805cb4146c74d1ba7afc3095195d11903183e2947f9ef56f608224f5ad"
     },
     "surfaces": {
       "truth": {
@@ -110,7 +110,7 @@
         "filename": "tasks.md",
         "path": "docs/beacon/v0.1.0/features/pi-executor/tasks.md",
         "exists": true,
-        "source_hash": "e04d32f5c65f71df340ae7950671356566b8e3b6a43247117ad59dd1197f4d7e",
+        "source_hash": "c04a0fb6d01783763ca1f74fd21efd5ca03d5a865d3b3dbfe724bfde7bd36acf",
         "authority": "markdown_feature_package",
         "json_authority": false
       },
@@ -126,7 +126,7 @@
         "filename": "evidence.md",
         "path": "docs/beacon/v0.1.0/features/pi-executor/evidence.md",
         "exists": true,
-        "source_hash": "73edbff42067fca4be9d9f43ea8f166ac42acfa1e7c3d9aa9e96bbb6ec3fbcb9",
+        "source_hash": "db901f805cb4146c74d1ba7afc3095195d11903183e2947f9ef56f608224f5ad",
         "authority": "markdown_feature_package",
         "json_authority": false
       }
@@ -214,7 +214,7 @@
         "truth_authority": true,
         "json_authority": false,
         "generated_governance_state": false,
-        "source_hash": "295ee08cad117500b3c66b65ab71a0a60b559cf3929b646d34aac85e209025f4"
+        "source_hash": "2ea8c4676eda58b3179cb378cdbb744c5280dbd687f4c0c16c3b00b8f0fce4b9"
       },
       "global_boundaries": {
         "schema_version": "1.0",
@@ -241,14 +241,14 @@
         "version": "v0.1.0",
         "surface": "summary",
         "path": "docs/beacon/v0.1.0/SUMMARY.md",
-        "exists": false,
+        "exists": true,
         "required": true,
         "role": "version_governance_truth",
         "authority": "version_governance_truth",
         "truth_authority": true,
         "json_authority": false,
         "generated_governance_state": false,
-        "source_hash": ""
+        "source_hash": "dd62b39c9ab3a08ef90d1e943992bdb61f2b3166ef6ae34fe7e723b9a5c75566"
       },
       "execution_boundaries": {
         "schema_version": "1.0",
@@ -328,14 +328,14 @@
         "version": "v0.1.0",
         "surface": "version_feature_manifest",
         "path": "docs/beacon/v0.1.0/.machine/manifest/version-features.json",
-        "exists": false,
+        "exists": true,
         "required": false,
         "role": "generated_governance_state_not_truth",
         "authority": "generated_governance_state_not_truth",
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": ""
+        "source_hash": "2ebf874d284920d16019123dce311a22c3237bab3fcebc282e82d50c71a0326a"
       },
       "project_version_metadata": {
         "schema_version": "1.0",
@@ -369,7 +369,7 @@
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": "abc916b9d7062a0075ed8280746ae66857e96121e0763e2d9825e8e46f93c341"
+        "source_hash": "a7d4ec13951cc4a5c24cf081972d2ecc550f09c9c9145890454717d246c6a2c8"
       },
       "evidence_manifest": {
         "schema_version": "1.0",
@@ -386,7 +386,7 @@
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": "2101b15e9886dd40d3d1b7aa7a8102ab4686b04bd054796daa27e4426427b9d3"
+        "source_hash": "5036b8b997ae71224f594fe35d34bd872e1bf57a8ff58245afbd1fa4f42ba5c3"
       },
       "qa_status": {
         "schema_version": "1.0",
@@ -426,12 +426,6 @@
     "manifest_authority": false,
     "json_authority": false,
     "diagnostics": [
-      {
-        "severity": "error",
-        "code": "version_governance_truth_missing",
-        "surface": "summary",
-        "path": "docs/beacon/v0.1.0/SUMMARY.md"
-      },
       {
         "severity": "error",
         "code": "version_governance_truth_missing",
@@ -699,7 +693,7 @@
     ]
   },
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-08-11T12:50:52.169312+00:00",
+  "generated_at": "2026-08-11T13:34:38.120792+00:00",
   "truth_authority": false,
   "source_paths": {
     "truth": "docs/beacon/v0.1.0/features/pi-executor/truth.md",
@@ -710,7 +704,7 @@
   "source_hashes": {
     "truth": "e6d28f437081de043687cedf16271880ead6d87cdfb5d880a7278ae976487d24",
     "tests": "833ed6174148bd7f110df76ae93d8902247355bb9d5a8d60330903d70a528549",
-    "tasks": "e04d32f5c65f71df340ae7950671356566b8e3b6a43247117ad59dd1197f4d7e",
-    "evidence": "73edbff42067fca4be9d9f43ea8f166ac42acfa1e7c3d9aa9e96bbb6ec3fbcb9"
+    "tasks": "c04a0fb6d01783763ca1f74fd21efd5ca03d5a865d3b3dbfe724bfde7bd36acf",
+    "evidence": "db901f805cb4146c74d1ba7afc3095195d11903183e2947f9ef56f608224f5ad"
   }
 }

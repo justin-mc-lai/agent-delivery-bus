@@ -5,7 +5,7 @@
   "truth_package_contract": "beacon-feature-package-v2",
   "machine_json_role": "generated_state_not_truth",
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-08-11T12:50:52.173045+00:00",
+  "generated_at": "2026-08-11T13:34:38.121717+00:00",
   "feature": "pi-executor",
   "feature_slug": "pi-executor",
   "version": "v0.1.0",
@@ -20,8 +20,8 @@
   "source_hashes": {
     "truth": "e6d28f437081de043687cedf16271880ead6d87cdfb5d880a7278ae976487d24",
     "tests": "833ed6174148bd7f110df76ae93d8902247355bb9d5a8d60330903d70a528549",
-    "tasks": "e04d32f5c65f71df340ae7950671356566b8e3b6a43247117ad59dd1197f4d7e",
-    "evidence": "73edbff42067fca4be9d9f43ea8f166ac42acfa1e7c3d9aa9e96bbb6ec3fbcb9"
+    "tasks": "c04a0fb6d01783763ca1f74fd21efd5ca03d5a865d3b3dbfe724bfde7bd36acf",
+    "evidence": "db901f805cb4146c74d1ba7afc3095195d11903183e2947f9ef56f608224f5ad"
   },
   "truth_frontmatter": {
     "slug": "pi-executor",
@@ -165,47 +165,47 @@
     {
       "id": "TASK-001",
       "title": "Implement AC-PI-001: `adapters/pi.py` 实现 ExecutorAdapter SPI（name=pi；preflight/board/works... · ac=AC-PI-001 · evidence=`.beacon/evidence/implement/pi-executor/AC-PI-001.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-002",
       "title": "Implement AC-PI-002: create_task 通过 pi CLI 创建任务，任务 body 含 binding manifest + evidence spec... · ac=AC-PI-002 · evidence=`.beacon/evidence/implement/pi-executor/AC-PI-002.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-003",
       "title": "Implement AC-PI-003: goal closure 契约：`BeaconAdapter.closure(stage=\"goal\")` 校验 `<repo>/.bea... · ac=AC-PI-003 · evidence=`.beacon/evidence/implement/pi-executor/AC-PI-003.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-004",
       "title": "Implement AC-PI-004: per-project 执行器路由：`executor=pi` 按项目解析；阶段→执行器策略（默认 hermes 兼容）；未知执行器 fa... · ac=AC-PI-004 · evidence=`.beacon/evidence/implement/pi-executor/AC-PI-004.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-005",
       "title": "Implement AC-PI-005: 本机 smoke：无 pi CLI → dry-run blocked（pi_cli_unavailable）；有 pi CLI → dr... · ac=AC-PI-005 · evidence=`.beacon/evidence/implement/pi-executor/AC-PI-005.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-006",
       "title": "Implement AC-PI-006: illegal：pi 自动 approve/auto-dispatch 拒绝；heartbeat 不得自动派发 pi；release 永远人工门 · ac=AC-PI-006 · evidence=`.beacon/evidence/implement/pi-executor/AC-PI-006.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-007",
       "title": "Implement AC-PI-007: 兼容性：hermes 默认路径与 AdapterResolver 全局默认不变；既有 145 测试保持全绿 · ac=AC-PI-007 · evidence=`.beacon/evidence/implement/pi-executor/AC-PI-007.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-008",
       "title": "Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/pi-executor/GATES.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-009",
       "title": "Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/pi-executor/QA-MATRIX.json`",
-      "status": "unchecked"
+      "status": "checked"
     }
   ],
   "checkbox_errors": [],
@@ -235,14 +235,14 @@
       "surface": "implement",
       "authority": "support_advisory",
       "canonical_artifact": ".beacon/evidence/implement/pi-executor/",
-      "status": "待实现",
+      "status": "present",
       "route": "implement"
     },
     {
       "surface": "qa",
       "authority": "qa_verdict",
       "canonical_artifact": ".beacon/evidence/qa/v0.1.0/pi-executor/scorecard.json",
-      "status": "待QA",
+      "status": "passed",
       "route": "qa"
     }
   ]

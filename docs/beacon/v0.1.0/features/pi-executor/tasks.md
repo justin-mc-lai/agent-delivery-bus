@@ -17,7 +17,7 @@ task_source: acceptance_criteria
 - [x] TASK-006 Implement AC-PI-006: illegal：pi 自动 approve/auto-dispatch 拒绝；heartbeat 不得自动派发 pi；release 永远人工门 · ac=AC-PI-006 · evidence=`.beacon/evidence/implement/pi-executor/AC-PI-006.json`
 - [x] TASK-007 Implement AC-PI-007: 兼容性：hermes 默认路径与 AdapterResolver 全局默认不变；既有 145 测试保持全绿 · ac=AC-PI-007 · evidence=`.beacon/evidence/implement/pi-executor/AC-PI-007.json`
 - [x] TASK-008 Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/pi-executor/GATES.json`
-- [ ] TASK-009 Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/pi-executor/QA-MATRIX.json`
+- [x] TASK-009 Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/pi-executor/QA-MATRIX.json`
 
 ## Boundary
 
