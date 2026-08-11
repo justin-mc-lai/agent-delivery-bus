@@ -146,3 +146,21 @@ parser_contract: "beacon-project-governance-v1"
 - merge_direction_policy: `beacon/v0.0.7->uat`
 - forbidden_directions: `uat->beacon/v0.0.7`
 - forbidden_directions: `uat_as_feature_base`
+
+### v0.1.0
+- participating_services: `agent-delivery-bus`
+- branch_guard_mode: `strict`
+- validation_state: `active`
+- per_service_canonical_branch:
+  - `agent-delivery-bus`: `main`
+- truth_canonical: `main`
+- branch_governance_template: `standard-feature`
+- previous_version_baseline_branch: `main`
+- next_version_feature_branch: `beacon/v0.1.0/<feature-slug>`
+- worktree_mode: `dedicated`
+- worktree_path: `pi-executor`
+- require_workspace_admission: `true`
+- merge_direction_policy: `master->main`
+- merge_direction_policy: `main->uat`
+- forbidden_directions: `uat->main`
+- forbidden_directions: `uat_as_feature_base`

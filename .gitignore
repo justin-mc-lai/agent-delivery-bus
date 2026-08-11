@@ -130,3 +130,6 @@ src/*.egg-info/
 
 # Local backup noise
 *.bak-*
+
+# Governed feature worktrees (beacon workspace admit)
+/pi-executor/

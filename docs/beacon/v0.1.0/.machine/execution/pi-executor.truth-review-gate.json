@@ -1,0 +1,190 @@
+{
+  "schema": "truth-review-gate.v1",
+  "schema_version": "1.0",
+  "feature": "pi-executor",
+  "version": "v0.1.0",
+  "pass": true,
+  "blocked": false,
+  "review_gate_pass": true,
+  "abc_pass": true,
+  "reason_code": "",
+  "domain_required": true,
+  "checks": {
+    "A_intent_coverage": {
+      "pass": true,
+      "check": "A",
+      "name": "intent_coverage",
+      "required": true,
+      "matrix_rows": 7,
+      "missing_must": [],
+      "reason": "",
+      "findings": [],
+      "matrix": [
+        {
+          "intent_id": "INT-001",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-PI-001",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-002",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-PI-002",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-003",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-PI-003",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-004",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-PI-004",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-005",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-PI-005",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-006",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-PI-006",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-007",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-PI-007",
+          "status": "covered"
+        }
+      ]
+    },
+    "B_fsm_audit": {
+      "pass": true,
+      "check": "B",
+      "name": "fsm_audit",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "fsm": {
+        "transition_count": 5,
+        "from_states": [
+          "artifact_ready",
+          "evidence_pending",
+          "pi_running",
+          "submitted"
+        ],
+        "hanging_states": [],
+        "terminals": [
+          "closure_failed",
+          "closure_verified"
+        ],
+        "illegal_present": true,
+        "five_tuple_present": true
+      }
+    },
+    "C_testability": {
+      "pass": true,
+      "check": "C",
+      "name": "testability",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "ac_count": 7,
+      "tc_count": 14,
+      "missing_ac": [],
+      "covered": {
+        "AC-PI-001": [
+          "TC-PI-001",
+          "TC-EXEC-001",
+          "TC-EXEC-002"
+        ],
+        "AC-PI-002": [
+          "TC-PI-002"
+        ],
+        "AC-PI-003": [
+          "TC-PI-003",
+          "TC-PI-ILL-002",
+          "TC-PI-ILL-003"
+        ],
+        "AC-PI-004": [
+          "TC-PI-004"
+        ],
+        "AC-PI-005": [
+          "TC-PI-005"
+        ],
+        "AC-PI-006": [
+          "TC-PI-006",
+          "TC-PI-ILL-001",
+          "TC-PI-ILL-004",
+          "TC-PI-ILL-005"
+        ],
+        "AC-PI-007": [
+          "TC-PI-007"
+        ]
+      }
+    },
+    "C_domain_exec_layer": {
+      "pass": true,
+      "check": "C_exec",
+      "name": "domain_exec_layer",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "exec_tc_count": 13,
+      "exec_tc_ids": [
+        "TC-PI-001",
+        "TC-PI-002",
+        "TC-PI-003",
+        "TC-PI-004",
+        "TC-PI-005",
+        "TC-PI-006",
+        "TC-PI-007",
+        "TC-EXEC-002",
+        "TC-PI-ILL-001",
+        "TC-PI-ILL-002",
+        "TC-PI-ILL-003",
+        "TC-PI-ILL-004",
+        "TC-PI-ILL-005"
+      ],
+      "domain_kind": "business"
+    },
+    "D_fill_depth": {
+      "pass": true,
+      "check": "D",
+      "name": "fill_depth",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "package_maturity": "filled",
+      "domain_kind": "business",
+      "business_domain": true
+    }
+  },
+  "findings": [],
+  "humanizer": {
+    "rule": "humanizer_only_after_abc_pass_before_freeze",
+    "abc_pass": true,
+    "allowed_now": true,
+    "fill_depth_pass": true,
+    "note": "Polish L0/narrative only after A/B/C; preserve_machine_fields=true; freeze needs D+exec too"
+  },
+  "evaluated_at": "2026-08-11T12:46:10.215261+00:00",
+  "paths": {
+    "truth": "docs/beacon/v0.1.0/features/pi-executor/truth.md",
+    "tests": "docs/beacon/v0.1.0/features/pi-executor/tests.md",
+    "report": "docs/beacon/v0.1.0/.machine/execution/pi-executor.truth-review-gate.json"
+  }
+}

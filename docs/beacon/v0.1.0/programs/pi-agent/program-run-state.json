@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "program_slug": "pi-agent",
+  "version": "v0.1.0",
+  "plan_mode": "interactive",
+  "program_phase": "P0",
+  "fsm_state": "plan_mode_selected",
+  "lake_or_ocean": "海",
+  "p4_ack": false,
+  "next_action": "program_phase:P0",
+  "updated_at": "2026-08-11T12:42:13.429483+00:00"
+}
