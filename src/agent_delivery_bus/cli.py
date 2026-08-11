@@ -15,6 +15,7 @@ from .install import install_skill
 from .intent import IntentParser
 from .keywords import canonical_keywords
 from .pending import pending_approval_views, render_pending_channel
+from .pi_curator import CuratorService
 from .preflight import Preflight
 from .registry import ALLOWED_CLASSES, ProjectRegistry
 from .schedule import ScheduleService, hermes_cron_tick_script
@@ -184,6 +185,32 @@ def build_parser() -> argparse.ArgumentParser:
     fleet.add_argument("--project")
     fleet.add_argument("--json", action="store_true")
     fleet.add_argument("--sync-boards", action="store_true", help="ensure boards exist before summarizing")
+
+    curator = sub.add_parser("curator", help="pi-curator: approved topics -> knowledge cards")
+    curator_sub = curator.add_subparsers(dest="curator_command", required=True)
+    curator_list = curator_sub.add_parser("list", help="list approved/curated proposals")
+    curator_list.add_argument("--status", default="approved", choices=["approved", "all"])
+    curator_list.add_argument("--project", default="")
+    curator_list.add_argument("--knowledge-root", default="")
+    curator_list.add_argument("--limit", type=int, default=0)
+    curator_list.add_argument("--json", action="store_true")
+    curator_request = curator_sub.add_parser("request", help="build a curation request for one proposal")
+    curator_request.add_argument("--proposal", required=True)
+    curator_request.add_argument("--project", default="")
+    curator_request.add_argument("--knowledge-root", default="")
+    curator_request.add_argument("--json", action="store_true")
+    curator_apply = curator_sub.add_parser("apply", help="validate host fill and write a topic card")
+    curator_apply.add_argument("--proposal", required=True)
+    curator_apply.add_argument("--response-json", required=True)
+    curator_apply.add_argument("--project", default="")
+    curator_apply.add_argument("--knowledge-root", default="")
+    curator_apply.add_argument("--dispatch-id", default="")
+    curator_apply.add_argument("--json", action="store_true")
+    curator_tick = curator_sub.add_parser("tick", help="build curation requests for approved proposals")
+    curator_tick.add_argument("--project", default="")
+    curator_tick.add_argument("--knowledge-root", default="")
+    curator_tick.add_argument("--limit", type=int, default=5)
+    curator_tick.add_argument("--json", action="store_true")
 
     approve = sub.add_parser("approve")
     approve.add_argument("--actor", required=True)
@@ -1073,6 +1100,52 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                     data=payload,
                 )
             raise DeliveryBusError("boards_command_invalid", f"Unknown boards command: {args.boards_command}")
+
+        if args.command == "curator":
+            kroot = str(getattr(args, "knowledge_root", "") or "").strip()
+            if not kroot and getattr(args, "project", ""):
+                try:
+                    proj = registry.resolve(slug=args.project)
+                    kroot = str((proj.metadata or {}).get("knowledge_root") or "").strip()
+                except DeliveryBusError:
+                    kroot = ""
+            if not kroot:
+                ks = registry.raw.get("knowledge_source")
+                if isinstance(ks, dict):
+                    kroot = str(ks.get("repo") or "").strip()
+            curator = CuratorService(
+                storage,
+                knowledge_root=kroot or str(ROOT / "knowledge"),
+                state_root=ROOT / ".beacon" / "state" / "curator",
+            )
+            if args.curator_command == "list":
+                rows = curator.proposals(status=args.status, limit=args.limit or None)
+                payload = {"proposals": rows, "knowledge_root": str(curator.knowledge_root)}
+                payload["text"] = "\n".join(
+                    f"{row.get('id')} {row.get('status')} {row.get('topic')}" for row in rows
+                ) or "(none)"
+                return envelope(status="pass", data=payload)
+            if args.curator_command == "request":
+                proposal = curator.boundary.show(args.proposal)
+                request = curator.build_request(proposal)
+                return envelope(status="pass", data={"request": request})
+            if args.curator_command == "apply":
+                response_path = Path(args.response_json)
+                try:
+                    response = json.loads(response_path.read_text(encoding="utf-8"))
+                except (OSError, json.JSONDecodeError) as exc:
+                    return envelope(
+                        status="blocked",
+                        blocked=True,
+                        reason_code="curator_response_invalid",
+                        resume_action="provide a valid curator-card.v1 JSON response file",
+                        data={"error": str(exc)},
+                    )
+                written = curator.apply(args.proposal, response, dispatch_id=args.dispatch_id)
+                return envelope(status="pass", data=written)
+            if args.curator_command == "tick":
+                result = curator.tick(limit=args.limit)
+                return envelope(status="pass", data=result)
 
         if args.command == "approve":
             issued = approvals.issue(

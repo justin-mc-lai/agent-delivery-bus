@@ -168,6 +168,12 @@ class PiExecutorAdapter:
                 "driver_pi refuses task bodies that request auto-approve flags",
                 resume_action="remove --auto-approve/--yolo from the bound command",
             )
+        body = body.rstrip() + (
+            "\n\n### Bounded task\n"
+            "Execute ONLY the single concrete deliverable described above. "
+            "Do not run project-wide workflows, install tools, or iterate beyond the deliverable. "
+            "Write the required evidence/manifest file, then stop."
+        )
         workspace = self.workspace_for(project, stage=stage).split(":", 1)[-1]
         task_id = f"pi_{uuid.uuid4().hex[:16]}"
         command = [self._cli(), "-p", "--mode", "json", body]
