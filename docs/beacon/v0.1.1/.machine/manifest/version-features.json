@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "version": "v0.1.1",
+  "generated_at": "2026-08-11T15:01:24.429356Z",
+  "features": [
+    {
+      "slug": "pi-curator",
+      "status": "template",
+      "language": "zh",
+      "truth_paths": {
+        "prd": "docs/beacon/v0.1.1/features/pi-curator/truth.md",
+        "user_story": "docs/beacon/v0.1.1/features/pi-curator/truth.md",
+        "test_case": "docs/beacon/v0.1.1/features/pi-curator/tests.md"
+      },
+      "evidence_paths": {
+        "qa_matrix": "docs/beacon/v0.1.1/.machine/qa/pi-curator.evidence-contract.json",
+        "freeze_state": "docs/beacon/v0.1.1/.machine/requirement/pi-curator.freeze-state.json"
+      }
+    }
+  ],
+  "version_level_paths": {
+    "research_dir": "docs/beacon/v0.1.1/research/",
+    "execution_dir": "docs/beacon/v0.1.1/execution/",
+    "release_dir": "docs/beacon/v0.1.1/release/",
+    "change_dir": "docs/beacon/v0.1.1/change/",
+    "design_dir": "docs/beacon/v0.1.1/design/"
+  }
+}

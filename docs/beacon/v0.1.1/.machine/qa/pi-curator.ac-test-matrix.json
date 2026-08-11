@@ -1,0 +1,56 @@
+{
+  "schema": "ac-test-matrix.v1",
+  "feature": "pi-curator",
+  "version": "v0.1.1",
+  "rows": [
+    {
+      "ac": "AC-PC-001",
+      "tc": [
+        "TC-PC-001",
+        "TC-EXEC-001"
+      ]
+    },
+    {
+      "ac": "AC-PC-002",
+      "tc": [
+        "TC-PC-002"
+      ]
+    },
+    {
+      "ac": "AC-PC-003",
+      "tc": [
+        "TC-PC-003",
+        "TC-PC-ILL-001"
+      ]
+    },
+    {
+      "ac": "AC-PC-004",
+      "tc": [
+        "TC-PC-004",
+        "TC-PC-ILL-002",
+        "TC-PC-ILL-004"
+      ]
+    },
+    {
+      "ac": "AC-PC-005",
+      "tc": [
+        "TC-PC-005"
+      ]
+    },
+    {
+      "ac": "AC-PC-006",
+      "tc": [
+        "TC-PC-006"
+      ]
+    },
+    {
+      "ac": "AC-PC-007",
+      "tc": [
+        "TC-PC-007",
+        "TC-PC-ILL-003",
+        "TC-PC-ILL-005",
+        "TC-EXEC-002"
+      ]
+    }
+  ]
+}

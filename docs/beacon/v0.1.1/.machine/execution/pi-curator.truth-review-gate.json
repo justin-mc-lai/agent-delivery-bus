@@ -1,0 +1,190 @@
+{
+  "schema": "truth-review-gate.v1",
+  "schema_version": "1.0",
+  "feature": "pi-curator",
+  "version": "v0.1.1",
+  "pass": true,
+  "blocked": false,
+  "review_gate_pass": true,
+  "abc_pass": true,
+  "reason_code": "",
+  "domain_required": true,
+  "checks": {
+    "A_intent_coverage": {
+      "pass": true,
+      "check": "A",
+      "name": "intent_coverage",
+      "required": true,
+      "matrix_rows": 7,
+      "missing_must": [],
+      "reason": "",
+      "findings": [],
+      "matrix": [
+        {
+          "intent_id": "INT-001",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-PC-001",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-002",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-PC-002",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-003",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-PC-003",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-004",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-PC-004",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-005",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-PC-005",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-006",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-PC-006",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-007",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-PC-007",
+          "status": "covered"
+        }
+      ]
+    },
+    "B_fsm_audit": {
+      "pass": true,
+      "check": "B",
+      "name": "fsm_audit",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "fsm": {
+        "transition_count": 5,
+        "from_states": [
+          "anchored",
+          "filled",
+          "requested",
+          "validated",
+          "written"
+        ],
+        "hanging_states": [],
+        "terminals": [
+          "recorded"
+        ],
+        "illegal_present": true,
+        "five_tuple_present": true
+      }
+    },
+    "C_testability": {
+      "pass": true,
+      "check": "C",
+      "name": "testability",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "ac_count": 7,
+      "tc_count": 14,
+      "missing_ac": [],
+      "covered": {
+        "AC-PC-001": [
+          "TC-PC-001",
+          "TC-EXEC-001",
+          "TC-EXEC-002"
+        ],
+        "AC-PC-002": [
+          "TC-PC-002"
+        ],
+        "AC-PC-003": [
+          "TC-PC-003",
+          "TC-PC-ILL-001"
+        ],
+        "AC-PC-004": [
+          "TC-PC-004",
+          "TC-PC-ILL-002",
+          "TC-PC-ILL-004"
+        ],
+        "AC-PC-005": [
+          "TC-PC-005"
+        ],
+        "AC-PC-006": [
+          "TC-PC-006"
+        ],
+        "AC-PC-007": [
+          "TC-PC-007",
+          "TC-PC-ILL-003",
+          "TC-PC-ILL-005"
+        ]
+      }
+    },
+    "C_domain_exec_layer": {
+      "pass": true,
+      "check": "C_exec",
+      "name": "domain_exec_layer",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "exec_tc_count": 13,
+      "exec_tc_ids": [
+        "TC-PC-001",
+        "TC-PC-002",
+        "TC-PC-003",
+        "TC-PC-004",
+        "TC-PC-005",
+        "TC-PC-006",
+        "TC-PC-007",
+        "TC-EXEC-002",
+        "TC-PC-ILL-001",
+        "TC-PC-ILL-002",
+        "TC-PC-ILL-003",
+        "TC-PC-ILL-004",
+        "TC-PC-ILL-005"
+      ],
+      "domain_kind": "business"
+    },
+    "D_fill_depth": {
+      "pass": true,
+      "check": "D",
+      "name": "fill_depth",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "package_maturity": "filled",
+      "domain_kind": "business",
+      "business_domain": true
+    }
+  },
+  "findings": [],
+  "humanizer": {
+    "rule": "humanizer_only_after_abc_pass_before_freeze",
+    "abc_pass": true,
+    "allowed_now": true,
+    "fill_depth_pass": true,
+    "note": "Polish L0/narrative only after A/B/C; preserve_machine_fields=true; freeze needs D+exec too"
+  },
+  "evaluated_at": "2026-08-11T15:01:59.358449+00:00",
+  "paths": {
+    "truth": "docs/beacon/v0.1.1/features/pi-curator/truth.md",
+    "tests": "docs/beacon/v0.1.1/features/pi-curator/tests.md",
+    "report": "docs/beacon/v0.1.1/.machine/execution/pi-curator.truth-review-gate.json"
+  }
+}

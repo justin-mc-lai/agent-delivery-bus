@@ -1,0 +1,55 @@
+{
+  "schema": "qa9-matrix.v1",
+  "feature": "pi-curator",
+  "version": "v0.1.1",
+  "walks": [
+    {
+      "walk": "W-PC-01",
+      "ac": "AC-PC-004/005",
+      "path": "requested→anchored→filled→validated→written→recorded",
+      "tc": "TC-PC-004/TC-PC-005"
+    },
+    {
+      "walk": "W-PC-02",
+      "ac": "AC-PC-001",
+      "path": "空 approved 池空跑",
+      "tc": "TC-PC-001"
+    },
+    {
+      "walk": "W-PC-03",
+      "ac": "AC-PC-006",
+      "path": "扩展安装幂等",
+      "tc": "TC-PC-006"
+    },
+    {
+      "walk": "I-PC-01",
+      "ac": "AC-PC-003",
+      "path": "无锚点写卡",
+      "tc": "TC-PC-ILL-001"
+    },
+    {
+      "walk": "I-PC-02",
+      "ac": "AC-PC-004",
+      "path": "越界写",
+      "tc": "TC-PC-ILL-002"
+    },
+    {
+      "walk": "I-PC-03",
+      "ac": "AC-PC-007",
+      "path": "自动 apply/审批",
+      "tc": "TC-PC-ILL-003"
+    },
+    {
+      "walk": "I-PC-04",
+      "ac": "AC-PC-004",
+      "path": "伪造/缺失 dispatch_id",
+      "tc": "TC-PC-ILL-004"
+    },
+    {
+      "walk": "I-PC-05",
+      "ac": "AC-PC-007",
+      "path": "release 自动放行",
+      "tc": "TC-PC-ILL-005"
+    }
+  ]
+}

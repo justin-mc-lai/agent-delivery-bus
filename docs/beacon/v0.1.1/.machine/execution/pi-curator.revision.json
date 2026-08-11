@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "feature": "pi-curator",
+  "feature_slug": "pi-curator",
+  "version": "v0.1.1",
+  "revision_id": "R1",
+  "source_revision_id": "",
+  "reason": "freeze",
+  "doc_status": "frozen",
+  "delivery_status": "idle",
+  "lifecycle_status": "idle",
+  "baseline_hash": "sha256:7d472c1c6a72f2529a7bbb8ffe591d2a443266db610c65824da7def68b51473a",
+  "superseded_by": "",
+  "created_at": "2026-08-11T15:01:59.359800+00:00",
+  "frozen_at": "2026-08-11T15:01:59.361461+00:00",
+  "accepted_at": ""
+}

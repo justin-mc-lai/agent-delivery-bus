@@ -1,0 +1,723 @@
+{
+  "schema_version": "1.0",
+  "feature": "pi-curator",
+  "feature_slug": "pi-curator",
+  "version": "v0.1.1",
+  "runtime_version": "v1.6.12",
+  "runtime_capability_line": "v1.3.3",
+  "required": true,
+  "reason_code": "",
+  "blocked": false,
+  "status": "pass",
+  "findings": [],
+  "report_json_path": "docs/beacon/v0.1.1/.machine/execution/requirement-clarity-pi-curator.json",
+  "report_markdown_path": "docs/beacon/v0.1.1/execution/requirement-clarity-pi-curator.md",
+  "state_path": ".beacon/state/requirement-clarity-pi-curator.json",
+  "diagram_truth": {
+    "schema_version": "1.0",
+    "version": "v0.1.1",
+    "supported": false,
+    "required": false,
+    "ready": false,
+    "diagram_types": [],
+    "state_axes": [],
+    "missing_diagram_types": [],
+    "missing_state_axes": false,
+    "complexity_signals": [],
+    "review_gates": [],
+    "qa_coverage_hints": [],
+    "evidence_lines": {},
+    "generated_at": "2026-08-11T15:01:59.072413+00:00",
+    "feature": "pi-curator",
+    "feature_slug": "pi-curator",
+    "prd_ref": "docs/beacon/v0.1.1/prd/pi-curator.md",
+    "user_story_ref": "docs/beacon/v0.1.1/user-story/pi-curator.md"
+  },
+  "domain_fsm_gate": {
+    "schema_version": "1.0",
+    "feature": "pi-curator",
+    "feature_slug": "pi-curator",
+    "version": "v0.1.1",
+    "truth_path": "docs/beacon/v0.1.1/features/pi-curator/truth.md",
+    "tests_path": "docs/beacon/v0.1.1/features/pi-curator/tests.md",
+    "required": true,
+    "blocked": false,
+    "status": "pass",
+    "reason_code": "",
+    "findings": [],
+    "requirement": {
+      "required": true,
+      "reason": "explicit_domain_mark",
+      "explicit": true,
+      "partial": true,
+      "complexity": false,
+      "business_signal": true,
+      "version_supported": false
+    },
+    "projection": {
+      "schema_version": "1.0",
+      "domain_fsm_schema": "domain-fsm.v1",
+      "entity_precedence_schema": "entity-precedence.v1",
+      "frontmatter": {
+        "slug": "pi-curator",
+        "version": "v0.1.1",
+        "status": "draft",
+        "language": "zh",
+        "domain_required": "true",
+        "ux_required": "false",
+        "package_maturity": "filled",
+        "parser_contract": "beacon-feature-package-v2",
+        "truth_source_model": "feature_package_authoritative",
+        "materials_status": "current",
+        "canonical_refs": {
+          "prd": "docs/beacon/v0.1.1/features/pi-curator/truth.md",
+          "user_story": "docs/beacon/v0.1.1/features/pi-curator/truth.md",
+          "test_case": "docs/beacon/v0.1.1/features/pi-curator/tests.md"
+        }
+      },
+      "frontmatter_errors": [],
+      "has_domain_model_section": true,
+      "has_domain_fsm_section": true,
+      "has_illegal_transition_section": true,
+      "entities": [
+        {
+          "entity": "CuratorProposal",
+          "key": "proposal_id, topic, query_hints, sources, rationale",
+          "precedence": "来自 boundary approved 池",
+          "requires": "来自 boundary approved 池"
+        },
+        {
+          "entity": "CurationRequest",
+          "key": "schema, proposal_id, topic, anchors[], prompt",
+          "precedence": "只读盘点产物",
+          "requires": "只读盘点产物"
+        },
+        {
+          "entity": "TopicCard",
+          "key": "topic, sources[], knowledge_refs[], market_signals[], status, created_at",
+          "precedence": "字段必须引用 anchors；dispatch_id 绑定",
+          "requires": "字段必须引用 anchors；dispatch_id 绑定"
+        },
+        {
+          "entity": "KnowledgeAnchor",
+          "key": "path, kind, excerpt",
+          "precedence": "来自 knowledge_root 扫描",
+          "requires": "来自 knowledge_root 扫描"
+        },
+        {
+          "entity": "CuratorCardLedger",
+          "key": "card_id, proposal_id, path, status",
+          "precedence": "追加式 SQLite 记录",
+          "requires": "追加式 SQLite 记录"
+        },
+        {
+          "entity": "CuratorProposal",
+          "key": "1",
+          "precedence": "boundary approved",
+          "requires": "boundary approved"
+        },
+        {
+          "entity": "KnowledgeAnchor",
+          "key": "2",
+          "precedence": "knowledge_root 可读",
+          "requires": "knowledge_root 可读"
+        },
+        {
+          "entity": "CurationRequest",
+          "key": "3",
+          "precedence": "proposal + anchors",
+          "requires": "proposal + anchors"
+        },
+        {
+          "entity": "TopicCard",
+          "key": "4",
+          "precedence": "host fill 校验通过",
+          "requires": "host fill 校验通过"
+        },
+        {
+          "entity": "CuratorCardLedger",
+          "key": "5",
+          "precedence": "写回成功",
+          "requires": "写回成功"
+        }
+      ],
+      "entity_precedence": [
+        {
+          "entity": "CuratorProposal",
+          "key": "proposal_id, topic, query_hints, sources, rationale",
+          "precedence": "来自 boundary approved 池",
+          "requires": "来自 boundary approved 池"
+        },
+        {
+          "entity": "CurationRequest",
+          "key": "schema, proposal_id, topic, anchors[], prompt",
+          "precedence": "只读盘点产物",
+          "requires": "只读盘点产物"
+        },
+        {
+          "entity": "TopicCard",
+          "key": "topic, sources[], knowledge_refs[], market_signals[], status, created_at",
+          "precedence": "字段必须引用 anchors；dispatch_id 绑定",
+          "requires": "字段必须引用 anchors；dispatch_id 绑定"
+        },
+        {
+          "entity": "KnowledgeAnchor",
+          "key": "path, kind, excerpt",
+          "precedence": "来自 knowledge_root 扫描",
+          "requires": "来自 knowledge_root 扫描"
+        },
+        {
+          "entity": "CuratorCardLedger",
+          "key": "card_id, proposal_id, path, status",
+          "precedence": "追加式 SQLite 记录",
+          "requires": "追加式 SQLite 记录"
+        },
+        {
+          "entity": "CuratorProposal",
+          "key": "1",
+          "precedence": "boundary approved",
+          "requires": "boundary approved"
+        },
+        {
+          "entity": "KnowledgeAnchor",
+          "key": "2",
+          "precedence": "knowledge_root 可读",
+          "requires": "knowledge_root 可读"
+        },
+        {
+          "entity": "CurationRequest",
+          "key": "3",
+          "precedence": "proposal + anchors",
+          "requires": "proposal + anchors"
+        },
+        {
+          "entity": "TopicCard",
+          "key": "4",
+          "precedence": "host fill 校验通过",
+          "requires": "host fill 校验通过"
+        },
+        {
+          "entity": "CuratorCardLedger",
+          "key": "5",
+          "precedence": "写回成功",
+          "requires": "写回成功"
+        }
+      ],
+      "aggregates": [
+        {
+          "name": "CuratorCardLifecycle",
+          "states": [
+            "anchored",
+            "filled",
+            "recorded",
+            "requested",
+            "validated",
+            "written"
+          ],
+          "transitions": [
+            {
+              "from": "",
+              "to": "requested",
+              "guard": "approved 提案存在",
+              "initial": "true"
+            },
+            {
+              "from": "requested",
+              "to": "anchored",
+              "guard": "knowledge 扫描完成"
+            },
+            {
+              "from": "anchored",
+              "to": "filled",
+              "guard": "host response schema 合法"
+            },
+            {
+              "from": "filled",
+              "to": "validated",
+              "guard": "字段有锚点引用 + schema 版本正确"
+            },
+            {
+              "from": "validated",
+              "to": "written",
+              "guard": "写入 knowledge_root/ideas/ 成功"
+            },
+            {
+              "from": "written",
+              "to": "recorded",
+              "guard": "ledger 落账"
+            }
+          ]
+        }
+      ],
+      "illegal_transition_slots": [
+        {
+          "description": "filled → written without validate（无锚点字段直接写卡）· TC-PC-ILL-001",
+          "aggregate": "",
+          "source": "truth"
+        },
+        {
+          "description": "validated → written outside knowledge_root · TC-PC-ILL-002",
+          "aggregate": "",
+          "source": "truth"
+        },
+        {
+          "description": "curator 自动 apply / 自动审批 · TC-PC-ILL-003",
+          "aggregate": "",
+          "source": "truth"
+        },
+        {
+          "description": "伪造/缺失 dispatch_id 绑定 · TC-PC-ILL-004",
+          "aggregate": "",
+          "source": "truth"
+        },
+        {
+          "description": "release 自动放行 · TC-PC-ILL-005",
+          "aggregate": "",
+          "source": "truth"
+        }
+      ],
+      "acceptance_criteria": [
+        {
+          "ac_id": "AC-PC-001",
+          "description": "`pi_curator.py` CuratorService：读取 boundary approved 池；`tick` 对无提案空跑 pass；构建 curation request（proposal_id/topic/anchors/prompt）"
+        },
+        {
+          "ac_id": "AC-PC-002",
+          "description": "knowledge_scan 扫描 knowledge_root（ideas/daily/bases）按 topic token 命中文件生成 anchors；agentmemory 不可用时降级文件检索不抛错"
+        },
+        {
+          "ac_id": "AC-PC-003",
+          "description": "选题卡 schema（curator-card.v1）校验：topic/sources/knowledge_refs/market_signals/status 必填且引用 anchors；缺锚点 fail-closed"
+        },
+        {
+          "ac_id": "AC-PC-004",
+          "description": "写回 personal-brain：`<knowledge_root>/ideas/<slug>-<date>.md` + YAML frontmatter + dispatch_id 绑定；越界写 fail-closed"
+        },
+        {
+          "ac_id": "AC-PC-005",
+          "description": "CLI：`adb curator list --status approved` / `request --proposal <id>` / `apply --proposal <id> --response-json <file>` / `tick --project <slug> --limit N`；curator_cards ledger 落账"
+        },
+        {
+          "ac_id": "AC-PC-006",
+          "description": "pi-beacon 扩展包：`skills/pi-beacon/extension.ts`（registerTool adb_dispatch + registerCommand /prism + session_start 知识提示）+ `install.sh`（幂等合并 settings.skills、拷贝扩展，支持 --dry-run）；driver_pi create_task 追加有界任务正文（Bounded task 段）"
+        },
+        {
+          "ac_id": "AC-PC-007",
+          "description": "定时整合：复用 ScheduleService should_run/quota 与 boundary cron 形态；curator 不自动审批/apply；hermes 兼容回归（既有 157 测试全绿）"
+        }
+      ],
+      "bound_ac_ids": [
+        "AC-PC-005",
+        "AC-PC-006"
+      ],
+      "orphan_ac_ids": [
+        "AC-PC-007"
+      ],
+      "aggregates_missing_illegal_slots": [],
+      "raw_section_titles": [
+        "人话",
+        "User Intent Snapshot",
+        "用户旅程",
+        "First principles",
+        "Domain Model",
+        "Entity Precedence",
+        "Domain FSM — CuratorCardLifecycle",
+        "FSM 五元组",
+        "Legal walks",
+        "Illegal transitions",
+        "Acceptance Criteria",
+        "Intent Coverage Matrix",
+        "Non-goals",
+        "Freeze readiness"
+      ]
+    },
+    "validation": {
+      "schema_version": "1.0",
+      "required": true,
+      "blocked": false,
+      "status": "pass",
+      "reason_code": "",
+      "findings": [],
+      "projection": {
+        "schema_version": "1.0",
+        "domain_fsm_schema": "domain-fsm.v1",
+        "entity_precedence_schema": "entity-precedence.v1",
+        "frontmatter": {
+          "slug": "pi-curator",
+          "version": "v0.1.1",
+          "status": "draft",
+          "language": "zh",
+          "domain_required": "true",
+          "ux_required": "false",
+          "package_maturity": "filled",
+          "parser_contract": "beacon-feature-package-v2",
+          "truth_source_model": "feature_package_authoritative",
+          "materials_status": "current",
+          "canonical_refs": {
+            "prd": "docs/beacon/v0.1.1/features/pi-curator/truth.md",
+            "user_story": "docs/beacon/v0.1.1/features/pi-curator/truth.md",
+            "test_case": "docs/beacon/v0.1.1/features/pi-curator/tests.md"
+          }
+        },
+        "frontmatter_errors": [],
+        "has_domain_model_section": true,
+        "has_domain_fsm_section": true,
+        "has_illegal_transition_section": true,
+        "entities": [
+          {
+            "entity": "CuratorProposal",
+            "key": "proposal_id, topic, query_hints, sources, rationale",
+            "precedence": "来自 boundary approved 池",
+            "requires": "来自 boundary approved 池"
+          },
+          {
+            "entity": "CurationRequest",
+            "key": "schema, proposal_id, topic, anchors[], prompt",
+            "precedence": "只读盘点产物",
+            "requires": "只读盘点产物"
+          },
+          {
+            "entity": "TopicCard",
+            "key": "topic, sources[], knowledge_refs[], market_signals[], status, created_at",
+            "precedence": "字段必须引用 anchors；dispatch_id 绑定",
+            "requires": "字段必须引用 anchors；dispatch_id 绑定"
+          },
+          {
+            "entity": "KnowledgeAnchor",
+            "key": "path, kind, excerpt",
+            "precedence": "来自 knowledge_root 扫描",
+            "requires": "来自 knowledge_root 扫描"
+          },
+          {
+            "entity": "CuratorCardLedger",
+            "key": "card_id, proposal_id, path, status",
+            "precedence": "追加式 SQLite 记录",
+            "requires": "追加式 SQLite 记录"
+          },
+          {
+            "entity": "CuratorProposal",
+            "key": "1",
+            "precedence": "boundary approved",
+            "requires": "boundary approved"
+          },
+          {
+            "entity": "KnowledgeAnchor",
+            "key": "2",
+            "precedence": "knowledge_root 可读",
+            "requires": "knowledge_root 可读"
+          },
+          {
+            "entity": "CurationRequest",
+            "key": "3",
+            "precedence": "proposal + anchors",
+            "requires": "proposal + anchors"
+          },
+          {
+            "entity": "TopicCard",
+            "key": "4",
+            "precedence": "host fill 校验通过",
+            "requires": "host fill 校验通过"
+          },
+          {
+            "entity": "CuratorCardLedger",
+            "key": "5",
+            "precedence": "写回成功",
+            "requires": "写回成功"
+          }
+        ],
+        "entity_precedence": [
+          {
+            "entity": "CuratorProposal",
+            "key": "proposal_id, topic, query_hints, sources, rationale",
+            "precedence": "来自 boundary approved 池",
+            "requires": "来自 boundary approved 池"
+          },
+          {
+            "entity": "CurationRequest",
+            "key": "schema, proposal_id, topic, anchors[], prompt",
+            "precedence": "只读盘点产物",
+            "requires": "只读盘点产物"
+          },
+          {
+            "entity": "TopicCard",
+            "key": "topic, sources[], knowledge_refs[], market_signals[], status, created_at",
+            "precedence": "字段必须引用 anchors；dispatch_id 绑定",
+            "requires": "字段必须引用 anchors；dispatch_id 绑定"
+          },
+          {
+            "entity": "KnowledgeAnchor",
+            "key": "path, kind, excerpt",
+            "precedence": "来自 knowledge_root 扫描",
+            "requires": "来自 knowledge_root 扫描"
+          },
+          {
+            "entity": "CuratorCardLedger",
+            "key": "card_id, proposal_id, path, status",
+            "precedence": "追加式 SQLite 记录",
+            "requires": "追加式 SQLite 记录"
+          },
+          {
+            "entity": "CuratorProposal",
+            "key": "1",
+            "precedence": "boundary approved",
+            "requires": "boundary approved"
+          },
+          {
+            "entity": "KnowledgeAnchor",
+            "key": "2",
+            "precedence": "knowledge_root 可读",
+            "requires": "knowledge_root 可读"
+          },
+          {
+            "entity": "CurationRequest",
+            "key": "3",
+            "precedence": "proposal + anchors",
+            "requires": "proposal + anchors"
+          },
+          {
+            "entity": "TopicCard",
+            "key": "4",
+            "precedence": "host fill 校验通过",
+            "requires": "host fill 校验通过"
+          },
+          {
+            "entity": "CuratorCardLedger",
+            "key": "5",
+            "precedence": "写回成功",
+            "requires": "写回成功"
+          }
+        ],
+        "aggregates": [
+          {
+            "name": "CuratorCardLifecycle",
+            "states": [
+              "anchored",
+              "filled",
+              "recorded",
+              "requested",
+              "validated",
+              "written"
+            ],
+            "transitions": [
+              {
+                "from": "",
+                "to": "requested",
+                "guard": "approved 提案存在",
+                "initial": "true"
+              },
+              {
+                "from": "requested",
+                "to": "anchored",
+                "guard": "knowledge 扫描完成"
+              },
+              {
+                "from": "anchored",
+                "to": "filled",
+                "guard": "host response schema 合法"
+              },
+              {
+                "from": "filled",
+                "to": "validated",
+                "guard": "字段有锚点引用 + schema 版本正确"
+              },
+              {
+                "from": "validated",
+                "to": "written",
+                "guard": "写入 knowledge_root/ideas/ 成功"
+              },
+              {
+                "from": "written",
+                "to": "recorded",
+                "guard": "ledger 落账"
+              }
+            ]
+          }
+        ],
+        "illegal_transition_slots": [
+          {
+            "description": "filled → written without validate（无锚点字段直接写卡）· TC-PC-ILL-001",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "validated → written outside knowledge_root · TC-PC-ILL-002",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "curator 自动 apply / 自动审批 · TC-PC-ILL-003",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "伪造/缺失 dispatch_id 绑定 · TC-PC-ILL-004",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "release 自动放行 · TC-PC-ILL-005",
+            "aggregate": "",
+            "source": "truth"
+          }
+        ],
+        "acceptance_criteria": [
+          {
+            "ac_id": "AC-PC-001",
+            "description": "`pi_curator.py` CuratorService：读取 boundary approved 池；`tick` 对无提案空跑 pass；构建 curation request（proposal_id/topic/anchors/prompt）"
+          },
+          {
+            "ac_id": "AC-PC-002",
+            "description": "knowledge_scan 扫描 knowledge_root（ideas/daily/bases）按 topic token 命中文件生成 anchors；agentmemory 不可用时降级文件检索不抛错"
+          },
+          {
+            "ac_id": "AC-PC-003",
+            "description": "选题卡 schema（curator-card.v1）校验：topic/sources/knowledge_refs/market_signals/status 必填且引用 anchors；缺锚点 fail-closed"
+          },
+          {
+            "ac_id": "AC-PC-004",
+            "description": "写回 personal-brain：`<knowledge_root>/ideas/<slug>-<date>.md` + YAML frontmatter + dispatch_id 绑定；越界写 fail-closed"
+          },
+          {
+            "ac_id": "AC-PC-005",
+            "description": "CLI：`adb curator list --status approved` / `request --proposal <id>` / `apply --proposal <id> --response-json <file>` / `tick --project <slug> --limit N`；curator_cards ledger 落账"
+          },
+          {
+            "ac_id": "AC-PC-006",
+            "description": "pi-beacon 扩展包：`skills/pi-beacon/extension.ts`（registerTool adb_dispatch + registerCommand /prism + session_start 知识提示）+ `install.sh`（幂等合并 settings.skills、拷贝扩展，支持 --dry-run）；driver_pi create_task 追加有界任务正文（Bounded task 段）"
+          },
+          {
+            "ac_id": "AC-PC-007",
+            "description": "定时整合：复用 ScheduleService should_run/quota 与 boundary cron 形态；curator 不自动审批/apply；hermes 兼容回归（既有 157 测试全绿）"
+          }
+        ],
+        "bound_ac_ids": [
+          "AC-PC-005",
+          "AC-PC-006"
+        ],
+        "orphan_ac_ids": [
+          "AC-PC-007"
+        ],
+        "aggregates_missing_illegal_slots": [],
+        "raw_section_titles": [
+          "人话",
+          "User Intent Snapshot",
+          "用户旅程",
+          "First principles",
+          "Domain Model",
+          "Entity Precedence",
+          "Domain FSM — CuratorCardLifecycle",
+          "FSM 五元组",
+          "Legal walks",
+          "Illegal transitions",
+          "Acceptance Criteria",
+          "Intent Coverage Matrix",
+          "Non-goals",
+          "Freeze readiness"
+        ]
+      },
+      "summary": {
+        "entity_count": 10,
+        "aggregate_count": 1,
+        "illegal_slot_count": 5,
+        "orphan_ac_count": 1,
+        "bound_ac_count": 2
+      }
+    },
+    "recommended_action": ""
+  },
+  "human_closure_contract": {
+    "required": false,
+    "research_path": "docs/beacon/v0.1.1/research/pi-curator.md",
+    "research_exists": true,
+    "source_architecture_path": "docs/beacon/v0.1.1/source-architecture/pi-curator.md",
+    "source_architecture_exists": false,
+    "required_sections": [
+      "architecture",
+      "business_flow"
+    ],
+    "missing_sections": [
+      "architecture",
+      "business_flow"
+    ],
+    "diagram_types": [],
+    "complexity_signals": []
+  },
+  "requirement_closure_contract": {
+    "required": true,
+    "chain_order": [
+      "research",
+      "prd",
+      "user_story",
+      "test_case",
+      "requirement_clarity",
+      "freeze"
+    ],
+    "human_closure_required": false,
+    "paths": {
+      "research": "docs/beacon/v0.1.1/research/pi-curator.md",
+      "prd": "docs/beacon/v0.1.1/features/pi-curator/truth.md",
+      "user_story": "docs/beacon/v0.1.1/features/pi-curator/truth.md",
+      "test_case": "docs/beacon/v0.1.1/features/pi-curator/tests.md"
+    },
+    "exists": {
+      "research": true,
+      "prd": true,
+      "user_story": true,
+      "test_case": true
+    },
+    "required_research_sections": [],
+    "missing_research_sections": [],
+    "ac_projection": {
+      "prd_ac_ids": [],
+      "user_story_ac_ids": [],
+      "test_case_ac_ids": [],
+      "upstream_ac_ids": [],
+      "missing_test_case_ac_ids": []
+    }
+  },
+  "version_projection_truth_contract": {
+    "required": false,
+    "supported": false,
+    "projection_types": [],
+    "research_path": "docs/beacon/v0.1.1/research/pi-curator.md",
+    "research_exists": true,
+    "required_fields": [
+      "prd_refs",
+      "user_story_refs",
+      "test_case_refs",
+      "coverage_notes",
+      "out_of_scope_notes"
+    ],
+    "field_presence": {
+      "prd_refs": false,
+      "user_story_refs": false,
+      "test_case_refs": false,
+      "coverage_notes": false,
+      "out_of_scope_notes": false
+    },
+    "missing_fields": [],
+    "required_refs": {
+      "prd_refs": "docs/beacon/v0.1.1/features/pi-curator/truth.md",
+      "user_story_refs": "docs/beacon/v0.1.1/features/pi-curator/truth.md",
+      "test_case_refs": "docs/beacon/v0.1.1/features/pi-curator/tests.md"
+    },
+    "missing_ref_targets": [],
+    "ready": false
+  },
+  "support_write_topology_contract": {
+    "schema_version": "1.0",
+    "supported": true,
+    "status": "pass",
+    "blocked": false,
+    "reason_code": "",
+    "diagnostics": []
+  },
+  "required_artifacts": [],
+  "scanned_files": [
+    "docs/beacon/v0.1.1/features/pi-curator/truth.md",
+    "docs/beacon/v0.1.1/features/pi-curator/tests.md",
+    "docs/beacon/v0.1.1/features/pi-curator/tasks.md",
+    "docs/beacon/v0.1.1/features/pi-curator/evidence.md",
+    "docs/beacon/v0.1.1/research/pi-curator.md"
+  ]
+}

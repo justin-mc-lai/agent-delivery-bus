@@ -1,0 +1,249 @@
+{
+  "schema_version": "1.0",
+  "truth_map_contract": "beacon-truth-map-v1",
+  "truth_source_model": "feature_package_authoritative",
+  "truth_package_contract": "beacon-feature-package-v2",
+  "machine_json_role": "generated_state_not_truth",
+  "generated_by": "beacon.truth_map.resolver",
+  "generated_at": "2026-08-11T15:01:59.497573+00:00",
+  "feature": "pi-curator",
+  "feature_slug": "pi-curator",
+  "version": "v0.1.1",
+  "truth_authority": false,
+  "json_authority": false,
+  "source_paths": {
+    "truth": "docs/beacon/v0.1.1/features/pi-curator/truth.md",
+    "tests": "docs/beacon/v0.1.1/features/pi-curator/tests.md",
+    "tasks": "docs/beacon/v0.1.1/features/pi-curator/tasks.md",
+    "evidence": "docs/beacon/v0.1.1/features/pi-curator/evidence.md"
+  },
+  "source_hashes": {
+    "truth": "dc206789c1f99975a1d21075371362d9dafa265e1351620610b1a3cb07828f1a",
+    "tests": "9b906f50a3857c21a71f275633b52107aa7a3216d0b8af86517747de22304304",
+    "tasks": "108324a27868f2833bfabd1302c66eac622e719d09a2654599a04a41b512826f",
+    "evidence": "aff29ed9d94a718b961dd512a8e892adcc1dc25807cc1be6afef88092230c45e"
+  },
+  "truth_frontmatter": {
+    "slug": "pi-curator",
+    "version": "v0.1.1",
+    "status": "frozen",
+    "language": "zh",
+    "domain_required": "true",
+    "ux_required": "false",
+    "package_maturity": "filled",
+    "parser_contract": "beacon-feature-package-v2",
+    "truth_source_model": "feature_package_authoritative",
+    "materials_status": "current",
+    "canonical_refs": {
+      "prd": "docs/beacon/v0.1.1/features/pi-curator/truth.md",
+      "user_story": "docs/beacon/v0.1.1/features/pi-curator/truth.md",
+      "test_case": "docs/beacon/v0.1.1/features/pi-curator/tests.md"
+    }
+  },
+  "frontmatter_errors": [],
+  "acceptance_criteria": [
+    {
+      "ac_id": "AC-PC-001",
+      "theme": "`pi_curator.py` CuratorService：读取 boundary approved 池；`tick` 对无提案空跑 pass；构建 curation request（proposal_id/topic/anchors/prompt）",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-PC-002",
+      "theme": "knowledge_scan 扫描 knowledge_root（ideas/daily/bases）按 topic token 命中文件生成 anchors；agentmemory 不可用时降级文件检索不抛错",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-PC-003",
+      "theme": "选题卡 schema（curator-card.v1）校验：topic/sources/knowledge_refs/market_signals/status 必填且引用 anchors；缺锚点 fail-closed",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-PC-004",
+      "theme": "写回 personal-brain：`<knowledge_root>/ideas/<slug>-<date>.md` + YAML frontmatter + dispatch_id 绑定；越界写 fail-closed",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-PC-005",
+      "theme": "CLI：`adb curator list --status approved` / `request --proposal <id>` / `apply --proposal <id> --response-json <file>` / `tick --project <slug> --limit N`；curator_cards ledger 落账",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-PC-006",
+      "theme": "pi-beacon 扩展包：`skills/pi-beacon/extension.ts`（registerTool adb_dispatch + registerCommand /prism + session_start 知识提示）+ `install.sh`（幂等合并 settings.skills、拷贝扩展，支持 --dry-run）；driver_pi create_task 追加有界任务正文（Bounded task 段）",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-PC-007",
+      "theme": "定时整合：复用 ScheduleService should_run/quota 与 boundary cron 形态；curator 不自动审批/apply；hermes 兼容回归（既有 157 测试全绿）",
+      "description": ""
+    }
+  ],
+  "test_rows": [
+    {
+      "ac_id": "AC-PC-001",
+      "tc_id": "TC-PC-001",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_pi_curator.py -k 'approved_pool or empty_tick or request' --tb=short`",
+      "assertion": "exit_code_0；approved 读取；空池 tick pass；request 含 anchors",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-PC-002",
+      "tc_id": "TC-PC-002",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_pi_curator.py -k 'knowledge_scan or fallback' --tb=short`",
+      "assertion": "exit_code_0；文件锚点命中；agentmemory 不可用降级",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-PC-003",
+      "tc_id": "TC-PC-003",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_pi_curator.py -k 'card_validate' --tb=short`",
+      "assertion": "exit_code_0；缺锚点拒绝",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-PC-004",
+      "tc_id": "TC-PC-004",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_pi_curator.py -k 'write_card or outside_root' --tb=short`",
+      "assertion": "exit_code_0；写卡成功；越界 fail-closed",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-PC-005",
+      "tc_id": "TC-PC-005",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_pi_curator.py -k 'cli' --tb=short`",
+      "assertion": "exit_code_0；list/request/apply/tick 可用；ledger 落账",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-PC-006",
+      "tc_id": "TC-PC-006",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_pi_beacon.py --tb=short`",
+      "assertion": "exit_code_0；extension.ts 注册 adb_dispatch/prism；install.sh --dry-run 幂等；bounded body 追加",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-PC-007",
+      "tc_id": "TC-PC-007",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/ --tb=short`",
+      "assertion": "exit_code_0；全量回归",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-PC-001..007",
+      "tc_id": "TC-EXEC-001",
+      "layer": "",
+      "command": "`python3 -c \"import agent_delivery_bus.pi_curator; print('ok')\"`",
+      "assertion": "output_ok",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-PC-001..007",
+      "tc_id": "TC-EXEC-002",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/ --tb=short`",
+      "assertion": "exit_code_0",
+      "evidence_path": "",
+      "source": ""
+    }
+  ],
+  "task_rows": [
+    {
+      "id": "TASK-001",
+      "title": "Implement AC-PC-001: `pi_curator.py` CuratorService：读取 boundary approved 池；`tick` 对无提案空跑 p... · ac=AC-PC-001 · evidence=`.beacon/evidence/implement/pi-curator/AC-PC-001.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-002",
+      "title": "Implement AC-PC-002: knowledge_scan 扫描 knowledge_root（ideas/daily/bases）按 topic token 命中文件... · ac=AC-PC-002 · evidence=`.beacon/evidence/implement/pi-curator/AC-PC-002.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-003",
+      "title": "Implement AC-PC-003: 选题卡 schema（curator-card.v1）校验：topic/sources/knowledge_refs/market_sig... · ac=AC-PC-003 · evidence=`.beacon/evidence/implement/pi-curator/AC-PC-003.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-004",
+      "title": "Implement AC-PC-004: 写回 personal-brain：`<knowledge_root>/ideas/<slug>-<date>.md` + YAML fr... · ac=AC-PC-004 · evidence=`.beacon/evidence/implement/pi-curator/AC-PC-004.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-005",
+      "title": "Implement AC-PC-005: CLI：`adb curator list --status approved` / `request --proposal <id>` ... · ac=AC-PC-005 · evidence=`.beacon/evidence/implement/pi-curator/AC-PC-005.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-006",
+      "title": "Implement AC-PC-006: pi-beacon 扩展包：`skills/pi-beacon/extension.ts`（registerTool adb_dispat... · ac=AC-PC-006 · evidence=`.beacon/evidence/implement/pi-curator/AC-PC-006.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-007",
+      "title": "Implement AC-PC-007: 定时整合：复用 ScheduleService should_run/quota 与 boundary cron 形态；curator 不... · ac=AC-PC-007 · evidence=`.beacon/evidence/implement/pi-curator/AC-PC-007.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-008",
+      "title": "Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/pi-curator/GATES.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-009",
+      "title": "Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/pi-curator/QA-MATRIX.json`",
+      "status": "unchecked"
+    }
+  ],
+  "checkbox_errors": [],
+  "evidence_rows": [
+    {
+      "surface": "truth",
+      "authority": "requirement_truth",
+      "canonical_artifact": "docs/beacon/v0.1.1/features/pi-curator/truth.md",
+      "status": "draft",
+      "route": "truth"
+    },
+    {
+      "surface": "tests",
+      "authority": "test_truth",
+      "canonical_artifact": "docs/beacon/v0.1.1/features/pi-curator/tests.md",
+      "status": "draft",
+      "route": "qa"
+    },
+    {
+      "surface": "plan",
+      "authority": "support_advisory",
+      "canonical_artifact": "docs/beacon/v0.1.1/programs/pi-agent/program-manifest.md",
+      "status": "indexed",
+      "route": "truth"
+    },
+    {
+      "surface": "implement",
+      "authority": "support_advisory",
+      "canonical_artifact": ".beacon/evidence/implement/pi-curator/",
+      "status": "待实现",
+      "route": "implement"
+    },
+    {
+      "surface": "qa",
+      "authority": "qa_verdict",
+      "canonical_artifact": ".beacon/evidence/qa/v0.1.1/pi-curator/scorecard.json",
+      "status": "待QA",
+      "route": "qa"
+    }
+  ]
+}
