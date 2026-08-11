@@ -197,7 +197,6 @@ class PiExecutorAdapter:
             or "Request timed out" in result.stdout
             or '"stopReason":"error"' in result.stdout
             or '"finalError"' in result.stdout
-            or "agent_settled" in result.stdout
         )
         receipt = {
             "board": board,

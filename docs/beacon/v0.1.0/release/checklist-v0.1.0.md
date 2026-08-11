@@ -16,7 +16,7 @@
 
 ## Deployment
 
-- [ ] Smoke tests passed (real pi CLI acceptance — pending pi install/run)
+- [x] Smoke tests passed (real pi + DeepSeek v4 flash: dispatch → manifest → reconcile completed)
 - [ ] Database migrations tested
 
 ## Release

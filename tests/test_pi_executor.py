@@ -158,6 +158,19 @@ class PiExecutorContractTests(unittest.TestCase):
             receipt = adapter.create_task(project, stage="goal", feature="f", body="b", idempotency_key="k")
             self.assertEqual(receipt["status"], "failed")
 
+    def test_create_task_marks_done_on_successful_agent_settled(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            project = make_project(root)
+            runner = FakeRunner(FakeResult(stdout='{"type":"message_end","message":{"stopReason":"stop"}}\n{"type":"agent_settled"}'))
+            adapter = PiExecutorAdapter(
+                runner=runner,
+                which_command=lambda _name: "/usr/local/bin/pi",
+                ledger=PiRunLedger(root / "ledger"),
+            )
+            receipt = adapter.create_task(project, stage="goal", feature="f", body="b", idempotency_key="k")
+            self.assertEqual(receipt["status"], "done")
+
     def test_create_task_idempotent(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
