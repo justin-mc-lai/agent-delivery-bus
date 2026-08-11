@@ -181,4 +181,32 @@ class BeaconAdapter:
                 "pass": frozen and revision.is_file(),
                 "evidence": [str(path) for path in (truth, revision) if path.is_file()],
             }
+        if stage == "goal":
+            goal_root = root / ".beacon" / "state" / "goal" / feature
+            manifest = goal_root / "manifest.json"
+            if not manifest.is_file():
+                return {
+                    "pass": False,
+                    "reason_code": "goal_manifest_missing",
+                    "evidence": [],
+                    "resume_action": (
+                        "write .beacon/state/goal/<feature>/manifest.json with "
+                        f"dispatch_id={dispatch_id}, then reconcile again"
+                    ),
+                }
+            try:
+                payload = json.loads(manifest.read_text(encoding="utf-8"))
+            except (json.JSONDecodeError, OSError):
+                payload = {}
+            if str(payload.get("dispatch_id") or "") != str(dispatch_id):
+                return {
+                    "pass": False,
+                    "reason_code": "evidence_ownership_mismatch",
+                    "evidence": [str(manifest)],
+                    "dispatch_id": dispatch_id,
+                    "resume_action": (
+                        "fix manifest.json dispatch_id to match this dispatch, then reconcile again"
+                    ),
+                }
+            return {"pass": True, "evidence": [str(manifest)], "payload": payload}
         return {"pass": False, "reason_code": "stage_not_enabled", "evidence": []}

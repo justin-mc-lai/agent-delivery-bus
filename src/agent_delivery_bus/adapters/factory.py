@@ -12,6 +12,7 @@ from .content import ContentTruthGate
 from .hermes import HermesAdapter
 from .memory import AgentMemoryAdapter, InMemoryMemoryAdapter
 from .null import NullExecutor, NullTruthGate
+from .pi import PiExecutorAdapter
 from .spi import ExecutorAdapter, MemoryAdapter, TruthGateAdapter
 from ..registry import Project
 from ..worker_binding import DEFAULT_BINDING_PROFILE
@@ -19,6 +20,7 @@ from ..worker_binding import DEFAULT_BINDING_PROFILE
 
 EXECUTOR_ADAPTERS = {
     "hermes": HermesAdapter,
+    "pi": PiExecutorAdapter,
     "null": NullExecutor,
 }
 
@@ -141,9 +143,16 @@ class AdapterResolver:
             self._gates[key] = instance
         return instance
 
-    def for_project(self, project: Project | None = None) -> dict[str, Any]:
+    def for_project(self, project: Project | None = None, *, stage: str = "") -> dict[str, Any]:
+        stage_executor = ""
+        if project is not None:
+            policy = project.metadata.get("executor_policy")
+            if isinstance(policy, dict):
+                stages = policy.get("stages")
+                if isinstance(stages, dict) and stage:
+                    stage_executor = str(stages.get(stage) or "").strip()
         executor_name = (
-            (project.executor or self.global_executor).strip().lower()
+            (stage_executor or project.executor or self.global_executor).strip().lower()
             if project is not None
             else self.global_executor
         )

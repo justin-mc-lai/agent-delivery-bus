@@ -128,10 +128,13 @@ class DeliveryService:
         self.preflight = preflight or Preflight(self.truth_gate, self.executor)
         self.approvals = ApprovalService(storage)
 
-    def _adapters_for(self, project: Project) -> dict[str, Any]:
+    def _adapters_for(self, project: Project, *, stage: str = "") -> dict[str, Any]:
         """Resolve per-project adapters, falling back to the global pair."""
         if self.adapter_resolver is not None:
-            return self.adapter_resolver(project)
+            try:
+                return self.adapter_resolver(project, stage=stage)
+            except TypeError:
+                return self.adapter_resolver(project)
         return {
             "executor": self.executor,
             "truth_gate": self.truth_gate,
@@ -213,7 +216,7 @@ class DeliveryService:
             raise DeliveryBusError("feature_required", "feature is required")
         stage = assert_stage_enabled(stage)
 
-        adapters = self._adapters_for(project)
+        adapters = self._adapters_for(project, stage=stage)
         executor = adapters["executor"]
         truth_gate = adapters["truth_gate"]
         binding_profile = str(adapters["binding_profile"] or "")
