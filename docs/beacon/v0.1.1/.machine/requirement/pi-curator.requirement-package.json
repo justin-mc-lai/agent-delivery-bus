@@ -5,7 +5,7 @@
   "truth_package_contract": "beacon-feature-package-v2",
   "machine_json_role": "generated_state_not_truth",
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-08-11T15:01:59.497573+00:00",
+  "generated_at": "2026-08-11T15:08:39.456658+00:00",
   "feature": "pi-curator",
   "feature_slug": "pi-curator",
   "version": "v0.1.1",
@@ -20,7 +20,7 @@
   "source_hashes": {
     "truth": "dc206789c1f99975a1d21075371362d9dafa265e1351620610b1a3cb07828f1a",
     "tests": "9b906f50a3857c21a71f275633b52107aa7a3216d0b8af86517747de22304304",
-    "tasks": "108324a27868f2833bfabd1302c66eac622e719d09a2654599a04a41b512826f",
+    "tasks": "008667bf91a77b0e171ac4f3ccf4ef1e8a0fab6973eba01fbed05b46fd8d8840",
     "evidence": "aff29ed9d94a718b961dd512a8e892adcc1dc25807cc1be6afef88092230c45e"
   },
   "truth_frontmatter": {
@@ -165,42 +165,42 @@
     {
       "id": "TASK-001",
       "title": "Implement AC-PC-001: `pi_curator.py` CuratorService：读取 boundary approved 池；`tick` 对无提案空跑 p... · ac=AC-PC-001 · evidence=`.beacon/evidence/implement/pi-curator/AC-PC-001.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-002",
       "title": "Implement AC-PC-002: knowledge_scan 扫描 knowledge_root（ideas/daily/bases）按 topic token 命中文件... · ac=AC-PC-002 · evidence=`.beacon/evidence/implement/pi-curator/AC-PC-002.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-003",
       "title": "Implement AC-PC-003: 选题卡 schema（curator-card.v1）校验：topic/sources/knowledge_refs/market_sig... · ac=AC-PC-003 · evidence=`.beacon/evidence/implement/pi-curator/AC-PC-003.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-004",
       "title": "Implement AC-PC-004: 写回 personal-brain：`<knowledge_root>/ideas/<slug>-<date>.md` + YAML fr... · ac=AC-PC-004 · evidence=`.beacon/evidence/implement/pi-curator/AC-PC-004.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-005",
       "title": "Implement AC-PC-005: CLI：`adb curator list --status approved` / `request --proposal <id>` ... · ac=AC-PC-005 · evidence=`.beacon/evidence/implement/pi-curator/AC-PC-005.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-006",
       "title": "Implement AC-PC-006: pi-beacon 扩展包：`skills/pi-beacon/extension.ts`（registerTool adb_dispat... · ac=AC-PC-006 · evidence=`.beacon/evidence/implement/pi-curator/AC-PC-006.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-007",
       "title": "Implement AC-PC-007: 定时整合：复用 ScheduleService should_run/quota 与 boundary cron 形态；curator 不... · ac=AC-PC-007 · evidence=`.beacon/evidence/implement/pi-curator/AC-PC-007.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-008",
       "title": "Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/pi-curator/GATES.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-009",
