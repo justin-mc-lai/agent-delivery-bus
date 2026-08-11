@@ -1,0 +1,698 @@
+{
+  "schema_version": "1.0",
+  "feature": "pi-executor",
+  "feature_slug": "pi-executor",
+  "version": "v0.1.0",
+  "runtime_version": "v1.6.12",
+  "runtime_capability_line": "v1.3.3",
+  "required": true,
+  "reason_code": "",
+  "blocked": false,
+  "status": "pass",
+  "findings": [],
+  "report_json_path": "docs/beacon/v0.1.0/.machine/execution/requirement-clarity-pi-executor.json",
+  "report_markdown_path": "docs/beacon/v0.1.0/execution/requirement-clarity-pi-executor.md",
+  "state_path": ".beacon/state/requirement-clarity-pi-executor.json",
+  "diagram_truth": {
+    "schema_version": "1.0",
+    "version": "v0.1.0",
+    "supported": false,
+    "required": false,
+    "ready": false,
+    "diagram_types": [],
+    "state_axes": [],
+    "missing_diagram_types": [],
+    "missing_state_axes": false,
+    "complexity_signals": [],
+    "review_gates": [],
+    "qa_coverage_hints": [],
+    "evidence_lines": {},
+    "generated_at": "2026-08-11T12:50:51.752455+00:00",
+    "feature": "pi-executor",
+    "feature_slug": "pi-executor",
+    "prd_ref": "docs/beacon/v0.1.0/prd/pi-executor.md",
+    "user_story_ref": "docs/beacon/v0.1.0/user-story/pi-executor.md"
+  },
+  "domain_fsm_gate": {
+    "schema_version": "1.0",
+    "feature": "pi-executor",
+    "feature_slug": "pi-executor",
+    "version": "v0.1.0",
+    "truth_path": "docs/beacon/v0.1.0/features/pi-executor/truth.md",
+    "tests_path": "docs/beacon/v0.1.0/features/pi-executor/tests.md",
+    "required": true,
+    "blocked": false,
+    "status": "pass",
+    "reason_code": "",
+    "findings": [],
+    "requirement": {
+      "required": true,
+      "reason": "explicit_domain_mark",
+      "explicit": true,
+      "partial": true,
+      "complexity": false,
+      "business_signal": true,
+      "version_supported": false
+    },
+    "projection": {
+      "schema_version": "1.0",
+      "domain_fsm_schema": "domain-fsm.v1",
+      "entity_precedence_schema": "entity-precedence.v1",
+      "frontmatter": {
+        "slug": "pi-executor",
+        "version": "v0.1.0",
+        "status": "draft",
+        "language": "zh",
+        "domain_required": "true",
+        "ux_required": "false",
+        "package_maturity": "filled",
+        "parser_contract": "beacon-feature-package-v2",
+        "truth_source_model": "feature_package_authoritative",
+        "materials_status": "current",
+        "canonical_refs": {
+          "prd": "docs/beacon/v0.1.0/features/pi-executor/truth.md",
+          "user_story": "docs/beacon/v0.1.0/features/pi-executor/truth.md",
+          "test_case": "docs/beacon/v0.1.0/features/pi-executor/tests.md"
+        }
+      },
+      "frontmatter_errors": [],
+      "has_domain_model_section": true,
+      "has_domain_fsm_section": true,
+      "has_illegal_transition_section": true,
+      "entities": [
+        {
+          "entity": "PiExecutorAdapter",
+          "key": "name=pi, cli_name, task_skill_args",
+          "precedence": "实现 ExecutorAdapter SPI；pi CLI 缺失 → preflight fail-closed",
+          "requires": "实现 ExecutorAdapter SPI；pi CLI 缺失 → preflight fail-closed"
+        },
+        {
+          "entity": "PiRunReceipt",
+          "key": "task_id, board, idempotency_key, remote_status",
+          "precedence": "同 idempotency key 复用同一 task；不重复创建",
+          "requires": "同 idempotency key 复用同一 task；不重复创建"
+        },
+        {
+          "entity": "GoalClosureManifest",
+          "key": "dispatch_id, stage=goal, feature, files[]",
+          "precedence": "必须存在且 dispatch_id 等于当前 dispatch",
+          "requires": "必须存在且 dispatch_id 等于当前 dispatch"
+        },
+        {
+          "entity": "ExecutorRoutingPolicy",
+          "key": "project.executor, stage→executor map",
+          "precedence": "项目显式 > 策略 > 全局默认 hermes；未知执行器 fail-closed",
+          "requires": "项目显式 > 策略 > 全局默认 hermes；未知执行器 fail-closed"
+        },
+        {
+          "entity": "ExecutorRoutingPolicy",
+          "key": "1",
+          "precedence": "registry 解析",
+          "requires": "registry 解析"
+        },
+        {
+          "entity": "PiExecutorAdapter",
+          "key": "2",
+          "precedence": "pi CLI 可执行（或 fail-closed）",
+          "requires": "pi CLI 可执行（或 fail-closed）"
+        },
+        {
+          "entity": "PiRunReceipt",
+          "key": "3",
+          "precedence": "create_task 回执含 task_id",
+          "requires": "create_task 回执含 task_id"
+        },
+        {
+          "entity": "GoalClosureManifest",
+          "key": "4",
+          "precedence": "任务产出写入声明路径",
+          "requires": "任务产出写入声明路径"
+        },
+        {
+          "entity": "ClosureVerdict",
+          "key": "5",
+          "precedence": "manifest.dispatch_id == dispatch_id",
+          "requires": "manifest.dispatch_id == dispatch_id"
+        }
+      ],
+      "entity_precedence": [
+        {
+          "entity": "PiExecutorAdapter",
+          "key": "name=pi, cli_name, task_skill_args",
+          "precedence": "实现 ExecutorAdapter SPI；pi CLI 缺失 → preflight fail-closed",
+          "requires": "实现 ExecutorAdapter SPI；pi CLI 缺失 → preflight fail-closed"
+        },
+        {
+          "entity": "PiRunReceipt",
+          "key": "task_id, board, idempotency_key, remote_status",
+          "precedence": "同 idempotency key 复用同一 task；不重复创建",
+          "requires": "同 idempotency key 复用同一 task；不重复创建"
+        },
+        {
+          "entity": "GoalClosureManifest",
+          "key": "dispatch_id, stage=goal, feature, files[]",
+          "precedence": "必须存在且 dispatch_id 等于当前 dispatch",
+          "requires": "必须存在且 dispatch_id 等于当前 dispatch"
+        },
+        {
+          "entity": "ExecutorRoutingPolicy",
+          "key": "project.executor, stage→executor map",
+          "precedence": "项目显式 > 策略 > 全局默认 hermes；未知执行器 fail-closed",
+          "requires": "项目显式 > 策略 > 全局默认 hermes；未知执行器 fail-closed"
+        },
+        {
+          "entity": "ExecutorRoutingPolicy",
+          "key": "1",
+          "precedence": "registry 解析",
+          "requires": "registry 解析"
+        },
+        {
+          "entity": "PiExecutorAdapter",
+          "key": "2",
+          "precedence": "pi CLI 可执行（或 fail-closed）",
+          "requires": "pi CLI 可执行（或 fail-closed）"
+        },
+        {
+          "entity": "PiRunReceipt",
+          "key": "3",
+          "precedence": "create_task 回执含 task_id",
+          "requires": "create_task 回执含 task_id"
+        },
+        {
+          "entity": "GoalClosureManifest",
+          "key": "4",
+          "precedence": "任务产出写入声明路径",
+          "requires": "任务产出写入声明路径"
+        },
+        {
+          "entity": "ClosureVerdict",
+          "key": "5",
+          "precedence": "manifest.dispatch_id == dispatch_id",
+          "requires": "manifest.dispatch_id == dispatch_id"
+        }
+      ],
+      "aggregates": [
+        {
+          "name": "PiExecutorRun",
+          "states": [
+            "artifact_ready",
+            "closure_failed",
+            "closure_verified",
+            "evidence_pending",
+            "pi_running",
+            "submitted"
+          ],
+          "transitions": [
+            {
+              "from": "",
+              "to": "submitted",
+              "guard": "preflight pass（pi 就绪）",
+              "initial": "true"
+            },
+            {
+              "from": "submitted",
+              "to": "pi_running",
+              "guard": "create_task 回执 task_id"
+            },
+            {
+              "from": "pi_running",
+              "to": "artifact_ready",
+              "guard": "远程状态 terminal success"
+            },
+            {
+              "from": "artifact_ready",
+              "to": "evidence_pending",
+              "guard": "证据文件按 spec 存在"
+            },
+            {
+              "from": "evidence_pending",
+              "to": "closure_verified",
+              "guard": "manifest.dispatch_id 匹配"
+            },
+            {
+              "from": "evidence_pending",
+              "to": "closure_failed",
+              "guard": "缺证据 / dispatch_id 不匹配"
+            }
+          ]
+        }
+      ],
+      "illegal_transition_slots": [
+        {
+          "description": "submitted → pi_running without pi CLI（静默回落默认执行器）· TC-PI-ILL-001",
+          "aggregate": "",
+          "source": "truth"
+        },
+        {
+          "description": "artifact_ready → closure_verified with dispatch_id mismatch · TC-PI-ILL-002",
+          "aggregate": "",
+          "source": "truth"
+        },
+        {
+          "description": "任何阶段伪造/缺失 goal manifest · TC-PI-ILL-003",
+          "aggregate": "",
+          "source": "truth"
+        },
+        {
+          "description": "pi 自动 approve/auto-dispatch · TC-PI-ILL-004",
+          "aggregate": "",
+          "source": "truth"
+        },
+        {
+          "description": "release 自动放行 · TC-PI-ILL-005",
+          "aggregate": "",
+          "source": "truth"
+        }
+      ],
+      "acceptance_criteria": [
+        {
+          "ac_id": "AC-PI-001",
+          "description": "`adapters/pi.py` 实现 ExecutorAdapter SPI（name=pi；preflight/board/workspace/ensure/create/show/find/skills_available）；pi CLI 缺失 → preflight `pi_cli_unavailable` fail-closed"
+        },
+        {
+          "ac_id": "AC-PI-002",
+          "description": "create_task 通过 pi CLI 创建任务，任务 body 含 binding manifest + evidence spec；同 idempotency key 幂等复用；回执含 task_id/board"
+        },
+        {
+          "ac_id": "AC-PI-003",
+          "description": "goal closure 契约：`BeaconAdapter.closure(stage=\"goal\")` 校验 `<repo>/.beacon/state/goal/<feature>/manifest.json` 的 dispatch_id；缺失/不匹配 → evidence_ownership_mismatch，reconcile 保持 reconciling"
+        },
+        {
+          "ac_id": "AC-PI-004",
+          "description": "per-project 执行器路由：`executor=pi` 按项目解析；阶段→执行器策略（默认 hermes 兼容）；未知执行器 fail-closed"
+        },
+        {
+          "ac_id": "AC-PI-005",
+          "description": "本机 smoke：无 pi CLI → dry-run blocked（pi_cli_unavailable）；有 pi CLI → dry-run→dispatch→reconcile 闭环（含 goal manifest 校验）"
+        },
+        {
+          "ac_id": "AC-PI-006",
+          "description": "illegal：pi 自动 approve/auto-dispatch 拒绝；heartbeat 不得自动派发 pi；release 永远人工门"
+        },
+        {
+          "ac_id": "AC-PI-007",
+          "description": "兼容性：hermes 默认路径与 AdapterResolver 全局默认不变；既有 145 测试保持全绿"
+        }
+      ],
+      "bound_ac_ids": [
+        "AC-PI-001",
+        "AC-PI-002",
+        "AC-PI-003",
+        "AC-PI-006"
+      ],
+      "orphan_ac_ids": [],
+      "aggregates_missing_illegal_slots": [],
+      "raw_section_titles": [
+        "人话",
+        "User Intent Snapshot",
+        "用户旅程",
+        "First principles",
+        "Domain Model",
+        "Entity Precedence",
+        "Domain FSM — PiExecutorRun",
+        "FSM 五元组",
+        "Legal walks",
+        "Illegal transitions",
+        "Acceptance Criteria",
+        "Intent Coverage Matrix",
+        "Non-goals",
+        "Freeze readiness"
+      ]
+    },
+    "validation": {
+      "schema_version": "1.0",
+      "required": true,
+      "blocked": false,
+      "status": "pass",
+      "reason_code": "",
+      "findings": [],
+      "projection": {
+        "schema_version": "1.0",
+        "domain_fsm_schema": "domain-fsm.v1",
+        "entity_precedence_schema": "entity-precedence.v1",
+        "frontmatter": {
+          "slug": "pi-executor",
+          "version": "v0.1.0",
+          "status": "draft",
+          "language": "zh",
+          "domain_required": "true",
+          "ux_required": "false",
+          "package_maturity": "filled",
+          "parser_contract": "beacon-feature-package-v2",
+          "truth_source_model": "feature_package_authoritative",
+          "materials_status": "current",
+          "canonical_refs": {
+            "prd": "docs/beacon/v0.1.0/features/pi-executor/truth.md",
+            "user_story": "docs/beacon/v0.1.0/features/pi-executor/truth.md",
+            "test_case": "docs/beacon/v0.1.0/features/pi-executor/tests.md"
+          }
+        },
+        "frontmatter_errors": [],
+        "has_domain_model_section": true,
+        "has_domain_fsm_section": true,
+        "has_illegal_transition_section": true,
+        "entities": [
+          {
+            "entity": "PiExecutorAdapter",
+            "key": "name=pi, cli_name, task_skill_args",
+            "precedence": "实现 ExecutorAdapter SPI；pi CLI 缺失 → preflight fail-closed",
+            "requires": "实现 ExecutorAdapter SPI；pi CLI 缺失 → preflight fail-closed"
+          },
+          {
+            "entity": "PiRunReceipt",
+            "key": "task_id, board, idempotency_key, remote_status",
+            "precedence": "同 idempotency key 复用同一 task；不重复创建",
+            "requires": "同 idempotency key 复用同一 task；不重复创建"
+          },
+          {
+            "entity": "GoalClosureManifest",
+            "key": "dispatch_id, stage=goal, feature, files[]",
+            "precedence": "必须存在且 dispatch_id 等于当前 dispatch",
+            "requires": "必须存在且 dispatch_id 等于当前 dispatch"
+          },
+          {
+            "entity": "ExecutorRoutingPolicy",
+            "key": "project.executor, stage→executor map",
+            "precedence": "项目显式 > 策略 > 全局默认 hermes；未知执行器 fail-closed",
+            "requires": "项目显式 > 策略 > 全局默认 hermes；未知执行器 fail-closed"
+          },
+          {
+            "entity": "ExecutorRoutingPolicy",
+            "key": "1",
+            "precedence": "registry 解析",
+            "requires": "registry 解析"
+          },
+          {
+            "entity": "PiExecutorAdapter",
+            "key": "2",
+            "precedence": "pi CLI 可执行（或 fail-closed）",
+            "requires": "pi CLI 可执行（或 fail-closed）"
+          },
+          {
+            "entity": "PiRunReceipt",
+            "key": "3",
+            "precedence": "create_task 回执含 task_id",
+            "requires": "create_task 回执含 task_id"
+          },
+          {
+            "entity": "GoalClosureManifest",
+            "key": "4",
+            "precedence": "任务产出写入声明路径",
+            "requires": "任务产出写入声明路径"
+          },
+          {
+            "entity": "ClosureVerdict",
+            "key": "5",
+            "precedence": "manifest.dispatch_id == dispatch_id",
+            "requires": "manifest.dispatch_id == dispatch_id"
+          }
+        ],
+        "entity_precedence": [
+          {
+            "entity": "PiExecutorAdapter",
+            "key": "name=pi, cli_name, task_skill_args",
+            "precedence": "实现 ExecutorAdapter SPI；pi CLI 缺失 → preflight fail-closed",
+            "requires": "实现 ExecutorAdapter SPI；pi CLI 缺失 → preflight fail-closed"
+          },
+          {
+            "entity": "PiRunReceipt",
+            "key": "task_id, board, idempotency_key, remote_status",
+            "precedence": "同 idempotency key 复用同一 task；不重复创建",
+            "requires": "同 idempotency key 复用同一 task；不重复创建"
+          },
+          {
+            "entity": "GoalClosureManifest",
+            "key": "dispatch_id, stage=goal, feature, files[]",
+            "precedence": "必须存在且 dispatch_id 等于当前 dispatch",
+            "requires": "必须存在且 dispatch_id 等于当前 dispatch"
+          },
+          {
+            "entity": "ExecutorRoutingPolicy",
+            "key": "project.executor, stage→executor map",
+            "precedence": "项目显式 > 策略 > 全局默认 hermes；未知执行器 fail-closed",
+            "requires": "项目显式 > 策略 > 全局默认 hermes；未知执行器 fail-closed"
+          },
+          {
+            "entity": "ExecutorRoutingPolicy",
+            "key": "1",
+            "precedence": "registry 解析",
+            "requires": "registry 解析"
+          },
+          {
+            "entity": "PiExecutorAdapter",
+            "key": "2",
+            "precedence": "pi CLI 可执行（或 fail-closed）",
+            "requires": "pi CLI 可执行（或 fail-closed）"
+          },
+          {
+            "entity": "PiRunReceipt",
+            "key": "3",
+            "precedence": "create_task 回执含 task_id",
+            "requires": "create_task 回执含 task_id"
+          },
+          {
+            "entity": "GoalClosureManifest",
+            "key": "4",
+            "precedence": "任务产出写入声明路径",
+            "requires": "任务产出写入声明路径"
+          },
+          {
+            "entity": "ClosureVerdict",
+            "key": "5",
+            "precedence": "manifest.dispatch_id == dispatch_id",
+            "requires": "manifest.dispatch_id == dispatch_id"
+          }
+        ],
+        "aggregates": [
+          {
+            "name": "PiExecutorRun",
+            "states": [
+              "artifact_ready",
+              "closure_failed",
+              "closure_verified",
+              "evidence_pending",
+              "pi_running",
+              "submitted"
+            ],
+            "transitions": [
+              {
+                "from": "",
+                "to": "submitted",
+                "guard": "preflight pass（pi 就绪）",
+                "initial": "true"
+              },
+              {
+                "from": "submitted",
+                "to": "pi_running",
+                "guard": "create_task 回执 task_id"
+              },
+              {
+                "from": "pi_running",
+                "to": "artifact_ready",
+                "guard": "远程状态 terminal success"
+              },
+              {
+                "from": "artifact_ready",
+                "to": "evidence_pending",
+                "guard": "证据文件按 spec 存在"
+              },
+              {
+                "from": "evidence_pending",
+                "to": "closure_verified",
+                "guard": "manifest.dispatch_id 匹配"
+              },
+              {
+                "from": "evidence_pending",
+                "to": "closure_failed",
+                "guard": "缺证据 / dispatch_id 不匹配"
+              }
+            ]
+          }
+        ],
+        "illegal_transition_slots": [
+          {
+            "description": "submitted → pi_running without pi CLI（静默回落默认执行器）· TC-PI-ILL-001",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "artifact_ready → closure_verified with dispatch_id mismatch · TC-PI-ILL-002",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "任何阶段伪造/缺失 goal manifest · TC-PI-ILL-003",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "pi 自动 approve/auto-dispatch · TC-PI-ILL-004",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "release 自动放行 · TC-PI-ILL-005",
+            "aggregate": "",
+            "source": "truth"
+          }
+        ],
+        "acceptance_criteria": [
+          {
+            "ac_id": "AC-PI-001",
+            "description": "`adapters/pi.py` 实现 ExecutorAdapter SPI（name=pi；preflight/board/workspace/ensure/create/show/find/skills_available）；pi CLI 缺失 → preflight `pi_cli_unavailable` fail-closed"
+          },
+          {
+            "ac_id": "AC-PI-002",
+            "description": "create_task 通过 pi CLI 创建任务，任务 body 含 binding manifest + evidence spec；同 idempotency key 幂等复用；回执含 task_id/board"
+          },
+          {
+            "ac_id": "AC-PI-003",
+            "description": "goal closure 契约：`BeaconAdapter.closure(stage=\"goal\")` 校验 `<repo>/.beacon/state/goal/<feature>/manifest.json` 的 dispatch_id；缺失/不匹配 → evidence_ownership_mismatch，reconcile 保持 reconciling"
+          },
+          {
+            "ac_id": "AC-PI-004",
+            "description": "per-project 执行器路由：`executor=pi` 按项目解析；阶段→执行器策略（默认 hermes 兼容）；未知执行器 fail-closed"
+          },
+          {
+            "ac_id": "AC-PI-005",
+            "description": "本机 smoke：无 pi CLI → dry-run blocked（pi_cli_unavailable）；有 pi CLI → dry-run→dispatch→reconcile 闭环（含 goal manifest 校验）"
+          },
+          {
+            "ac_id": "AC-PI-006",
+            "description": "illegal：pi 自动 approve/auto-dispatch 拒绝；heartbeat 不得自动派发 pi；release 永远人工门"
+          },
+          {
+            "ac_id": "AC-PI-007",
+            "description": "兼容性：hermes 默认路径与 AdapterResolver 全局默认不变；既有 145 测试保持全绿"
+          }
+        ],
+        "bound_ac_ids": [
+          "AC-PI-001",
+          "AC-PI-002",
+          "AC-PI-003",
+          "AC-PI-006"
+        ],
+        "orphan_ac_ids": [],
+        "aggregates_missing_illegal_slots": [],
+        "raw_section_titles": [
+          "人话",
+          "User Intent Snapshot",
+          "用户旅程",
+          "First principles",
+          "Domain Model",
+          "Entity Precedence",
+          "Domain FSM — PiExecutorRun",
+          "FSM 五元组",
+          "Legal walks",
+          "Illegal transitions",
+          "Acceptance Criteria",
+          "Intent Coverage Matrix",
+          "Non-goals",
+          "Freeze readiness"
+        ]
+      },
+      "summary": {
+        "entity_count": 9,
+        "aggregate_count": 1,
+        "illegal_slot_count": 5,
+        "orphan_ac_count": 0,
+        "bound_ac_count": 4
+      }
+    },
+    "recommended_action": ""
+  },
+  "human_closure_contract": {
+    "required": false,
+    "research_path": "docs/beacon/v0.1.0/research/pi-executor.md",
+    "research_exists": false,
+    "source_architecture_path": "docs/beacon/v0.1.0/source-architecture/pi-executor.md",
+    "source_architecture_exists": false,
+    "required_sections": [
+      "architecture",
+      "business_flow"
+    ],
+    "missing_sections": [
+      "architecture",
+      "business_flow"
+    ],
+    "diagram_types": [],
+    "complexity_signals": []
+  },
+  "requirement_closure_contract": {
+    "required": true,
+    "chain_order": [
+      "research",
+      "prd",
+      "user_story",
+      "test_case",
+      "requirement_clarity",
+      "freeze"
+    ],
+    "human_closure_required": false,
+    "paths": {
+      "research": "docs/beacon/v0.1.0/research/pi-executor.md",
+      "prd": "docs/beacon/v0.1.0/features/pi-executor/truth.md",
+      "user_story": "docs/beacon/v0.1.0/features/pi-executor/truth.md",
+      "test_case": "docs/beacon/v0.1.0/features/pi-executor/tests.md"
+    },
+    "exists": {
+      "research": false,
+      "prd": true,
+      "user_story": true,
+      "test_case": true
+    },
+    "required_research_sections": [],
+    "missing_research_sections": [],
+    "ac_projection": {
+      "prd_ac_ids": [],
+      "user_story_ac_ids": [],
+      "test_case_ac_ids": [],
+      "upstream_ac_ids": [],
+      "missing_test_case_ac_ids": []
+    }
+  },
+  "version_projection_truth_contract": {
+    "required": false,
+    "supported": false,
+    "projection_types": [],
+    "research_path": "docs/beacon/v0.1.0/research/pi-executor.md",
+    "research_exists": false,
+    "required_fields": [
+      "prd_refs",
+      "user_story_refs",
+      "test_case_refs",
+      "coverage_notes",
+      "out_of_scope_notes"
+    ],
+    "field_presence": {
+      "prd_refs": false,
+      "user_story_refs": false,
+      "test_case_refs": false,
+      "coverage_notes": false,
+      "out_of_scope_notes": false
+    },
+    "missing_fields": [],
+    "required_refs": {
+      "prd_refs": "docs/beacon/v0.1.0/features/pi-executor/truth.md",
+      "user_story_refs": "docs/beacon/v0.1.0/features/pi-executor/truth.md",
+      "test_case_refs": "docs/beacon/v0.1.0/features/pi-executor/tests.md"
+    },
+    "missing_ref_targets": [],
+    "ready": false
+  },
+  "support_write_topology_contract": {
+    "schema_version": "1.0",
+    "supported": true,
+    "status": "pass",
+    "blocked": false,
+    "reason_code": "",
+    "diagnostics": []
+  },
+  "required_artifacts": [],
+  "scanned_files": [
+    "docs/beacon/v0.1.0/features/pi-executor/truth.md",
+    "docs/beacon/v0.1.0/features/pi-executor/tests.md",
+    "docs/beacon/v0.1.0/features/pi-executor/tasks.md",
+    "docs/beacon/v0.1.0/features/pi-executor/evidence.md"
+  ]
+}

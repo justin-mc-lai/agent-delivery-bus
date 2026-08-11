@@ -1,0 +1,249 @@
+{
+  "schema_version": "1.0",
+  "truth_map_contract": "beacon-truth-map-v1",
+  "truth_source_model": "feature_package_authoritative",
+  "truth_package_contract": "beacon-feature-package-v2",
+  "machine_json_role": "generated_state_not_truth",
+  "generated_by": "beacon.truth_map.resolver",
+  "generated_at": "2026-08-11T12:50:52.173045+00:00",
+  "feature": "pi-executor",
+  "feature_slug": "pi-executor",
+  "version": "v0.1.0",
+  "truth_authority": false,
+  "json_authority": false,
+  "source_paths": {
+    "truth": "docs/beacon/v0.1.0/features/pi-executor/truth.md",
+    "tests": "docs/beacon/v0.1.0/features/pi-executor/tests.md",
+    "tasks": "docs/beacon/v0.1.0/features/pi-executor/tasks.md",
+    "evidence": "docs/beacon/v0.1.0/features/pi-executor/evidence.md"
+  },
+  "source_hashes": {
+    "truth": "e6d28f437081de043687cedf16271880ead6d87cdfb5d880a7278ae976487d24",
+    "tests": "833ed6174148bd7f110df76ae93d8902247355bb9d5a8d60330903d70a528549",
+    "tasks": "e04d32f5c65f71df340ae7950671356566b8e3b6a43247117ad59dd1197f4d7e",
+    "evidence": "73edbff42067fca4be9d9f43ea8f166ac42acfa1e7c3d9aa9e96bbb6ec3fbcb9"
+  },
+  "truth_frontmatter": {
+    "slug": "pi-executor",
+    "version": "v0.1.0",
+    "status": "frozen",
+    "language": "zh",
+    "domain_required": "true",
+    "ux_required": "false",
+    "package_maturity": "filled",
+    "parser_contract": "beacon-feature-package-v2",
+    "truth_source_model": "feature_package_authoritative",
+    "materials_status": "current",
+    "canonical_refs": {
+      "prd": "docs/beacon/v0.1.0/features/pi-executor/truth.md",
+      "user_story": "docs/beacon/v0.1.0/features/pi-executor/truth.md",
+      "test_case": "docs/beacon/v0.1.0/features/pi-executor/tests.md"
+    }
+  },
+  "frontmatter_errors": [],
+  "acceptance_criteria": [
+    {
+      "ac_id": "AC-PI-001",
+      "theme": "`adapters/pi.py` 实现 ExecutorAdapter SPI（name=pi；preflight/board/workspace/ensure/create/show/find/skills_available）；pi CLI 缺失 → preflight `pi_cli_unavailable` fail-closed",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-PI-002",
+      "theme": "create_task 通过 pi CLI 创建任务，任务 body 含 binding manifest + evidence spec；同 idempotency key 幂等复用；回执含 task_id/board",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-PI-003",
+      "theme": "goal closure 契约：`BeaconAdapter.closure(stage=\"goal\")` 校验 `<repo>/.beacon/state/goal/<feature>/manifest.json` 的 dispatch_id；缺失/不匹配 → evidence_ownership_mismatch，reconcile 保持 reconciling",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-PI-004",
+      "theme": "per-project 执行器路由：`executor=pi` 按项目解析；阶段→执行器策略（默认 hermes 兼容）；未知执行器 fail-closed",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-PI-005",
+      "theme": "本机 smoke：无 pi CLI → dry-run blocked（pi_cli_unavailable）；有 pi CLI → dry-run→dispatch→reconcile 闭环（含 goal manifest 校验）",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-PI-006",
+      "theme": "illegal：pi 自动 approve/auto-dispatch 拒绝；heartbeat 不得自动派发 pi；release 永远人工门",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-PI-007",
+      "theme": "兼容性：hermes 默认路径与 AdapterResolver 全局默认不变；既有 145 测试保持全绿",
+      "description": ""
+    }
+  ],
+  "test_rows": [
+    {
+      "ac_id": "AC-PI-001",
+      "tc_id": "TC-PI-001",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_pi_executor.py -k 'spi or cli_missing' --tb=short`",
+      "assertion": "exit_code_0；SPI 方法齐全；pi CLI 缺失 → pi_cli_unavailable",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-PI-002",
+      "tc_id": "TC-PI-002",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_pi_executor.py -k 'create_task or idempotency' --tb=short`",
+      "assertion": "exit_code_0；body 含 binding/evidence；同 key 复用 task",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-PI-003",
+      "tc_id": "TC-PI-003",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_pi_executor.py -k 'goal_closure or manifest' --tb=short`",
+      "assertion": "exit_code_0；goal manifest dispatch_id 校验；缺失/不匹配保持 reconciling",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-PI-004",
+      "tc_id": "TC-PI-004",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_pi_executor.py -k 'routing or unknown' --tb=short`",
+      "assertion": "exit_code_0；executor=pi 按项目解析；未知执行器 fail-closed",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-PI-005",
+      "tc_id": "TC-PI-005",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_pi_executor.py -k 'smoke or reconcile' --tb=short`",
+      "assertion": "exit_code_0；dry-run→dispatch→reconcile 闭环",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-PI-006",
+      "tc_id": "TC-PI-006",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_pi_executor.py -k 'illegal or auto' --tb=short`",
+      "assertion": "exit_code_0；auto approve/auto dispatch/heartbeat 自动派发全拒",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-PI-007",
+      "tc_id": "TC-PI-007",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_worker_binding.py tests/test_registry_routing.py --tb=short`",
+      "assertion": "exit_code_0；hermes 兼容路径不变",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-PI-001..007",
+      "tc_id": "TC-EXEC-001",
+      "layer": "",
+      "command": "`python3 -c \"import agent_delivery_bus.adapters.pi; print('ok')\"`",
+      "assertion": "output_ok",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-PI-001..007",
+      "tc_id": "TC-EXEC-002",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/ --tb=short`",
+      "assertion": "exit_code_0",
+      "evidence_path": "",
+      "source": ""
+    }
+  ],
+  "task_rows": [
+    {
+      "id": "TASK-001",
+      "title": "Implement AC-PI-001: `adapters/pi.py` 实现 ExecutorAdapter SPI（name=pi；preflight/board/works... · ac=AC-PI-001 · evidence=`.beacon/evidence/implement/pi-executor/AC-PI-001.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-002",
+      "title": "Implement AC-PI-002: create_task 通过 pi CLI 创建任务，任务 body 含 binding manifest + evidence spec... · ac=AC-PI-002 · evidence=`.beacon/evidence/implement/pi-executor/AC-PI-002.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-003",
+      "title": "Implement AC-PI-003: goal closure 契约：`BeaconAdapter.closure(stage=\"goal\")` 校验 `<repo>/.bea... · ac=AC-PI-003 · evidence=`.beacon/evidence/implement/pi-executor/AC-PI-003.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-004",
+      "title": "Implement AC-PI-004: per-project 执行器路由：`executor=pi` 按项目解析；阶段→执行器策略（默认 hermes 兼容）；未知执行器 fa... · ac=AC-PI-004 · evidence=`.beacon/evidence/implement/pi-executor/AC-PI-004.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-005",
+      "title": "Implement AC-PI-005: 本机 smoke：无 pi CLI → dry-run blocked（pi_cli_unavailable）；有 pi CLI → dr... · ac=AC-PI-005 · evidence=`.beacon/evidence/implement/pi-executor/AC-PI-005.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-006",
+      "title": "Implement AC-PI-006: illegal：pi 自动 approve/auto-dispatch 拒绝；heartbeat 不得自动派发 pi；release 永远人工门 · ac=AC-PI-006 · evidence=`.beacon/evidence/implement/pi-executor/AC-PI-006.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-007",
+      "title": "Implement AC-PI-007: 兼容性：hermes 默认路径与 AdapterResolver 全局默认不变；既有 145 测试保持全绿 · ac=AC-PI-007 · evidence=`.beacon/evidence/implement/pi-executor/AC-PI-007.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-008",
+      "title": "Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/pi-executor/GATES.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-009",
+      "title": "Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/pi-executor/QA-MATRIX.json`",
+      "status": "unchecked"
+    }
+  ],
+  "checkbox_errors": [],
+  "evidence_rows": [
+    {
+      "surface": "truth",
+      "authority": "requirement_truth",
+      "canonical_artifact": "docs/beacon/v0.1.0/features/pi-executor/truth.md",
+      "status": "draft",
+      "route": "truth"
+    },
+    {
+      "surface": "tests",
+      "authority": "test_truth",
+      "canonical_artifact": "docs/beacon/v0.1.0/features/pi-executor/tests.md",
+      "status": "draft",
+      "route": "qa"
+    },
+    {
+      "surface": "plan",
+      "authority": "support_advisory",
+      "canonical_artifact": "docs/beacon/v0.1.0/programs/pi-agent/program-manifest.md",
+      "status": "indexed",
+      "route": "truth"
+    },
+    {
+      "surface": "implement",
+      "authority": "support_advisory",
+      "canonical_artifact": ".beacon/evidence/implement/pi-executor/",
+      "status": "待实现",
+      "route": "implement"
+    },
+    {
+      "surface": "qa",
+      "authority": "qa_verdict",
+      "canonical_artifact": ".beacon/evidence/qa/v0.1.0/pi-executor/scorecard.json",
+      "status": "待QA",
+      "route": "qa"
+    }
+  ]
+}

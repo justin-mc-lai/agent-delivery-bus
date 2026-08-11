@@ -1,0 +1,88 @@
+{
+  "schema_version": "1.0",
+  "feature": "pi-executor",
+  "feature_slug": "pi-executor",
+  "version": "v0.1.0",
+  "current_revision_id": "R1",
+  "lifecycle_status": "frozen",
+  "updated_at": "2026-08-11T12:50:52.025841+00:00",
+  "revisions": [
+    {
+      "revision_id": "R1",
+      "feature_slug": "pi-executor",
+      "source_revision_id": null,
+      "reason": "draft",
+      "doc_status": "frozen",
+      "delivery_status": "idle",
+      "baseline_hash": "sha256:f4fcf11794c5961ae5f6519bfd959d77551eaaab259f5b1ae4e49f28fee43012",
+      "superseded_by": null,
+      "created_at": "2026-08-11T12:50:52.024299+00:00",
+      "frozen_at": "2026-08-11T12:50:52.037198+00:00",
+      "accepted_at": null,
+      "accepted_by": null
+    }
+  ],
+  "stories": [
+    {
+      "story_id": "US-001",
+      "revision_id": "R1",
+      "title": "pi-executor",
+      "priority": "medium",
+      "status": "frozen",
+      "items": [
+        {
+          "id": "AC-001",
+          "kind": "ac",
+          "theme": "general",
+          "text": "Acceptance criteria TBD",
+          "required": true,
+          "status": "draft",
+          "implemented_by_run_id": null,
+          "verified_by_run_id": null,
+          "accepted_at": null,
+          "changed_in_revision": null,
+          "story_id": "",
+          "details": [],
+          "source": "fallback"
+        },
+        {
+          "id": "TASK-001",
+          "kind": "task",
+          "text": "Implement current frozen revision",
+          "required": true,
+          "status": "draft",
+          "implemented_by_run_id": null,
+          "verified_by_run_id": null,
+          "accepted_at": null,
+          "changed_in_revision": null
+        },
+        {
+          "id": "TEST-001",
+          "kind": "test",
+          "text": "Verify AC-001 — Acceptance criteria TBD",
+          "required": true,
+          "status": "draft",
+          "implemented_by_run_id": null,
+          "verified_by_run_id": null,
+          "accepted_at": null,
+          "changed_in_revision": null,
+          "covers": [
+            "AC-001"
+          ],
+          "story_id": "",
+          "source": "fallback"
+        }
+      ],
+      "research_projection": {
+        "schema_version": "1.0",
+        "feature": "pi-executor",
+        "version": "v0.1.0",
+        "source": "research:/Users/apple/Developer/Personal/products/agent-delivery-bus/docs/beacon/v0.1.0/research/pi-executor.md",
+        "present": false,
+        "section_count": 0,
+        "sections": {},
+        "derived_items": []
+      }
+    }
+  ]
+}

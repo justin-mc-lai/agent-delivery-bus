@@ -3,9 +3,9 @@ schema_version: "1.0"
 project_root: "."
 topology_kind: "single_repo"
 default_execution_service: "agent-delivery-bus"
-transaction_id: "tx-project-governance-f091dbea4b584106"
-committed_at: "2026-08-10T08:49:31.796924+00:00"
-source_hash: "f091dbea4b5841063e50316955139839c6f8ff1c160f342af02354f0200f0896"
+transaction_id: "tx-project-governance-3b676955eddb4afe"
+committed_at: "2026-08-11T12:50:52.178535+00:00"
+source_hash: "3b676955eddb4afeb4e8ed82fb8e8aeb1adcb11f9031d6cd8cf3191b69876d9e"
 event_type: "freeze-version-contract"
 parser_contract: "beacon-project-governance-v1"
 ---
@@ -152,15 +152,15 @@ parser_contract: "beacon-project-governance-v1"
 - branch_guard_mode: `strict`
 - validation_state: `active`
 - per_service_canonical_branch:
-  - `agent-delivery-bus`: `main`
+  - `agent-delivery-bus`: `beacon/v0.1.0`
 - truth_canonical: `main`
 - branch_governance_template: `standard-feature`
 - previous_version_baseline_branch: `main`
 - next_version_feature_branch: `beacon/v0.1.0/<feature-slug>`
 - worktree_mode: `dedicated`
-- worktree_path: `pi-executor`
+- worktree_path: `.beacon/worktrees/v0.1.0`
 - require_workspace_admission: `true`
-- merge_direction_policy: `master->main`
-- merge_direction_policy: `main->uat`
-- forbidden_directions: `uat->main`
+- merge_direction_policy: `master->beacon/v0.1.0`
+- merge_direction_policy: `beacon/v0.1.0->uat`
+- forbidden_directions: `uat->beacon/v0.1.0`
 - forbidden_directions: `uat_as_feature_base`

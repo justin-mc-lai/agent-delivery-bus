@@ -1,7 +1,7 @@
 ---
 slug: pi-executor
 version: v0.1.0
-status: draft
+status: frozen
 language: zh
 domain_required: true
 ux_required: false
