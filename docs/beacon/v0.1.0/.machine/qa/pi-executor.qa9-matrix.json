@@ -1,0 +1,15 @@
+{
+  "schema": "qa9-matrix.v1",
+  "feature": "pi-executor",
+  "version": "v0.1.0",
+  "walks": [
+    {"walk": "W-PI-01", "ac": "AC-PI-005", "path": "submitted→pi_running→artifact_ready→evidence_pending→closure_verified", "tc": "TC-PI-005"},
+    {"walk": "W-PI-02", "ac": "AC-PI-003", "path": "goal dispatch→manifest 校验→completed", "tc": "TC-PI-003"},
+    {"walk": "W-PI-03", "ac": "AC-PI-007", "path": "hermes 兼容", "tc": "TC-PI-007"},
+    {"walk": "I-PI-01", "ac": "AC-PI-006", "path": "illegal 无 pi CLI 静默回落", "tc": "TC-PI-ILL-001"},
+    {"walk": "I-PI-02", "ac": "AC-PI-003", "path": "illegal dispatch_id 不匹配", "tc": "TC-PI-ILL-002"},
+    {"walk": "I-PI-03", "ac": "AC-PI-003", "path": "illegal 伪造/缺失 manifest", "tc": "TC-PI-ILL-003"},
+    {"walk": "I-PI-04", "ac": "AC-PI-006", "path": "illegal auto approve/dispatch", "tc": "TC-PI-ILL-004"},
+    {"walk": "I-PI-05", "ac": "AC-PI-006", "path": "illegal release 自动放行", "tc": "TC-PI-ILL-005"}
+  ]
+}

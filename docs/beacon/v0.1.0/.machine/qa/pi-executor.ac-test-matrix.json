@@ -1,0 +1,14 @@
+{
+  "schema": "ac-test-matrix.v1",
+  "feature": "pi-executor",
+  "version": "v0.1.0",
+  "rows": [
+    {"ac": "AC-PI-001", "tc": ["TC-PI-001", "TC-EXEC-001"]},
+    {"ac": "AC-PI-002", "tc": ["TC-PI-002"]},
+    {"ac": "AC-PI-003", "tc": ["TC-PI-003", "TC-PI-ILL-002", "TC-PI-ILL-003"]},
+    {"ac": "AC-PI-004", "tc": ["TC-PI-004"]},
+    {"ac": "AC-PI-005", "tc": ["TC-PI-005"]},
+    {"ac": "AC-PI-006", "tc": ["TC-PI-006", "TC-PI-ILL-001", "TC-PI-ILL-004", "TC-PI-ILL-005"]},
+    {"ac": "AC-PI-007", "tc": ["TC-PI-007", "TC-EXEC-002"]}
+  ]
+}

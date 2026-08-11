@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "version": "v0.1.0",
+  "generated_at": "2026-08-11T12:56:58.819945Z",
+  "features": [
+    {
+      "slug": "pi-executor",
+      "status": "template",
+      "language": "zh",
+      "truth_paths": {
+        "prd": "docs/beacon/v0.1.0/features/pi-executor/truth.md",
+        "user_story": "docs/beacon/v0.1.0/features/pi-executor/truth.md",
+        "test_case": "docs/beacon/v0.1.0/features/pi-executor/tests.md"
+      },
+      "evidence_paths": {
+        "qa_matrix": "docs/beacon/v0.1.0/.machine/qa/pi-executor.evidence-contract.json",
+        "freeze_state": "docs/beacon/v0.1.0/.machine/requirement/pi-executor.freeze-state.json"
+      }
+    }
+  ],
+  "version_level_paths": {
+    "research_dir": "docs/beacon/v0.1.0/research/",
+    "execution_dir": "docs/beacon/v0.1.0/execution/",
+    "release_dir": "docs/beacon/v0.1.0/release/",
+    "change_dir": "docs/beacon/v0.1.0/change/",
+    "design_dir": "docs/beacon/v0.1.0/design/"
+  }
+}
