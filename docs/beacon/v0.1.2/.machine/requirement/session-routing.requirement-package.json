@@ -5,7 +5,7 @@
   "truth_package_contract": "beacon-feature-package-v2",
   "machine_json_role": "generated_state_not_truth",
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-08-12T15:28:19.181575+00:00",
+  "generated_at": "2026-08-12T15:39:03.656471+00:00",
   "feature": "session-routing",
   "feature_slug": "session-routing",
   "version": "v0.1.2",
@@ -20,7 +20,7 @@
   "source_hashes": {
     "truth": "2654219330d12217a34c165cf31aae2e345a1ff9a42514abf3d2973a305ca084",
     "tests": "b7fec915df80cea9d9dbb05cc844f060cacd4701be04587da8a028dfd8771466",
-    "tasks": "ddae81dd97651e0f1652dc586a7517ff8f3379025420583cde349b122d2ebe70",
+    "tasks": "faee080eba7f3d6163b27c699a1030e1943f409d1001e58560deb3ca94f79d27",
     "evidence": "ddc0e1d4bea85319157ce5a1b6a99c6fa0620c1e6c1875e17ad171e76396180c"
   },
   "truth_frontmatter": {
@@ -165,42 +165,42 @@
     {
       "id": "TASK-001",
       "title": "Implement AC-SR-001: thread\\ · ac=AC-SR-001 · evidence=`.beacon/evidence/implement/session-routing/AC-SR-001.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-002",
       "title": "Implement AC-SR-002: dispatch envelope v1.1：normalized_request 增 channel/channel_thread/ac... · ac=AC-SR-002 · evidence=`.beacon/evidence/implement/session-routing/AC-SR-002.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-003",
       "title": "Implement AC-SR-003: codex · ac=AC-SR-003 · evidence=`.beacon/evidence/implement/session-routing/AC-SR-003.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-004",
       "title": "Implement AC-SR-004: 任务 body 注入 `### Session context`；pi create_task 支持 session_id → `--se... · ac=AC-SR-004 · evidence=`.beacon/evidence/implement/session-routing/AC-SR-004.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-005",
       "title": "Implement AC-SR-005: reconcile 回发：dispatch 账本记录 channel_thread；HermesAdapter.deliver() 用 `... · ac=AC-SR-005 · evidence=`.beacon/evidence/implement/session-routing/AC-SR-005.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-006",
       "title": "Implement AC-SR-006: 审批渠道身份：approve 支持 `--channel-actor <open_id>`；reserve 校验绑定；不匹配 → appr... · ac=AC-SR-006 · evidence=`.beacon/evidence/implement/session-routing/AC-SR-006.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-007",
       "title": "Implement AC-SR-007: 自然语言全流程：bind → intent parse --agent → envelope 确认 → dispatch → pi 执行 ... · ac=AC-SR-007 · evidence=`.beacon/evidence/implement/session-routing/AC-SR-007.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-008",
       "title": "Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/session-routing/GATES.json`",
-      "status": "unchecked"
+      "status": "checked"
     },
     {
       "id": "TASK-009",

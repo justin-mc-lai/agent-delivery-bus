@@ -218,6 +218,7 @@ def build_parser() -> argparse.ArgumentParser:
     approve.add_argument("--stage", required=True, choices=["implement", "freeze", "release"])
     approve.add_argument("--feature", required=True)
     approve.add_argument("--ttl", type=int, default=900)
+    approve.add_argument("--channel-actor", default="")
     approve.add_argument("--json", action="store_true")
 
     approvals = sub.add_parser("approvals", help="list pending / awaiting human approvals")
@@ -240,9 +241,30 @@ def build_parser() -> argparse.ArgumentParser:
     intent_parse = intent_sub.add_parser("parse", help="parse utterance into IntentEnvelope JSON")
     intent_parse.add_argument("--utterance", required=True)
     intent_parse.add_argument("--project", default="", help="optional forced project slug")
+    intent_parse.add_argument("--agent", default="", help="target executor: codex|claude|pi")
     intent_parse.add_argument("--json", action="store_true")
     intent_keywords = intent_sub.add_parser("keywords", help="channel-agnostic canonical keyword map (machine-readable)")
     intent_keywords.add_argument("--json", action="store_true")
+
+    session = sub.add_parser("session", help="agent session registry (channel/actor -> target executor)")
+    session_sub = session.add_subparsers(dest="session_command", required=True)
+    session_bind = session_sub.add_parser("bind", help="bind a channel thread to a target agent session")
+    session_bind.add_argument("--channel", required=True)
+    session_bind.add_argument("--thread", required=True)
+    session_bind.add_argument("--actor", default="")
+    session_bind.add_argument("--host-session", default="")
+    session_bind.add_argument("--target", default="")
+    session_bind.add_argument("--target-session", default="")
+    session_bind.add_argument("--json", action="store_true")
+    session_resolve = session_sub.add_parser("resolve", help="resolve a session id")
+    session_resolve.add_argument("--session-id", required=True)
+    session_resolve.add_argument("--json", action="store_true")
+    session_list = session_sub.add_parser("list", help="list session bindings")
+    session_list.add_argument("--channel", default="")
+    session_list.add_argument("--json", action="store_true")
+    session_status = session_sub.add_parser("status", help="show binding state")
+    session_status.add_argument("--session-id", required=True)
+    session_status.add_argument("--json", action="store_true")
 
     dispatch = sub.add_parser("dispatch")
     dispatch.add_argument("--project", required=True)
@@ -250,6 +272,12 @@ def build_parser() -> argparse.ArgumentParser:
     dispatch.add_argument("--feature", required=True)
     dispatch.add_argument("--approval-token", default="")
     dispatch.add_argument("--dry-run", action="store_true")
+    dispatch.add_argument("--channel", default="")
+    dispatch.add_argument("--channel-thread", default="")
+    dispatch.add_argument("--actor-id", default="")
+    dispatch.add_argument("--host-session", default="")
+    dispatch.add_argument("--target-executor", default="")
+    dispatch.add_argument("--target-session", default="")
     dispatch.add_argument("--json", action="store_true")
 
     task = sub.add_parser("task")
@@ -1154,8 +1182,29 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                 stage=args.stage,
                 feature=args.feature,
                 ttl_seconds=args.ttl,
+                channel_actor=getattr(args, "channel_actor", ""),
             )
             return envelope(status="pass", data=issued)
+
+        if args.command == "session":
+            sessions = SessionRegistry(storage)
+            if args.session_command == "bind":
+                binding = sessions.bind(
+                    channel=args.channel,
+                    channel_thread=args.thread,
+                    actor_id=args.actor,
+                    host_session=args.host_session,
+                    target_executor=args.target,
+                    target_session=args.target_session,
+                )
+                return envelope(status="pass", data=binding)
+            if args.session_command == "resolve":
+                return envelope(status="pass", data=sessions.resolve(args.session_id))
+            if args.session_command == "list":
+                return envelope(status="pass", data={"sessions": sessions.list(channel=args.channel)})
+            if args.session_command == "status":
+                return envelope(status="pass", data=sessions.status(args.session_id))
+            raise DeliveryBusError("session_command_invalid", f"Unknown session command: {args.session_command}")
 
         if args.command == "approvals":
             if args.approvals_command == "awaiting":
@@ -1181,6 +1230,7 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                 parsed = parser.parse(
                     args.utterance,
                     project=(args.project or None),
+                    agent=getattr(args, "agent", ""),
                 )
                 return envelope(
                     status=str(parsed.get("status") or "pass"),
@@ -1203,12 +1253,41 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
             raise DeliveryBusError("intent_command_invalid", f"Unknown intent command: {args.intent_command}")
 
         if args.command == "dispatch":
+            sessions = SessionRegistry(storage)
+            target_executor = str(getattr(args, "target_executor", "") or "").strip()
+            target_session = str(getattr(args, "target_session", "") or "").strip()
+            channel = str(getattr(args, "channel", "") or "").strip()
+            channel_thread = str(getattr(args, "channel_thread", "") or "").strip()
+            if channel and channel_thread and not target_executor:
+                try:
+                    binding = sessions.resolve_by_thread(
+                        channel=channel,
+                        channel_thread=channel_thread,
+                        actor_id=getattr(args, "actor_id", "") or "",
+                        host_session=getattr(args, "host_session", "") or "",
+                    )
+                    target_executor = str(binding.get("target_executor") or "").strip()
+                    target_session = str(binding.get("target_session") or "").strip()
+                except DeliveryBusError as exc:
+                    return envelope(
+                        status="blocked",
+                        blocked=True,
+                        reason_code=str(exc.reason_code or "session_unresolved"),
+                        resume_action=str(exc.resume_action or "run `adb session bind` first"),
+                        data={"error": str(exc)},
+                    )
             result = service.dispatch(
                 project_slug=args.project,
                 stage=args.stage,
                 feature=args.feature,
                 approval_token=args.approval_token,
                 dry_run=args.dry_run,
+                channel=channel,
+                channel_thread=channel_thread,
+                actor_id=getattr(args, "actor_id", "") or "",
+                host_session_ref=getattr(args, "host_session", "") or "",
+                target_executor=target_executor,
+                target_session_ref=target_session,
             )
             return envelope(
                 status=str(result.get("status") or "pass"),

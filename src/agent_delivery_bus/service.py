@@ -35,15 +35,27 @@ def normalized_request(
     stage: str,
     feature: str,
     binding_profile: str = "",
+    channel: str = "",
+    channel_thread: str = "",
+    actor_id: str = "",
+    host_session_ref: str = "",
+    target_executor: str = "",
+    target_session_ref: str = "",
 ) -> dict[str, Any]:
     return {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "project_slug": project.slug,
         "canonical_repo": project.repo,
         "docs_version": project.docs_version,
         "stage": stage.strip().lower(),
         "feature": feature.strip(),
         "binding_profile": binding_profile or DEFAULT_BINDING_PROFILE,
+        "channel": str(channel or "").strip(),
+        "channel_thread": str(channel_thread or "").strip(),
+        "actor_id": str(actor_id or "").strip(),
+        "host_session_ref": str(host_session_ref or "").strip(),
+        "target_executor": str(target_executor or "").strip(),
+        "target_session_ref": str(target_session_ref or "").strip(),
     }
 
 
@@ -162,6 +174,25 @@ class DeliveryService:
         query = f"{project.slug} {stage} {feature}".strip()
         return self.memory.recall(project_slug=project.slug, query=query, limit=8)
 
+    def _deliver(self, dispatch: dict[str, Any], text: str) -> dict[str, Any]:
+        request = dispatch.get("request") if isinstance(dispatch.get("request"), dict) else {}
+        thread = str(request.get("channel_thread") or "").strip()
+        if not thread:
+            return {"skipped": True}
+        try:
+            project = self.registry.resolve(slug=dispatch["project_slug"])
+        except DeliveryBusError:
+            return {"skipped": True}
+        executor = self._adapters_for(project)["executor"]
+        deliver = getattr(executor, "deliver", None)
+        if not callable(deliver):
+            return {"skipped": True}
+        try:
+            deliver(text, channel_thread=thread, channel=str(request.get("channel") or "feishu"))
+            return {"delivered": True, "channel_thread": thread}
+        except Exception as exc:  # noqa: BLE001 - delivery must not break reconcile
+            return {"delivered": False, "reason_code": "deliver_failed", "reason": str(exc)[:200]}
+
     def _safe_writeback(
         self,
         *,
@@ -207,7 +238,19 @@ class DeliveryService:
         approval_token: str = "",
         dry_run: bool = False,
         forced_idempotency_key: str = "",
+        channel: str = "",
+        channel_thread: str = "",
+        actor_id: str = "",
+        host_session_ref: str = "",
+        target_executor: str = "",
+        target_session_ref: str = "",
     ) -> dict[str, Any]:
+        if channel.strip() and not channel_thread.strip():
+            raise DeliveryBusError(
+                "session_identity_incomplete",
+                "channel requires channel_thread for session-aware dispatch",
+                resume_action="pass --channel-thread or run `adb session bind` first",
+            )
         project = self.registry.resolve(slug=project_slug)
         if not project.dispatchable:
             raise DeliveryBusError("project_not_dispatchable", f"Project {project.slug} is not dispatchable")
@@ -235,6 +278,12 @@ class DeliveryService:
             stage=stage,
             feature=feature,
             binding_profile=binding_profile,
+            channel=channel,
+            channel_thread=channel_thread,
+            actor_id=actor_id,
+            host_session_ref=host_session_ref,
+            target_executor=target_executor,
+            target_session_ref=target_session_ref,
         )
         digest = request_digest(request)
         idempotency_key = forced_idempotency_key or f"adb-v1-{digest}"
@@ -482,11 +531,7 @@ class DeliveryService:
                     "resume_action": f"run `adb workflow verify --name {binding_profile}` before real dispatch",
                     "dispatch": dispatch,
                 }
-            receipt = executor.create_task(
-                project,
-                stage=stage,
-                feature=feature,
-                body=task_body(
+            task_body_text = self._task_body_with_session(
                     project,
                     stage=stage,
                     feature=feature,
@@ -494,11 +539,29 @@ class DeliveryService:
                     dispatch_id=dispatch_id,
                     binding_profile=binding_profile,
                     profile_config=profile_config,
-                ),
-                idempotency_key=idempotency_key,
-                assignee=runner_profile,
-                skills=binding.get("skills") or [],
-            )
+                    request=request,
+                )
+            try:
+                receipt = executor.create_task(
+                    project,
+                    stage=stage,
+                    feature=feature,
+                    body=task_body_text,
+                    idempotency_key=idempotency_key,
+                    assignee=runner_profile,
+                    skills=binding.get("skills") or [],
+                    session_id=request.get("target_session_ref") or "",
+                )
+            except TypeError:
+                receipt = executor.create_task(
+                    project,
+                    stage=stage,
+                    feature=feature,
+                    body=task_body_text,
+                    idempotency_key=idempotency_key,
+                    assignee=runner_profile,
+                    skills=binding.get("skills") or [],
+                )
             dispatch = self.storage.transition(
                 dispatch_id,
                 expected_from="queued",
@@ -525,6 +588,7 @@ class DeliveryService:
                     "record_count": len(memory.get("records") or []),
                 },
             }
+
         except CommandTimedOut as exc:
             dispatch = self.storage.transition(
                 dispatch_id,
@@ -561,6 +625,40 @@ class DeliveryService:
                 "resume_action": exc.resume_action,
                 "dispatch": dispatch,
             }
+
+    @staticmethod
+    def _task_body_with_session(
+        project: Project,
+        *,
+        stage: str,
+        feature: str,
+        memory_summary: str,
+        dispatch_id: str,
+        binding_profile: str,
+        profile_config: dict[str, Any] | None,
+        request: dict[str, Any],
+    ) -> str:
+        body = task_body(
+            project,
+            stage=stage,
+            feature=feature,
+            memory_summary=memory_summary,
+            dispatch_id=dispatch_id,
+            binding_profile=binding_profile,
+            profile_config=profile_config,
+        )
+        if request.get("channel_thread"):
+            body += (
+                "\n\n### Session context\n"
+                f"- channel: {request.get('channel') or ''}\n"
+                f"- channel_thread: {request.get('channel_thread') or ''}\n"
+                f"- actor_id: {request.get('actor_id') or ''}\n"
+                f"- host_session_ref: {request.get('host_session_ref') or ''}\n"
+                f"- target_executor: {request.get('target_executor') or ''}\n"
+                f"- target_session_ref: {request.get('target_session_ref') or ''}\n"
+                "- result must be delivered back to channel_thread after reconcile"
+            )
+        return body
 
     def reconcile(self, dispatch_id: str) -> dict[str, Any]:
         dispatch = self.storage.get_dispatch(dispatch_id)
@@ -604,6 +702,10 @@ class DeliveryService:
                     reason_code="executor_terminal_failure",
                     payload={"task": task},
                 )
+            delivery = self._deliver(
+                dispatch,
+                f"blocked {dispatch['stage']}/{dispatch['feature']} dispatch={dispatch_id} ({status})",
+            )
             writeback = self._safe_writeback(
                 project_slug=project.slug,
                 stage=dispatch["stage"],
@@ -618,6 +720,7 @@ class DeliveryService:
                 "reason_code": "executor_terminal_failure",
                 "dispatch": dispatch,
                 "memory_writeback": writeback,
+                "delivery": delivery,
             }
         if status not in TERMINAL_EXECUTOR_SUCCESS:
             return {"status": dispatch["state"], "blocked": False, "remote_status": status, "dispatch": dispatch}
@@ -651,6 +754,10 @@ class DeliveryService:
             event_type="closure_verified",
             payload={"closure": closure, "task": task},
         )
+        delivery = self._deliver(
+            dispatch,
+            f"completed {dispatch['stage']}/{dispatch['feature']} dispatch={dispatch_id}",
+        )
         writeback = self._safe_writeback(
             project_slug=project.slug,
             stage=dispatch["stage"],
@@ -665,4 +772,5 @@ class DeliveryService:
             "closure": closure,
             "dispatch": dispatch,
             "memory_writeback": writeback,
+            "delivery": delivery,
         }

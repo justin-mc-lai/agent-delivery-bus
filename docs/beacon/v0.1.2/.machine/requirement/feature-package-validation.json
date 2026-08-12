@@ -6,7 +6,7 @@
   "status": "pass",
   "blocked": false,
   "reason_code": "",
-  "generated_at": "2026-08-12T15:28:19.056104+00:00",
+  "generated_at": "2026-08-12T15:39:03.406557+00:00",
   "package_dir": "docs/beacon/v0.1.2/features/session-routing",
   "truth_frontmatter": {
     "slug": "session-routing",
@@ -33,7 +33,7 @@
   "checkbox_gate_bypass": false,
   "task_evidence_gate": {
     "pass": true,
-    "checked_ok": 0,
+    "checked_ok": 8,
     "checked_bad": 0,
     "unbound": 0,
     "findings": [],

@@ -91,8 +91,10 @@ class IntentParser:
         *,
         project: str | None = None,
         require_project: bool = True,
+        agent: str = "",
     ) -> dict[str, Any]:
         text = (utterance or "").strip()
+        self._target_executor = str(agent or "").strip()
         if not text:
             return self._blocked(
                 utterance=text,
@@ -365,6 +367,7 @@ class IntentParser:
             "utterance_hash": _utterance_hash(utterance),
             "utterance": utterance,
             "action": action,
+            "target_executor": getattr(self, "_target_executor", ""),
             "project_slug": project_slug,
             "project_candidates": candidates,
             "stage": stage,

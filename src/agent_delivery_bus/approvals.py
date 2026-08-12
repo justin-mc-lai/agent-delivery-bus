@@ -29,6 +29,7 @@ class ApprovalService:
         stage: str,
         feature: str,
         ttl_seconds: int,
+        channel_actor: str = "",
     ) -> dict[str, Any]:
         if stage not in RESTRICTED_STAGES:
             raise DeliveryBusError(
@@ -45,14 +46,15 @@ class ApprovalService:
         self.storage.conn.execute(
             """
             INSERT INTO approvals(
-              approval_id,token_hash,actor,project_slug,stage,feature,
+              approval_id,token_hash,actor,channel_actor,project_slug,stage,feature,
               expires_at,state,created_at
-            ) VALUES(?,?,?,?,?,?,?,'issued',?)
+            ) VALUES(?,?,?,?,?,?,?,?,'issued',?)
             """,
             (
                 approval_id,
                 token_hash(token),
                 actor.strip(),
+                str(channel_actor or "").strip(),
                 project_slug,
                 stage,
                 feature,
@@ -64,6 +66,7 @@ class ApprovalService:
             "approval_id": approval_id,
             "token": token,
             "actor": actor.strip(),
+            "channel_actor": str(channel_actor or "").strip(),
             "project_slug": project_slug,
             "stage": stage,
             "feature": feature,
@@ -79,6 +82,7 @@ class ApprovalService:
         project_slug: str,
         stage: str,
         feature: str,
+        channel_actor: str = "",
     ) -> dict[str, Any]:
         digest = token_hash(token)
         with self.storage.transaction():
@@ -105,6 +109,13 @@ class ApprovalService:
                 raise DeliveryBusError("approval_in_flight", "Approval token is reserved by another dispatch")
             if approval["state"] != "issued":
                 raise DeliveryBusError("approval_invalid", f"Approval state is {approval['state']}")
+            bound_channel_actor = str(approval.get("channel_actor") or "").strip()
+            if bound_channel_actor and channel_actor and bound_channel_actor != str(channel_actor or "").strip():
+                raise DeliveryBusError(
+                    "approval_channel_actor_mismatch",
+                    "Approval channel actor does not match the dispatching actor",
+                    resume_action="re-issue the approval from the originating channel identity",
+                )
             updated = self.storage.conn.execute(
                 """
                 UPDATE approvals
