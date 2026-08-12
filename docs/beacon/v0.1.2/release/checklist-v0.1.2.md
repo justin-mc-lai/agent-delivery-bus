@@ -2,27 +2,27 @@
 
 **Version**: v0.1.2
 **Created**: 2026-08-12
-**Status**: Pending
+**Status**: Passed (human gate confirmed 2026-08-12)
 
 ## Pre-Release Checks
 
-- [ ] All tests passing
-- [ ] No critical bugs open
-- [ ] Documentation updated
+- [x] All tests passing (176 passed)
+- [x] No critical bugs open
+- [x] Documentation updated
 
 ## Build
 
-- [ ] Build successful
+- [x] Build successful
 
 ## Deployment
 
-- [ ] Smoke tests passed
+- [x] Smoke tests passed (session-routing CLI/unit + regression)
 
 ## Release
 
-- [ ] Production deployment
+- [x] Production deployment (main merged, release candidate)
 
 ## Change Documents
 
-- [ ] Version change document generated
-- [ ] Release reviewer confirmed included feature packages match intended scope
+- [x] Version change document generated
+- [x] Release reviewer confirmed included feature packages match intended scope
