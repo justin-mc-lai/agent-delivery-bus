@@ -47,6 +47,35 @@ class SessionRoutingTests(unittest.TestCase):
             sid = session_id_for(channel="feishu", channel_thread="oc_1:om_2", actor_id="open_1", host_session="h1")
             self.assertEqual(sid, binding["session_id"])
 
+    def test_cli_session_bind(self):
+        from agent_delivery_bus.cli import main
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config = write_registry(root / "projects.json", [make_project(root, slug="demo")])
+            code = main(
+                [
+                    "--config",
+                    str(config),
+                    "--db",
+                    ":memory:",
+                    "session",
+                    "bind",
+                    "--channel",
+                    "feishu",
+                    "--thread",
+                    "oc_1",
+                    "--actor",
+                    "open_1",
+                    "--host-session",
+                    "h1",
+                    "--target",
+                    "pi",
+                    "--json",
+                ]
+            )
+            self.assertEqual(code, 0)
+
     def test_session_stale(self):
         with tempfile.TemporaryDirectory() as tmp:
             storage = Storage(":memory:")

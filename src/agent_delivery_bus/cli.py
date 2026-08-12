@@ -19,6 +19,7 @@ from .pi_curator import CuratorService
 from .preflight import Preflight
 from .registry import ALLOWED_CLASSES, ProjectRegistry
 from .schedule import ScheduleService, hermes_cron_tick_script
+from .session import SessionRegistry
 from .service import DeliveryService
 from .storage import Storage
 from .workflows import (
