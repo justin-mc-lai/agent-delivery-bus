@@ -13,6 +13,7 @@ from .approvals import ApprovalService, RESTRICTED_STAGES
 from .errors import CommandTimedOut, DeliveryBusError
 from .preflight import Preflight
 from .registry import Project, ProjectRegistry
+from .session import SessionRegistry, next_task_session
 from .storage import Storage
 from .worker_binding import (
     DEFAULT_BINDING_PROFILE,
@@ -56,6 +57,8 @@ def normalized_request(
         "host_session_ref": str(host_session_ref or "").strip(),
         "target_executor": str(target_executor or "").strip(),
         "target_session_ref": str(target_session_ref or "").strip(),
+        "resolution_source": "",
+        "lease_required": False,
     }
 
 
@@ -193,6 +196,16 @@ class DeliveryService:
         except Exception as exc:  # noqa: BLE001 - delivery must not break reconcile
             return {"delivered": False, "reason_code": "deliver_failed", "reason": str(exc)[:200]}
 
+    def _release_lease(self, dispatch: dict[str, Any]) -> dict[str, Any]:
+        request = dispatch.get("request") if isinstance(dispatch.get("request"), dict) else {}
+        session_ref = str(request.get("target_session_ref") or "").strip()
+        if not session_ref or not request.get("lease_required"):
+            return {}
+        try:
+            return SessionRegistry(self.storage).release(session_ref, dispatch["dispatch_id"])
+        except DeliveryBusError:
+            return {}
+
     def _safe_writeback(
         self,
         *,
@@ -287,6 +300,40 @@ class DeliveryService:
         )
         digest = request_digest(request)
         idempotency_key = forced_idempotency_key or f"adb-v1-{digest}"
+        session_registry: SessionRegistry | None = None
+        if channel_thread:
+            session_registry = SessionRegistry(self.storage)
+            resolved_target = str(target_executor or "").strip()
+            resolution_source = ""
+            if resolved_target:
+                resolution_source = "explicit"
+            elif actor_id or host_session_ref:
+                try:
+                    binding = session_registry.resolve_by_thread(
+                        channel=channel,
+                        channel_thread=channel_thread,
+                        actor_id=actor_id,
+                        host_session=host_session_ref,
+                    )
+                    resolved_target = str(binding.get("target_executor") or "").strip()
+                    if resolved_target:
+                        resolution_source = "binding"
+                except DeliveryBusError:
+                    pass
+            if not resolved_target:
+                policy = project.metadata.get("executor_policy") if isinstance(project.metadata.get("executor_policy"), dict) else {}
+                stages_map = policy.get("stages") if isinstance(policy.get("stages"), dict) else {}
+                resolved_target = str(stages_map.get(stage) or "").strip()
+                resolution_source = "policy" if resolved_target else "channel_default"
+            resolved_target = resolved_target or "hermes"
+            request["target_executor"] = resolved_target
+            request["resolution_source"] = resolution_source
+            raw_session = str(target_session_ref or "").strip()
+            if raw_session in ("", "auto"):
+                request["target_session_ref"] = next_task_session(target_executor=resolved_target, seed=digest)
+            else:
+                request["target_session_ref"] = raw_session[6:] if raw_session.startswith("fixed:") else raw_session
+                request["lease_required"] = True
         if self.adapter_resolver is not None:
             preflight = Preflight(truth_gate, executor).run(project, stage=stage)
         else:
@@ -341,6 +388,25 @@ class DeliveryService:
             feature=feature,
         )
         dispatch_id = dispatch["dispatch_id"]
+        if created and session_registry is not None and request.get("lease_required"):
+            try:
+                session_registry.acquire(str(request.get("target_session_ref") or ""), dispatch_id)
+            except DeliveryBusError as exc:
+                dispatch = self.storage.transition(
+                    dispatch_id,
+                    expected_from="draft",
+                    to_state="blocked",
+                    event_type="session_busy",
+                    reason_code=exc.reason_code,
+                    resume_action=exc.resume_action,
+                )
+                return {
+                    "status": "blocked",
+                    "blocked": True,
+                    "reason_code": exc.reason_code,
+                    "resume_action": exc.resume_action,
+                    "dispatch": dispatch,
+                }
         if not created and dispatch["state"] in {"blocked", "failed"}:
             if preflight["blocked"]:
                 return {
@@ -702,6 +768,7 @@ class DeliveryService:
                     reason_code="executor_terminal_failure",
                     payload={"task": task},
                 )
+            lease_release = self._release_lease(dispatch)
             delivery = self._deliver(
                 dispatch,
                 f"blocked {dispatch['stage']}/{dispatch['feature']} dispatch={dispatch_id} ({status})",
@@ -721,6 +788,7 @@ class DeliveryService:
                 "dispatch": dispatch,
                 "memory_writeback": writeback,
                 "delivery": delivery,
+                "lease_release": lease_release,
             }
         if status not in TERMINAL_EXECUTOR_SUCCESS:
             return {"status": dispatch["state"], "blocked": False, "remote_status": status, "dispatch": dispatch}
@@ -754,6 +822,7 @@ class DeliveryService:
             event_type="closure_verified",
             payload={"closure": closure, "task": task},
         )
+        lease_release = self._release_lease(dispatch)
         delivery = self._deliver(
             dispatch,
             f"completed {dispatch['stage']}/{dispatch['feature']} dispatch={dispatch_id}",
@@ -773,4 +842,5 @@ class DeliveryService:
             "dispatch": dispatch,
             "memory_writeback": writeback,
             "delivery": delivery,
+            "lease_release": lease_release,
         }
