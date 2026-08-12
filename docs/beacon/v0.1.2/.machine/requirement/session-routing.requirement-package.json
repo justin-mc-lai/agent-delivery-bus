@@ -1,0 +1,249 @@
+{
+  "schema_version": "1.0",
+  "truth_map_contract": "beacon-truth-map-v1",
+  "truth_source_model": "feature_package_authoritative",
+  "truth_package_contract": "beacon-feature-package-v2",
+  "machine_json_role": "generated_state_not_truth",
+  "generated_by": "beacon.truth_map.resolver",
+  "generated_at": "2026-08-12T15:28:19.181575+00:00",
+  "feature": "session-routing",
+  "feature_slug": "session-routing",
+  "version": "v0.1.2",
+  "truth_authority": false,
+  "json_authority": false,
+  "source_paths": {
+    "truth": "docs/beacon/v0.1.2/features/session-routing/truth.md",
+    "tests": "docs/beacon/v0.1.2/features/session-routing/tests.md",
+    "tasks": "docs/beacon/v0.1.2/features/session-routing/tasks.md",
+    "evidence": "docs/beacon/v0.1.2/features/session-routing/evidence.md"
+  },
+  "source_hashes": {
+    "truth": "2654219330d12217a34c165cf31aae2e345a1ff9a42514abf3d2973a305ca084",
+    "tests": "b7fec915df80cea9d9dbb05cc844f060cacd4701be04587da8a028dfd8771466",
+    "tasks": "ddae81dd97651e0f1652dc586a7517ff8f3379025420583cde349b122d2ebe70",
+    "evidence": "ddc0e1d4bea85319157ce5a1b6a99c6fa0620c1e6c1875e17ad171e76396180c"
+  },
+  "truth_frontmatter": {
+    "slug": "session-routing",
+    "version": "v0.1.2",
+    "status": "frozen",
+    "language": "zh",
+    "domain_required": "true",
+    "ux_required": "false",
+    "package_maturity": "filled",
+    "parser_contract": "beacon-feature-package-v2",
+    "truth_source_model": "feature_package_authoritative",
+    "materials_status": "current",
+    "canonical_refs": {
+      "prd": "docs/beacon/v0.1.2/features/session-routing/truth.md",
+      "user_story": "docs/beacon/v0.1.2/features/session-routing/truth.md",
+      "test_case": "docs/beacon/v0.1.2/features/session-routing/tests.md"
+    }
+  },
+  "frontmatter_errors": [],
+  "acceptance_criteria": [
+    {
+      "ac_id": "AC-SR-001",
+      "theme": "SessionRegistry：`adb session bind/resolve/list/status`；session_id=`sess_<sha256(channel\\",
+      "description": "thread\\"
+    },
+    {
+      "ac_id": "AC-SR-002",
+      "theme": "dispatch envelope v1.1：normalized_request 增 channel/channel_thread/actor_id/host_session_ref/target_executor/target_session_ref；幂等键 = digest(thread+actor+target_executor+stage+feature+project)；旧 1.0 兼容",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-SR-003",
+      "theme": "`adb intent parse --agent pi",
+      "description": "codex"
+    },
+    {
+      "ac_id": "AC-SR-004",
+      "theme": "任务 body 注入 `### Session context`；pi create_task 支持 session_id → `--session-id` 固定 resume；codex/claude 目标回传 `--resume <host_session>` 指引",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-SR-005",
+      "theme": "reconcile 回发：dispatch 账本记录 channel_thread；HermesAdapter.deliver() 用 `hermes send --to feishu:<chat>[:<topic>]`；completed/blocked 均回发；发送失败不影响状态（记录 deliver_failed）",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-SR-006",
+      "theme": "审批渠道身份：approve 支持 `--channel-actor <open_id>`；reserve 校验绑定；不匹配 → approval_channel_actor_mismatch；未提供时兼容旧行为并标记 unverified",
+      "description": ""
+    },
+    {
+      "ac_id": "AC-SR-007",
+      "theme": "自然语言全流程：bind → intent parse --agent → envelope 确认 → dispatch → pi 执行 → reconcile → 回发；同线程同意图幂等；既有 167 测试全绿",
+      "description": ""
+    }
+  ],
+  "test_rows": [
+    {
+      "ac_id": "AC-SR-001",
+      "tc_id": "TC-SR-001",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_session_routing.py -k 'registry or stale' --tb=short`",
+      "assertion": "exit_code_0；bind/resolve/list/status；stale → session_stale",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-SR-002",
+      "tc_id": "TC-SR-002",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_session_routing.py -k 'envelope or idempotency' --tb=short`",
+      "assertion": "exit_code_0；v1.1 字段；六要素幂等；1.0 兼容",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-SR-003",
+      "tc_id": "TC-SR-003",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_session_routing.py -k 'intent_agent or candidates' --tb=short`",
+      "assertion": "exit_code_0；--agent 解析；歧义/未知 blocked",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-SR-004",
+      "tc_id": "TC-SR-004",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_session_routing.py -k 'context_inject or session_id' --tb=short`",
+      "assertion": "exit_code_0；Session context 注入；pi --session-id 传递",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-SR-005",
+      "tc_id": "TC-SR-005",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_session_routing.py -k 'deliver or reply' --tb=short`",
+      "assertion": "exit_code_0；hermes send 回发；失败不影响状态",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-SR-006",
+      "tc_id": "TC-SR-006",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/test_session_routing.py -k 'channel_actor' --tb=short`",
+      "assertion": "exit_code_0；不匹配拒绝；未提供兼容",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-SR-007",
+      "tc_id": "TC-SR-007",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/ --tb=short`",
+      "assertion": "exit_code_0；全量回归",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-SR-001..007",
+      "tc_id": "TC-EXEC-001",
+      "layer": "",
+      "command": "`python3 -c \"import agent_delivery_bus.session; print('ok')\"`",
+      "assertion": "output_ok",
+      "evidence_path": "",
+      "source": ""
+    },
+    {
+      "ac_id": "AC-SR-001..007",
+      "tc_id": "TC-EXEC-002",
+      "layer": "",
+      "command": "`python3 -m pytest -q tests/ --tb=short`",
+      "assertion": "exit_code_0",
+      "evidence_path": "",
+      "source": ""
+    }
+  ],
+  "task_rows": [
+    {
+      "id": "TASK-001",
+      "title": "Implement AC-SR-001: thread\\ · ac=AC-SR-001 · evidence=`.beacon/evidence/implement/session-routing/AC-SR-001.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-002",
+      "title": "Implement AC-SR-002: dispatch envelope v1.1：normalized_request 增 channel/channel_thread/ac... · ac=AC-SR-002 · evidence=`.beacon/evidence/implement/session-routing/AC-SR-002.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-003",
+      "title": "Implement AC-SR-003: codex · ac=AC-SR-003 · evidence=`.beacon/evidence/implement/session-routing/AC-SR-003.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-004",
+      "title": "Implement AC-SR-004: 任务 body 注入 `### Session context`；pi create_task 支持 session_id → `--se... · ac=AC-SR-004 · evidence=`.beacon/evidence/implement/session-routing/AC-SR-004.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-005",
+      "title": "Implement AC-SR-005: reconcile 回发：dispatch 账本记录 channel_thread；HermesAdapter.deliver() 用 `... · ac=AC-SR-005 · evidence=`.beacon/evidence/implement/session-routing/AC-SR-005.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-006",
+      "title": "Implement AC-SR-006: 审批渠道身份：approve 支持 `--channel-actor <open_id>`；reserve 校验绑定；不匹配 → appr... · ac=AC-SR-006 · evidence=`.beacon/evidence/implement/session-routing/AC-SR-006.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-007",
+      "title": "Implement AC-SR-007: 自然语言全流程：bind → intent parse --agent → envelope 确认 → dispatch → pi 执行 ... · ac=AC-SR-007 · evidence=`.beacon/evidence/implement/session-routing/AC-SR-007.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-008",
+      "title": "Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/session-routing/GATES.json`",
+      "status": "unchecked"
+    },
+    {
+      "id": "TASK-009",
+      "title": "Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/session-routing/QA-MATRIX.json`",
+      "status": "unchecked"
+    }
+  ],
+  "checkbox_errors": [],
+  "evidence_rows": [
+    {
+      "surface": "truth",
+      "authority": "requirement_truth",
+      "canonical_artifact": "docs/beacon/v0.1.2/features/session-routing/truth.md",
+      "status": "draft",
+      "route": "truth"
+    },
+    {
+      "surface": "tests",
+      "authority": "test_truth",
+      "canonical_artifact": "docs/beacon/v0.1.2/features/session-routing/tests.md",
+      "status": "draft",
+      "route": "qa"
+    },
+    {
+      "surface": "plan",
+      "authority": "support_advisory",
+      "canonical_artifact": "docs/beacon/v0.1.2/programs/session-routing/program-manifest.md",
+      "status": "indexed",
+      "route": "truth"
+    },
+    {
+      "surface": "implement",
+      "authority": "support_advisory",
+      "canonical_artifact": ".beacon/evidence/implement/session-routing/",
+      "status": "待实现",
+      "route": "implement"
+    },
+    {
+      "surface": "qa",
+      "authority": "qa_verdict",
+      "canonical_artifact": ".beacon/evidence/qa/v0.1.2/session-routing/scorecard.json",
+      "status": "待QA",
+      "route": "qa"
+    }
+  ]
+}

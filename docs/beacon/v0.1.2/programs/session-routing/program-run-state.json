@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "program_slug": "session-routing",
+  "version": "v0.1.2",
+  "plan_mode": "interactive",
+  "program_phase": "P0",
+  "fsm_state": "plan_mode_selected",
+  "lake_or_ocean": "海",
+  "p4_ack": false,
+  "next_action": "program_phase:P0",
+  "updated_at": "2026-08-12T15:26:19.998531+00:00"
+}

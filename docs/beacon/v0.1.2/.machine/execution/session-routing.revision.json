@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "feature": "session-routing",
+  "feature_slug": "session-routing",
+  "version": "v0.1.2",
+  "revision_id": "R1",
+  "source_revision_id": "",
+  "reason": "freeze",
+  "doc_status": "frozen",
+  "delivery_status": "idle",
+  "lifecycle_status": "idle",
+  "baseline_hash": "sha256:4b164f0309ca760a54a1ebe93b36ec618533120198b3754844f70a1aef5b5339",
+  "superseded_by": "",
+  "created_at": "2026-08-12T15:28:19.050361+00:00",
+  "frozen_at": "2026-08-12T15:28:19.051132+00:00",
+  "accepted_at": ""
+}

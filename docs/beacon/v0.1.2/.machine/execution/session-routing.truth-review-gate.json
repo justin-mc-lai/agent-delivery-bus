@@ -1,0 +1,191 @@
+{
+  "schema": "truth-review-gate.v1",
+  "schema_version": "1.0",
+  "feature": "session-routing",
+  "version": "v0.1.2",
+  "pass": true,
+  "blocked": false,
+  "review_gate_pass": true,
+  "abc_pass": true,
+  "reason_code": "",
+  "domain_required": true,
+  "checks": {
+    "A_intent_coverage": {
+      "pass": true,
+      "check": "A",
+      "name": "intent_coverage",
+      "required": true,
+      "matrix_rows": 7,
+      "missing_must": [],
+      "reason": "",
+      "findings": [],
+      "matrix": [
+        {
+          "intent_id": "INT-001",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-SR-001",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-002",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-SR-002",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-003",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-SR-003",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-004",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-SR-004",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-005",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-SR-005",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-006",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-SR-006",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-007",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-SR-007",
+          "status": "covered"
+        }
+      ]
+    },
+    "B_fsm_audit": {
+      "pass": true,
+      "check": "B",
+      "name": "fsm_audit",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "fsm": {
+        "transition_count": 5,
+        "from_states": [
+          "active",
+          "bound",
+          "bound/active",
+          "stale",
+          "unbound"
+        ],
+        "hanging_states": [],
+        "terminals": [
+          "archived",
+          "rebound"
+        ],
+        "illegal_present": true,
+        "five_tuple_present": true
+      }
+    },
+    "C_testability": {
+      "pass": true,
+      "check": "C",
+      "name": "testability",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "ac_count": 7,
+      "tc_count": 14,
+      "missing_ac": [],
+      "covered": {
+        "AC-SR-001": [
+          "TC-SR-001",
+          "TC-EXEC-001",
+          "TC-EXEC-002"
+        ],
+        "AC-SR-002": [
+          "TC-SR-002",
+          "TC-SR-ILL-001",
+          "TC-SR-ILL-002"
+        ],
+        "AC-SR-003": [
+          "TC-SR-003",
+          "TC-SR-ILL-003"
+        ],
+        "AC-SR-004": [
+          "TC-SR-004"
+        ],
+        "AC-SR-005": [
+          "TC-SR-005"
+        ],
+        "AC-SR-006": [
+          "TC-SR-006",
+          "TC-SR-ILL-004"
+        ],
+        "AC-SR-007": [
+          "TC-SR-007",
+          "TC-SR-ILL-005"
+        ]
+      }
+    },
+    "C_domain_exec_layer": {
+      "pass": true,
+      "check": "C_exec",
+      "name": "domain_exec_layer",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "exec_tc_count": 13,
+      "exec_tc_ids": [
+        "TC-SR-001",
+        "TC-SR-002",
+        "TC-SR-003",
+        "TC-SR-004",
+        "TC-SR-005",
+        "TC-SR-006",
+        "TC-SR-007",
+        "TC-EXEC-002",
+        "TC-SR-ILL-001",
+        "TC-SR-ILL-002",
+        "TC-SR-ILL-003",
+        "TC-SR-ILL-004",
+        "TC-SR-ILL-005"
+      ],
+      "domain_kind": "business"
+    },
+    "D_fill_depth": {
+      "pass": true,
+      "check": "D",
+      "name": "fill_depth",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "package_maturity": "filled",
+      "domain_kind": "business",
+      "business_domain": true
+    }
+  },
+  "findings": [],
+  "humanizer": {
+    "rule": "humanizer_only_after_abc_pass_before_freeze",
+    "abc_pass": true,
+    "allowed_now": true,
+    "fill_depth_pass": true,
+    "note": "Polish L0/narrative only after A/B/C; preserve_machine_fields=true; freeze needs D+exec too"
+  },
+  "evaluated_at": "2026-08-12T15:28:19.049303+00:00",
+  "paths": {
+    "truth": "docs/beacon/v0.1.2/features/session-routing/truth.md",
+    "tests": "docs/beacon/v0.1.2/features/session-routing/tests.md",
+    "report": "docs/beacon/v0.1.2/.machine/execution/session-routing.truth-review-gate.json"
+  }
+}

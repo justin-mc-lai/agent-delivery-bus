@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "version": "v0.1.2",
+  "generated_at": "2026-08-12T15:28:17.242892Z",
+  "features": [
+    {
+      "slug": "session-routing",
+      "status": "template",
+      "language": "zh",
+      "truth_paths": {
+        "prd": "docs/beacon/v0.1.2/features/session-routing/truth.md",
+        "user_story": "docs/beacon/v0.1.2/features/session-routing/truth.md",
+        "test_case": "docs/beacon/v0.1.2/features/session-routing/tests.md"
+      },
+      "evidence_paths": {
+        "qa_matrix": "docs/beacon/v0.1.2/.machine/qa/session-routing.evidence-contract.json",
+        "freeze_state": "docs/beacon/v0.1.2/.machine/requirement/session-routing.freeze-state.json"
+      }
+    }
+  ],
+  "version_level_paths": {
+    "research_dir": "docs/beacon/v0.1.2/research/",
+    "execution_dir": "docs/beacon/v0.1.2/execution/",
+    "release_dir": "docs/beacon/v0.1.2/release/",
+    "change_dir": "docs/beacon/v0.1.2/change/",
+    "design_dir": "docs/beacon/v0.1.2/design/"
+  }
+}

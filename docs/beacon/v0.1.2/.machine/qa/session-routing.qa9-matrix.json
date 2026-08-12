@@ -1,0 +1,55 @@
+{
+  "schema": "qa9-matrix.v1",
+  "feature": "session-routing",
+  "version": "v0.1.2",
+  "walks": [
+    {
+      "walk": "W-SR-01",
+      "ac": "AC-SR-005/007",
+      "path": "bound→active→dispatch→reconcile→回发",
+      "tc": "TC-SR-005/007"
+    },
+    {
+      "walk": "W-SR-02",
+      "ac": "AC-SR-002",
+      "path": "同线程同意图幂等",
+      "tc": "TC-SR-002"
+    },
+    {
+      "walk": "W-SR-03",
+      "ac": "AC-SR-001",
+      "path": "stale→rebound",
+      "tc": "TC-SR-001"
+    },
+    {
+      "walk": "I-SR-01",
+      "ac": "AC-SR-002",
+      "path": "无会话身份派发",
+      "tc": "TC-SR-ILL-001"
+    },
+    {
+      "walk": "I-SR-02",
+      "ac": "AC-SR-002",
+      "path": "幂等键丢轴",
+      "tc": "TC-SR-ILL-002"
+    },
+    {
+      "walk": "I-SR-03",
+      "ac": "AC-SR-003",
+      "path": "目标静默回落",
+      "tc": "TC-SR-ILL-003"
+    },
+    {
+      "walk": "I-SR-04",
+      "ac": "AC-SR-006",
+      "path": "渠道身份不匹配",
+      "tc": "TC-SR-ILL-004"
+    },
+    {
+      "walk": "I-SR-05",
+      "ac": "AC-SR-007",
+      "path": "release 自动放行",
+      "tc": "TC-SR-ILL-005"
+    }
+  ]
+}

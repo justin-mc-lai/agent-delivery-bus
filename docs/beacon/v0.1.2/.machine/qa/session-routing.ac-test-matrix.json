@@ -1,0 +1,55 @@
+{
+  "schema": "ac-test-matrix.v1",
+  "feature": "session-routing",
+  "version": "v0.1.2",
+  "rows": [
+    {
+      "ac": "AC-SR-001",
+      "tc": [
+        "TC-SR-001"
+      ]
+    },
+    {
+      "ac": "AC-SR-002",
+      "tc": [
+        "TC-SR-002",
+        "TC-SR-ILL-001",
+        "TC-SR-ILL-002"
+      ]
+    },
+    {
+      "ac": "AC-SR-003",
+      "tc": [
+        "TC-SR-003",
+        "TC-SR-ILL-003"
+      ]
+    },
+    {
+      "ac": "AC-SR-004",
+      "tc": [
+        "TC-SR-004"
+      ]
+    },
+    {
+      "ac": "AC-SR-005",
+      "tc": [
+        "TC-SR-005"
+      ]
+    },
+    {
+      "ac": "AC-SR-006",
+      "tc": [
+        "TC-SR-006",
+        "TC-SR-ILL-004"
+      ]
+    },
+    {
+      "ac": "AC-SR-007",
+      "tc": [
+        "TC-SR-007",
+        "TC-SR-ILL-005",
+        "TC-EXEC-002"
+      ]
+    }
+  ]
+}
