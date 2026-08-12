@@ -1,0 +1,710 @@
+{
+  "schema_version": "1.0",
+  "truth_map_contract": "beacon-truth-map-v1",
+  "truth_source_model": "feature_package_authoritative",
+  "truth_package_contract": "beacon-feature-package-v2",
+  "machine_json_role": "generated_state_not_truth",
+  "runtime_json_role": "runtime_process_record_not_requirement_truth",
+  "governance_state_role": "generated_governance_state_not_truth",
+  "governance_resolver_mode": "resolver_first",
+  "version": "v0.1.3",
+  "supported": true,
+  "truth_map_json_authority": false,
+  "json_authority": false,
+  "authority_source": "cli_static_resolver_plus_markdown_feature_package",
+  "authority_state": "feature_package_authoritative",
+  "authority_flip_allowed": true,
+  "feature": "channel-session-hardening",
+  "feature_slug": "channel-session-hardening",
+  "feature_truth": {
+    "schema_version": "1.0",
+    "truth_map_contract": "beacon-truth-map-v1",
+    "truth_source_model": "feature_package_authoritative",
+    "truth_package_contract": "beacon-feature-package-v2",
+    "machine_json_role": "generated_state_not_truth",
+    "feature": "channel-session-hardening",
+    "feature_slug": "channel-session-hardening",
+    "version": "v0.1.3",
+    "status": "resolved",
+    "truth_authority": "markdown_feature_package",
+    "authority_state": "feature_package_authoritative",
+    "authority_flip_allowed": true,
+    "json_authority": false,
+    "frontmatter": {
+      "slug": "channel-session-hardening",
+      "version": "v0.1.3",
+      "status": "frozen",
+      "language": "zh",
+      "domain_required": "true",
+      "ux_required": "false",
+      "package_maturity": "filled",
+      "parser_contract": "beacon-feature-package-v2",
+      "truth_source_model": "feature_package_authoritative",
+      "materials_status": "current",
+      "canonical_refs": {
+        "prd": "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+        "user_story": "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+        "test_case": "docs/beacon/v0.1.3/features/channel-session-hardening/tests.md"
+      }
+    },
+    "frontmatter_errors": [],
+    "canonical_refs": {
+      "prd": "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+      "user_story": "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+      "test_case": "docs/beacon/v0.1.3/features/channel-session-hardening/tests.md"
+    },
+    "source_paths": {
+      "truth": "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+      "tests": "docs/beacon/v0.1.3/features/channel-session-hardening/tests.md",
+      "tasks": "docs/beacon/v0.1.3/features/channel-session-hardening/tasks.md",
+      "evidence": "docs/beacon/v0.1.3/features/channel-session-hardening/evidence.md"
+    },
+    "source_hashes": {
+      "truth": "85709e5fd7a74a962f9967c8540d67275db2bc377ce5c817432a9bd0adb61503",
+      "tests": "ca8fafa871fe3816e1f28ed673107dc0ee3a6376077268c5ef172968a4f4d4e1",
+      "tasks": "7da148f7dd780944896a2c7c223ea05a67168ee55e9a1cac949ab68ec5275370",
+      "evidence": "f303f8733ee9726615dd70a57a0e9eb01bdce77b9e2023ee46b47ef86a32a528"
+    },
+    "surfaces": {
+      "truth": {
+        "schema_version": "1.0",
+        "truth_map_contract": "beacon-truth-map-v1",
+        "truth_source_model": "feature_package_authoritative",
+        "truth_package_contract": "beacon-feature-package-v2",
+        "feature": "channel-session-hardening",
+        "feature_slug": "channel-session-hardening",
+        "version": "v0.1.3",
+        "surface": "truth",
+        "filename": "truth.md",
+        "path": "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+        "exists": true,
+        "source_hash": "85709e5fd7a74a962f9967c8540d67275db2bc377ce5c817432a9bd0adb61503",
+        "authority": "markdown_feature_package",
+        "json_authority": false
+      },
+      "tests": {
+        "schema_version": "1.0",
+        "truth_map_contract": "beacon-truth-map-v1",
+        "truth_source_model": "feature_package_authoritative",
+        "truth_package_contract": "beacon-feature-package-v2",
+        "feature": "channel-session-hardening",
+        "feature_slug": "channel-session-hardening",
+        "version": "v0.1.3",
+        "surface": "tests",
+        "filename": "tests.md",
+        "path": "docs/beacon/v0.1.3/features/channel-session-hardening/tests.md",
+        "exists": true,
+        "source_hash": "ca8fafa871fe3816e1f28ed673107dc0ee3a6376077268c5ef172968a4f4d4e1",
+        "authority": "markdown_feature_package",
+        "json_authority": false
+      },
+      "tasks": {
+        "schema_version": "1.0",
+        "truth_map_contract": "beacon-truth-map-v1",
+        "truth_source_model": "feature_package_authoritative",
+        "truth_package_contract": "beacon-feature-package-v2",
+        "feature": "channel-session-hardening",
+        "feature_slug": "channel-session-hardening",
+        "version": "v0.1.3",
+        "surface": "tasks",
+        "filename": "tasks.md",
+        "path": "docs/beacon/v0.1.3/features/channel-session-hardening/tasks.md",
+        "exists": true,
+        "source_hash": "7da148f7dd780944896a2c7c223ea05a67168ee55e9a1cac949ab68ec5275370",
+        "authority": "markdown_feature_package",
+        "json_authority": false
+      },
+      "evidence": {
+        "schema_version": "1.0",
+        "truth_map_contract": "beacon-truth-map-v1",
+        "truth_source_model": "feature_package_authoritative",
+        "truth_package_contract": "beacon-feature-package-v2",
+        "feature": "channel-session-hardening",
+        "feature_slug": "channel-session-hardening",
+        "version": "v0.1.3",
+        "surface": "evidence",
+        "filename": "evidence.md",
+        "path": "docs/beacon/v0.1.3/features/channel-session-hardening/evidence.md",
+        "exists": true,
+        "source_hash": "f303f8733ee9726615dd70a57a0e9eb01bdce77b9e2023ee46b47ef86a32a528",
+        "authority": "markdown_feature_package",
+        "json_authority": false
+      }
+    }
+  },
+  "machine_json_plan": {
+    "schema_version": "1.0",
+    "truth_map_contract": "beacon-truth-map-v1",
+    "truth_source_model": "feature_package_authoritative",
+    "truth_package_contract": "beacon-feature-package-v2",
+    "machine_json_role": "generated_state_not_truth",
+    "generated_by": "beacon.truth_map.resolver",
+    "feature": "channel-session-hardening",
+    "feature_slug": "channel-session-hardening",
+    "version": "v0.1.3",
+    "source_paths": {
+      "truth": "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+      "tests": "docs/beacon/v0.1.3/features/channel-session-hardening/tests.md",
+      "tasks": "docs/beacon/v0.1.3/features/channel-session-hardening/tasks.md",
+      "evidence": "docs/beacon/v0.1.3/features/channel-session-hardening/evidence.md"
+    },
+    "outputs": {
+      "truth_map_projection": "docs/beacon/v0.1.3/.machine/requirement/channel-session-hardening.truth-map.json",
+      "requirement_package_state": "docs/beacon/v0.1.3/.machine/requirement/channel-session-hardening.requirement-package.json",
+      "feature_package_validation": "docs/beacon/v0.1.3/.machine/requirement/feature-package-validation.json"
+    },
+    "runtime_json_exemption": {
+      "role": "runtime_process_record_not_requirement_truth",
+      "applies_to": [
+        ".beacon/runs/**",
+        ".beacon/qa/**",
+        "runtime/process execution records"
+      ],
+      "requires_markdown_twin": false,
+      "requirement_authority": false
+    },
+    "routes": {
+      "doctor_rebuild": {
+        "status": "legacy_output_only",
+        "command": "beacon truth-map rebuild-machine channel-session-hardening --version v0.1.3"
+      },
+      "change_absorb": {
+        "status": "package_truth_target_only",
+        "command": "beacon change channel-session-hardening --version v0.1.3 --reason absorb-legacy-truth-into-feature-package"
+      }
+    }
+  },
+  "version_governance": {
+    "schema_version": "1.0",
+    "truth_map_contract": "beacon-truth-map-v1",
+    "truth_source_model": "feature_package_authoritative",
+    "resolver_mode": "resolver_first",
+    "version": "v0.1.3",
+    "status": "blocked",
+    "blocked": true,
+    "authority_classification": {
+      "feature_truth": "markdown_feature_package",
+      "feature_truth_model": "feature_package_authoritative",
+      "version_governance_truth": "version_governance_truth",
+      "generated_governance_state": "generated_governance_state_not_truth",
+      "runtime_process_record": "runtime_process_record_not_requirement_truth"
+    },
+    "governance_projection_roles": {
+      "canonical_commit_surface": "docs/beacon/governance/project-version-governance.md",
+      "canonical_role": "version_governance_truth",
+      "sqlite_projection_surface": "project_governance_sqlite_projection",
+      "sqlite_projection_role": "generated_governance_state_not_truth",
+      "sqlite_ledger_path": "/Users/apple/.beacon/runtime-ledger/runtime-ledger.sqlite3",
+      "deprecated_legacy_json": ".beacon/metadata/project-version-metadata.json",
+      "write_direction": "governance_md_to_sqlite_only"
+    },
+    "truth_surfaces": {
+      "project_governance": {
+        "schema_version": "1.0",
+        "truth_map_contract": "beacon-truth-map-v1",
+        "truth_source_model": "feature_package_authoritative",
+        "resolver_mode": "resolver_first",
+        "version": "v0.1.3",
+        "surface": "project_governance",
+        "path": "docs/beacon/governance/project-version-governance.md",
+        "exists": true,
+        "required": true,
+        "role": "version_governance_truth",
+        "authority": "version_governance_truth",
+        "truth_authority": true,
+        "json_authority": false,
+        "generated_governance_state": false,
+        "source_hash": "a797a4a18a494bd98e110af68b6e8782065029829db2f152da8e2cf292b30050"
+      },
+      "global_boundaries": {
+        "schema_version": "1.0",
+        "truth_map_contract": "beacon-truth-map-v1",
+        "truth_source_model": "feature_package_authoritative",
+        "resolver_mode": "resolver_first",
+        "version": "v0.1.3",
+        "surface": "global_boundaries",
+        "path": "docs/beacon/global-boundaries.md",
+        "exists": true,
+        "required": true,
+        "role": "global_governance_truth",
+        "authority": "global_governance_truth",
+        "truth_authority": true,
+        "json_authority": false,
+        "generated_governance_state": false,
+        "source_hash": "414d5d34c4068a45b68fe8116311e6228014e67e8c9f2adf5de80bb2f340ab94"
+      },
+      "summary": {
+        "schema_version": "1.0",
+        "truth_map_contract": "beacon-truth-map-v1",
+        "truth_source_model": "feature_package_authoritative",
+        "resolver_mode": "resolver_first",
+        "version": "v0.1.3",
+        "surface": "summary",
+        "path": "docs/beacon/v0.1.3/SUMMARY.md",
+        "exists": true,
+        "required": true,
+        "role": "version_governance_truth",
+        "authority": "version_governance_truth",
+        "truth_authority": true,
+        "json_authority": false,
+        "generated_governance_state": false,
+        "source_hash": "d0bb0939d945ef7812b8282cc2ab65659fcc23e726b5ee9f94bf2ad474065e31"
+      },
+      "execution_boundaries": {
+        "schema_version": "1.0",
+        "truth_map_contract": "beacon-truth-map-v1",
+        "truth_source_model": "feature_package_authoritative",
+        "resolver_mode": "resolver_first",
+        "version": "v0.1.3",
+        "surface": "execution_boundaries",
+        "path": "docs/beacon/v0.1.3/execution/boundaries.md",
+        "exists": false,
+        "required": true,
+        "role": "version_governance_truth",
+        "authority": "version_governance_truth",
+        "truth_authority": true,
+        "json_authority": false,
+        "generated_governance_state": false,
+        "source_hash": ""
+      },
+      "project_skill_blueprint": {
+        "schema_version": "1.0",
+        "truth_map_contract": "beacon-truth-map-v1",
+        "truth_source_model": "feature_package_authoritative",
+        "resolver_mode": "resolver_first",
+        "version": "v0.1.3",
+        "surface": "project_skill_blueprint",
+        "path": "docs/beacon/v0.1.3/execution/project-skill-qa-evolution-blueprint.md",
+        "exists": false,
+        "required": true,
+        "role": "version_governance_truth",
+        "authority": "version_governance_truth",
+        "truth_authority": true,
+        "json_authority": false,
+        "generated_governance_state": false,
+        "source_hash": ""
+      },
+      "source_architecture_index": {
+        "schema_version": "1.0",
+        "truth_map_contract": "beacon-truth-map-v1",
+        "truth_source_model": "feature_package_authoritative",
+        "resolver_mode": "resolver_first",
+        "version": "v0.1.3",
+        "surface": "source_architecture_index",
+        "path": "docs/beacon/v0.1.3/source-architecture/index.md",
+        "exists": false,
+        "required": true,
+        "role": "version_governance_truth",
+        "authority": "version_governance_truth",
+        "truth_authority": true,
+        "json_authority": false,
+        "generated_governance_state": false,
+        "source_hash": ""
+      },
+      "release_notes": {
+        "schema_version": "1.0",
+        "truth_map_contract": "beacon-truth-map-v1",
+        "truth_source_model": "feature_package_authoritative",
+        "resolver_mode": "resolver_first",
+        "version": "v0.1.3",
+        "surface": "release_notes",
+        "path": "docs/beacon/v0.1.3/release/v0.1.3.md",
+        "exists": false,
+        "required": true,
+        "role": "version_governance_truth",
+        "authority": "version_governance_truth",
+        "truth_authority": true,
+        "json_authority": false,
+        "generated_governance_state": false,
+        "source_hash": ""
+      }
+    },
+    "generated_state_surfaces": {
+      "version_feature_manifest": {
+        "schema_version": "1.0",
+        "truth_map_contract": "beacon-truth-map-v1",
+        "truth_source_model": "feature_package_authoritative",
+        "resolver_mode": "resolver_first",
+        "version": "v0.1.3",
+        "surface": "version_feature_manifest",
+        "path": "docs/beacon/v0.1.3/.machine/manifest/version-features.json",
+        "exists": true,
+        "required": false,
+        "role": "generated_governance_state_not_truth",
+        "authority": "generated_governance_state_not_truth",
+        "truth_authority": false,
+        "json_authority": false,
+        "generated_governance_state": true,
+        "source_hash": "ca64964dba5cf809f5e46f5c240c70812060bc4a375bdc650a73f8f247bdd587"
+      },
+      "project_version_metadata": {
+        "schema_version": "1.0",
+        "truth_map_contract": "beacon-truth-map-v1",
+        "truth_source_model": "feature_package_authoritative",
+        "resolver_mode": "resolver_first",
+        "version": "v0.1.3",
+        "surface": "project_version_metadata",
+        "path": ".beacon/metadata/project-version-metadata.json",
+        "exists": false,
+        "required": false,
+        "role": "generated_governance_state_not_truth",
+        "authority": "generated_governance_state_not_truth",
+        "truth_authority": false,
+        "json_authority": false,
+        "generated_governance_state": true,
+        "source_hash": ""
+      },
+      "project_governance_sqlite_projection": {
+        "schema_version": "1.0",
+        "truth_map_contract": "beacon-truth-map-v1",
+        "truth_source_model": "feature_package_authoritative",
+        "resolver_mode": "resolver_first",
+        "version": "v0.1.3",
+        "surface": "project_governance_sqlite_projection",
+        "path": "/Users/apple/.beacon/runtime-ledger/runtime-ledger.sqlite3",
+        "exists": true,
+        "required": false,
+        "role": "generated_governance_state_not_truth",
+        "authority": "generated_governance_state_not_truth",
+        "truth_authority": false,
+        "json_authority": false,
+        "generated_governance_state": true,
+        "source_hash": "499eb7bf77d8844397e0b48f47fd06b7a5752b25b24e1d4c1f71bce4daf747e9"
+      },
+      "evidence_manifest": {
+        "schema_version": "1.0",
+        "truth_map_contract": "beacon-truth-map-v1",
+        "truth_source_model": "feature_package_authoritative",
+        "resolver_mode": "resolver_first",
+        "version": "v0.1.3",
+        "surface": "evidence_manifest",
+        "path": ".beacon/evidence-manifest.json",
+        "exists": true,
+        "required": false,
+        "role": "generated_governance_state_not_truth",
+        "authority": "generated_governance_state_not_truth",
+        "truth_authority": false,
+        "json_authority": false,
+        "generated_governance_state": true,
+        "source_hash": "5273c4ace719b4d901973a6f2fc394e40bbe1a2396cbb29400dcb6ac80a73809"
+      },
+      "qa_status": {
+        "schema_version": "1.0",
+        "truth_map_contract": "beacon-truth-map-v1",
+        "truth_source_model": "feature_package_authoritative",
+        "resolver_mode": "resolver_first",
+        "version": "v0.1.3",
+        "surface": "qa_status",
+        "path": ".beacon/qa/status.json",
+        "exists": true,
+        "required": false,
+        "role": "generated_governance_state_not_truth",
+        "authority": "generated_governance_state_not_truth",
+        "truth_authority": false,
+        "json_authority": false,
+        "generated_governance_state": true,
+        "source_hash": "11b9264f517b722caa8c23413cae874f5caff12c25138b2dffac45ad67c807e9"
+      },
+      "release_gate_report": {
+        "schema_version": "1.0",
+        "truth_map_contract": "beacon-truth-map-v1",
+        "truth_source_model": "feature_package_authoritative",
+        "resolver_mode": "resolver_first",
+        "version": "v0.1.3",
+        "surface": "release_gate_report",
+        "path": ".beacon/release-gate-report.json",
+        "exists": true,
+        "required": false,
+        "role": "generated_governance_state_not_truth",
+        "authority": "generated_governance_state_not_truth",
+        "truth_authority": false,
+        "json_authority": false,
+        "generated_governance_state": true,
+        "source_hash": "886fba8020adae8215c2d7302f422119018570828b0e51999b600159f28be0b8"
+      }
+    },
+    "manifest_authority": false,
+    "json_authority": false,
+    "diagnostics": [
+      {
+        "severity": "error",
+        "code": "version_governance_truth_missing",
+        "surface": "execution_boundaries",
+        "path": "docs/beacon/v0.1.3/execution/boundaries.md"
+      },
+      {
+        "severity": "error",
+        "code": "version_governance_truth_missing",
+        "surface": "project_skill_blueprint",
+        "path": "docs/beacon/v0.1.3/execution/project-skill-qa-evolution-blueprint.md"
+      },
+      {
+        "severity": "error",
+        "code": "version_governance_truth_missing",
+        "surface": "source_architecture_index",
+        "path": "docs/beacon/v0.1.3/source-architecture/index.md"
+      },
+      {
+        "severity": "error",
+        "code": "version_governance_truth_missing",
+        "surface": "release_notes",
+        "path": "docs/beacon/v0.1.3/release/v0.1.3.md"
+      }
+    ]
+  },
+  "entrypoint_inventory": {
+    "schema_version": "1.0",
+    "truth_map_contract": "beacon-truth-map-v1",
+    "truth_source_model": "feature_package_authoritative",
+    "route_mode": "truth_center_resolver",
+    "version": "v0.1.3",
+    "status": "blocked",
+    "blocked": true,
+    "authority_state": "feature_package_authoritative",
+    "authority_flip_allowed": true,
+    "required_entrypoint_count": 13,
+    "entries": [
+      {
+        "path": "beacon/commands/prd.py",
+        "surface": "prd_command",
+        "entrypoint_kind": "truth_read_write_command",
+        "classification": "resolver_routed",
+        "exception_kind": "",
+        "exists": false,
+        "truth_center_routed": true,
+        "explicit_v151_exception": false,
+        "fail_closed": true,
+        "cutover_version": "v1.5.2",
+        "cutover_violation": false
+      },
+      {
+        "path": "beacon/commands/user_story.py",
+        "surface": "user_story_command",
+        "entrypoint_kind": "truth_read_write_command",
+        "classification": "resolver_routed",
+        "exception_kind": "",
+        "exists": false,
+        "truth_center_routed": true,
+        "explicit_v151_exception": false,
+        "fail_closed": true,
+        "cutover_version": "v1.5.2",
+        "cutover_violation": false
+      },
+      {
+        "path": "beacon/commands/test_case.py",
+        "surface": "test_case_command",
+        "entrypoint_kind": "truth_read_write_command",
+        "classification": "resolver_routed",
+        "exception_kind": "",
+        "exists": false,
+        "truth_center_routed": true,
+        "explicit_v151_exception": false,
+        "fail_closed": true,
+        "cutover_version": "v1.5.2",
+        "cutover_violation": false
+      },
+      {
+        "path": "beacon/commands/workflow.py",
+        "surface": "workflow_command",
+        "entrypoint_kind": "lifecycle_gate_routing_surface",
+        "classification": "resolver_routed",
+        "exception_kind": "",
+        "exists": false,
+        "truth_center_routed": true,
+        "explicit_v151_exception": false,
+        "fail_closed": true,
+        "cutover_version": "v1.5.2",
+        "cutover_violation": false
+      },
+      {
+        "path": "beacon/commands/truth.py",
+        "surface": "truth_command",
+        "entrypoint_kind": "direct_truth_command_surface",
+        "classification": "resolver_routed",
+        "exception_kind": "",
+        "exists": false,
+        "truth_center_routed": true,
+        "explicit_v151_exception": false,
+        "fail_closed": true,
+        "cutover_version": "v1.5.2",
+        "cutover_violation": false
+      },
+      {
+        "path": "beacon/commands/gate.py",
+        "surface": "gate_command",
+        "entrypoint_kind": "gate_input_consumer",
+        "classification": "resolver_routed",
+        "exception_kind": "",
+        "exists": false,
+        "truth_center_routed": true,
+        "explicit_v151_exception": false,
+        "fail_closed": true,
+        "cutover_version": "v1.5.2",
+        "cutover_violation": false
+      },
+      {
+        "path": "beacon/utils/prd_bootstrap.py",
+        "surface": "prd_bootstrap",
+        "entrypoint_kind": "bootstrap_truth_writer",
+        "classification": "resolver_routed",
+        "exception_kind": "",
+        "exists": false,
+        "truth_center_routed": true,
+        "explicit_v151_exception": false,
+        "fail_closed": true,
+        "cutover_version": "v1.5.2",
+        "cutover_violation": false
+      },
+      {
+        "path": "beacon/utils/requirement_clarity.py",
+        "surface": "requirement_clarity",
+        "entrypoint_kind": "requirement_truth_consumer",
+        "classification": "resolver_routed",
+        "exception_kind": "",
+        "exists": false,
+        "truth_center_routed": true,
+        "explicit_v151_exception": false,
+        "fail_closed": true,
+        "cutover_version": "v1.5.2",
+        "cutover_violation": false
+      },
+      {
+        "path": "beacon/utils/requirement_deepening.py",
+        "surface": "requirement_deepening",
+        "entrypoint_kind": "requirement_support_consumer",
+        "classification": "resolver_routed",
+        "exception_kind": "",
+        "exists": false,
+        "truth_center_routed": true,
+        "explicit_v151_exception": false,
+        "fail_closed": true,
+        "cutover_version": "v1.5.2",
+        "cutover_violation": false
+      },
+      {
+        "path": "beacon/utils/manifest.py",
+        "surface": "manifest",
+        "entrypoint_kind": "generated_index_surface",
+        "classification": "generated_state_exception",
+        "exception_kind": "generated_governance_state",
+        "exists": false,
+        "truth_center_routed": false,
+        "explicit_v151_exception": true,
+        "fail_closed": true,
+        "cutover_version": "v1.5.2",
+        "cutover_violation": false
+      },
+      {
+        "path": "beacon/utils/acceptance_kit.py",
+        "surface": "acceptance_kit",
+        "entrypoint_kind": "acceptance_gate_input_consumer",
+        "classification": "resolver_routed",
+        "exception_kind": "",
+        "exists": false,
+        "truth_center_routed": true,
+        "explicit_v151_exception": false,
+        "fail_closed": true,
+        "cutover_version": "v1.5.2",
+        "cutover_violation": false
+      },
+      {
+        "path": "skills/beacon/**/SKILL.md",
+        "surface": "packaged_skills",
+        "entrypoint_kind": "llm_skill_guidance",
+        "classification": "resolver_guidance_required",
+        "exception_kind": "",
+        "exists": true,
+        "truth_center_routed": true,
+        "explicit_v151_exception": false,
+        "fail_closed": true,
+        "cutover_version": "v1.5.2",
+        "cutover_violation": false
+      },
+      {
+        "path": ".agents/skills/**/SKILL.md",
+        "surface": "project_agent_skills",
+        "entrypoint_kind": "llm_skill_guidance",
+        "classification": "resolver_guidance_required",
+        "exception_kind": "",
+        "exists": true,
+        "truth_center_routed": true,
+        "explicit_v151_exception": false,
+        "fail_closed": true,
+        "cutover_version": "v1.5.2",
+        "cutover_violation": false
+      }
+    ],
+    "diagnostics": [
+      {
+        "severity": "error",
+        "code": "truth_entrypoint_inventory_missing",
+        "path": "beacon/commands/prd.py"
+      },
+      {
+        "severity": "error",
+        "code": "truth_entrypoint_inventory_missing",
+        "path": "beacon/commands/user_story.py"
+      },
+      {
+        "severity": "error",
+        "code": "truth_entrypoint_inventory_missing",
+        "path": "beacon/commands/test_case.py"
+      },
+      {
+        "severity": "error",
+        "code": "truth_entrypoint_inventory_missing",
+        "path": "beacon/commands/workflow.py"
+      },
+      {
+        "severity": "error",
+        "code": "truth_entrypoint_inventory_missing",
+        "path": "beacon/commands/truth.py"
+      },
+      {
+        "severity": "error",
+        "code": "truth_entrypoint_inventory_missing",
+        "path": "beacon/commands/gate.py"
+      },
+      {
+        "severity": "error",
+        "code": "truth_entrypoint_inventory_missing",
+        "path": "beacon/utils/prd_bootstrap.py"
+      },
+      {
+        "severity": "error",
+        "code": "truth_entrypoint_inventory_missing",
+        "path": "beacon/utils/requirement_clarity.py"
+      },
+      {
+        "severity": "error",
+        "code": "truth_entrypoint_inventory_missing",
+        "path": "beacon/utils/requirement_deepening.py"
+      },
+      {
+        "severity": "error",
+        "code": "truth_entrypoint_inventory_missing",
+        "path": "beacon/utils/manifest.py"
+      },
+      {
+        "severity": "error",
+        "code": "truth_entrypoint_inventory_missing",
+        "path": "beacon/utils/acceptance_kit.py"
+      }
+    ]
+  },
+  "generated_by": "beacon.truth_map.resolver",
+  "generated_at": "2026-08-12T22:09:01.395895+00:00",
+  "truth_authority": false,
+  "source_paths": {
+    "truth": "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+    "tests": "docs/beacon/v0.1.3/features/channel-session-hardening/tests.md",
+    "tasks": "docs/beacon/v0.1.3/features/channel-session-hardening/tasks.md",
+    "evidence": "docs/beacon/v0.1.3/features/channel-session-hardening/evidence.md"
+  },
+  "source_hashes": {
+    "truth": "85709e5fd7a74a962f9967c8540d67275db2bc377ce5c817432a9bd0adb61503",
+    "tests": "ca8fafa871fe3816e1f28ed673107dc0ee3a6376077268c5ef172968a4f4d4e1",
+    "tasks": "7da148f7dd780944896a2c7c223ea05a67168ee55e9a1cac949ab68ec5275370",
+    "evidence": "f303f8733ee9726615dd70a57a0e9eb01bdce77b9e2023ee46b47ef86a32a528"
+  }
+}

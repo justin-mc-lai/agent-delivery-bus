@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "program_slug": "channel-session-hardening",
+  "version": "v0.1.3",
+  "plan_mode": "interactive",
+  "program_phase": "P0",
+  "fsm_state": "plan_mode_selected",
+  "lake_or_ocean": "海",
+  "p4_ack": false,
+  "next_action": "program_phase:P0",
+  "updated_at": "2026-08-12T22:07:41.428127+00:00"
+}

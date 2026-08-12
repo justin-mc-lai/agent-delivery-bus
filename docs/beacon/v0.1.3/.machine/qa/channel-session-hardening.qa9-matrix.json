@@ -1,0 +1,49 @@
+{
+  "schema": "qa9-matrix.v1",
+  "feature": "channel-session-hardening",
+  "version": "v0.1.3",
+  "walks": [
+    {
+      "walk": "W-CH-01",
+      "ac": "AC-CH-002",
+      "path": "同线程并发两任务独立会话",
+      "tc": "TC-CH-002"
+    },
+    {
+      "walk": "W-CH-02",
+      "ac": "AC-CH-003",
+      "path": "acquire→release→acquire",
+      "tc": "TC-CH-003"
+    },
+    {
+      "walk": "W-CH-03",
+      "ac": "AC-CH-001/005",
+      "path": "三渠道同脚本",
+      "tc": "TC-CH-001/005"
+    },
+    {
+      "walk": "I-CH-01",
+      "ac": "AC-CH-003",
+      "path": "并发同固定会话",
+      "tc": "TC-CH-ILL-001"
+    },
+    {
+      "walk": "I-CH-02",
+      "ac": "AC-CH-003",
+      "path": "release 不匹配",
+      "tc": "TC-CH-ILL-002"
+    },
+    {
+      "walk": "I-CH-03",
+      "ac": "AC-CH-001",
+      "path": "未知渠道静默",
+      "tc": "TC-CH-ILL-003"
+    },
+    {
+      "walk": "I-CH-04",
+      "ac": "AC-CH-006",
+      "path": "release 自动放行",
+      "tc": "TC-CH-ILL-004"
+    }
+  ]
+}

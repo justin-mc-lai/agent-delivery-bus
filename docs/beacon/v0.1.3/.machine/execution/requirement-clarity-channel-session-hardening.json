@@ -1,0 +1,629 @@
+{
+  "schema_version": "1.0",
+  "feature": "channel-session-hardening",
+  "feature_slug": "channel-session-hardening",
+  "version": "v0.1.3",
+  "runtime_version": "v1.6.12",
+  "runtime_capability_line": "v1.3.3",
+  "required": true,
+  "reason_code": "",
+  "blocked": false,
+  "status": "pass",
+  "findings": [],
+  "report_json_path": "docs/beacon/v0.1.3/.machine/execution/requirement-clarity-channel-session-hardening.json",
+  "report_markdown_path": "docs/beacon/v0.1.3/execution/requirement-clarity-channel-session-hardening.md",
+  "state_path": ".beacon/state/requirement-clarity-channel-session-hardening.json",
+  "diagram_truth": {
+    "schema_version": "1.0",
+    "version": "v0.1.3",
+    "supported": false,
+    "required": false,
+    "ready": false,
+    "diagram_types": [],
+    "state_axes": [],
+    "missing_diagram_types": [],
+    "missing_state_axes": false,
+    "complexity_signals": [],
+    "review_gates": [],
+    "qa_coverage_hints": [],
+    "evidence_lines": {},
+    "generated_at": "2026-08-12T22:09:00.956778+00:00",
+    "feature": "channel-session-hardening",
+    "feature_slug": "channel-session-hardening",
+    "prd_ref": "docs/beacon/v0.1.3/prd/channel-session-hardening.md",
+    "user_story_ref": "docs/beacon/v0.1.3/user-story/channel-session-hardening.md"
+  },
+  "domain_fsm_gate": {
+    "schema_version": "1.0",
+    "feature": "channel-session-hardening",
+    "feature_slug": "channel-session-hardening",
+    "version": "v0.1.3",
+    "truth_path": "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+    "tests_path": "docs/beacon/v0.1.3/features/channel-session-hardening/tests.md",
+    "required": true,
+    "blocked": false,
+    "status": "pass",
+    "reason_code": "",
+    "findings": [],
+    "requirement": {
+      "required": true,
+      "reason": "explicit_domain_mark",
+      "explicit": true,
+      "partial": true,
+      "complexity": false,
+      "business_signal": true,
+      "version_supported": false
+    },
+    "projection": {
+      "schema_version": "1.0",
+      "domain_fsm_schema": "domain-fsm.v1",
+      "entity_precedence_schema": "entity-precedence.v1",
+      "frontmatter": {
+        "slug": "channel-session-hardening",
+        "version": "v0.1.3",
+        "status": "draft",
+        "language": "zh",
+        "domain_required": "true",
+        "ux_required": "false",
+        "package_maturity": "filled",
+        "parser_contract": "beacon-feature-package-v2",
+        "truth_source_model": "feature_package_authoritative",
+        "materials_status": "current",
+        "canonical_refs": {
+          "prd": "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+          "user_story": "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+          "test_case": "docs/beacon/v0.1.3/features/channel-session-hardening/tests.md"
+        }
+      },
+      "frontmatter_errors": [],
+      "has_domain_model_section": true,
+      "has_domain_fsm_section": true,
+      "has_illegal_transition_section": true,
+      "entities": [
+        {
+          "entity": "ChannelAwarePayload",
+          "key": "platform, chat, thread, actor, text",
+          "precedence": "platform 必填，未知 fail-closed",
+          "requires": "platform 必填，未知 fail-closed"
+        },
+        {
+          "entity": "TaskSession",
+          "key": "task_session_id, dispatch_id, target_executor, state",
+          "precedence": "每派发唯一；acquire/release 成对",
+          "requires": "每派发唯一；acquire/release 成对"
+        },
+        {
+          "entity": "SessionLease",
+          "key": "session_id, dispatch_id, acquired_at",
+          "precedence": "同 session 仅一个未完成 lease",
+          "requires": "同 session 仅一个未完成 lease"
+        },
+        {
+          "entity": "ResolutionTrace",
+          "key": "target_executor, source(explicit/binding/policy/channel_default)",
+          "precedence": "envelope 回显 source",
+          "requires": "envelope 回显 source"
+        },
+        {
+          "entity": "ChannelAwarePayload",
+          "key": "1",
+          "precedence": "1",
+          "requires": "1"
+        },
+        {
+          "entity": "TaskSession",
+          "key": "2",
+          "precedence": "2",
+          "requires": "2"
+        },
+        {
+          "entity": "SessionLease",
+          "key": "3",
+          "precedence": "3",
+          "requires": "3"
+        },
+        {
+          "entity": "ResolutionTrace",
+          "key": "4",
+          "precedence": "4",
+          "requires": "4"
+        }
+      ],
+      "entity_precedence": [
+        {
+          "entity": "ChannelAwarePayload",
+          "key": "platform, chat, thread, actor, text",
+          "precedence": "platform 必填，未知 fail-closed",
+          "requires": "platform 必填，未知 fail-closed"
+        },
+        {
+          "entity": "TaskSession",
+          "key": "task_session_id, dispatch_id, target_executor, state",
+          "precedence": "每派发唯一；acquire/release 成对",
+          "requires": "每派发唯一；acquire/release 成对"
+        },
+        {
+          "entity": "SessionLease",
+          "key": "session_id, dispatch_id, acquired_at",
+          "precedence": "同 session 仅一个未完成 lease",
+          "requires": "同 session 仅一个未完成 lease"
+        },
+        {
+          "entity": "ResolutionTrace",
+          "key": "target_executor, source(explicit/binding/policy/channel_default)",
+          "precedence": "envelope 回显 source",
+          "requires": "envelope 回显 source"
+        },
+        {
+          "entity": "ChannelAwarePayload",
+          "key": "1",
+          "precedence": "1",
+          "requires": "1"
+        },
+        {
+          "entity": "TaskSession",
+          "key": "2",
+          "precedence": "2",
+          "requires": "2"
+        },
+        {
+          "entity": "SessionLease",
+          "key": "3",
+          "precedence": "3",
+          "requires": "3"
+        },
+        {
+          "entity": "ResolutionTrace",
+          "key": "4",
+          "precedence": "4",
+          "requires": "4"
+        }
+      ],
+      "aggregates": [
+        {
+          "name": "TaskSessionLease",
+          "states": [
+            "acquired",
+            "busy",
+            "idle",
+            "released"
+          ],
+          "transitions": [
+            {
+              "from": "",
+              "to": "idle",
+              "guard": "—",
+              "initial": "true"
+            },
+            {
+              "from": "idle",
+              "to": "acquired",
+              "guard": "acquire(dispatch)"
+            },
+            {
+              "from": "acquired",
+              "to": "released",
+              "guard": "release(dispatch) 匹配"
+            },
+            {
+              "from": "acquired",
+              "to": "busy",
+              "guard": "第二个 dispatch 尝试 acquire"
+            }
+          ]
+        }
+      ],
+      "illegal_transition_slots": [
+        {
+          "description": "acquire 跳过（无 lease 并发同会话）· TC-CH-ILL-001",
+          "aggregate": "",
+          "source": "truth"
+        },
+        {
+          "description": "release 不匹配 dispatch · TC-CH-ILL-002",
+          "aggregate": "",
+          "source": "truth"
+        },
+        {
+          "description": "渠道未知静默按 feishu · TC-CH-ILL-003",
+          "aggregate": "",
+          "source": "truth"
+        },
+        {
+          "description": "release 自动放行 · TC-CH-ILL-004",
+          "aggregate": "",
+          "source": "truth"
+        }
+      ],
+      "acceptance_criteria": [
+        {
+          "ac_id": "AC-CH-001",
+          "description": "入站桥 channel-aware：payload 取 platform（feishu/weixin/line/telegram 等）；bind/deliver 用真实渠道；未知渠道 → channel_unsupported blocked"
+        },
+        {
+          "ac_id": "AC-CH-002",
+          "description": "fixed:<id>"
+        },
+        {
+          "ac_id": "AC-CH-003",
+          "description": "SessionRegistry.acquire/release lease：同 fixed 会话并发第二个未完成 dispatch → session_busy；reconcile completed/failed 时 release；重试同 dispatch 幂等不重复 acquire"
+        },
+        {
+          "ac_id": "AC-CH-004",
+          "description": "目标决议顺序固化：显式 --target-executor > 线程绑定 target > 项目 executor_policy.stages > 通道默认（hermes coding）；envelope 回显 resolution_source；SKILL/README 写明"
+        },
+        {
+          "ac_id": "AC-CH-005",
+          "description": "按渠道回发：dispatch 账本记录 channel；reconcile deliver 目标 `<channel>:<thread>`；feishu/weixin/line 同路径"
+        },
+        {
+          "ac_id": "AC-CH-006",
+          "description": "兼容回归：旧绑定（共享 target_session）仍可解析；既有 177 测试全绿"
+        }
+      ],
+      "bound_ac_ids": [
+        "AC-CH-001",
+        "AC-CH-003"
+      ],
+      "orphan_ac_ids": [],
+      "aggregates_missing_illegal_slots": [],
+      "raw_section_titles": [
+        "人话",
+        "User Intent Snapshot",
+        "用户旅程",
+        "First principles",
+        "Domain Model",
+        "Entity Precedence",
+        "Domain FSM — TaskSessionLease",
+        "FSM 五元组",
+        "Legal walks",
+        "Illegal transitions",
+        "Acceptance Criteria",
+        "Intent Coverage Matrix",
+        "Non-goals",
+        "Freeze readiness"
+      ]
+    },
+    "validation": {
+      "schema_version": "1.0",
+      "required": true,
+      "blocked": false,
+      "status": "pass",
+      "reason_code": "",
+      "findings": [],
+      "projection": {
+        "schema_version": "1.0",
+        "domain_fsm_schema": "domain-fsm.v1",
+        "entity_precedence_schema": "entity-precedence.v1",
+        "frontmatter": {
+          "slug": "channel-session-hardening",
+          "version": "v0.1.3",
+          "status": "draft",
+          "language": "zh",
+          "domain_required": "true",
+          "ux_required": "false",
+          "package_maturity": "filled",
+          "parser_contract": "beacon-feature-package-v2",
+          "truth_source_model": "feature_package_authoritative",
+          "materials_status": "current",
+          "canonical_refs": {
+            "prd": "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+            "user_story": "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+            "test_case": "docs/beacon/v0.1.3/features/channel-session-hardening/tests.md"
+          }
+        },
+        "frontmatter_errors": [],
+        "has_domain_model_section": true,
+        "has_domain_fsm_section": true,
+        "has_illegal_transition_section": true,
+        "entities": [
+          {
+            "entity": "ChannelAwarePayload",
+            "key": "platform, chat, thread, actor, text",
+            "precedence": "platform 必填，未知 fail-closed",
+            "requires": "platform 必填，未知 fail-closed"
+          },
+          {
+            "entity": "TaskSession",
+            "key": "task_session_id, dispatch_id, target_executor, state",
+            "precedence": "每派发唯一；acquire/release 成对",
+            "requires": "每派发唯一；acquire/release 成对"
+          },
+          {
+            "entity": "SessionLease",
+            "key": "session_id, dispatch_id, acquired_at",
+            "precedence": "同 session 仅一个未完成 lease",
+            "requires": "同 session 仅一个未完成 lease"
+          },
+          {
+            "entity": "ResolutionTrace",
+            "key": "target_executor, source(explicit/binding/policy/channel_default)",
+            "precedence": "envelope 回显 source",
+            "requires": "envelope 回显 source"
+          },
+          {
+            "entity": "ChannelAwarePayload",
+            "key": "1",
+            "precedence": "1",
+            "requires": "1"
+          },
+          {
+            "entity": "TaskSession",
+            "key": "2",
+            "precedence": "2",
+            "requires": "2"
+          },
+          {
+            "entity": "SessionLease",
+            "key": "3",
+            "precedence": "3",
+            "requires": "3"
+          },
+          {
+            "entity": "ResolutionTrace",
+            "key": "4",
+            "precedence": "4",
+            "requires": "4"
+          }
+        ],
+        "entity_precedence": [
+          {
+            "entity": "ChannelAwarePayload",
+            "key": "platform, chat, thread, actor, text",
+            "precedence": "platform 必填，未知 fail-closed",
+            "requires": "platform 必填，未知 fail-closed"
+          },
+          {
+            "entity": "TaskSession",
+            "key": "task_session_id, dispatch_id, target_executor, state",
+            "precedence": "每派发唯一；acquire/release 成对",
+            "requires": "每派发唯一；acquire/release 成对"
+          },
+          {
+            "entity": "SessionLease",
+            "key": "session_id, dispatch_id, acquired_at",
+            "precedence": "同 session 仅一个未完成 lease",
+            "requires": "同 session 仅一个未完成 lease"
+          },
+          {
+            "entity": "ResolutionTrace",
+            "key": "target_executor, source(explicit/binding/policy/channel_default)",
+            "precedence": "envelope 回显 source",
+            "requires": "envelope 回显 source"
+          },
+          {
+            "entity": "ChannelAwarePayload",
+            "key": "1",
+            "precedence": "1",
+            "requires": "1"
+          },
+          {
+            "entity": "TaskSession",
+            "key": "2",
+            "precedence": "2",
+            "requires": "2"
+          },
+          {
+            "entity": "SessionLease",
+            "key": "3",
+            "precedence": "3",
+            "requires": "3"
+          },
+          {
+            "entity": "ResolutionTrace",
+            "key": "4",
+            "precedence": "4",
+            "requires": "4"
+          }
+        ],
+        "aggregates": [
+          {
+            "name": "TaskSessionLease",
+            "states": [
+              "acquired",
+              "busy",
+              "idle",
+              "released"
+            ],
+            "transitions": [
+              {
+                "from": "",
+                "to": "idle",
+                "guard": "—",
+                "initial": "true"
+              },
+              {
+                "from": "idle",
+                "to": "acquired",
+                "guard": "acquire(dispatch)"
+              },
+              {
+                "from": "acquired",
+                "to": "released",
+                "guard": "release(dispatch) 匹配"
+              },
+              {
+                "from": "acquired",
+                "to": "busy",
+                "guard": "第二个 dispatch 尝试 acquire"
+              }
+            ]
+          }
+        ],
+        "illegal_transition_slots": [
+          {
+            "description": "acquire 跳过（无 lease 并发同会话）· TC-CH-ILL-001",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "release 不匹配 dispatch · TC-CH-ILL-002",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "渠道未知静默按 feishu · TC-CH-ILL-003",
+            "aggregate": "",
+            "source": "truth"
+          },
+          {
+            "description": "release 自动放行 · TC-CH-ILL-004",
+            "aggregate": "",
+            "source": "truth"
+          }
+        ],
+        "acceptance_criteria": [
+          {
+            "ac_id": "AC-CH-001",
+            "description": "入站桥 channel-aware：payload 取 platform（feishu/weixin/line/telegram 等）；bind/deliver 用真实渠道；未知渠道 → channel_unsupported blocked"
+          },
+          {
+            "ac_id": "AC-CH-002",
+            "description": "fixed:<id>"
+          },
+          {
+            "ac_id": "AC-CH-003",
+            "description": "SessionRegistry.acquire/release lease：同 fixed 会话并发第二个未完成 dispatch → session_busy；reconcile completed/failed 时 release；重试同 dispatch 幂等不重复 acquire"
+          },
+          {
+            "ac_id": "AC-CH-004",
+            "description": "目标决议顺序固化：显式 --target-executor > 线程绑定 target > 项目 executor_policy.stages > 通道默认（hermes coding）；envelope 回显 resolution_source；SKILL/README 写明"
+          },
+          {
+            "ac_id": "AC-CH-005",
+            "description": "按渠道回发：dispatch 账本记录 channel；reconcile deliver 目标 `<channel>:<thread>`；feishu/weixin/line 同路径"
+          },
+          {
+            "ac_id": "AC-CH-006",
+            "description": "兼容回归：旧绑定（共享 target_session）仍可解析；既有 177 测试全绿"
+          }
+        ],
+        "bound_ac_ids": [
+          "AC-CH-001",
+          "AC-CH-003"
+        ],
+        "orphan_ac_ids": [],
+        "aggregates_missing_illegal_slots": [],
+        "raw_section_titles": [
+          "人话",
+          "User Intent Snapshot",
+          "用户旅程",
+          "First principles",
+          "Domain Model",
+          "Entity Precedence",
+          "Domain FSM — TaskSessionLease",
+          "FSM 五元组",
+          "Legal walks",
+          "Illegal transitions",
+          "Acceptance Criteria",
+          "Intent Coverage Matrix",
+          "Non-goals",
+          "Freeze readiness"
+        ]
+      },
+      "summary": {
+        "entity_count": 8,
+        "aggregate_count": 1,
+        "illegal_slot_count": 4,
+        "orphan_ac_count": 0,
+        "bound_ac_count": 2
+      }
+    },
+    "recommended_action": ""
+  },
+  "human_closure_contract": {
+    "required": false,
+    "research_path": "docs/beacon/v0.1.3/research/channel-session-hardening.md",
+    "research_exists": true,
+    "source_architecture_path": "docs/beacon/v0.1.3/source-architecture/channel-session-hardening.md",
+    "source_architecture_exists": false,
+    "required_sections": [
+      "architecture",
+      "business_flow"
+    ],
+    "missing_sections": [
+      "architecture",
+      "business_flow"
+    ],
+    "diagram_types": [],
+    "complexity_signals": []
+  },
+  "requirement_closure_contract": {
+    "required": true,
+    "chain_order": [
+      "research",
+      "prd",
+      "user_story",
+      "test_case",
+      "requirement_clarity",
+      "freeze"
+    ],
+    "human_closure_required": false,
+    "paths": {
+      "research": "docs/beacon/v0.1.3/research/channel-session-hardening.md",
+      "prd": "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+      "user_story": "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+      "test_case": "docs/beacon/v0.1.3/features/channel-session-hardening/tests.md"
+    },
+    "exists": {
+      "research": true,
+      "prd": true,
+      "user_story": true,
+      "test_case": true
+    },
+    "required_research_sections": [],
+    "missing_research_sections": [],
+    "ac_projection": {
+      "prd_ac_ids": [],
+      "user_story_ac_ids": [],
+      "test_case_ac_ids": [],
+      "upstream_ac_ids": [],
+      "missing_test_case_ac_ids": []
+    }
+  },
+  "version_projection_truth_contract": {
+    "required": false,
+    "supported": false,
+    "projection_types": [],
+    "research_path": "docs/beacon/v0.1.3/research/channel-session-hardening.md",
+    "research_exists": true,
+    "required_fields": [
+      "prd_refs",
+      "user_story_refs",
+      "test_case_refs",
+      "coverage_notes",
+      "out_of_scope_notes"
+    ],
+    "field_presence": {
+      "prd_refs": false,
+      "user_story_refs": false,
+      "test_case_refs": false,
+      "coverage_notes": false,
+      "out_of_scope_notes": false
+    },
+    "missing_fields": [],
+    "required_refs": {
+      "prd_refs": "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+      "user_story_refs": "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+      "test_case_refs": "docs/beacon/v0.1.3/features/channel-session-hardening/tests.md"
+    },
+    "missing_ref_targets": [],
+    "ready": false
+  },
+  "support_write_topology_contract": {
+    "schema_version": "1.0",
+    "supported": true,
+    "status": "pass",
+    "blocked": false,
+    "reason_code": "",
+    "diagnostics": []
+  },
+  "required_artifacts": [],
+  "scanned_files": [
+    "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+    "docs/beacon/v0.1.3/features/channel-session-hardening/tests.md",
+    "docs/beacon/v0.1.3/features/channel-session-hardening/tasks.md",
+    "docs/beacon/v0.1.3/features/channel-session-hardening/evidence.md",
+    "docs/beacon/v0.1.3/research/channel-session-hardening.md"
+  ]
+}

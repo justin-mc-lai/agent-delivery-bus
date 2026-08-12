@@ -1,0 +1,175 @@
+{
+  "schema": "truth-review-gate.v1",
+  "schema_version": "1.0",
+  "feature": "channel-session-hardening",
+  "version": "v0.1.3",
+  "pass": true,
+  "blocked": false,
+  "review_gate_pass": true,
+  "abc_pass": true,
+  "reason_code": "",
+  "domain_required": true,
+  "checks": {
+    "A_intent_coverage": {
+      "pass": true,
+      "check": "A",
+      "name": "intent_coverage",
+      "required": true,
+      "matrix_rows": 6,
+      "missing_must": [],
+      "reason": "",
+      "findings": [],
+      "matrix": [
+        {
+          "intent_id": "INT-001",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-CH-001",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-002",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-CH-002",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-003",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-CH-003",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-004",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-CH-004",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-005",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-CH-005",
+          "status": "covered"
+        },
+        {
+          "intent_id": "INT-006",
+          "source": "user",
+          "strength": "must",
+          "landing": "AC-CH-006",
+          "status": "covered"
+        }
+      ]
+    },
+    "B_fsm_audit": {
+      "pass": true,
+      "check": "B",
+      "name": "fsm_audit",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "fsm": {
+        "transition_count": 3,
+        "from_states": [
+          "acquired",
+          "idle"
+        ],
+        "hanging_states": [],
+        "terminals": [
+          "busy",
+          "released"
+        ],
+        "illegal_present": true,
+        "five_tuple_present": true
+      }
+    },
+    "C_testability": {
+      "pass": true,
+      "check": "C",
+      "name": "testability",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "ac_count": 6,
+      "tc_count": 12,
+      "missing_ac": [],
+      "covered": {
+        "AC-CH-001": [
+          "TC-CH-001",
+          "TC-EXEC-001",
+          "TC-EXEC-002",
+          "TC-CH-ILL-003"
+        ],
+        "AC-CH-002": [
+          "TC-CH-002"
+        ],
+        "AC-CH-003": [
+          "TC-CH-003",
+          "TC-CH-ILL-001",
+          "TC-CH-ILL-002"
+        ],
+        "AC-CH-004": [
+          "TC-CH-004"
+        ],
+        "AC-CH-005": [
+          "TC-CH-005"
+        ],
+        "AC-CH-006": [
+          "TC-CH-006",
+          "TC-CH-ILL-004"
+        ]
+      }
+    },
+    "C_domain_exec_layer": {
+      "pass": true,
+      "check": "C_exec",
+      "name": "domain_exec_layer",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "exec_tc_count": 11,
+      "exec_tc_ids": [
+        "TC-CH-001",
+        "TC-CH-002",
+        "TC-CH-003",
+        "TC-CH-004",
+        "TC-CH-005",
+        "TC-CH-006",
+        "TC-EXEC-002",
+        "TC-CH-ILL-001",
+        "TC-CH-ILL-002",
+        "TC-CH-ILL-003",
+        "TC-CH-ILL-004"
+      ],
+      "domain_kind": "business"
+    },
+    "D_fill_depth": {
+      "pass": true,
+      "check": "D",
+      "name": "fill_depth",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "package_maturity": "filled",
+      "domain_kind": "business",
+      "business_domain": true
+    }
+  },
+  "findings": [],
+  "humanizer": {
+    "rule": "humanizer_only_after_abc_pass_before_freeze",
+    "abc_pass": true,
+    "allowed_now": true,
+    "fill_depth_pass": true,
+    "note": "Polish L0/narrative only after A/B/C; preserve_machine_fields=true; freeze needs D+exec too"
+  },
+  "evaluated_at": "2026-08-12T22:09:01.260237+00:00",
+  "paths": {
+    "truth": "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+    "tests": "docs/beacon/v0.1.3/features/channel-session-hardening/tests.md",
+    "report": "docs/beacon/v0.1.3/.machine/execution/channel-session-hardening.truth-review-gate.json"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "version": "v0.1.3",
+  "generated_at": "2026-08-12T22:08:59.323664Z",
+  "features": [
+    {
+      "slug": "channel-session-hardening",
+      "status": "template",
+      "language": "zh",
+      "truth_paths": {
+        "prd": "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+        "user_story": "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+        "test_case": "docs/beacon/v0.1.3/features/channel-session-hardening/tests.md"
+      },
+      "evidence_paths": {
+        "qa_matrix": "docs/beacon/v0.1.3/.machine/qa/channel-session-hardening.evidence-contract.json",
+        "freeze_state": "docs/beacon/v0.1.3/.machine/requirement/channel-session-hardening.freeze-state.json"
+      }
+    }
+  ],
+  "version_level_paths": {
+    "research_dir": "docs/beacon/v0.1.3/research/",
+    "execution_dir": "docs/beacon/v0.1.3/execution/",
+    "release_dir": "docs/beacon/v0.1.3/release/",
+    "change_dir": "docs/beacon/v0.1.3/change/",
+    "design_dir": "docs/beacon/v0.1.3/design/"
+  }
+}

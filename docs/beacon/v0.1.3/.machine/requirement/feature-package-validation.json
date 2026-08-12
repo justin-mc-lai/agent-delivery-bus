@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "feature": "channel-session-hardening",
+  "feature_slug": "channel-session-hardening",
+  "version": "v0.1.3",
+  "status": "pass",
+  "blocked": false,
+  "reason_code": "",
+  "generated_at": "2026-08-12T22:09:01.265573+00:00",
+  "package_dir": "docs/beacon/v0.1.3/features/channel-session-hardening",
+  "truth_frontmatter": {
+    "slug": "channel-session-hardening",
+    "version": "v0.1.3",
+    "status": "frozen",
+    "language": "zh",
+    "domain_required": "true",
+    "ux_required": "false",
+    "package_maturity": "filled",
+    "parser_contract": "beacon-feature-package-v2",
+    "truth_source_model": "feature_package_authoritative",
+    "materials_status": "current",
+    "canonical_refs": {
+      "prd": "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+      "user_story": "docs/beacon/v0.1.3/features/channel-session-hardening/truth.md",
+      "test_case": "docs/beacon/v0.1.3/features/channel-session-hardening/tests.md"
+    }
+  },
+  "ac_count": 6,
+  "test_count": 8,
+  "checkbox_count": 8,
+  "evidence_row_count": 5,
+  "gate_authority": "canonical_surfaces_preserved",
+  "checkbox_gate_bypass": false,
+  "task_evidence_gate": {
+    "pass": true,
+    "checked_ok": 0,
+    "checked_bad": 0,
+    "unbound": 0,
+    "findings": [],
+    "reason_code": ""
+  },
+  "evidence_gate_truth": false,
+  "diagnostics": []
+}
