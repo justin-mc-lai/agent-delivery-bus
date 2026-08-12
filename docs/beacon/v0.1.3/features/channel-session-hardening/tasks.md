@@ -16,7 +16,7 @@ task_source: acceptance_criteria
 - [x] TASK-005 Implement AC-CH-005: 按渠道回发：dispatch 账本记录 channel；reconcile deliver 目标 `<channel>:<thread>`... · ac=AC-CH-005 · evidence=`.beacon/evidence/implement/channel-session-hardening/AC-CH-005.json`
 - [x] TASK-006 Implement AC-CH-006: 兼容回归：旧绑定（共享 target_session）仍可解析；既有 177 测试全绿 · ac=AC-CH-006 · evidence=`.beacon/evidence/implement/channel-session-hardening/AC-CH-006.json`
 - [x] TASK-007 Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/channel-session-hardening/GATES.json`
-- [ ] TASK-008 Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/channel-session-hardening/QA-MATRIX.json`
+- [x] TASK-008 Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/channel-session-hardening/QA-MATRIX.json`
 
 ## Boundary
 

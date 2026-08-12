@@ -6,7 +6,7 @@
   "status": "pass",
   "blocked": false,
   "reason_code": "",
-  "generated_at": "2026-08-12T22:13:18.204109+00:00",
+  "generated_at": "2026-08-12T22:13:56.652037+00:00",
   "package_dir": "docs/beacon/v0.1.3/features/channel-session-hardening",
   "truth_frontmatter": {
     "slug": "channel-session-hardening",
@@ -33,7 +33,7 @@
   "checkbox_gate_bypass": false,
   "task_evidence_gate": {
     "pass": true,
-    "checked_ok": 7,
+    "checked_ok": 8,
     "checked_bad": 0,
     "unbound": 0,
     "findings": [],
