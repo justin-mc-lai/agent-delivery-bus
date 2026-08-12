@@ -134,3 +134,4 @@ src/*.egg-info/
 # Governed feature worktrees (beacon workspace admit)
 /pi-executor/
 /pi-curator/
+/session-routing/
