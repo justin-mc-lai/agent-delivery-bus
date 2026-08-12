@@ -157,6 +157,7 @@ class PiExecutorAdapter:
         idempotency_key: str,
         assignee: str = "coding",
         skills: list[str] | None = None,
+        session_id: str = "",
     ) -> dict[str, Any]:
         board = self.board_for(project)
         existing = self.ledger.get(board, idempotency_key)
@@ -176,7 +177,10 @@ class PiExecutorAdapter:
         )
         workspace = self.workspace_for(project, stage=stage).split(":", 1)[-1]
         task_id = f"pi_{uuid.uuid4().hex[:16]}"
-        command = [self._cli(), "-p", "--mode", "json", body]
+        command = [self._cli(), "-p", "--mode", "json"]
+        if session_id:
+            command.extend(["--session-id", session_id])
+        command.append(body)
         result = self.runner.run(command, cwd=workspace, timeout=600)
         if result.returncode != 0:
             raise CommandFailed(
@@ -258,3 +262,8 @@ class PiExecutorAdapter:
                     installed.add(skill_dir.name)
         missing = [s for s in skills if s and s not in installed]
         return {"missing": missing, "installed": sorted(installed)}
+
+    def deliver(self, text: str, *, channel_thread: str = "", channel: str = "feishu") -> dict[str, Any]:
+        """pi has no outbound chat channel; delivery is a hermes concern."""
+        del text, channel_thread, channel
+        return {"delivered": False, "reason_code": "deliver_not_supported", "reason": "pi executor has no outbound channel"}

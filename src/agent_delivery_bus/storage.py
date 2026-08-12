@@ -149,9 +149,28 @@ class Storage:
                 created_at TEXT NOT NULL,
                 FOREIGN KEY(proposal_id) REFERENCES boundary_proposals(id)
             );
+            CREATE TABLE IF NOT EXISTS agent_sessions (
+                session_id TEXT PRIMARY KEY,
+                channel TEXT NOT NULL,
+                channel_thread TEXT NOT NULL,
+                actor_id TEXT NOT NULL DEFAULT '',
+                host_session TEXT NOT NULL DEFAULT '',
+                target_executor TEXT NOT NULL DEFAULT '',
+                target_session TEXT NOT NULL DEFAULT '',
+                state TEXT NOT NULL DEFAULT 'bound',
+                last_seen_at TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            );
             """
         )
         self._migrate_legacy_columns()
+        approval_columns = {
+            row["name"]
+            for row in self.conn.execute("PRAGMA table_info(approvals)").fetchall()
+        }
+        if "channel_actor" not in approval_columns:
+            self.conn.execute("ALTER TABLE approvals ADD COLUMN channel_actor TEXT NOT NULL DEFAULT ''")
 
     def _migrate_legacy_columns(self) -> None:
         columns = {

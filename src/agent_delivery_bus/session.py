@@ -1,0 +1,166 @@
+"""Agent session registry: stable channel/actor -> target executor session mapping.
+
+Session identity has four orthogonal axes:
+- channel_thread: where the message comes from and results go back to
+- host_session: which hermes/agent session parsed the intent
+- target_executor + target_session: which agent (codex/claude/pi) executes and
+  into which runnable session
+- actor_id: who is approving (channel identity)
+"""
+
+from __future__ import annotations
+
+import hashlib
+from datetime import datetime, timedelta, timezone
+from typing import Any
+
+from .errors import DeliveryBusError
+from .storage import Storage
+
+
+DEFAULT_TTL_SECONDS = 24 * 3600
+ALLOWED_TARGETS = ("codex", "claude", "pi", "coding")
+
+
+def _now() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def session_id_for(*, channel: str, channel_thread: str, actor_id: str, host_session: str) -> str:
+    canonical = "|".join(
+        [
+            str(channel or "").strip().lower(),
+            str(channel_thread or "").strip(),
+            str(actor_id or "").strip(),
+            str(host_session or "").strip(),
+        ]
+    )
+    return "sess_" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:24]
+
+
+class SessionRegistry:
+    def __init__(self, storage: Storage, *, ttl_seconds: int = DEFAULT_TTL_SECONDS):
+        self.storage = storage
+        self.ttl_seconds = int(ttl_seconds)
+
+    def bind(
+        self,
+        *,
+        channel: str,
+        channel_thread: str,
+        actor_id: str = "",
+        host_session: str = "",
+        target_executor: str = "",
+        target_session: str = "",
+    ) -> dict[str, Any]:
+        if not str(channel or "").strip() or not str(channel_thread or "").strip():
+            raise DeliveryBusError(
+                "session_identity_incomplete",
+                "channel and channel_thread are required for session binding",
+                resume_action="pass --channel and --thread",
+            )
+        target = str(target_executor or "").strip().lower()
+        if target and target not in ALLOWED_TARGETS:
+            raise DeliveryBusError(
+                "session_target_unknown",
+                f"unknown target executor: {target!r}",
+                resume_action=f"use one of: {', '.join(sorted(ALLOWED_TARGETS))}",
+            )
+        sid = session_id_for(
+            channel=channel,
+            channel_thread=channel_thread,
+            actor_id=actor_id,
+            host_session=host_session,
+        )
+        now = _now()
+        self.storage.conn.execute(
+            """
+            INSERT INTO agent_sessions(
+              session_id,channel,channel_thread,actor_id,host_session,
+              target_executor,target_session,state,last_seen_at,created_at,updated_at
+            ) VALUES(?,?,?,?,?,?,?,'bound',?,?,?)
+            ON CONFLICT(session_id) DO UPDATE SET
+              target_executor=excluded.target_executor,
+              target_session=excluded.target_session,
+              state='bound',
+              last_seen_at=excluded.last_seen_at,
+              updated_at=excluded.updated_at
+            """,
+            (sid, str(channel).strip(), str(channel_thread).strip(), str(actor_id or "").strip(),
+             str(host_session or "").strip(), target, str(target_session or "").strip(), now, now, now),
+        )
+        return self.status(sid)
+
+    def resolve(self, session_id: str) -> dict[str, Any]:
+        row = self.storage.conn.execute(
+            "SELECT * FROM agent_sessions WHERE session_id=?", (session_id,)
+        ).fetchone()
+        if row is None:
+            raise DeliveryBusError(
+                "session_not_found",
+                f"no session binding for {session_id!r}",
+                resume_action="run `adb session bind` first, or pass identity fields explicitly",
+            )
+        binding = dict(row)
+        if self._is_stale(binding):
+            raise DeliveryBusError(
+                "session_stale",
+                f"session {session_id} is stale (last_seen={binding['last_seen_at']})",
+                resume_action="re-run `adb session bind` with the same identity to rebound",
+                data={"binding": binding},
+            )
+        return binding
+
+    def resolve_by_thread(
+        self,
+        *,
+        channel: str,
+        channel_thread: str,
+        actor_id: str = "",
+        host_session: str = "",
+    ) -> dict[str, Any]:
+        sid = session_id_for(
+            channel=channel,
+            channel_thread=channel_thread,
+            actor_id=actor_id,
+            host_session=host_session,
+        )
+        return self.resolve(sid)
+
+    def list(self, *, channel: str = "") -> list[dict[str, Any]]:
+        if channel:
+            rows = self.storage.conn.execute(
+                "SELECT * FROM agent_sessions WHERE channel=? ORDER BY updated_at DESC",
+                (str(channel).strip().lower(),),
+            ).fetchall()
+        else:
+            rows = self.storage.conn.execute(
+                "SELECT * FROM agent_sessions ORDER BY updated_at DESC"
+            ).fetchall()
+        return [dict(row) for row in rows]
+
+    def status(self, session_id: str) -> dict[str, Any]:
+        row = self.storage.conn.execute(
+            "SELECT * FROM agent_sessions WHERE session_id=?", (session_id,)
+        ).fetchone()
+        if row is None:
+            raise DeliveryBusError(
+                "session_not_found",
+                f"no session binding for {session_id!r}",
+                resume_action="run `adb session bind` first",
+            )
+        binding = dict(row)
+        stale = self._is_stale(binding)
+        return {
+            **binding,
+            "state": "stale" if stale else binding.get("state", "bound"),
+            "stale": stale,
+        }
+
+    def _is_stale(self, binding: dict[str, Any]) -> bool:
+        try:
+            last = datetime.fromisoformat(str(binding.get("last_seen_at") or ""))
+        except ValueError:
+            return True
+        cutoff = datetime.now(timezone.utc) - timedelta(seconds=self.ttl_seconds)
+        return last < cutoff

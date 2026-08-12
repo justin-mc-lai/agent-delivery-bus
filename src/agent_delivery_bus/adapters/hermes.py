@@ -218,6 +218,19 @@ class HermesAdapter:
         missing = [s for s in skills if s and s not in installed]
         return {"missing": missing, "installed": sorted(installed)}
 
+    def deliver(self, text: str, *, channel_thread: str = "", channel: str = "feishu") -> dict[str, Any]:
+        """Post a message back to the originating channel thread via `hermes send`."""
+        target = f"{channel}:{channel_thread}" if channel_thread else channel
+        result = self.runner.run(["hermes", "send", "--to", target, str(text)], timeout=30)
+        if result.returncode != 0:
+            raise CommandFailed(
+                "hermes_deliver_failed",
+                "hermes send failed",
+                resume_action="check gateway/platform credentials and rerun reconcile delivery",
+                data={"stderr": result.stderr[-2000:]},
+            )
+        return {"delivered": True, "target": target}
+
     def stats(self, board: str) -> dict[str, Any]:
         result = self.runner.run(
             ["hermes", "kanban", "--board", board, "stats", "--json"],
