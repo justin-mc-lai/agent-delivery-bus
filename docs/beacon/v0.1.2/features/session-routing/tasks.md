@@ -17,7 +17,7 @@ task_source: acceptance_criteria
 - [x] TASK-006 Implement AC-SR-006: 审批渠道身份：approve 支持 `--channel-actor <open_id>`；reserve 校验绑定；不匹配 → appr... · ac=AC-SR-006 · evidence=`.beacon/evidence/implement/session-routing/AC-SR-006.json`
 - [x] TASK-007 Implement AC-SR-007: 自然语言全流程：bind → intent parse --agent → envelope 确认 → dispatch → pi 执行 ... · ac=AC-SR-007 · evidence=`.beacon/evidence/implement/session-routing/AC-SR-007.json`
 - [x] TASK-008 Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/session-routing/GATES.json`
-- [ ] TASK-009 Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/session-routing/QA-MATRIX.json`
+- [x] TASK-009 Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/session-routing/QA-MATRIX.json`
 
 ## Boundary
 

@@ -5,7 +5,7 @@
   "truth_package_contract": "beacon-feature-package-v2",
   "machine_json_role": "generated_state_not_truth",
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-08-12T15:39:03.656471+00:00",
+  "generated_at": "2026-08-12T15:41:07.885636+00:00",
   "feature": "session-routing",
   "feature_slug": "session-routing",
   "version": "v0.1.2",
@@ -20,8 +20,8 @@
   "source_hashes": {
     "truth": "2654219330d12217a34c165cf31aae2e345a1ff9a42514abf3d2973a305ca084",
     "tests": "b7fec915df80cea9d9dbb05cc844f060cacd4701be04587da8a028dfd8771466",
-    "tasks": "faee080eba7f3d6163b27c699a1030e1943f409d1001e58560deb3ca94f79d27",
-    "evidence": "ddc0e1d4bea85319157ce5a1b6a99c6fa0620c1e6c1875e17ad171e76396180c"
+    "tasks": "0fa176c8304aa9aa83e1fee2a75b90fa8178edff37650cdeed0e8c875edb22ea",
+    "evidence": "a204e4195cb46cf3c6c0fc02a3b4b9b998325c254b3d177ff5bd406681e86885"
   },
   "truth_frontmatter": {
     "slug": "session-routing",
@@ -205,7 +205,7 @@
     {
       "id": "TASK-009",
       "title": "Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/session-routing/QA-MATRIX.json`",
-      "status": "unchecked"
+      "status": "checked"
     }
   ],
   "checkbox_errors": [],
@@ -235,14 +235,14 @@
       "surface": "implement",
       "authority": "support_advisory",
       "canonical_artifact": ".beacon/evidence/implement/session-routing/",
-      "status": "待实现",
+      "status": "present",
       "route": "implement"
     },
     {
       "surface": "qa",
       "authority": "qa_verdict",
       "canonical_artifact": ".beacon/evidence/qa/v0.1.2/session-routing/scorecard.json",
-      "status": "待QA",
+      "status": "passed",
       "route": "qa"
     }
   ]

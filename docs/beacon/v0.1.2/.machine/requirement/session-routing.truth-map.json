@@ -62,8 +62,8 @@
     "source_hashes": {
       "truth": "2654219330d12217a34c165cf31aae2e345a1ff9a42514abf3d2973a305ca084",
       "tests": "b7fec915df80cea9d9dbb05cc844f060cacd4701be04587da8a028dfd8771466",
-      "tasks": "faee080eba7f3d6163b27c699a1030e1943f409d1001e58560deb3ca94f79d27",
-      "evidence": "ddc0e1d4bea85319157ce5a1b6a99c6fa0620c1e6c1875e17ad171e76396180c"
+      "tasks": "0fa176c8304aa9aa83e1fee2a75b90fa8178edff37650cdeed0e8c875edb22ea",
+      "evidence": "a204e4195cb46cf3c6c0fc02a3b4b9b998325c254b3d177ff5bd406681e86885"
     },
     "surfaces": {
       "truth": {
@@ -110,7 +110,7 @@
         "filename": "tasks.md",
         "path": "docs/beacon/v0.1.2/features/session-routing/tasks.md",
         "exists": true,
-        "source_hash": "faee080eba7f3d6163b27c699a1030e1943f409d1001e58560deb3ca94f79d27",
+        "source_hash": "0fa176c8304aa9aa83e1fee2a75b90fa8178edff37650cdeed0e8c875edb22ea",
         "authority": "markdown_feature_package",
         "json_authority": false
       },
@@ -126,7 +126,7 @@
         "filename": "evidence.md",
         "path": "docs/beacon/v0.1.2/features/session-routing/evidence.md",
         "exists": true,
-        "source_hash": "ddc0e1d4bea85319157ce5a1b6a99c6fa0620c1e6c1875e17ad171e76396180c",
+        "source_hash": "a204e4195cb46cf3c6c0fc02a3b4b9b998325c254b3d177ff5bd406681e86885",
         "authority": "markdown_feature_package",
         "json_authority": false
       }
@@ -386,7 +386,7 @@
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": "23355091a8cf7d24d37393c0cf79a6e5db1784e116baffa5f631cb278f8058ce"
+        "source_hash": "976f980cd72243eaaccef24d5780d7c7bc708c4f893b6c7885f69b3896bce61a"
       },
       "qa_status": {
         "schema_version": "1.0",
@@ -396,14 +396,14 @@
         "version": "v0.1.2",
         "surface": "qa_status",
         "path": ".beacon/qa/status.json",
-        "exists": false,
+        "exists": true,
         "required": false,
         "role": "generated_governance_state_not_truth",
         "authority": "generated_governance_state_not_truth",
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": ""
+        "source_hash": "11b9264f517b722caa8c23413cae874f5caff12c25138b2dffac45ad67c807e9"
       },
       "release_gate_report": {
         "schema_version": "1.0",
@@ -413,14 +413,14 @@
         "version": "v0.1.2",
         "surface": "release_gate_report",
         "path": ".beacon/release-gate-report.json",
-        "exists": false,
+        "exists": true,
         "required": false,
         "role": "generated_governance_state_not_truth",
         "authority": "generated_governance_state_not_truth",
         "truth_authority": false,
         "json_authority": false,
         "generated_governance_state": true,
-        "source_hash": ""
+        "source_hash": "886fba8020adae8215c2d7302f422119018570828b0e51999b600159f28be0b8"
       }
     },
     "manifest_authority": false,
@@ -613,7 +613,7 @@
         "entrypoint_kind": "llm_skill_guidance",
         "classification": "resolver_guidance_required",
         "exception_kind": "",
-        "exists": false,
+        "exists": true,
         "truth_center_routed": true,
         "explicit_v151_exception": false,
         "fail_closed": true,
@@ -626,7 +626,7 @@
         "entrypoint_kind": "llm_skill_guidance",
         "classification": "resolver_guidance_required",
         "exception_kind": "",
-        "exists": false,
+        "exists": true,
         "truth_center_routed": true,
         "explicit_v151_exception": false,
         "fail_closed": true,
@@ -689,21 +689,11 @@
         "severity": "error",
         "code": "truth_entrypoint_inventory_missing",
         "path": "beacon/utils/acceptance_kit.py"
-      },
-      {
-        "severity": "error",
-        "code": "truth_entrypoint_inventory_missing",
-        "path": "skills/beacon/**/SKILL.md"
-      },
-      {
-        "severity": "error",
-        "code": "truth_entrypoint_inventory_missing",
-        "path": ".agents/skills/**/SKILL.md"
       }
     ]
   },
   "generated_by": "beacon.truth_map.resolver",
-  "generated_at": "2026-08-12T15:39:03.655674+00:00",
+  "generated_at": "2026-08-12T15:41:07.884863+00:00",
   "truth_authority": false,
   "source_paths": {
     "truth": "docs/beacon/v0.1.2/features/session-routing/truth.md",
@@ -714,7 +704,7 @@
   "source_hashes": {
     "truth": "2654219330d12217a34c165cf31aae2e345a1ff9a42514abf3d2973a305ca084",
     "tests": "b7fec915df80cea9d9dbb05cc844f060cacd4701be04587da8a028dfd8771466",
-    "tasks": "faee080eba7f3d6163b27c699a1030e1943f409d1001e58560deb3ca94f79d27",
-    "evidence": "ddc0e1d4bea85319157ce5a1b6a99c6fa0620c1e6c1875e17ad171e76396180c"
+    "tasks": "0fa176c8304aa9aa83e1fee2a75b90fa8178edff37650cdeed0e8c875edb22ea",
+    "evidence": "a204e4195cb46cf3c6c0fc02a3b4b9b998325c254b3d177ff5bd406681e86885"
   }
 }
