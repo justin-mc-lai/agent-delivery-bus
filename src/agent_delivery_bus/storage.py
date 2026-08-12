@@ -162,6 +162,11 @@ class Storage:
                 created_at TEXT NOT NULL,
                 updated_at TEXT NOT NULL
             );
+            CREATE TABLE IF NOT EXISTS session_leases (
+                session_id TEXT PRIMARY KEY,
+                dispatch_id TEXT NOT NULL,
+                acquired_at TEXT NOT NULL
+            );
             """
         )
         self._migrate_legacy_columns()

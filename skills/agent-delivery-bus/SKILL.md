@@ -94,6 +94,18 @@ dispatch stage by default.
 Read [references/contracts.md](references/contracts.md) before performing a real
 dispatch or interpreting reconciliation.
 
+## Session routing resolution order
+
+聊天里用 `adb <项目编号> <业务描述>` 触发调度时，目标 agent 按以下决议顺序确定（绝不静默跳级）：
+
+1. 显式 `--target-executor`（explicit）
+2. 该通道线程的会话绑定 target（binding，`adb session bind`）
+3. 项目 `metadata.executor_policy.stages[<stage>]`（policy）
+4. 通道默认（channel_default → hermes coding）
+
+每次派发默认独立目标会话（`<target>-<digest[:12]>`，防止同线程并发任务串话）；
+固定会话用 `--target-session fixed:<id>` 时加互斥 lease，忙则 `session_busy`。
+
 Project lifecycle: `register` auto-assigns index = max+1 (never reused);
 `delete` soft-archives (dispatchable=false, index kept); `restore` reactivates.
 Project management writes also require explicit human confirmation.

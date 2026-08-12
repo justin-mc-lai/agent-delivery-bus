@@ -38,6 +38,10 @@ def session_id_for(*, channel: str, channel_thread: str, actor_id: str, host_ses
     return "sess_" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:24]
 
 
+def next_task_session(*, target_executor: str, seed: str) -> str:
+    return f"{str(target_executor or 'agent').strip().lower()}-{hashlib.sha256(str(seed or '').encode('utf-8')).hexdigest()[:12]}"
+
+
 class SessionRegistry:
     def __init__(self, storage: Storage, *, ttl_seconds: int = DEFAULT_TTL_SECONDS):
         self.storage = storage
@@ -156,6 +160,41 @@ class SessionRegistry:
             "state": "stale" if stale else binding.get("state", "bound"),
             "stale": stale,
         }
+
+    def acquire(self, session_id: str, dispatch_id: str) -> dict[str, Any]:
+        if not session_id or not dispatch_id:
+            raise DeliveryBusError("session_lease_invalid", "session_id and dispatch_id are required")
+        row = self.storage.conn.execute(
+            "SELECT dispatch_id FROM session_leases WHERE session_id=?", (session_id,)
+        ).fetchone()
+        if row is not None and str(row["dispatch_id"]) != str(dispatch_id):
+            raise DeliveryBusError(
+                "session_busy",
+                f"session {session_id} is leased by dispatch {row['dispatch_id']}",
+                resume_action="wait for the in-flight dispatch to complete, or use --target-session auto",
+                data={"held_by": row["dispatch_id"]},
+            )
+        self.storage.conn.execute(
+            "INSERT INTO session_leases(session_id,dispatch_id,acquired_at) VALUES(?,?,?) "
+            "ON CONFLICT(session_id) DO UPDATE SET acquired_at=excluded.acquired_at",
+            (session_id, dispatch_id, _now()),
+        )
+        return {"session_id": session_id, "dispatch_id": dispatch_id, "acquired": True}
+
+    def release(self, session_id: str, dispatch_id: str) -> dict[str, Any]:
+        row = self.storage.conn.execute(
+            "SELECT dispatch_id FROM session_leases WHERE session_id=?", (session_id,)
+        ).fetchone()
+        if row is None:
+            return {"session_id": session_id, "released": False, "reason": "not_leased"}
+        if str(row["dispatch_id"]) != str(dispatch_id):
+            raise DeliveryBusError(
+                "session_lease_mismatch",
+                "lease release dispatch mismatch",
+                resume_action="only the owning dispatch may release the lease",
+            )
+        self.storage.conn.execute("DELETE FROM session_leases WHERE session_id=?", (session_id,))
+        return {"session_id": session_id, "released": True}
 
     def _is_stale(self, binding: dict[str, Any]) -> bool:
         try:
