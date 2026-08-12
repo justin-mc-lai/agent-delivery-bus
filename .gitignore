@@ -135,3 +135,4 @@ src/*.egg-info/
 /pi-executor/
 /pi-curator/
 /session-routing/
+/channel-session-hardening/
