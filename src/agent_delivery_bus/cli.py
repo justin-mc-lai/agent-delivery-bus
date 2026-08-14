@@ -324,6 +324,7 @@ def build_parser() -> argparse.ArgumentParser:
     boundary_ingest.add_argument("--topic", required=True)
     boundary_ingest.add_argument("--query", action="append", default=[], dest="query_hints")
     boundary_ingest.add_argument("--source", action="append", default=[], dest="sources")
+    boundary_ingest.add_argument("--library", action="append", default=[], dest="libraries")
     boundary_ingest.add_argument("--rationale", default="")
     boundary_ingest.add_argument("--project-profile-ref", default="", dest="project_profile_ref")
     boundary_ingest.add_argument("--account-profile-ref", default="", dest="account_profile_ref")
@@ -1353,6 +1354,7 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                     topic=args.topic,
                     query_hints=list(args.query_hints or []),
                     sources=list(args.sources or []),
+                    libraries=list(args.libraries or []),
                     rationale=args.rationale,
                     project_profile_ref=str(getattr(args, "project_profile_ref", "") or ""),
                     account_profile_ref=str(getattr(args, "account_profile_ref", "") or ""),

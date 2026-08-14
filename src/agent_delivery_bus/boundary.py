@@ -33,6 +33,34 @@ def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def _normalize_libraries(libraries: list[Any] | None) -> list[dict[str, str]]:
+    """Normalize library entries to ``[{"name": ..., "domain": ...}, ...]``.
+
+    Accepts dicts (``{"name", "domain"}``) or strings (``"LangGraph (Agent 编排)"``
+    or ``"LangGraph"``). Unknown shapes are skipped; order is preserved.
+    """
+    out: list[dict[str, str]] = []
+    for lib in libraries or []:
+        if isinstance(lib, dict):
+            name = str(lib.get("name") or "").strip()
+            if not name:
+                continue
+            domain = str(lib.get("domain") or "").strip()
+        else:
+            text = str(lib).strip()
+            if not text:
+                continue
+            match = re.match(r"^(?P<name>.+?)\s*\((?P<domain>[^()]*)\)$", text)
+            if match:
+                name = match.group("name").strip()
+                domain = match.group("domain").strip()
+            else:
+                name = text
+                domain = ""
+        out.append({"name": name, "domain": domain})
+    return out
+
+
 def _profiles_root() -> Path:
     # src/agent_delivery_bus/boundary.py → repo root
     return Path(__file__).resolve().parents[2] / "fixtures" / "vertical-profiles"
@@ -128,6 +156,7 @@ class BoundaryService:
         topic: str,
         query_hints: list[str] | None = None,
         sources: list[str] | None = None,
+        libraries: list[dict[str, Any]] | None = None,
         rationale: str = "",
         project_profile_ref: str = "",
         account_profile_ref: str = "",
@@ -186,6 +215,7 @@ class BoundaryService:
             "topic": topic,
             "query_hints": hints,
             "sources": [str(s).strip() for s in (sources or []) if str(s).strip()],
+            "libraries": _normalize_libraries(libraries),
             "rationale": (rationale or "").strip(),
             "project_profile_ref": project_profile.get("id") or project_ref,
             "account_profile_ref": (account_profile or {}).get("id") if account_profile else account_ref,
@@ -295,101 +325,193 @@ TOPIC_BANK: list[dict[str, Any]] = [
         "topic": "本周值得盯的 GitHub 开源 AI Agent 框架更新",
         "query_hints": ["github ai agent", "开源 agent framework", "llm agent release"],
         "rationale": "示例·AI Spec 贴图｜给建造者可执行的开源雷达",
+        "libraries": [
+            {"name": "LangGraph", "domain": "Agent 编排框架"},
+            {"name": "CrewAI", "domain": "Agent 编排框架"},
+            {"name": "AutoGen", "domain": "Agent 编排框架"},
+        ],
     },
     {
         "topic": "把一条 AI Spec 画成信息图：输入/工具/护栏三块怎么拆",
         "query_hints": ["ai spec diagram", "agent spec 信息图", "tool guardrail"],
         "rationale": "示例·贴图=image_post｜把规范变成可转发图",
+        "libraries": [
+            {"name": "Mermaid", "domain": "图表渲染"},
+            {"name": "Excalidraw", "domain": "协作白板绘图"},
+        ],
     },
     {
         "topic": "开源 LLM Ops 小工具：评测/追踪/成本一眼看懂",
         "query_hints": ["llm ops opensource", "eval tracing cost", "github llm toolkit"],
         "rationale": "示例·oss-picks｜运维向实用开源清单",
+        "libraries": [
+            {"name": "Langfuse", "domain": "LLM 可观测性"},
+            {"name": "Helicone", "domain": "LLM 网关观测"},
+            {"name": "OpenLLMetry", "domain": "LLM 链路追踪"},
+        ],
     },
     {
         "topic": "从 README 到可复现：开源 AI 库最小跑通清单",
         "query_hints": ["reproducible ai repo", "github quickstart", "oss onboarding"],
         "rationale": "示例·开源 AI 库｜降低读者上手摩擦",
+        "libraries": [
+            {"name": "uv", "domain": "Python 包管理"},
+            {"name": "Hugging Face Hub", "domain": "模型/数据集托管"},
+        ],
     },
     {
         "topic": "Agent 工具调用失败怎么写进 Spec：错误码与重试边界",
         "query_hints": ["agent tool error spec", "retry boundary", "ai spec failure"],
         "rationale": "示例·AI Spec｜把失败路径画清楚",
+        "libraries": [
+            {"name": "MCP", "domain": "工具调用协议"},
+            {"name": "Tenacity", "domain": "重试策略库"},
+        ],
     },
     {
         "topic": "多模型路由开源方案对比：何时该切便宜模型",
         "query_hints": ["multi model router", "github llm router", "cost aware routing"],
         "rationale": "示例·oss-picks｜成本与质量权衡图",
+        "libraries": [
+            {"name": "LiteLLM", "domain": "多模型统一网关"},
+            {"name": "Portkey", "domain": "LLM 网关/路由"},
+        ],
     },
     {
         "topic": "开源 RAG 管线一周进展：切片、召回、引用三件套",
         "query_hints": ["opensource rag", "github retrieval", "citation pipeline"],
         "rationale": "示例·开源 AI｜检索链路可视化贴图",
+        "libraries": [
+            {"name": "LlamaIndex", "domain": "RAG 框架"},
+            {"name": "LangChain", "domain": "RAG/Agent 框架"},
+            {"name": "RAGFlow", "domain": "RAG 应用平台"},
+        ],
     },
     {
         "topic": "把 MCP / Tool Schema 画成人话：字段、权限、副作用",
         "query_hints": ["mcp schema", "tool schema spec", "agent permission"],
         "rationale": "示例·AI Spec 贴图｜协议层可读化",
+        "libraries": [
+            {"name": "MCP", "domain": "工具调用协议"},
+            {"name": "FastMCP", "domain": "MCP 服务端框架"},
+        ],
     },
     {
         "topic": "GitHub 上的 Prompt/Eval 数据集：怎么挑、怎么标注边界",
         "query_hints": ["prompt eval dataset", "github benchmark", "annotation boundary"],
         "rationale": "示例·oss-picks｜数据集选型信息图",
+        "libraries": [
+            {"name": "OpenAI Evals", "domain": "LLM 评测框架"},
+            {"name": "Promptfoo", "domain": "提示词评测"},
+            {"name": "lm-eval-harness", "domain": "模型评测基准"},
+        ],
     },
     {
         "topic": "本地可跑的开源推理栈：量化、显存、吞吐一张图说清",
         "query_hints": ["local llm inference", "quantization vram", "opensource runtime"],
         "rationale": "示例·开源 AI 库｜硬件约束可视化",
+        "libraries": [
+            {"name": "Ollama", "domain": "本地推理运行时"},
+            {"name": "llama.cpp", "domain": "本地推理引擎"},
+            {"name": "vLLM", "domain": "高吞吐推理服务"},
+        ],
     },
     {
         "topic": "Agent 编排框架选型：LangGraph / CrewAI / AutoGen 怎么挑",
         "query_hints": ["langgraph vs crewai", "agent orchestration", "github agent framework"],
         "rationale": "示例·oss-picks｜编排层选型对比图",
+        "libraries": [
+            {"name": "LangGraph", "domain": "Agent 编排框架"},
+            {"name": "CrewAI", "domain": "Agent 编排框架"},
+            {"name": "AutoGen", "domain": "Agent 编排框架"},
+        ],
     },
     {
         "topic": "给 AI 写一份好的系统提示：角色、边界、输出格式三段式",
         "query_hints": ["system prompt design", "prompt spec", "ai spec prompt"],
         "rationale": "示例·AI Spec｜提示词规范可视化",
+        "libraries": [
+            {"name": "Promptfoo", "domain": "提示词评测"},
+            {"name": "Anthropic Cookbook", "domain": "提示工程示例"},
+        ],
     },
     {
         "topic": "开源向量库横向对比：chunk 策略与召回率怎么权衡",
         "query_hints": ["vector database opensource", "chunking strategy", "retrieval recall"],
         "rationale": "示例·开源 AI｜检索底座选型图",
+        "libraries": [
+            {"name": "Chroma", "domain": "向量数据库"},
+            {"name": "Qdrant", "domain": "向量数据库"},
+            {"name": "Milvus", "domain": "向量数据库"},
+            {"name": "Weaviate", "domain": "向量数据库"},
+        ],
     },
     {
         "topic": "AI 应用的观测：OpenTelemetry 追踪一次 Agent 调用全链路",
         "query_hints": ["opentelemetry agent tracing", "llm observability", "github tracing"],
         "rationale": "示例·AI Spec 贴图｜可观测性链路图",
+        "libraries": [
+            {"name": "OpenTelemetry", "domain": "可观测性标准"},
+            {"name": "Langfuse", "domain": "LLM 追踪"},
+            {"name": "OpenLLMetry", "domain": "LLM 链路追踪"},
+        ],
     },
     {
         "topic": "开源 RAG 评测集盘点：问答、引用、幻觉三类指标",
         "query_hints": ["rag benchmark", "evaluation dataset", "hallucination metric"],
         "rationale": "示例·oss-picks｜评测指标信息图",
+        "libraries": [
+            {"name": "RAGAS", "domain": "RAG 评测框架"},
+            {"name": "TruLens", "domain": "LLM 应用评测"},
+            {"name": "MTEB", "domain": "嵌入模型评测"},
+        ],
     },
     {
         "topic": "把工具调用画进状态机：Agent 一次任务的生命周期",
         "query_hints": ["tool call state machine", "agent lifecycle", "ai spec diagram"],
         "rationale": "示例·AI Spec 贴图｜生命周期可视化",
+        "libraries": [
+            {"name": "LangGraph", "domain": "状态图编排"},
+            {"name": "XState", "domain": "状态机框架"},
+        ],
     },
     {
         "topic": "本地模型 vs API：数据隐私、成本、延迟的三岔口怎么选",
         "query_hints": ["local model vs api", "privacy cost latency", "llm deployment"],
         "rationale": "示例·开源 AI 库｜部署选型决策图",
+        "libraries": [
+            {"name": "Ollama", "domain": "本地推理运行时"},
+            {"name": "llama.cpp", "domain": "本地推理引擎"},
+        ],
     },
     {
         "topic": "开源 Agent 的评测基准：从工具调用到长任务到底考什么",
         "query_hints": ["agent benchmark", "tool calling eval", "long horizon tasks"],
         "rationale": "示例·oss-picks｜基准解读贴图",
+        "libraries": [
+            {"name": "AgentBench", "domain": "Agent 评测基准"},
+            {"name": "SWE-bench", "domain": "软件工程 Agent 基准"},
+            {"name": "τ-bench", "domain": "工具调用基准"},
+        ],
     },
     {
         "topic": "AI Spec 的版本管理：Truth、Change、Release 三账怎么对",
         "query_hints": ["ai spec versioning", "requirement truth", "beacon spec"],
         "rationale": "示例·AI Spec｜工程化规范可视化",
+        "libraries": [
+            {"name": "semantic-release", "domain": "自动版本发布"},
+            {"name": "Conventional Commits", "domain": "提交规范"},
+        ],
     },
     {
         "topic": "把 Agent 的 memory 画出来：短期上下文、长期知识、工具状态",
         "query_hints": ["agent memory design", "context management", "ai spec memory"],
         "rationale": "示例·AI Spec 贴图｜记忆分层图",
+        "libraries": [
+            {"name": "MemGPT", "domain": "Agent 记忆管理"},
+            {"name": "Zep", "domain": "长期记忆层"},
+            {"name": "LangMem", "domain": "记忆优化工具"},
+        ],
     },
 ]
 
@@ -496,6 +618,11 @@ for item in topics:
         cmd.extend(["--query", q])
     for s in item.get("sources") or ["demo://wechat-gzh/image_post"]:
         cmd.extend(["--source", s])
+    for lib in item.get("libraries") or []:
+        name = lib.get("name") if isinstance(lib, dict) else str(lib)
+        domain = (lib.get("domain") if isinstance(lib, dict) else "") or ""
+        flag = f"{name} ({domain})" if domain else str(name)
+        cmd.extend(["--library", flag])
     proc = subprocess.run(cmd, capture_output=True, text=True)
     if proc.returncode != 0:
         print(proc.stdout or proc.stderr or f"ingest failed: {item['topic']}", file=sys.stderr)
@@ -520,6 +647,14 @@ lines = [
 for i, row in enumerate(ingested[:5], 1):
     lines.append(f"{i}. {row.get('topic') or '(no topic)'}")
     lines.append(f"   id={row.get('id') or '-'}")
+    libs = row.get("libraries") or []
+    if libs:
+        bits = []
+        for lib in libs:
+            name = lib.get("name") if isinstance(lib, dict) else str(lib)
+            domain = (lib.get("domain") if isinstance(lib, dict) else "") or ""
+            bits.append(f"{name}（{domain}）" if domain else str(name))
+        lines.append(f"   📦 {' / '.join(bits)}")
 lines.extend(["", "下一步：approve 或 reject 任意一条 id"])
 print("\n".join(lines))
 PY

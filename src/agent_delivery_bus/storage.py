@@ -129,6 +129,7 @@ class Storage:
                 topic TEXT NOT NULL,
                 query_hints_json TEXT NOT NULL DEFAULT '[]',
                 sources_json TEXT NOT NULL DEFAULT '[]',
+                libraries_json TEXT NOT NULL DEFAULT '[]',
                 rationale TEXT NOT NULL DEFAULT '',
                 project_profile_ref TEXT NOT NULL DEFAULT '',
                 account_profile_ref TEXT NOT NULL DEFAULT '',
@@ -210,6 +211,10 @@ class Storage:
         if "provenance" not in boundary_columns:
             self.conn.execute(
                 "ALTER TABLE boundary_proposals ADD COLUMN provenance TEXT NOT NULL DEFAULT ''"
+            )
+        if "libraries_json" not in boundary_columns:
+            self.conn.execute(
+                "ALTER TABLE boundary_proposals ADD COLUMN libraries_json TEXT NOT NULL DEFAULT '[]'"
             )
 
     def snapshot_project(self, slug: str, payload: dict[str, Any]) -> None:
@@ -611,6 +616,7 @@ class Storage:
         payload = dict(row)
         payload["query_hints"] = json.loads(payload.pop("query_hints_json") or "[]")
         payload["sources"] = json.loads(payload.pop("sources_json") or "[]")
+        payload["libraries"] = json.loads(payload.pop("libraries_json") or "[]")
         return payload
 
     def upsert_boundary_proposal(self, proposal: dict[str, Any]) -> dict[str, Any]:
@@ -618,14 +624,15 @@ class Storage:
         self.conn.execute(
             """
             INSERT INTO boundary_proposals(
-              id, topic, query_hints_json, sources_json, rationale,
+              id, topic, query_hints_json, sources_json, libraries_json, rationale,
               project_profile_ref, account_profile_ref, provenance, status,
               actor, decision_note, created_at, updated_at, decided_at
-            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
             ON CONFLICT(id) DO UPDATE SET
               topic=excluded.topic,
               query_hints_json=excluded.query_hints_json,
               sources_json=excluded.sources_json,
+              libraries_json=excluded.libraries_json,
               rationale=excluded.rationale,
               project_profile_ref=excluded.project_profile_ref,
               account_profile_ref=excluded.account_profile_ref,
@@ -641,6 +648,7 @@ class Storage:
                 str(proposal["topic"]),
                 json.dumps(list(proposal.get("query_hints") or []), ensure_ascii=False),
                 json.dumps(list(proposal.get("sources") or []), ensure_ascii=False),
+                json.dumps(list(proposal.get("libraries") or []), ensure_ascii=False),
                 str(proposal.get("rationale") or ""),
                 str(proposal.get("project_profile_ref") or ""),
                 str(proposal.get("account_profile_ref") or ""),
