@@ -32,5 +32,8 @@
   "value_tests": [
     "topic_has_operator_or_builder_value",
     "in_vertical_keywords_or_explicit_value_rationale"
-  ]
+  ],
+  "dispatch_auto": false,
+  "dispatch_project": "",
+  "dispatch_stage": "plan"
 }

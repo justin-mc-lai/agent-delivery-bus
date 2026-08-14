@@ -33,6 +33,24 @@ def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def derive_feature_slug(topic: str, proposal_id: str, max_len: int = 48) -> str:
+    """Derive an ASCII feature slug from a (possibly CJK) topic.
+
+    Keeps only ``[a-z0-9]+`` tokens joined by ``-`` (lowercased). If the topic
+    carries fewer than two ASCII tokens (pure Chinese, or a single word like
+    「chunk」), fall back to a stable ``topic-<proposal_id>`` slug so the feature
+    dir stays unique and valid on disk. Never raises.
+    """
+    tokens = re.findall(r"[A-Za-z0-9]+", topic or "")
+    tokens = [t.lower() for t in tokens if not t.lower() in {"a", "an", "the", "of", "for", "and", "vs"}]
+    if len(tokens) >= 2:
+        slug = "-".join(tokens)
+    else:
+        short_id = str(proposal_id or "").replace("sbp-", "")[:12]
+        slug = f"topic-{short_id}" if short_id else "topic"
+    return slug[:max_len].rstrip("-") or "topic"
+
+
 def _normalize_libraries(libraries: list[Any] | None) -> list[dict[str, str]]:
     """Normalize library entries to ``[{"name": ..., "domain": ...}, ...]``.
 

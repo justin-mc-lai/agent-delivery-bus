@@ -7,9 +7,9 @@ from pathlib import Path
 from typing import Any
 
 from .adapters.factory import AdapterResolver
-from .approvals import ApprovalService
+from .approvals import ApprovalService, RESTRICTED_STAGES
 from .assign import AssignmentScorer
-from .boundary import BoundaryService, hermes_boundary_tick_script
+from .boundary import BoundaryService, derive_feature_slug, hermes_boundary_tick_script, load_vertical_profile
 from .errors import DeliveryBusError
 from .install import install_skill
 from .intent import IntentParser
@@ -716,6 +716,84 @@ def _resolve_project_ref(registry: ProjectRegistry, raw: str | None) -> str | No
         return registry.resolve(alias=text).slug
 
 
+def _auto_dispatch_on_approve(
+    service: DeliveryService,
+    proposal: dict[str, Any],
+    *,
+    actor: str,
+) -> dict[str, Any] | None:
+    """Auto-promote an approved boundary proposal into a real dispatch.
+
+    Fires only when the proposal's project vertical profile opts in with
+    ``dispatch_auto: true`` plus ``dispatch_project`` (registry slug) and an
+    optional ``dispatch_stage`` (default ``plan``). Restricted stages
+    (implement/freeze/release) are never auto-dispatched — they still require a
+    human approval token via ``adb approve``. Returns None when the profile does
+    not opt in (decide keeps its old behavior); otherwise returns a summary of
+    the dispatch attempt (pass or blocked).
+    """
+    ref = str(proposal.get("project_profile_ref") or "").strip()
+    if not ref:
+        return None
+    try:
+        profile = load_vertical_profile(ref)
+    except DeliveryBusError:
+        return None
+    if not profile.get("dispatch_auto"):
+        return None
+    project_slug = str(profile.get("dispatch_project") or "").strip()
+    if not project_slug:
+        return {
+            "status": "blocked",
+            "blocked": True,
+            "reason_code": "auto_dispatch_project_unset",
+            "resume_action": "set dispatch_project in the vertical profile to enable auto-promote",
+        }
+    stage = str(profile.get("dispatch_stage") or "plan").strip().lower() or "plan"
+    if stage in RESTRICTED_STAGES:
+        return {
+            "status": "blocked",
+            "blocked": True,
+            "reason_code": "auto_dispatch_restricted_stage",
+            "resume_action": (
+                f"stage {stage} is restricted; approve and dispatch manually via "
+                "`adb approve` + `adb dispatch`"
+            ),
+            "stage": stage,
+        }
+    feature = derive_feature_slug(
+        str(proposal.get("topic") or ""),
+        str(proposal.get("id") or ""),
+    )
+    try:
+        result = service.dispatch(
+            project_slug=project_slug,
+            stage=stage,
+            feature=feature,
+            actor_id=actor,
+        )
+    except DeliveryBusError as exc:
+        return {
+            "status": "blocked",
+            "blocked": True,
+            "reason_code": exc.reason_code or "auto_dispatch_failed",
+            "resume_action": exc.resume_action or "inspect with `adb task list`",
+            "error": str(exc),
+        }
+    dispatch = result.get("dispatch") or {}
+    return {
+        "status": str(result.get("status") or "pass"),
+        "blocked": bool(result.get("blocked")),
+        "reason_code": str(result.get("reason_code") or ""),
+        "resume_action": str(result.get("resume_action") or ""),
+        "project": project_slug,
+        "stage": stage,
+        "feature": feature,
+        "dispatch_id": str(dispatch.get("dispatch_id") or ""),
+        "duplicate": bool(result.get("duplicate")),
+    }
+
+
 def execute(args: argparse.Namespace) -> dict[str, Any]:
     if args.command == "install-skills":
         skill = ROOT / "skills" / "agent-delivery-bus"
@@ -1373,7 +1451,12 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                     decision=args.decision,
                     note=args.note,
                 )
-                return envelope(status="pass", data={"proposal": row})
+                payload: dict[str, Any] = {"proposal": row}
+                if row.get("status") == "approved":
+                    auto = _auto_dispatch_on_approve(service, row, actor=args.actor)
+                    if auto is not None:
+                        payload["auto_dispatch"] = auto
+                return envelope(status="pass", data=payload)
             if args.boundary_command == "list":
                 return envelope(
                     status="pass",
