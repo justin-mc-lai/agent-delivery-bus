@@ -69,6 +69,8 @@ bin/adb approve --actor <actor> --project <slug> --stage <implement|freeze|relea
 bin/adb dispatch --project <slug> --stage <stage> --feature <feature> --approval-token <token> --json
 bin/adb task show <dispatch-id> --json
 bin/adb reconcile <dispatch-id> --json
+bin/adb reconcile-loop [--interval 60] [--max-runs 0|--once] [--project <slug>] --json
+bin/adb reconcile-loop cron-template --json   # silent Hermes cron tick script
 bin/adb fleet --json
 bin/adb fleet --project <slug> --json
 bin/adb boards status --project <slug>
@@ -122,6 +124,10 @@ dispatch or interpreting reconciliation.
   同一业务任务跨线程重试复用同一 dispatch。
 - 结果回传走独立 ChannelAdapter（`hermes send`），不再依赖执行适配器；
   pi 只负责执行，不承担渠道交付。
+- 自动化回执：`adb reconcile-loop` 定时对账 dispatched/reconciling 派发，
+  完成/失败自动回发原话题；`reconcile-loop cron-template` 输出静默
+  Hermes cron 脚本（本机已注册 `adb-reconcile`，每分钟一轮）。单个
+  dispatch 对账失败（如项目已注销）会被归置为 blocked，不会中断整轮。
 
 Project lifecycle: `register` auto-assigns index = max+1 (never reused);
 `delete` soft-archives (dispatchable=false, index kept); `restore` reactivates.

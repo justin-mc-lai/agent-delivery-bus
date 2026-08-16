@@ -121,6 +121,24 @@ business idempotency keys exclude routing fields, fixed sessions are
 lease-mutexed, and pi runs asynchronously with durable `running` →
 `done`/`failed` receipts.
 
+### Automatic result delivery
+
+`adb reconcile-loop` periodically reconciles every `dispatched` /
+`reconciling` dispatch and delivers terminal results back to the originating
+channel thread (via ChannelAdapter):
+
+```bash
+adb reconcile-loop --once --json          # one round, then exit
+adb reconcile-loop --interval 60          # periodic rounds (Ctrl+C to stop)
+adb reconcile-loop cron-template --json   # silent Hermes cron tick script
+```
+
+The recommended deployment is a Hermes cron job (`--no-agent` + silent
+script, e.g. every 1m); ADB itself posts completion/failure messages to the
+originating Feishu topic. Dispatches whose project was removed from the
+registry are parked `blocked` (`project_not_found`) so one orphan never
+fails the whole round.
+
 ### Workflow presets (third-party enforced workflows)
 
 ADB is workflow-agnostic. Two popular open-source workflows ship as presets:
