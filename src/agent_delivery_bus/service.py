@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from .adapters.memory import InMemoryMemoryAdapter
+from .adapters.channel import ChannelAdapter
 from .adapters.spi import ExecutorAdapter, MemoryAdapter, TruthGateAdapter
 from .approvals import ApprovalService, RESTRICTED_STAGES
 from .errors import CommandTimedOut, DeliveryBusError
@@ -28,6 +29,27 @@ from .workflows import is_verified as _workflow_verified
 
 TERMINAL_EXECUTOR_SUCCESS = {"done", "completed", "success", "succeeded"}
 TERMINAL_EXECUTOR_FAILURE = {"blocked", "failed", "cancelled", "archived"}
+
+# target_executor label -> executor adapter name (mirrors factory mapping).
+# Used to validate custom adapter resolvers that do not yet accept
+# ``target_executor``.
+TARGET_EXECUTOR_ADAPTERS = {
+    "pi": "pi",
+    "hermes": "hermes",
+    "coding": "hermes",
+    "codex": "hermes",
+    "claude": "hermes",
+}
+
+BUSINESS_IDEMPOTENCY_FIELDS = (
+    "schema_version",
+    "project_slug",
+    "canonical_repo",
+    "docs_version",
+    "stage",
+    "feature",
+    "binding_profile",
+)
 
 
 def normalized_request(
@@ -63,7 +85,14 @@ def normalized_request(
 
 
 def request_digest(request: dict[str, Any]) -> str:
-    canonical = json.dumps(request, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    """Digest only the business essence of a request.
+
+    Session/routing fields (channel, thread, actor, host session, target
+    executor/session) are deliberately excluded: the same business task must
+    share one idempotency key even when its routing context changes.
+    """
+    business = {key: request.get(key) for key in BUSINESS_IDEMPOTENCY_FIELDS}
+    canonical = json.dumps(business, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
@@ -122,6 +151,7 @@ class DeliveryService:
         executor: ExecutorAdapter | None = None,
         truth_gate: TruthGateAdapter | None = None,
         memory: MemoryAdapter | None = None,
+        channel_adapter: ChannelAdapter | None = None,
         adapter_resolver: Callable[[Project], dict[str, Any]] | None = None,
         workflow_root: Path | None = None,
         # Backward-compatible aliases
@@ -140,16 +170,49 @@ class DeliveryService:
         self.adapter_resolver = adapter_resolver
         self.workflow_root = workflow_root
         self.memory = memory or InMemoryMemoryAdapter()
+        self.channel_adapter = channel_adapter
         self.preflight = preflight or Preflight(self.truth_gate, self.executor)
         self.approvals = ApprovalService(storage)
 
-    def _adapters_for(self, project: Project, *, stage: str = "") -> dict[str, Any]:
-        """Resolve per-project adapters, falling back to the global pair."""
+    def _adapters_for(
+        self,
+        project: Project,
+        *,
+        stage: str = "",
+        target_executor: str = "",
+    ) -> dict[str, Any]:
+        """Resolve per-project adapters, falling back to the global pair.
+
+        When ``target_executor`` is supplied (explicit flag or session
+        binding), it overrides the adapter choice. Custom resolvers that do
+        not accept the parameter yet are validated instead: a mismatch
+        between the bound target and the resolved executor fails closed.
+        """
         if self.adapter_resolver is not None:
             try:
-                return self.adapter_resolver(project, stage=stage)
+                return self.adapter_resolver(project, stage=stage, target_executor=target_executor)
             except TypeError:
-                return self.adapter_resolver(project)
+                try:
+                    adapters = self.adapter_resolver(project, stage=stage)
+                except TypeError:
+                    adapters = self.adapter_resolver(project)
+                requested = str(target_executor or "").strip().lower()
+                if requested:
+                    expected = TARGET_EXECUTOR_ADAPTERS.get(requested, requested)
+                    actual = str(adapters.get("executor_name") or "").strip().lower()
+                    if actual and actual != expected:
+                        raise DeliveryBusError(
+                            "executor_mismatch",
+                            (
+                                f"session bound target_executor={requested!r} requires the "
+                                f"{expected!r} executor, but the project resolved {actual!r}"
+                            ),
+                            resume_action=(
+                                "update the session binding or the project executor_policy "
+                                "so the bound target matches the executor adapter"
+                            ),
+                        )
+                return adapters
         return {
             "executor": self.executor,
             "truth_gate": self.truth_gate,
@@ -186,12 +249,20 @@ class DeliveryService:
             project = self.registry.resolve(slug=dispatch["project_slug"])
         except DeliveryBusError:
             return {"skipped": True}
-        executor = self._adapters_for(project)["executor"]
-        deliver = getattr(executor, "deliver", None)
-        if not callable(deliver):
-            return {"skipped": True}
+        channel = str(request.get("channel") or "feishu")
+        if self.channel_adapter is not None:
+            deliver = self.channel_adapter.deliver
+        else:
+            executor = self._adapters_for(project)["executor"]
+            deliver = getattr(executor, "deliver", None)
+            if not callable(deliver):
+                return {
+                    "skipped": True,
+                    "reason_code": "deliver_not_supported",
+                    "reason": "no channel adapter and executor has no outbound channel",
+                }
         try:
-            deliver(text, channel_thread=thread, channel=str(request.get("channel") or "feishu"))
+            deliver(text, channel_thread=thread, channel=channel)
             return {"delivered": True, "channel_thread": thread}
         except Exception as exc:  # noqa: BLE001 - delivery must not break reconcile
             return {"delivered": False, "reason_code": "deliver_failed", "reason": str(exc)[:200]}
@@ -272,7 +343,39 @@ class DeliveryService:
             raise DeliveryBusError("feature_required", "feature is required")
         stage = assert_stage_enabled(stage)
 
-        adapters = self._adapters_for(project, stage=stage)
+        session_registry: SessionRegistry | None = None
+        resolved_target = ""
+        resolution_source = ""
+        if channel_thread:
+            session_registry = SessionRegistry(self.storage)
+            resolved_target = str(target_executor or "").strip()
+            if resolved_target:
+                resolution_source = "explicit"
+            else:
+                try:
+                    binding = session_registry.resolve_by_thread(
+                        channel=channel,
+                        channel_thread=channel_thread,
+                        actor_id=actor_id,
+                        host_session=host_session_ref,
+                    )
+                    resolved_target = str(binding.get("target_executor") or "").strip()
+                    if resolved_target:
+                        resolution_source = "binding"
+                except DeliveryBusError:
+                    pass
+            if not resolved_target:
+                policy = project.metadata.get("executor_policy") if isinstance(project.metadata.get("executor_policy"), dict) else {}
+                stages_map = policy.get("stages") if isinstance(policy.get("stages"), dict) else {}
+                resolved_target = str(stages_map.get(stage) or "").strip()
+                resolution_source = "policy" if resolved_target else "channel_default"
+            resolved_target = resolved_target or "hermes"
+
+        # Session-aware adapter resolution: a session-bound target (explicit
+        # or binding) overrides the project/global executor, so a thread bound
+        # to pi really dispatches through PiExecutorAdapter. Mismatches fail
+        # closed in _adapters_for.
+        adapters = self._adapters_for(project, stage=stage, target_executor=resolved_target)
         executor = adapters["executor"]
         truth_gate = adapters["truth_gate"]
         binding_profile = str(adapters["binding_profile"] or "")
@@ -298,42 +401,18 @@ class DeliveryService:
             target_executor=target_executor,
             target_session_ref=target_session_ref,
         )
-        digest = request_digest(request)
-        idempotency_key = forced_idempotency_key or f"adb-v1-{digest}"
-        session_registry: SessionRegistry | None = None
-        if channel_thread:
-            session_registry = SessionRegistry(self.storage)
-            resolved_target = str(target_executor or "").strip()
-            resolution_source = ""
-            if resolved_target:
-                resolution_source = "explicit"
-            elif actor_id or host_session_ref:
-                try:
-                    binding = session_registry.resolve_by_thread(
-                        channel=channel,
-                        channel_thread=channel_thread,
-                        actor_id=actor_id,
-                        host_session=host_session_ref,
-                    )
-                    resolved_target = str(binding.get("target_executor") or "").strip()
-                    if resolved_target:
-                        resolution_source = "binding"
-                except DeliveryBusError:
-                    pass
-            if not resolved_target:
-                policy = project.metadata.get("executor_policy") if isinstance(project.metadata.get("executor_policy"), dict) else {}
-                stages_map = policy.get("stages") if isinstance(policy.get("stages"), dict) else {}
-                resolved_target = str(stages_map.get(stage) or "").strip()
-                resolution_source = "policy" if resolved_target else "channel_default"
-            resolved_target = resolved_target or "hermes"
+        if resolved_target:
             request["target_executor"] = resolved_target
             request["resolution_source"] = resolution_source
+        digest = request_digest(request)
+        if channel_thread:
             raw_session = str(target_session_ref or "").strip()
             if raw_session in ("", "auto"):
                 request["target_session_ref"] = next_task_session(target_executor=resolved_target, seed=digest)
             else:
                 request["target_session_ref"] = raw_session[6:] if raw_session.startswith("fixed:") else raw_session
                 request["lease_required"] = True
+        idempotency_key = forced_idempotency_key or f"adb-v1-{digest}"
         if self.adapter_resolver is not None:
             preflight = Preflight(truth_gate, executor).run(project, stage=stage)
         else:
@@ -552,6 +631,10 @@ class DeliveryService:
                 dispatch_id=dispatch_id,
             )
             runner_profile = str(binding.get("runner_profile") or "coding")
+            if resolved_target in {"codex", "claude", "coding"}:
+                # Session-bound runner profiles map to executor assignees
+                # (hermes kanban profiles; pi ignores assignee).
+                runner_profile = resolved_target
             missing = self._missing_skills(executor, binding.get("skills") or [])
             if missing:
                 if dispatch["state"] == "queued":

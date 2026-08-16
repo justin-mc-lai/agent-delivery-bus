@@ -17,12 +17,14 @@ from __future__ import annotations
 
 import json
 import re
+import threading
 import uuid
+from datetime import datetime, timezone
 from pathlib import Path
 from shutil import which
 from typing import Any
 
-from ..errors import CommandFailed, DeliveryBusError
+from ..errors import CommandTimedOut, DeliveryBusError
 from ..process import CommandRunner
 from ..registry import Project
 from .spi import as_check
@@ -75,10 +77,12 @@ class PiExecutorAdapter:
         runner: CommandRunner | None = None,
         which_command=None,
         ledger: PiRunLedger | None = None,
+        task_timeout: float = 600.0,
     ):
         self.runner = runner or CommandRunner()
         self.which_command = which_command or which
         self.ledger = ledger or PiRunLedger()
+        self.task_timeout = float(task_timeout)
 
     def _cli(self) -> str:
         return PI_CLI_DEFAULT
@@ -158,6 +162,7 @@ class PiExecutorAdapter:
         assignee: str = "coding",
         skills: list[str] | None = None,
         session_id: str = "",
+        wait: bool = False,
     ) -> dict[str, Any]:
         board = self.board_for(project)
         existing = self.ledger.get(board, idempotency_key)
@@ -181,14 +186,76 @@ class PiExecutorAdapter:
         if session_id:
             command.extend(["--session-id", session_id])
         command.append(body)
-        result = self.runner.run(command, cwd=workspace, timeout=600)
-        if result.returncode != 0:
-            raise CommandFailed(
-                "pi_dispatch_failed",
-                "pi launch failed",
-                resume_action="inspect `pi` output, then retry the same idempotency key",
-                data={"stderr": result.stderr[-2000:], "stdout": result.stdout[-2000:]},
+        receipt = {
+            "board": board,
+            "task_id": task_id,
+            "idempotency_key": idempotency_key,
+            "project_slug": project.slug,
+            "stage": stage,
+            "feature": feature,
+            "status": "running",
+            "session_ref": session_id or "",
+            "assignee": assignee,
+            "skills": list(skills or []),
+            "started_at": datetime.now(timezone.utc).isoformat(),
+        }
+        self.ledger.put(board, idempotency_key, receipt)
+        if wait:
+            self._run_and_record(
+                command,
+                workspace=workspace,
+                board=board,
+                idempotency_key=idempotency_key,
+                task_id=task_id,
             )
+            return dict(self.ledger.get(board, idempotency_key) or receipt)
+        thread = threading.Thread(
+            target=self._run_and_record,
+            args=(command,),
+            kwargs={
+                "workspace": workspace,
+                "board": board,
+                "idempotency_key": idempotency_key,
+                "task_id": task_id,
+            },
+            daemon=True,
+        )
+        thread.start()
+        return dict(receipt)
+
+    def _run_and_record(
+        self,
+        command: list[str],
+        *,
+        workspace: str,
+        board: str,
+        idempotency_key: str,
+        task_id: str,
+    ) -> None:
+        """Run pi in the background and update the run ledger on completion."""
+        base = self.ledger.get(board, idempotency_key) or {
+            "board": board,
+            "task_id": task_id,
+            "idempotency_key": idempotency_key,
+            "status": "running",
+        }
+        try:
+            result = self.runner.run(command, cwd=workspace, timeout=self.task_timeout)
+        except CommandTimedOut:
+            base["status"] = "failed"
+            base["reason_code"] = "pi_timeout"
+            base["error"] = f"pi run exceeded {self.task_timeout:.0f}s timeout"
+            base["finished_at"] = datetime.now(timezone.utc).isoformat()
+            self.ledger.put(board, idempotency_key, base)
+            return
+        except Exception as exc:  # noqa: BLE001 - always record a terminal receipt
+            reason_code = getattr(exc, "reason_code", None) or "pi_runner_failed"
+            base["status"] = "failed"
+            base["reason_code"] = str(reason_code)
+            base["error"] = str(exc)[:2000]
+            base["finished_at"] = datetime.now(timezone.utc).isoformat()
+            self.ledger.put(board, idempotency_key, base)
+            return
         session_ref = ""
         if result.stdout.strip():
             try:
@@ -208,20 +275,16 @@ class PiExecutorAdapter:
             or '"stopReason":"error"' in result.stdout
             or '"finalError"' in result.stdout
         )
-        receipt = {
-            "board": board,
-            "task_id": task_id,
-            "idempotency_key": idempotency_key,
-            "project_slug": project.slug,
-            "stage": stage,
-            "feature": feature,
-            "status": "failed" if failed else "done",
-            "session_ref": session_ref,
-            "assignee": assignee,
-            "skills": list(skills or []),
-        }
-        self.ledger.put(board, idempotency_key, receipt)
-        return dict(receipt)
+        base["status"] = "failed" if failed else "done"
+        base["session_ref"] = session_ref or base.get("session_ref") or ""
+        base["finished_at"] = datetime.now(timezone.utc).isoformat()
+        if failed:
+            base["reason_code"] = (
+                "pi_llm_error" if result.returncode == 0 else "pi_dispatch_failed"
+            )
+            base["stderr"] = result.stderr[-2000:]
+            base["stdout_tail"] = result.stdout[-2000:]
+        self.ledger.put(board, idempotency_key, base)
 
     def show_task(self, board: str, task_id: str) -> dict[str, Any]:
         for receipt in self._receipts(board):
@@ -262,8 +325,3 @@ class PiExecutorAdapter:
                     installed.add(skill_dir.name)
         missing = [s for s in skills if s and s not in installed]
         return {"missing": missing, "installed": sorted(installed)}
-
-    def deliver(self, text: str, *, channel_thread: str = "", channel: str = "feishu") -> dict[str, Any]:
-        """pi has no outbound chat channel; delivery is a hermes concern."""
-        del text, channel_thread, channel
-        return {"delivered": False, "reason_code": "deliver_not_supported", "reason": "pi executor has no outbound channel"}

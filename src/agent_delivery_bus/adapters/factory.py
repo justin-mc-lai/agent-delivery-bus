@@ -24,6 +24,17 @@ EXECUTOR_ADAPTERS = {
     "null": NullExecutor,
 }
 
+# target_executor label -> executor adapter name.
+# codex/claude/coding are runner profiles served by the hermes adapter
+# (assignee mapping), never separate adapters.
+TARGET_EXECUTOR_ADAPTERS = {
+    "pi": "pi",
+    "hermes": "hermes",
+    "coding": "hermes",
+    "codex": "hermes",
+    "claude": "hermes",
+}
+
 TRUTH_GATE_ADAPTERS = {
     "beacon": BeaconAdapter,
     "content": ContentTruthGate,
@@ -143,7 +154,20 @@ class AdapterResolver:
             self._gates[key] = instance
         return instance
 
-    def for_project(self, project: Project | None = None, *, stage: str = "") -> dict[str, Any]:
+    def for_project(
+        self,
+        project: Project | None = None,
+        *,
+        stage: str = "",
+        target_executor: str = "",
+    ) -> dict[str, Any]:
+        """Resolve per-project adapters with session-aware executor override.
+
+        ``target_executor`` comes from an explicit flag or a channel session
+        binding. When present it overrides the project/global executor choice
+        so a session bound to ``pi`` really dispatches through the pi adapter.
+        Unknown targets stay unresolved and fail closed in ``create_executor``.
+        """
         stage_executor = ""
         if project is not None:
             policy = project.metadata.get("executor_policy")
@@ -151,11 +175,12 @@ class AdapterResolver:
                 stages = policy.get("stages")
                 if isinstance(stages, dict) and stage:
                     stage_executor = str(stages.get(stage) or "").strip()
-        executor_name = (
-            (stage_executor or project.executor or self.global_executor).strip().lower()
+        raw_executor = (
+            (target_executor or stage_executor or project.executor or self.global_executor).strip().lower()
             if project is not None
-            else self.global_executor
+            else (target_executor or self.global_executor).strip().lower()
         )
+        executor_name = TARGET_EXECUTOR_ADAPTERS.get(raw_executor, raw_executor)
         truth_name = (
             (project.truth_gate or self.global_truth_gate).strip().lower()
             if project is not None

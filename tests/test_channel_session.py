@@ -29,18 +29,35 @@ class ChannelSessionTests(unittest.TestCase):
             "preflight_checks": lambda self, p, stage="": [],
             "closure": lambda self, **k: {"pass": True},
         })()
-        svc = DeliveryService(
-            registry,
-            Storage(":memory:"),
-            executor=hermes,
-            truth_gate=gate,
-            adapter_resolver=lambda p, stage="": {
+        pi_executor = PiExecutorAdapter(
+            runner=FakeRunner(FakeResult(stdout='{"type":"message_end","message":{"stopReason":"stop"}}')),
+            which_command=lambda _n: "/usr/local/bin/pi",
+            ledger=PiRunLedger(tmp / "pi-ledger"),
+        )
+
+        def adapter_resolver(p, stage="", target_executor=""):
+            if str(target_executor or "").strip().lower() == "pi":
+                return {
+                    "executor": pi_executor,
+                    "truth_gate": gate,
+                    "binding_profile": "beacon",
+                    "executor_name": "pi",
+                    "truth_gate_name": "null",
+                }
+            return {
                 "executor": hermes,
                 "truth_gate": gate,
                 "binding_profile": "beacon",
                 "executor_name": "hermes",
                 "truth_gate_name": "null",
-            },
+            }
+
+        svc = DeliveryService(
+            registry,
+            Storage(":memory:"),
+            executor=hermes,
+            truth_gate=gate,
+            adapter_resolver=adapter_resolver,
         )
         return registry, svc
 

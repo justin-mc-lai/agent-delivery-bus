@@ -10,6 +10,7 @@ from .adapters.factory import AdapterResolver
 from .approvals import ApprovalService, RESTRICTED_STAGES
 from .assign import AssignmentScorer
 from .boundary import BoundaryService, derive_feature_slug, hermes_boundary_tick_script, load_vertical_profile
+from .adapters.channel import HermesChannelAdapter
 from .errors import DeliveryBusError
 from .install import install_skill
 from .intent import IntentParser
@@ -816,6 +817,7 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
             executor=executor,
             truth_gate=truth_gate,
             memory=wired["memory"],
+            channel_adapter=HermesChannelAdapter(),
             adapter_resolver=resolver.for_project,
             workflow_root=ROOT,
         )
@@ -1346,8 +1348,11 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                         actor_id=getattr(args, "actor_id", "") or "",
                         host_session=getattr(args, "host_session", "") or "",
                     )
-                    target_executor = str(binding.get("target_executor") or "").strip()
-                    target_session = str(binding.get("target_session") or "").strip()
+                    # Only the bound target_session is resolved here; the
+                    # target_executor is resolved by the service so the
+                    # resolution_source stays accurate ("binding").
+                    if not target_session:
+                        target_session = str(binding.get("target_session") or "").strip()
                 except DeliveryBusError as exc:
                     return envelope(
                         status="blocked",

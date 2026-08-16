@@ -99,6 +99,27 @@ Implement your own backends against:
 
 - `agent_delivery_bus.adapters.spi.ExecutorAdapter`
 - `agent_delivery_bus.adapters.spi.TruthGateAdapter`
+- `agent_delivery_bus.adapters.channel.ChannelAdapter` (optional; outbound
+  delivery is decoupled from execution so pi-style workers without a chat
+  channel can still report results)
+
+### Session-aware dispatch
+
+Channel threads bind to a target executor session with `adb session bind`:
+
+```bash
+adb session bind --channel feishu --thread oc_1:om_2 --actor open_1 \
+  --host-session h1 --target pi --target-session fixed:pi-thread-1
+```
+
+Resolution order: explicit `--target-executor` → session binding → project
+`executor_policy` → channel default (hermes coding). The resolved target
+actually drives the executor adapter (`pi` → PiExecutorAdapter; `codex` /
+`claude` / `coding` → Hermes assignee profiles); a mismatch fails closed with
+`executor_mismatch`. Session identity excludes `host_session` (audit only),
+business idempotency keys exclude routing fields, fixed sessions are
+lease-mutexed, and pi runs asynchronously with durable `running` →
+`done`/`failed` receipts.
 
 ### Workflow presets (third-party enforced workflows)
 

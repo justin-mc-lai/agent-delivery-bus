@@ -104,9 +104,15 @@ class SessionRoutingTests(unittest.TestCase):
             same = normalized_request(project, stage="goal", feature="f", channel="feishu", channel_thread="t1", actor_id="a", target_executor="pi")
             other_thread = normalized_request(project, stage="goal", feature="f", channel="feishu", channel_thread="t2", actor_id="a", target_executor="pi")
             other_agent = normalized_request(project, stage="goal", feature="f", channel="feishu", channel_thread="t1", actor_id="a", target_executor="codex")
+            other_stage = normalized_request(project, stage="plan", feature="f", channel="feishu", channel_thread="t1", actor_id="a", target_executor="pi")
+            other_feature = normalized_request(project, stage="goal", feature="g", channel="feishu", channel_thread="t1", actor_id="a", target_executor="pi")
             self.assertEqual(request_digest(base), request_digest(same))
-            self.assertNotEqual(request_digest(base), request_digest(other_thread))
-            self.assertNotEqual(request_digest(base), request_digest(other_agent))
+            # Routing/session context must NOT change the business idempotency key.
+            self.assertEqual(request_digest(base), request_digest(other_thread))
+            self.assertEqual(request_digest(base), request_digest(other_agent))
+            # Business essence still separates dispatches.
+            self.assertNotEqual(request_digest(base), request_digest(other_stage))
+            self.assertNotEqual(request_digest(base), request_digest(other_feature))
 
     def test_intent_parse_agent(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -141,7 +147,7 @@ class SessionRoutingTests(unittest.TestCase):
                 which_command=lambda _name: "/usr/local/bin/pi",
                 ledger=PiRunLedger(root / "ledger"),
             )
-            pi.create_task(project, stage="goal", feature="f", body="b", idempotency_key="k", session_id="sess_t")
+            pi.create_task(project, stage="goal", feature="f", body="b", idempotency_key="k", session_id="sess_t", wait=True)
             cmd = next(c for c in runner.calls if "-p" in c)
             self.assertIn("--session-id", cmd)
             self.assertIn("sess_t", cmd)

@@ -40,7 +40,7 @@ class FakeRunner:
 class AutoDonePi(PiExecutorAdapter):
     """Test-only pi adapter that marks runs done for reconcile smoke."""
 
-    def create_task(self, project, *, stage, feature, body, idempotency_key, assignee="coding", skills=None):
+    def create_task(self, project, *, stage, feature, body, idempotency_key, assignee="coding", skills=None, session_id="", wait=True):
         receipt = super().create_task(
             project,
             stage=stage,
@@ -49,6 +49,8 @@ class AutoDonePi(PiExecutorAdapter):
             idempotency_key=idempotency_key,
             assignee=assignee,
             skills=skills,
+            session_id=session_id,
+            wait=wait,
         )
         receipt["status"] = "done"
         self.ledger.put(receipt["board"], idempotency_key, receipt)
@@ -137,6 +139,7 @@ class PiExecutorContractTests(unittest.TestCase):
                 feature="feat-x",
                 body="### Worker binding\n- binding_profile: beacon\n### Evidence spec\n- dispatch_id_binding: true",
                 idempotency_key="key-1",
+                wait=True,
             )
             self.assertTrue(receipt["task_id"].startswith("pi_"))
             self.assertEqual(receipt["board"], "adb-pi-demo")
@@ -155,7 +158,7 @@ class PiExecutorContractTests(unittest.TestCase):
                 which_command=lambda _name: "/usr/local/bin/pi",
                 ledger=PiRunLedger(root / "ledger"),
             )
-            receipt = adapter.create_task(project, stage="goal", feature="f", body="b", idempotency_key="k")
+            receipt = adapter.create_task(project, stage="goal", feature="f", body="b", idempotency_key="k", wait=True)
             self.assertEqual(receipt["status"], "failed")
 
     def test_create_task_marks_done_on_successful_agent_settled(self):
@@ -168,7 +171,7 @@ class PiExecutorContractTests(unittest.TestCase):
                 which_command=lambda _name: "/usr/local/bin/pi",
                 ledger=PiRunLedger(root / "ledger"),
             )
-            receipt = adapter.create_task(project, stage="goal", feature="f", body="b", idempotency_key="k")
+            receipt = adapter.create_task(project, stage="goal", feature="f", body="b", idempotency_key="k", wait=True)
             self.assertEqual(receipt["status"], "done")
 
     def test_create_task_idempotent(self):
@@ -181,8 +184,8 @@ class PiExecutorContractTests(unittest.TestCase):
                 which_command=lambda _name: "/usr/local/bin/omp",
                 ledger=PiRunLedger(root / "ledger"),
             )
-            first = adapter.create_task(project, stage="plan", feature="f", body="b", idempotency_key="k")
-            second = adapter.create_task(project, stage="plan", feature="f", body="b", idempotency_key="k")
+            first = adapter.create_task(project, stage="plan", feature="f", body="b", idempotency_key="k", wait=True)
+            second = adapter.create_task(project, stage="plan", feature="f", body="b", idempotency_key="k", wait=True)
             self.assertEqual(first["task_id"], second["task_id"])
             self.assertEqual(sum(1 for c in runner.calls if "-p" in c), 1)
 

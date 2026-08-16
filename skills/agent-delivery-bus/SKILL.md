@@ -106,6 +106,23 @@ dispatch or interpreting reconciliation.
 每次派发默认独立目标会话（`<target>-<digest[:12]>`，防止同线程并发任务串话）；
 固定会话用 `--target-session fixed:<id>` 时加互斥 lease，忙则 `session_busy`。
 
+### 会话路由的稳定性契约（v1.6.11+）
+
+- 会话身份只由 `channel + channel_thread + actor_id` 构成；`host_session`
+  仅作审计字段，不进身份键——同线程换宿主会话不丢绑定。
+- 决议出的 target 会真正驱动适配器选择：`pi → PiExecutorAdapter`，
+  `codex/claude/coding → HermesAdapter` 的对应 assignee profile；旧式
+  resolver 若解析结果与绑定 target 不一致，fail-closed 返回
+  `executor_mismatch`，绝不静默降级。
+- 固定会话的 ADB 句柄直接作为 pi 的 `--session-id` 精确项目会话 ID；
+  pi 异步执行，先落 `running` receipt 再更新 `done/failed`，超时/失败
+  均有账可对（`pi_timeout` / `pi_dispatch_failed` / `pi_runner_failed`）。
+- 业务幂等键只含 `schema/project/repo/docs_version/stage/feature/
+  binding_profile`；渠道、actor、host_session、target 等路由字段不入键，
+  同一业务任务跨线程重试复用同一 dispatch。
+- 结果回传走独立 ChannelAdapter（`hermes send`），不再依赖执行适配器；
+  pi 只负责执行，不承担渠道交付。
+
 Project lifecycle: `register` auto-assigns index = max+1 (never reused);
 `delete` soft-archives (dispatchable=false, index kept); `restore` reactivates.
 Project management writes also require explicit human confirmation.

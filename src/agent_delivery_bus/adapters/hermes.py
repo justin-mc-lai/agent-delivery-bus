@@ -146,7 +146,15 @@ class HermesAdapter:
         idempotency_key: str,
         assignee: str = "coding",
         skills: list[str] | None = None,
+        session_id: str = "",
     ) -> dict[str, Any]:
+        """Create a kanban task.
+
+        ``session_id`` is the ADB session handle. The public kanban CLI does
+        not expose a session flag, so it is returned on the receipt for
+        session tracing instead of being passed to the CLI. Session-bound
+        runner profiles (codex/claude) arrive via ``assignee``.
+        """
         slug = self.board_for(project)
         workspace = self.workspace_for(project, stage=stage)
         task_skills = ["agent-delivery-bus"]
@@ -203,7 +211,7 @@ class HermesAdapter:
                 resume_action="query the board by idempotency key before retrying",
                 data={"payload": payload},
             )
-        return {"board": slug, "task_id": task_id, "payload": payload}
+        return {"board": slug, "task_id": task_id, "payload": payload, "session_ref": session_id}
 
     def skills_available(self, skills: list[str]) -> dict[str, list[str]]:
         """Return missing skill names (searches local Hermes/Codex skill trees)."""

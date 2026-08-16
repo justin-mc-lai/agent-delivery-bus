@@ -48,7 +48,7 @@ class PiBeaconTests(unittest.TestCase):
                 which_command=lambda _name: "/usr/local/bin/pi",
                 ledger=PiRunLedger(root / "ledger"),
             )
-            adapter.create_task(project, stage="goal", feature="f", body="### Evidence spec\n- dispatch_id_binding: true", idempotency_key="k")
+            adapter.create_task(project, stage="goal", feature="f", body="### Evidence spec\n- dispatch_id_binding: true", idempotency_key="k", wait=True)
             body_cmd = next(cmd for cmd in runner.calls if "-p" in cmd)
             self.assertIn("### Bounded task", body_cmd[-1])
             self.assertIn("Execute ONLY the single concrete deliverable", body_cmd[-1])

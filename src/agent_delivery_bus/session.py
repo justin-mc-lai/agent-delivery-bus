@@ -1,11 +1,13 @@
 """Agent session registry: stable channel/actor -> target executor session mapping.
 
-Session identity has four orthogonal axes:
+Session identity has three persistent axes plus one audit axis:
 - channel_thread: where the message comes from and results go back to
-- host_session: which hermes/agent session parsed the intent
+- actor_id: who is approving (channel identity)
 - target_executor + target_session: which agent (codex/claude/pi) executes and
   into which runnable session
-- actor_id: who is approving (channel identity)
+- host_session: audit only (which hermes/agent session parsed the intent);
+  it is intentionally NOT part of the identity key so a channel thread keeps
+  the same binding across host-session restarts.
 """
 
 from __future__ import annotations
@@ -26,13 +28,16 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def session_id_for(*, channel: str, channel_thread: str, actor_id: str, host_session: str) -> str:
+def session_id_for(*, channel: str, channel_thread: str, actor_id: str, host_session: str = "") -> str:
+    # host_session is deliberately excluded from the identity key: it is a
+    # transient host-side context, not a durable conversation identity.
+    # It remains stored on the binding record for audit purposes.
+    del host_session
     canonical = "|".join(
         [
             str(channel or "").strip().lower(),
             str(channel_thread or "").strip(),
             str(actor_id or "").strip(),
-            str(host_session or "").strip(),
         ]
     )
     return "sess_" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:24]

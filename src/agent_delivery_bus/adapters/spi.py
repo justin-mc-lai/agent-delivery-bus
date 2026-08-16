@@ -74,11 +74,14 @@ class ExecutorAdapter(Protocol):
         body: str,
         idempotency_key: str,
         assignee: str = "coding",
+        session_id: str = "",
     ) -> dict[str, Any]:
         """Create or reuse a task. Must return board and task_id.
 
         ``assignee`` selects the local runner profile (e.g. ``coding`` or
         ``codex``) when the executor backend supports named workers.
+        ``session_id`` is the ADB session handle; backends that support
+        persistent sessions (e.g. pi --session-id) should pass it through.
         """
 
     def show_task(self, board: str, task_id: str) -> dict[str, Any]:
