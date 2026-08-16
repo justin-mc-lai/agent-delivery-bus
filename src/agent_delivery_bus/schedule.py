@@ -298,3 +298,27 @@ SLUG="${1:?slug required}"
 adb schedule should-run "$SLUG" --json | grep -q '"action": "run"' || exit 0
 # Operator/controller path executes command; heartbeat itself must not auto-dispatch.
 """
+
+
+def hermes_reconcile_tick_script() -> str:
+    """Hermes cron fixture: reconcile all pending dispatches on a timer.
+
+    ADB itself delivers terminal results back to the originating channel
+    (ChannelAdapter), so the cron script keeps stdout empty (silent job) and
+    writes diagnostics to a local log. Register with:
+
+    hermes cron create "every 1m" --name adb-reconcile --no-agent \
+      --script adb-reconcile-tick.sh
+    """
+    return """#!/bin/bash
+# Hermes cron tick → ADB reconcile one-pass.
+# Results are delivered back to the originating channel by ADB itself,
+# so this script stays silent (empty stdout) and only logs diagnostics.
+set -euo pipefail
+LOG="${ADB_RECONCILE_LOG:-$HOME/.adb/reconcile-loop.log}"
+mkdir -p "$(dirname "$LOG")"
+{
+  echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] adb reconcile-loop --once"
+  adb reconcile-loop --once --interval 0
+} >>"$LOG" 2>&1
+"""

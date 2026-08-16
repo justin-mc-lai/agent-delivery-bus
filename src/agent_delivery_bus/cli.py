@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import time
 from pathlib import Path
 from typing import Any
 
@@ -19,7 +20,7 @@ from .pending import pending_approval_views, render_pending_channel
 from .pi_curator import CuratorService
 from .preflight import Preflight
 from .registry import ALLOWED_CLASSES, ProjectRegistry
-from .schedule import ScheduleService, hermes_cron_tick_script
+from .schedule import ScheduleService, hermes_cron_tick_script, hermes_reconcile_tick_script
 from .session import SessionRegistry
 from .service import DeliveryService
 from .storage import Storage
@@ -62,6 +63,29 @@ def envelope(
         "resume_action": resume_action,
         "data": data,
     }
+
+
+def _reconcile_one(service: DeliveryService, dispatch_id: str) -> dict[str, Any]:
+    """Reconcile one dispatch without letting an adapter crash the round."""
+    try:
+        return service.reconcile(dispatch_id)
+    except DeliveryBusError as exc:
+        return {
+            "status": "blocked",
+            "blocked": True,
+            "reason_code": exc.reason_code,
+            "resume_action": exc.resume_action,
+            "dispatch_id": dispatch_id,
+        }
+    except Exception as exc:  # noqa: BLE001 - keep the loop alive on adapter bugs
+        return {
+            "status": "failed",
+            "blocked": True,
+            "reason_code": "reconcile_crashed",
+            "resume_action": "inspect executor/gate diagnostics for the dispatch",
+            "dispatch_id": dispatch_id,
+            "error": str(exc)[:500],
+        }
 
 
 def emit(payload: dict[str, Any], *, as_json: bool) -> None:
@@ -294,6 +318,22 @@ def build_parser() -> argparse.ArgumentParser:
     reconcile = sub.add_parser("reconcile")
     reconcile.add_argument("dispatch_id", nargs="?")
     reconcile.add_argument("--json", action="store_true")
+
+    reconcile_loop = sub.add_parser(
+        "reconcile-loop",
+        help="periodic reconcile loop: auto-reconcile pending dispatches and deliver results back to channels",
+    )
+    reconcile_loop_sub = reconcile_loop.add_subparsers(dest="reconcile_loop_command")
+    reconcile_loop_template = reconcile_loop_sub.add_parser(
+        "cron-template",
+        help="print a silent Hermes cron tick script for scheduled reconciliation",
+    )
+    reconcile_loop_template.add_argument("--json", action="store_true")
+    reconcile_loop.add_argument("--interval", type=int, default=60, help="seconds between rounds (default 60)")
+    reconcile_loop.add_argument("--max-runs", type=int, default=0, help="max rounds; 0 = run forever (default 0)")
+    reconcile_loop.add_argument("--once", action="store_true", help="reconcile one round and exit")
+    reconcile_loop.add_argument("--project", default="", help="only reconcile dispatches for this project slug")
+    reconcile_loop.add_argument("--json", action="store_true")
 
     schedule = sub.add_parser("schedule", help="schedule heartbeat layer (register / should-run / quota)")
     schedule_sub = schedule.add_subparsers(dest="schedule_command", required=True)
@@ -1393,9 +1433,69 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                 for row in storage.list_dispatches()
                 if row["state"] in {"dispatched", "reconciling"}
             ]
-            results = [service.reconcile(dispatch_id) for dispatch_id in ids]
+            results = [_reconcile_one(service, dispatch_id) for dispatch_id in ids]
             blocked = any(item.get("blocked") for item in results)
             return envelope(status="blocked" if blocked else "pass", blocked=blocked, data={"results": results})
+
+        if args.command == "reconcile-loop":
+            if getattr(args, "reconcile_loop_command", "") == "cron-template":
+                return envelope(
+                    status="pass",
+                    data={
+                        "text": hermes_reconcile_tick_script(),
+                        "cron_owner": "hermes",
+                        "register": (
+                            'hermes cron create "every 1m" --name adb-reconcile '
+                            "--no-agent --script adb-reconcile-tick.sh"
+                        ),
+                    },
+                )
+            interval = max(0, int(getattr(args, "interval", 60) or 60))
+            max_runs = 1 if getattr(args, "once", False) else int(getattr(args, "max_runs", 0) or 0)
+            project = str(getattr(args, "project", "") or "").strip()
+            as_json = bool(getattr(args, "json", False))
+            runs = 0
+            final_results: list[dict[str, Any]] = []
+            while max_runs == 0 or runs < max_runs:
+                rows = [
+                    row
+                    for row in storage.list_dispatches(project_slug=project or None)
+                    if row["state"] in {"dispatched", "reconciling"}
+                ]
+                ids = [row["dispatch_id"] for row in rows]
+                results = [_reconcile_one(service, dispatch_id) for dispatch_id in ids]
+                final_results = results
+                runs += 1
+                if max_runs == 0 or runs < max_runs:
+                    if as_json:
+                        print(
+                            json.dumps(
+                                {
+                                    "round": runs,
+                                    "checked": len(ids),
+                                    "completed": sum(
+                                        1 for item in results if item.get("status") == "completed"
+                                    ),
+                                    "pending": sum(
+                                        1 for item in results if item.get("status") not in {"completed", "failed"}
+                                    ),
+                                },
+                                ensure_ascii=False,
+                            )
+                        )
+                    else:
+                        print(
+                            f"[{time.strftime('%H:%M:%S')}] reconcile round {runs}: "
+                            f"{len(ids)} checked, "
+                            f"{sum(1 for item in results if item.get('status') == 'completed')} completed"
+                        )
+                    time.sleep(interval)
+            blocked = any(item.get("blocked") for item in final_results)
+            return envelope(
+                status="blocked" if blocked else "pass",
+                blocked=blocked,
+                data={"results": final_results, "rounds": runs},
+            )
 
         if args.command == "schedule":
             schedules = ScheduleService(storage)

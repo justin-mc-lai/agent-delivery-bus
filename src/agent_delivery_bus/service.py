@@ -811,7 +811,30 @@ class DeliveryService:
 
     def reconcile(self, dispatch_id: str) -> dict[str, Any]:
         dispatch = self.storage.get_dispatch(dispatch_id)
-        project = self.registry.resolve(slug=dispatch["project_slug"])
+        try:
+            project = self.registry.resolve(slug=dispatch["project_slug"])
+        except DeliveryBusError as exc:
+            # A dispatch may reference a project that was archived/removed
+            # from the registry. Park it as blocked so it leaves the pending
+            # set instead of failing every reconcile round.
+            try:
+                dispatch = self.storage.transition(
+                    dispatch_id,
+                    expected_from=("dispatched", "reconciling"),
+                    to_state="blocked",
+                    event_type="project_unresolved",
+                    reason_code=exc.reason_code,
+                    resume_action=exc.resume_action,
+                )
+            except DeliveryBusError:
+                dispatch = self.storage.get_dispatch(dispatch_id)
+            return {
+                "status": "blocked",
+                "blocked": True,
+                "reason_code": exc.reason_code,
+                "resume_action": exc.resume_action,
+                "dispatch": dispatch,
+            }
         adapters = self._adapters_for(project)
         executor = adapters["executor"]
         truth_gate = adapters["truth_gate"]
