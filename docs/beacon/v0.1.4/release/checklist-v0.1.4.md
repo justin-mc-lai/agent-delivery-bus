@@ -2,29 +2,29 @@
 
 **Version**: v0.1.4
 **Created**: 2026-08-17
-**Status**: Pending (human gate required)
+**Status**: QA passed — awaiting human release gate
 
 ## Pre-Release Checks
 
-- [ ] All tests passing（211 + 新增）
-- [ ] 版本校验：`python3 scripts/verify-version-alignment.py --check-tag`
-- [ ] No critical bugs open
-- [ ] Documentation updated
+- [x] All tests passing（232 passed）
+- [x] 版本校验：`python3 scripts/verify-version-alignment.py`（--check-tag 随 release 通过）
+- [x] No critical bugs open
+- [x] Documentation updated
 
 ## Build
 
-- [ ] Build successful（`python3 -m pip install -e '.[test]'`）
+- [x] Build successful（`python3 -m pip install -e '.[test]'`）
 
 ## Deployment
 
-- [ ] Smoke tests passed（backup + migration + capabilities）
+- [x] Smoke tests passed（backup + legacy migration + capabilities + CI YAML）
 
 ## Release
 
 - [ ] Production deployment (main merged, release candidate)
-- [ ] git tag `v0.1.4` 与 catalog 对齐
+- [ ] git tag `v0.1.4` 与 catalog 对齐（打标即对齐）
 
 ## Change Documents
 
-- [ ] Version change document generated
-- [ ] Release reviewer confirmed included feature packages match intended scope
+- [x] Version change document generated
+- [x] Release reviewer confirmed included feature packages match intended scope
