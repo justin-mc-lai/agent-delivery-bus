@@ -22,7 +22,7 @@
 ## Release
 
 - [ ] Production deployment (main merged, release candidate)
-- [ ] git tag `v0.1.4` 与 catalog 对齐（打标即对齐）
+- [x] git tag `v0.1.4` 与 catalog 对齐（`--check-tag` 通过）
 
 ## Change Documents
 
