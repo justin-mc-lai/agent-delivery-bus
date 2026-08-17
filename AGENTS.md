@@ -1,6 +1,6 @@
 <!-- BEACON:START -->
-<!-- BEACON:VERSION:v1.6.11 -->
-<!-- BEACON:DOCS_VERSION:v0.0.5 -->
+<!-- BEACON:VERSION:v1.6.12 -->
+<!-- BEACON:DOCS_VERSION:v0.1.4 -->
 # AGENTS.md
 
 This file is Beacon-managed agent operation guidance.
@@ -11,8 +11,8 @@ This file is Beacon-managed agent operation guidance.
 - Preserve user-authored sections outside Beacon managed blocks.
 
 ## Beacon requirement-material usage
-- Runtime target version: `v1.6.11`
-- Docs target version: `v0.0.5`
+- Runtime target version: `v1.6.12`
+- Docs target version: `v0.1.4`
 - Use `docs/beacon/global-boundaries.md` as the canonical Beacon-wide global constraint source.
 - Use `docs/beacon/<version>/` as the canonical delivery tree.
 - Read progressively in this order:
@@ -30,5 +30,4 @@ This file is Beacon-managed agent operation guidance.
 - After runtime/version upgrades on a real project, sync machine requirement materials before QA:
   - `beacon doctor sync-materials --project-root . --version <version> --all-features`
 <!-- BEACON:END -->
-
 

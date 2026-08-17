@@ -395,6 +395,11 @@ def build_parser() -> argparse.ArgumentParser:
     boundary_fixture = boundary_sub.add_parser("tick-fixture", help="run fixture ingest-only tick")
     boundary_fixture.add_argument("--json", action="store_true")
 
+    backup = sub.add_parser("backup", help="back up the local control plane (SQLite ledger + registry configs)")
+    backup.add_argument("--dest", default="", help="target directory (default: data/backups/adb-backup-<timestamp>)")
+    backup.add_argument("--json", action="store_true")
+    backup.set_defaults(command="backup")
+
     install = sub.add_parser("install-skills")
     install.add_argument("--dry-run", action="store_true")
     install.add_argument("--json", action="store_true")
@@ -836,6 +841,30 @@ def _auto_dispatch_on_approve(
 
 
 def execute(args: argparse.Namespace) -> dict[str, Any]:
+    if args.command == "backup":
+        from datetime import datetime
+
+        from .backup import backup_control_plane
+
+        dest = args.dest or (
+            ROOT / "data" / "backups" / f"adb-backup-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
+        )
+        required_sources = [args.config]
+        local_config = ROOT / "config" / "projects.local.json"
+        if local_config.is_file() and Path(args.config).resolve() != local_config.resolve():
+            required_sources.append(local_config)
+        try:
+            manifest = backup_control_plane(db_path=args.db, dest=dest, config_paths=required_sources)
+        except DeliveryBusError as exc:
+            return envelope(
+                status="blocked",
+                blocked=True,
+                reason_code=exc.reason_code,
+                resume_action=exc.resume_action,
+                data={"error": str(exc)},
+            )
+        return envelope(status="pass", data=manifest)
+
     if args.command == "install-skills":
         skill = ROOT / "skills" / "agent-delivery-bus"
         return envelope(status="pass", data=install_skill(skill, dry_run=args.dry_run))

@@ -17,6 +17,59 @@ def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+SCHEMA_VERSION = 2
+
+
+def _migrate_legacy_columns(conn: sqlite3.Connection) -> None:
+    """v1: rename hermes_* columns to executor_* and backfill boundary columns."""
+    columns = {row["name"] for row in conn.execute("PRAGMA table_info(dispatches)").fetchall()}
+    if "hermes_board" in columns and "executor_board" not in columns:
+        conn.execute("ALTER TABLE dispatches RENAME COLUMN hermes_board TO executor_board")
+        columns.discard("hermes_board")
+        columns.add("executor_board")
+    if "hermes_task_id" in columns and "executor_task_id" not in columns:
+        conn.execute("ALTER TABLE dispatches RENAME COLUMN hermes_task_id TO executor_task_id")
+        columns.discard("hermes_task_id")
+        columns.add("executor_task_id")
+    if "executor_board" not in columns:
+        conn.execute("ALTER TABLE dispatches ADD COLUMN executor_board TEXT")
+    if "executor_task_id" not in columns:
+        conn.execute("ALTER TABLE dispatches ADD COLUMN executor_task_id TEXT")
+
+    boundary_columns = {row["name"] for row in conn.execute("PRAGMA table_info(boundary_proposals)").fetchall()}
+    if "project_profile_ref" not in boundary_columns:
+        conn.execute(
+            "ALTER TABLE boundary_proposals ADD COLUMN project_profile_ref TEXT NOT NULL DEFAULT ''"
+        )
+    if "account_profile_ref" not in boundary_columns:
+        conn.execute(
+            "ALTER TABLE boundary_proposals ADD COLUMN account_profile_ref TEXT NOT NULL DEFAULT ''"
+        )
+    if "provenance" not in boundary_columns:
+        conn.execute(
+            "ALTER TABLE boundary_proposals ADD COLUMN provenance TEXT NOT NULL DEFAULT ''"
+        )
+    if "libraries_json" not in boundary_columns:
+        conn.execute(
+            "ALTER TABLE boundary_proposals ADD COLUMN libraries_json TEXT NOT NULL DEFAULT '[]'"
+        )
+
+
+def _add_approval_channel_actor(conn: sqlite3.Connection) -> None:
+    columns = {row["name"] for row in conn.execute("PRAGMA table_info(approvals)").fetchall()}
+    if "channel_actor" not in columns:
+        conn.execute("ALTER TABLE approvals ADD COLUMN channel_actor TEXT NOT NULL DEFAULT ''")
+
+
+# Ordered, append-only migrations. Version numbers must never be reused or
+# reordered; a gap between user_version and the next migration version is a
+# fail-closed state, never something to skip silently.
+MIGRATIONS = (
+    (1, "legacy_columns", _migrate_legacy_columns),
+    (2, "approval_channel_actor", _add_approval_channel_actor),
+)
+
+
 class Storage:
     def __init__(self, path: str | Path):
         self.path = str(path)
@@ -168,54 +221,75 @@ class Storage:
                 dispatch_id TEXT NOT NULL,
                 acquired_at TEXT NOT NULL
             );
+            CREATE TABLE IF NOT EXISTS schema_migrations (
+                version INTEGER PRIMARY KEY,
+                name TEXT NOT NULL,
+                applied_at TEXT NOT NULL
+            );
             """
         )
-        self._migrate_legacy_columns()
-        approval_columns = {
-            row["name"]
-            for row in self.conn.execute("PRAGMA table_info(approvals)").fetchall()
-        }
-        if "channel_actor" not in approval_columns:
-            self.conn.execute("ALTER TABLE approvals ADD COLUMN channel_actor TEXT NOT NULL DEFAULT ''")
+        self._apply_migrations()
 
-    def _migrate_legacy_columns(self) -> None:
-        columns = {
-            row["name"]
-            for row in self.conn.execute("PRAGMA table_info(dispatches)").fetchall()
-        }
-        if "hermes_board" in columns and "executor_board" not in columns:
-            self.conn.execute("ALTER TABLE dispatches RENAME COLUMN hermes_board TO executor_board")
-            columns.discard("hermes_board")
-            columns.add("executor_board")
-        if "hermes_task_id" in columns and "executor_task_id" not in columns:
-            self.conn.execute("ALTER TABLE dispatches RENAME COLUMN hermes_task_id TO executor_task_id")
-            columns.discard("hermes_task_id")
-            columns.add("executor_task_id")
-        if "executor_board" not in columns:
-            self.conn.execute("ALTER TABLE dispatches ADD COLUMN executor_board TEXT")
-        if "executor_task_id" not in columns:
-            self.conn.execute("ALTER TABLE dispatches ADD COLUMN executor_task_id TEXT")
+    def _schema_version(self) -> int:
+        return int(self.conn.execute("PRAGMA user_version").fetchone()[0])
 
-        boundary_columns = {
-            row["name"]
-            for row in self.conn.execute("PRAGMA table_info(boundary_proposals)").fetchall()
+    def _apply_migrations(self) -> None:
+        """Apply pending migrations in order and record them in the audit table."""
+        current = self._schema_version()
+        recorded = [
+            int(row["version"])
+            for row in self.conn.execute(
+                "SELECT version FROM schema_migrations ORDER BY version"
+            ).fetchall()
+        ]
+        if current > 0 and recorded != list(range(1, current + 1)):
+            raise DeliveryBusError(
+                "schema_migration_gap",
+                f"schema user_version={current} but recorded migrations={recorded}",
+                resume_action=(
+                    "restore the ledger from a backup or repair the schema_migrations "
+                    "audit table before continuing"
+                ),
+            )
+        for version, name, migrate in MIGRATIONS:
+            if version <= current:
+                continue
+            with self.transaction():
+                migrate(self.conn)
+                self.conn.execute(
+                    "INSERT INTO schema_migrations(version, name, applied_at) VALUES(?, ?, ?)",
+                    (version, name, now_iso()),
+                )
+                self.conn.execute(f"PRAGMA user_version = {int(version)}")
+            current = version
+
+    def schema_status(self) -> dict[str, Any]:
+        """Return schema version state for doctor/backup/audit surfaces."""
+        rows = self.conn.execute(
+            "SELECT version, name, applied_at FROM schema_migrations ORDER BY version"
+        ).fetchall()
+        return {
+            "target": SCHEMA_VERSION,
+            "user_version": self._schema_version(),
+            "applied": [dict(row) for row in rows],
+            "up_to_date": self._schema_version() >= SCHEMA_VERSION,
         }
-        if "project_profile_ref" not in boundary_columns:
-            self.conn.execute(
-                "ALTER TABLE boundary_proposals ADD COLUMN project_profile_ref TEXT NOT NULL DEFAULT ''"
-            )
-        if "account_profile_ref" not in boundary_columns:
-            self.conn.execute(
-                "ALTER TABLE boundary_proposals ADD COLUMN account_profile_ref TEXT NOT NULL DEFAULT ''"
-            )
-        if "provenance" not in boundary_columns:
-            self.conn.execute(
-                "ALTER TABLE boundary_proposals ADD COLUMN provenance TEXT NOT NULL DEFAULT ''"
-            )
-        if "libraries_json" not in boundary_columns:
-            self.conn.execute(
-                "ALTER TABLE boundary_proposals ADD COLUMN libraries_json TEXT NOT NULL DEFAULT '[]'"
-            )
+
+    def backup_to(self, dest: str | Path) -> dict[str, Any]:
+        """Online-consistent SQLite backup via the native backup API."""
+        dest = Path(dest)
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        target = sqlite3.connect(str(dest))
+        try:
+            self.conn.backup(target)
+        finally:
+            target.close()
+        check = sqlite3.connect(str(dest))
+        try:
+            integrity = str(check.execute("PRAGMA integrity_check").fetchone()[0])
+        finally:
+            check.close()
+        return {"dest": str(dest), "integrity_check": integrity}
 
     def snapshot_project(self, slug: str, payload: dict[str, Any]) -> None:
         self.conn.execute(

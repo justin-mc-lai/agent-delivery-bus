@@ -49,9 +49,21 @@ class ExecutorAdapter(Protocol):
 
     The executor owns claim/retry/worker lifecycle. Delivery Bus never reaches
     into the executor's private database.
+
+    v1.2 contract — explicit capability declaration instead of exception
+    sniffing:
+
+    - ``capabilities`` (class attribute, `dict[str, bool]`) declares which
+      optional call parameters the adapter understands:
+        * ``task_skills`` — accepts the ``skills`` kwarg on ``create_task``
+        * ``task_session`` — accepts the ``session_id`` kwarg on ``create_task``
+    - DeliveryService consults ``capabilities`` before passing those kwargs.
+      An adapter that needs them must declare them; an undeclared feature is
+      treated as unsupported and never probed via ``TypeError``.
     """
 
     name: str
+    capabilities: dict[str, bool]
 
     def preflight_checks(self, project: Project, *, stage: str) -> list[dict[str, Any]]:
         """Return ordered executor readiness checks."""
@@ -146,3 +158,9 @@ def as_check(
         "resume_action": "" if passed else resume_action,
         "detail": detail or {},
     }
+
+
+def adapter_capabilities(adapter: Any) -> dict[str, bool]:
+    """Return the adapter's declared capabilities (empty dict if undeclared)."""
+    caps = getattr(adapter, "capabilities", None)
+    return dict(caps) if isinstance(caps, dict) else {}

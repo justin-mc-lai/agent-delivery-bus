@@ -70,6 +70,7 @@ class PassingPreflight:
 class FakeExecutor:
     def __init__(self, *, remote_status: str = "running"):
         self.name = "fake-executor"
+        self.capabilities = {"task_skills": True, "task_session": False}
         self.create_count = 0
         self.remote_status = remote_status
         self.tasks: dict[str, dict[str, Any]] = {}

@@ -25,6 +25,7 @@ def board_slug(project_slug: str) -> str:
 
 class HermesAdapter:
     name = "hermes"
+    capabilities = {"task_skills": True, "task_session": True}
 
     def __init__(self, runner: CommandRunner | None = None, which_command=None):
         self.runner = runner or CommandRunner()

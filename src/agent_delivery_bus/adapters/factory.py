@@ -201,6 +201,8 @@ class AdapterResolver:
             "truth_gate_name": truth_name,
         }
 
+    for_project.resolver_capabilities = {"target_executor": True, "stage": True}
+
     def global_adapters(self) -> dict[str, Any]:
         return self.for_project(None)
 

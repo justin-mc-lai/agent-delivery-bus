@@ -3,13 +3,19 @@
 from __future__ import annotations
 
 import hashlib
+import inspect
 import json
 from pathlib import Path
 from typing import Any, Callable
 
 from .adapters.memory import InMemoryMemoryAdapter
 from .adapters.channel import ChannelAdapter
-from .adapters.spi import ExecutorAdapter, MemoryAdapter, TruthGateAdapter
+from .adapters.spi import (
+    ExecutorAdapter,
+    MemoryAdapter,
+    TruthGateAdapter,
+    adapter_capabilities,
+)
 from .approvals import ApprovalService, RESTRICTED_STAGES
 from .errors import CommandTimedOut, DeliveryBusError
 from .preflight import Preflight
@@ -94,6 +100,39 @@ def request_digest(request: dict[str, Any]) -> str:
     business = {key: request.get(key) for key in BUSINESS_IDEMPOTENCY_FIELDS}
     canonical = json.dumps(business, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def _call_adapter_resolver(
+    resolver: Callable[..., dict[str, Any]],
+    project: Project,
+    *,
+    stage: str,
+    target_executor: str,
+) -> dict[str, Any]:
+    """Deterministic resolver dispatch via declared capability or signature.
+
+    Resolvers that declare ``resolver_capabilities`` are called with the
+    surface they advertise. Resolvers without the attribute are called
+    by their declared signature (no exception sniffing): ``lambda p: ...``
+    keeps working, while a signature with ``stage`` / ``target_executor``
+    receives the full context.
+    """
+    caps = getattr(resolver, "resolver_capabilities", None)
+    if isinstance(caps, dict):
+        if caps.get("target_executor"):
+            return resolver(project, stage=stage, target_executor=target_executor)
+        if caps.get("stage"):
+            return resolver(project, stage=stage)
+        return resolver(project)
+    params = inspect.signature(resolver).parameters
+    has_var_keyword = any(
+        param.kind is inspect.Parameter.VAR_KEYWORD for param in params.values()
+    )
+    if "target_executor" in params or has_var_keyword:
+        return resolver(project, stage=stage, target_executor=target_executor)
+    if "stage" in params:
+        return resolver(project, stage=stage)
+    return resolver(project)
 
 
 def task_body(
@@ -184,35 +223,35 @@ class DeliveryService:
         """Resolve per-project adapters, falling back to the global pair.
 
         When ``target_executor`` is supplied (explicit flag or session
-        binding), it overrides the adapter choice. Custom resolvers that do
-        not accept the parameter yet are validated instead: a mismatch
-        between the bound target and the resolved executor fails closed.
+        binding), it overrides the adapter choice. Resolver calls are
+        dispatched by ``resolver_capabilities`` / declared signature; a
+        mismatch between the bound target and the resolved executor fails
+        closed instead of probing with ``TypeError``.
         """
         if self.adapter_resolver is not None:
-            try:
-                return self.adapter_resolver(project, stage=stage, target_executor=target_executor)
-            except TypeError:
-                try:
-                    adapters = self.adapter_resolver(project, stage=stage)
-                except TypeError:
-                    adapters = self.adapter_resolver(project)
-                requested = str(target_executor or "").strip().lower()
-                if requested:
-                    expected = TARGET_EXECUTOR_ADAPTERS.get(requested, requested)
-                    actual = str(adapters.get("executor_name") or "").strip().lower()
-                    if actual and actual != expected:
-                        raise DeliveryBusError(
-                            "executor_mismatch",
-                            (
-                                f"session bound target_executor={requested!r} requires the "
-                                f"{expected!r} executor, but the project resolved {actual!r}"
-                            ),
-                            resume_action=(
-                                "update the session binding or the project executor_policy "
-                                "so the bound target matches the executor adapter"
-                            ),
-                        )
-                return adapters
+            adapters = _call_adapter_resolver(
+                self.adapter_resolver,
+                project,
+                stage=stage,
+                target_executor=target_executor,
+            )
+            requested = str(target_executor or "").strip().lower()
+            if requested:
+                expected = TARGET_EXECUTOR_ADAPTERS.get(requested, requested)
+                actual = str(adapters.get("executor_name") or "").strip().lower()
+                if actual and actual != expected:
+                    raise DeliveryBusError(
+                        "executor_mismatch",
+                        (
+                            f"session bound target_executor={requested!r} requires the "
+                            f"{expected!r} executor, but the project resolved {actual!r}"
+                        ),
+                        resume_action=(
+                            "update the session binding or the project executor_policy "
+                            "so the bound target matches the executor adapter"
+                        ),
+                    )
+            return adapters
         return {
             "executor": self.executor,
             "truth_gate": self.truth_gate,
@@ -690,27 +729,21 @@ class DeliveryService:
                     profile_config=profile_config,
                     request=request,
                 )
-            try:
-                receipt = executor.create_task(
-                    project,
-                    stage=stage,
-                    feature=feature,
-                    body=task_body_text,
-                    idempotency_key=idempotency_key,
-                    assignee=runner_profile,
-                    skills=binding.get("skills") or [],
-                    session_id=request.get("target_session_ref") or "",
-                )
-            except TypeError:
-                receipt = executor.create_task(
-                    project,
-                    stage=stage,
-                    feature=feature,
-                    body=task_body_text,
-                    idempotency_key=idempotency_key,
-                    assignee=runner_profile,
-                    skills=binding.get("skills") or [],
-                )
+            caps = adapter_capabilities(executor)
+            create_kwargs: dict[str, Any] = {}
+            if caps.get("task_skills", False):
+                create_kwargs["skills"] = binding.get("skills") or []
+            if caps.get("task_session", False):
+                create_kwargs["session_id"] = request.get("target_session_ref") or ""
+            receipt = executor.create_task(
+                project,
+                stage=stage,
+                feature=feature,
+                body=task_body_text,
+                idempotency_key=idempotency_key,
+                assignee=runner_profile,
+                **create_kwargs,
+            )
             dispatch = self.storage.transition(
                 dispatch_id,
                 expected_from="queued",

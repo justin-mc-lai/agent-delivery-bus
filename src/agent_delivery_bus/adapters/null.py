@@ -26,6 +26,7 @@ class NullExecutor:
     """In-memory executor used for Hermes-free demos and unit wiring."""
 
     name = "null"
+    capabilities = {"task_skills": False, "task_session": False}
 
     def __init__(self, *, auto_complete: bool = True):
         self.auto_complete = auto_complete
@@ -73,8 +74,9 @@ class NullExecutor:
         idempotency_key: str,
         assignee: str = "coding",
         skills: list[str] | None = None,
+        session_id: str = "",
     ) -> dict[str, Any]:
-        del skills
+        del skills, session_id
         existing = self.find_by_idempotency(self.board_for(project), idempotency_key)
         if existing is not None:
             return {

@@ -71,6 +71,7 @@ class PiRunLedger:
 
 class PiExecutorAdapter:
     name = "pi"
+    capabilities = {"task_skills": True, "task_session": True}
 
     def __init__(
         self,
