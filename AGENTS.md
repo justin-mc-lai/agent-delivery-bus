@@ -31,3 +31,11 @@ This file is Beacon-managed agent operation guidance.
   - `beacon doctor sync-materials --project-root . --version <version> --all-features`
 <!-- BEACON:END -->
 
+
+<!-- USER:CUSTOM-START -->
+## 用户规则（大白话汇报）
+
+- 每次交付的「这次做了什么」必须让不懂本项目的人看懂：说人话、少术语、必要术语一句话解释。
+- 复杂批次按 `/eli5`（本仓 `skills/eli5` + 全局已装，Apache-2.0）的大图少字思路输出。
+- 参考实现：`selfmedia/prism` 仓 `contracts/human-card.md` 大白话规则 + `vendor/skills/eli5`。
+<!-- USER:CUSTOM-END -->
