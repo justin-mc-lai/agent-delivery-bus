@@ -37,6 +37,11 @@ def _load_env() -> None:
 def _d1(sql: str, timeout: int = 60) -> tuple[bool, list[dict[str, Any]], str]:
     """Run SQL on remote D1. Returns (ok, rows, err)."""
     _load_env()
+    import os as _os
+    if not _os.environ.get("PATH"):
+        _os.environ["PATH"] = "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+    elif "/opt/homebrew/bin" not in _os.environ["PATH"]:
+        _os.environ["PATH"] = "/opt/homebrew/bin:" + _os.environ["PATH"]
     try:
         r = subprocess.run(
             ["wrangler", "d1", "execute", DB, "--remote", "--command", sql],
