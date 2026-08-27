@@ -368,6 +368,7 @@ def build_parser() -> argparse.ArgumentParser:
     machines_register.add_argument("--json", action="store_true")
     machines_list = machines_sub.add_parser("list", help="list active machines")
     machines_list.add_argument("--capability", default="", help="filter by capability")
+    machines_list.add_argument("--remote", action="store_true", help="read from Cloudflare D1 (multi-machine shared)")
     machines_list.add_argument("--json", action="store_true")
     machines_remove = machines_sub.add_parser("remove", help="remove a machine")
     machines_remove.add_argument("--name", required=True)
@@ -1586,6 +1587,14 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                 })
                 return envelope(status="pass", data={"machine": machine})
             if args.machines_command == "list":
+                if getattr(args, "remote", False):
+                    from .d1_registry import machines_list as d1_machines_list
+                    ok, rows, err = d1_machines_list(capability=args.capability or "")
+                    if not ok:
+                        return envelope(status="blocked", blocked=True, reason_code=err,
+                                        resume_action="run `wrangler login` on this machine first",
+                                        data={"machines": []})
+                    return envelope(status="pass", data={"machines": rows})
                 rows = storage.list_machines(capability=args.capability or None)
                 return envelope(status="pass", data={"machines": rows})
             if args.machines_command == "remove":
