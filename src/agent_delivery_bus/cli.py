@@ -359,6 +359,20 @@ def build_parser() -> argparse.ArgumentParser:
     schedule_tick = schedule_sub.add_parser("cron-template", help="print hermes cron tick script fixture")
     schedule_tick.add_argument("--json", action="store_true")
 
+    machines = sub.add_parser("machines", help="worker machine registry (f8)")
+    machines_sub = machines.add_subparsers(dest="machines_command", required=True)
+    machines_register = machines_sub.add_parser("register", help="register a worker machine (tailscale identity)")
+    machines_register.add_argument("--name", required=True, help="tailscale hostname (e.g. mac-mini)")
+    machines_register.add_argument("--capabilities", default="", help="comma list: pi,codex,hermes")
+    machines_register.add_argument("--permission-level", default="L1", choices=["L0", "L1", "L2", "L3"])
+    machines_register.add_argument("--json", action="store_true")
+    machines_list = machines_sub.add_parser("list", help="list active machines")
+    machines_list.add_argument("--capability", default="", help="filter by capability")
+    machines_list.add_argument("--json", action="store_true")
+    machines_remove = machines_sub.add_parser("remove", help="remove a machine")
+    machines_remove.add_argument("--name", required=True)
+    machines_remove.add_argument("--json", action="store_true")
+
     boundary = sub.add_parser("boundary", help="search-boundary curation (ingest → pending → decide)")
     boundary_sub = boundary.add_subparsers(dest="boundary_command", required=True)
     boundary_ingest = boundary_sub.add_parser("ingest", help="ingest a proposal into pending (never active)")
@@ -1558,6 +1572,28 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                 script = hermes_cron_tick_script()
                 return envelope(status="pass", data={"text": script, "cron_owner": "hermes"})
             raise DeliveryBusError("schedule_command_invalid", f"Unknown schedule command: {args.schedule_command}")
+
+        if args.command == "machines":
+            if args.machines_command == "register":
+                mid = f"mch_{abs(hash(args.name)) & 0xFFFFFF:06x}"
+                machine = storage.upsert_machine({
+                    "machine_id": mid,
+                    "name": args.name,
+                    "tailscale_name": args.name,
+                    "capabilities": args.capabilities,
+                    "permission_level": args.permission_level,
+                    "status": "active",
+                })
+                return envelope(status="pass", data={"machine": machine})
+            if args.machines_command == "list":
+                rows = storage.list_machines(capability=args.capability or None)
+                return envelope(status="pass", data={"machines": rows})
+            if args.machines_command == "remove":
+                removed = storage.remove_machine(args.name)
+                return envelope(status="pass" if removed else "blocked",
+                                blocked=not removed,
+                                reason_code="" if removed else "machine_not_found",
+                                data={"removed": removed, "name": args.name})
 
         if args.command == "boundary":
             boundaries = BoundaryService(storage)

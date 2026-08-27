@@ -58,6 +58,10 @@ BUSINESS_IDEMPOTENCY_FIELDS = (
 )
 
 
+def _tier_rank(level: str) -> int:
+    return {"L0": 0, "L1": 1, "L2": 2, "L3": 3}.get(str(level).upper(), 1)
+
+
 def normalized_request(
     project: Project,
     *,
@@ -443,6 +447,26 @@ class DeliveryService:
         if resolved_target:
             request["target_executor"] = resolved_target
             request["resolution_source"] = resolution_source
+        # f9: bind project executor_machine / executor_agent into the request (fall back to project metadata)
+        request.setdefault("executor_machine", str(project.metadata.get("executor_machine") or ""))
+        request.setdefault("executor_agent", str(project.metadata.get("executor_agent") or "hermes"))
+        # f8 R3: enforce machine permission level against task tier (fail-closed)
+        if request.get("executor_machine"):
+            m = self.storage.get_machine(str(request["executor_machine"]))
+            if m is None:
+                raise DeliveryBusError(
+                    "machine_not_registered",
+                    f"executor_machine {request['executor_machine']!r} is not registered",
+                    resume_action="run `adb machines register` first",
+                )
+            task_tier = {"plan": "L1", "qa": "L1", "implement": "L2", "freeze": "L3", "release": "L3"}.get(stage, "L1")
+            m_level = str(m.get("permission_level") or "L1")
+            if _tier_rank(m_level) < _tier_rank(task_tier):
+                raise DeliveryBusError(
+                    "machine_permission_insufficient",
+                    f"machine {request['executor_machine']} (level {m_level}) cannot run {stage} (needs {task_tier})",
+                    resume_action="raise machine permission_level or pick another machine",
+                )
         digest = request_digest(request)
         if channel_thread:
             raw_session = str(target_session_ref or "").strip()

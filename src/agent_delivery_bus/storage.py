@@ -17,7 +17,7 @@ def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 
 
 def _migrate_legacy_columns(conn: sqlite3.Connection) -> None:
@@ -35,6 +35,10 @@ def _migrate_legacy_columns(conn: sqlite3.Connection) -> None:
         conn.execute("ALTER TABLE dispatches ADD COLUMN executor_board TEXT")
     if "executor_task_id" not in columns:
         conn.execute("ALTER TABLE dispatches ADD COLUMN executor_task_id TEXT")
+    if "executor_machine" not in columns:
+        conn.execute("ALTER TABLE dispatches ADD COLUMN executor_machine TEXT DEFAULT ''")
+    if "executor_agent" not in columns:
+        conn.execute("ALTER TABLE dispatches ADD COLUMN executor_agent TEXT DEFAULT ''")
 
     boundary_columns = {row["name"] for row in conn.execute("PRAGMA table_info(boundary_proposals)").fetchall()}
     if "project_profile_ref" not in boundary_columns:
@@ -61,12 +65,21 @@ def _add_approval_channel_actor(conn: sqlite3.Connection) -> None:
         conn.execute("ALTER TABLE approvals ADD COLUMN channel_actor TEXT NOT NULL DEFAULT ''")
 
 
+def _migrate_executor_binding_columns(conn: sqlite3.Connection) -> None:
+    columns = {row["name"] for row in conn.execute("PRAGMA table_info(dispatches)").fetchall()}
+    if "executor_machine" not in columns:
+        conn.execute("ALTER TABLE dispatches ADD COLUMN executor_machine TEXT DEFAULT ''")
+    if "executor_agent" not in columns:
+        conn.execute("ALTER TABLE dispatches ADD COLUMN executor_agent TEXT DEFAULT ''")
+
+
 # Ordered, append-only migrations. Version numbers must never be reused or
 # reordered; a gap between user_version and the next migration version is a
 # fail-closed state, never something to skip silently.
 MIGRATIONS = (
     (1, "legacy_columns", _migrate_legacy_columns),
     (2, "approval_channel_actor", _add_approval_channel_actor),
+    (3, "executor_binding_columns", _migrate_executor_binding_columns),
 )
 
 
@@ -129,6 +142,8 @@ class Storage:
                 approval_id TEXT,
                 executor_board TEXT,
                 executor_task_id TEXT,
+                executor_machine TEXT DEFAULT '',
+                executor_agent TEXT DEFAULT '',
                 last_reason_code TEXT NOT NULL DEFAULT '',
                 resume_action TEXT NOT NULL DEFAULT '',
                 created_at TEXT NOT NULL,
@@ -145,6 +160,16 @@ class Storage:
                 created_at TEXT NOT NULL,
                 PRIMARY KEY(dispatch_id, sequence),
                 FOREIGN KEY(dispatch_id) REFERENCES dispatches(dispatch_id)
+            );
+            CREATE TABLE IF NOT EXISTS machines (
+                machine_id TEXT PRIMARY KEY,
+                name TEXT NOT NULL UNIQUE,
+                tailscale_name TEXT NOT NULL,
+                capabilities TEXT NOT NULL DEFAULT '',
+                permission_level TEXT NOT NULL DEFAULT 'L1' CHECK(permission_level IN ('L0','L1','L2','L3')),
+                status TEXT NOT NULL DEFAULT 'active' CHECK(status IN ('active','paused','retired')),
+                registered_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
             );
             CREATE TABLE IF NOT EXISTS schedule_entries (
                 slug TEXT PRIMARY KEY,
@@ -332,8 +357,8 @@ class Storage:
                 """
                 INSERT INTO dispatches(
                   dispatch_id,idempotency_key,request_hash,request_json,
-                  project_slug,stage,feature,state,created_at,updated_at
-                ) VALUES(?,?,?,?,?,?,?,'draft',?,?)
+                  project_slug,stage,feature,state,executor_machine,executor_agent,created_at,updated_at
+                ) VALUES(?,?,?,?,?,?,?,'draft',?,?,?,?)
                 """,
                 (
                     dispatch_id,
@@ -343,6 +368,8 @@ class Storage:
                     project_slug,
                     stage,
                     feature,
+                    str(request.get("executor_machine") or ""),
+                    str(request.get("executor_agent") or ""),
                     timestamp,
                     timestamp,
                 ),
@@ -810,3 +837,57 @@ class Storage:
             (decision["decision_id"],),
         ).fetchone()
         return dict(row)
+
+    # ---- f8 machine registry ----
+
+    def upsert_machine(self, machine: dict[str, Any]) -> dict[str, Any]:
+        """Register (or idempotently update) a worker machine."""
+        mid = str(machine["machine_id"])
+        name = str(machine["name"])
+        ts = now_iso()
+        self.conn.execute(
+            """
+            INSERT INTO machines(
+              machine_id, name, tailscale_name, capabilities,
+              permission_level, status, registered_at, updated_at
+            ) VALUES(?,?,?,?,?,?,?,?)
+            ON CONFLICT(name) DO UPDATE SET
+              capabilities=excluded.capabilities,
+              permission_level=excluded.permission_level,
+              status=excluded.status,
+              updated_at=excluded.updated_at
+            """,
+            (
+                mid,
+                name,
+                str(machine.get("tailscale_name") or name),
+                str(machine.get("capabilities") or ""),
+                str(machine.get("permission_level") or "L1"),
+                str(machine.get("status") or "active"),
+                ts,
+                ts,
+            ),
+        )
+        row = self.conn.execute("SELECT * FROM machines WHERE name=?", (name,)).fetchone()
+        assert row is not None
+        return dict(row)
+
+    def get_machine(self, name: str) -> dict[str, Any] | None:
+        row = self.conn.execute("SELECT * FROM machines WHERE name=?", (name,)).fetchone()
+        return dict(row) if row else None
+
+    def list_machines(self, capability: str | None = None) -> list[dict[str, Any]]:
+        if capability:
+            rows = self.conn.execute(
+                "SELECT * FROM machines WHERE status='active' AND capabilities LIKE ?",
+                (f"%{capability}%",),
+            ).fetchall()
+        else:
+            rows = self.conn.execute(
+                "SELECT * FROM machines WHERE status='active' ORDER BY name"
+            ).fetchall()
+        return [dict(r) for r in rows]
+
+    def remove_machine(self, name: str) -> bool:
+        cur = self.conn.execute("DELETE FROM machines WHERE name=?", (name,))
+        return cur.rowcount > 0
