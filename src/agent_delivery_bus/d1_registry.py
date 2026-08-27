@@ -19,8 +19,24 @@ from typing import Any
 DB = "adb-registry"
 
 
+def _load_env() -> None:
+    """Load Cloudflare credentials from ~/.config/adb-d1/token.env if present."""
+    import os
+    if os.environ.get("CLOUDFLARE_API_TOKEN"):
+        return
+    import pathlib
+    envfile = pathlib.Path.home() / ".config" / "adb-d1" / "token.env"
+    if envfile.exists():
+        for line in envfile.read_text().splitlines():
+            line = line.strip()
+            if "=" in line and not line.startswith("#"):
+                k, v = line.split("=", 1)
+                os.environ.setdefault(k.strip(), v.strip())
+
+
 def _d1(sql: str, timeout: int = 60) -> tuple[bool, list[dict[str, Any]], str]:
     """Run SQL on remote D1. Returns (ok, rows, err)."""
+    _load_env()
     try:
         r = subprocess.run(
             ["wrangler", "d1", "execute", DB, "--remote", "--command", sql],
