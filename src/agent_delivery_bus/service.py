@@ -62,6 +62,23 @@ def _tier_rank(level: str) -> int:
     return {"L0": 0, "L1": 1, "L2": 2, "L3": 3}.get(str(level).upper(), 1)
 
 
+def _machine_reachable(name: str) -> bool:
+    """Probe a worker machine over tailscale (ping -c1 -t2). Fallback: assume reachable."""
+    import shutil
+    import subprocess
+    ts = shutil.which("tailscale")
+    if not ts:
+        return True  # tailscale CLI absent on this control machine -> don't block
+    try:
+        r = subprocess.run(
+            [ts, "ping", name],
+            capture_output=True, text=True, timeout=8,
+        )
+        return r.returncode == 0
+    except Exception:
+        return True  # probe failure is not an outage proof; be permissive
+
+
 def normalized_request(
     project: Project,
     *,
@@ -356,6 +373,19 @@ class DeliveryService:
                 "resume_action": "retry writeback; reconcile status is unchanged",
             }
 
+    def _pick_backup_machine(self, wanted: str, capability: str, tier: str) -> str:
+        """Pick a healthy registered machine as failover for an unreachable one."""
+        machines = self.storage.list_machines(capability=capability or None)
+        for m in machines:
+            name = str(m.get("name") or "")
+            if name == wanted:
+                continue
+            if _tier_rank(str(m.get("permission_level") or "L1")) < _tier_rank(tier):
+                continue
+            if _machine_reachable(name):
+                return name
+        return ""
+
     def dispatch(
         self,
         *,
@@ -467,6 +497,28 @@ class DeliveryService:
                     f"machine {request['executor_machine']} (level {m_level}) cannot run {stage} (needs {task_tier})",
                     resume_action="raise machine permission_level or pick another machine",
                 )
+        # f10 R3: tailscale health probe + failover (distributed balanced scheduling)
+        if request.get("executor_machine"):
+            wanted = str(request["executor_machine"])
+            if not _machine_reachable(wanted):
+                # preferred machine unreachable -> pick a healthy registered backup with same capability
+                backup = self._pick_backup_machine(
+                    wanted=wanted,
+                    capability=request.get("executor_agent", ""),
+                    tier=task_tier,
+                )
+                if backup:
+                    request["executor_machine"] = backup
+                    request["actual_machine"] = backup
+                    request["failover_from"] = wanted
+                else:
+                    raise DeliveryBusError(
+                        "no_healthy_executor_machine",
+                        f"machine {wanted} unreachable and no healthy backup for tier {task_tier}",
+                        resume_action="restore a machine or raise permissions",
+                    )
+            else:
+                request["actual_machine"] = wanted
         digest = request_digest(request)
         if channel_thread:
             raw_session = str(target_session_ref or "").strip()

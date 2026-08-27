@@ -120,6 +120,10 @@ def build_parser() -> argparse.ArgumentParser:
     group.add_argument("--path")
     group.add_argument("--index", type=int)
     projects_resolve.add_argument("--json", action="store_true")
+    projects_sync = projects_sub.add_parser("sync", help="sync local registry + repos from Cloudflare D1 (cloud authoritative)")
+    projects_sync.add_argument("--remote", action="store_true", help="read cloud D1 as authoritative project source")
+    projects_sync.add_argument("--clone", action="store_true", help="auto-clone missing repos from GitHub")
+    projects_sync.add_argument("--json", action="store_true")
     projects_register = projects_sub.add_parser("register", help="register a new project (index auto-assigned)")
     projects_register.add_argument("--slug", required=True)
     projects_register.add_argument("--title", default="")
@@ -964,6 +968,20 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                     "可用 --binding-profile 指定其他工作流）"
                 )
                 return envelope(status="pass", data=payload)
+            if args.projects_command == "sync":
+                from .d1_registry import sync_projects_from_cloud
+                if not getattr(args, "remote", False):
+                    return envelope(status="blocked", blocked=True, reason_code="remote_required",
+                                    resume_action="use --remote to sync from Cloudflare D1")
+                local_rows = [p.to_dict() for p in registry.list()]
+                base_dir = str(Path(ROOT).parent) if "ROOT" in dir() else str(Path.cwd())
+                result = sync_projects_from_cloud(
+                    local_rows, base_dir, clone=bool(getattr(args, "clone", False))
+                )
+                if result.get("status") == "blocked":
+                    return envelope(status="blocked", blocked=True, reason_code=str(result.get("reason")),
+                                    data={"synced": False})
+                return envelope(status="pass", data=result)
             if args.projects_command == "delete":
                 if not args.yes:
                     return envelope(
