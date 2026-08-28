@@ -394,6 +394,7 @@ class DeliveryService:
         feature: str,
         approval_token: str = "",
         dry_run: bool = False,
+        reversible: bool = False,
         forced_idempotency_key: str = "",
         channel: str = "",
         channel_thread: str = "",
@@ -656,7 +657,11 @@ class DeliveryService:
             }
 
         approval_id: str | None = dispatch.get("approval_id")
-        if stage in RESTRICTED_STAGES:
+        # f3 R4: reversible L2 implement is agent-autonomous (no human approval).
+        # gate marks reversible=true only after denying irreversible markers; this is
+        # defense-in-depth — a direct adb call without the gate must still approve.
+        reversible_skip = bool(reversible) and stage == "implement"
+        if stage in RESTRICTED_STAGES and not reversible_skip:
             if dispatch["state"] == "draft":
                 dispatch = self.storage.transition(
                     dispatch_id,

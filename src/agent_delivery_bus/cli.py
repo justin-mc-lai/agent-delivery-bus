@@ -302,6 +302,7 @@ def build_parser() -> argparse.ArgumentParser:
     dispatch.add_argument("--feature", required=True)
     dispatch.add_argument("--approval-token", default="")
     dispatch.add_argument("--dry-run", action="store_true")
+    dispatch.add_argument("--reversible", action="store_true", help="f3 R4: reversible L2 implement skips human approval (agent-autonomous)")
     dispatch.add_argument("--channel", default="")
     dispatch.add_argument("--channel-thread", default="")
     dispatch.add_argument("--actor-id", default="")
@@ -1469,6 +1470,7 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                 feature=args.feature,
                 approval_token=args.approval_token,
                 dry_run=args.dry_run,
+                reversible=getattr(args, "reversible", False),
                 channel=channel,
                 channel_thread=channel_thread,
                 actor_id=getattr(args, "actor_id", "") or "",
