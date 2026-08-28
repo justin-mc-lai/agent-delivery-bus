@@ -1,12 +1,22 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Sequence
 
 from .errors import CommandFailed, CommandTimedOut
+
+# Full toolchain PATH: launchd/systemd/CI spawn adb with a minimal PATH that omits
+# /opt/homebrew/bin (homebrew) and ~/.local/bin, which breaks executor CLI detection
+# (pi, beacon, hermes). Unconditionally inject the complete PATH into every subprocess.
+_FULL_PATH = (
+    "/opt/homebrew/bin:/usr/local/bin:"
+    + os.path.expanduser("~/.local/bin")
+    + ":/usr/bin:/bin:/usr/sbin:/sbin"
+)
 
 
 @dataclass(frozen=True)
@@ -45,6 +55,7 @@ class CommandRunner:
                 text=True,
                 timeout=timeout,
                 check=False,
+                env=dict(os.environ, PATH=_FULL_PATH),
             )
         except subprocess.TimeoutExpired as exc:
             raise CommandTimedOut(
