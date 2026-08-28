@@ -819,7 +819,12 @@ class DeliveryService:
             # f3 R4: reversible autonomous dispatch waits for the executor to finish so
             # the caller gets a real result, not a thread that dies with the CLI process.
             if reversible:
-                create_kwargs["wait"] = True
+                try:
+                    import inspect
+                    if "wait" in inspect.signature(executor.create_task).parameters:
+                        create_kwargs["wait"] = True
+                except (TypeError, ValueError):
+                    pass
             receipt = executor.create_task(
                 project,
                 stage=stage,
