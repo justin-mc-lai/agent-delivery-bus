@@ -183,7 +183,11 @@ class ProjectRegistry:
                     aliases=tuple(item.strip() for item in aliases if item.strip()),
                     dispatchable=False if status == "archived" else bool(row.get("dispatchable", True)),
                     status=status,
-                    docs_root=str(Path(docs_root).expanduser().resolve()) if docs_root else "",
+                    docs_root=(
+                        str(Path(docs_root).expanduser().resolve())
+                        if docs_root and Path(docs_root).is_absolute()
+                        else str(Path(canonical_repo) / docs_root) if docs_root else ""
+                    ),
                     docs_version=version,
                     truth_gate=truth_gate,
                     executor=executor,

@@ -177,6 +177,9 @@ class NullTruthGate:
         checks: list[dict[str, Any]] = []
         if project.docs_root:
             docs = Path(project.docs_root)
+            if not docs.is_absolute():
+                # relative docs_root is relative to the project repo, not cwd
+                docs = Path(project.repo) / project.docs_root
             checks.append(
                 as_check(
                     "truth_docs_root",
