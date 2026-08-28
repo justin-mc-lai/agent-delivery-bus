@@ -100,6 +100,7 @@ class BeaconAdapter:
                 "--strict",
                 "--json",
             ],
+            cwd=project.repo,
             timeout=60,
         )
         try:

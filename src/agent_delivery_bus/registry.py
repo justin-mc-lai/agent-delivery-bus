@@ -145,7 +145,11 @@ class ProjectRegistry:
             if not repo:
                 raise DeliveryBusError("project_repo_missing", f"Project {slug!r} has no repo")
             canonical_repo = Path(repo).expanduser().resolve()
-            if validate_paths and not canonical_repo.is_dir():
+            _raw_status = str(row.get("status") or "").strip().lower()
+            _archived = bool(row.get("archived") or _raw_status == "archived")
+            _dispatchable = False if _archived else bool(row.get("dispatchable", True))
+            # only validate repo existence for dispatchable projects; archived/parked may be absent
+            if validate_paths and _dispatchable and not canonical_repo.is_dir():
                 raise DeliveryBusError(
                     "repo_missing",
                     f"Project repository does not exist: {canonical_repo}",
