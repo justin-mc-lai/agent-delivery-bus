@@ -90,13 +90,27 @@ class BeaconAdapter:
         return checks
 
     def verify_context(self, project: Project) -> dict[str, Any]:
+        # For aggregate repos (e.g. selfmedia → prism/docs/beacon), the beacon context
+        # lives under docs_root, not the repo root. Probe the docs_root parent so
+        # verify-context reports the version that actually matches the registry.
+        probe_root = project.repo
+        docs_root = getattr(project, "docs_root", "") or ""
+        if docs_root:
+            dr = Path(docs_root)
+            # docs_root = <repo>/<sub>/docs/beacon; beacon context project-root is the
+            # dir two levels above docs (the repo subproject), e.g. prism for
+            # selfmedia/prism/docs/beacon. Probe there so verify-context reports the
+            # version that actually matches the registry.
+            candidate = dr.parent.parent  # .../docs -> project root
+            if candidate.is_dir():
+                probe_root = str(candidate)
         result = self.runner.run(
             [
                 "beacon",
                 "doctor",
                 "verify-context",
                 "--project-root",
-                project.repo,
+                probe_root,
                 "--strict",
                 "--json",
             ],
