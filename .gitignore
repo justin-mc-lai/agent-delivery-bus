@@ -1,5 +1,5 @@
 # BEACON:GITIGNORE:START
-# BEACON:GITIGNORE:VERSION:v1.6.11
+# BEACON:GITIGNORE:VERSION:v1.6.16
 # Local orchestration scratch state
 .omx/
 .omc/
@@ -66,6 +66,7 @@
 __pycache__/
 *.py[cod]
 # BEACON:GITIGNORE:END
+
 
 
 # Beacon local runtime state
