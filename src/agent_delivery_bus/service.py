@@ -374,9 +374,17 @@ class DeliveryService:
             }
 
     def _pick_backup_machine(self, wanted: str, capability: str, tier: str) -> str:
-        """Pick a healthy registered machine as failover for an unreachable one."""
-        machines = self.storage.list_machines(capability=capability or None)
-        for m in machines:
+        """Pick a healthy registered machine as failover for an unreachable one.
+
+        Priority policy (f13): MacBook is the preferred executor, Mac mini is
+        the fallback. Both must have the capability and tier clearance.
+        """
+        candidates = self.storage.list_machines(capability=capability or None)
+        # sort by preference: macbook first, then mac-mini, then others (by name)
+        pref = {"macbook": 0, "applemacbook-pro": 0, "mac-mini": 1, "chenmingyaodeMac-mini.local": 1}
+        ordered = sorted(candidates, key=lambda m: (pref.get(str(m.get("name") or "").lower(), 99),
+                                                    str(m.get("name") or "")))
+        for m in ordered:
             name = str(m.get("name") or "")
             if name == wanted:
                 continue
@@ -480,6 +488,13 @@ class DeliveryService:
             request["resolution_source"] = resolution_source
         # f9: bind project executor_machine / executor_agent into the request (fall back to project metadata)
         request.setdefault("executor_machine", str(project.metadata.get("executor_machine") or ""))
+        # f13: default scheduling policy — MacBook preferred, Mac mini fallback (global, not just bound projects)
+        if not request.get("executor_machine"):
+            for cand in ("applemacbook-pro", "macbook", "mac-mini", "chenmingyaodeMac-mini.local"):
+                m = self.storage.get_machine(cand)
+                if m and _machine_reachable(cand):
+                    request["executor_machine"] = cand
+                    break
         request.setdefault("executor_agent", str(project.metadata.get("executor_agent") or "hermes"))
         # f8 R3: enforce machine permission level against task tier (fail-closed)
         if request.get("executor_machine"):
@@ -498,11 +513,25 @@ class DeliveryService:
                     f"machine {request['executor_machine']} (level {m_level}) cannot run {stage} (needs {task_tier})",
                     resume_action="raise machine permission_level or pick another machine",
                 )
-        # f10 R3: tailscale health probe + failover (distributed balanced scheduling)
+        # f10 R3 + f13: tailscale health probe + priority scheduling (MacBook preferred, mini fallback)
         if request.get("executor_machine"):
             wanted = str(request["executor_machine"])
-            if not _machine_reachable(wanted):
-                # preferred machine unreachable -> pick a healthy registered backup with same capability
+            # priority order: MacBook first, then Mac mini (canonical tailscale names)
+            pref_order = ("applemacbook-pro", "macbook", "mac-mini", "chenmingyaodeMac-mini.local")
+            chosen = ""
+            for cand in pref_order:
+                m = self.storage.get_machine(cand)
+                if not m:
+                    continue
+                if _tier_rank(str(m.get("permission_level") or "L1")) < _tier_rank(task_tier):
+                    continue
+                if _machine_reachable(cand):
+                    chosen = cand
+                    break
+            # if nothing in pref_order is reachable/cleared, fall back to wanted
+            if not chosen:
+                chosen = wanted if _machine_reachable(wanted) else ""
+            if not chosen:
                 backup = self._pick_backup_machine(
                     wanted=wanted,
                     capability=request.get("executor_agent", ""),
@@ -515,11 +544,14 @@ class DeliveryService:
                 else:
                     raise DeliveryBusError(
                         "no_healthy_executor_machine",
-                        f"machine {wanted} unreachable and no healthy backup for tier {task_tier}",
+                        f"no reachable executor for tier {task_tier}",
                         resume_action="restore a machine or raise permissions",
                     )
             else:
-                request["actual_machine"] = wanted
+                request["executor_machine"] = chosen
+                request["actual_machine"] = chosen
+                if chosen != wanted:
+                    request["failover_from"] = wanted
         digest = request_digest(request)
         if channel_thread:
             raw_session = str(target_session_ref or "").strip()
