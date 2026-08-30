@@ -141,6 +141,19 @@ Beacon 的多表面写入必须遵循单真值、多投影、事务一致的原�
 - **truth 不隔离、实现隔离**：truth 在 main 积累单一真相源；实现隔离避免主分支被半成品污染。两者职责分离。
 - monorepo 场景的 truth 分支策略另定（beacon 当前 single_repo）。
 
+### 4.1 自动合入契约（auto-merge · v1.6.14+）
+
+第一性原理：**合入（merge）与发布（release）是两层动作，控制强度必须匹配风险强度**。合入可逆（git revert / 分支保留），发布不可逆（对用户生效）。方法论 M4（Cursor / Lauren Tan）的 auto-merge 落在合入层，与 Beacon release 人类 gate 不冲突。
+
+- **L1 自动合入（默认）**：实现经 worktree 内 QA 验收（AC↔TC 矩阵全绿 + exec-layer 测试 exit 0）后，agent 可自动 `git merge` 回 main。人类不需要对每个 PR 把关合入动作本身。
+- **L2 合并前置强化（进行中）**：QA passed 后、merge 前，叠加「失败模式回归库命中 0 + 对抗式审查通过」作为自动合并的证据背书。
+- **L3 发布判定（人类 gate 保留，永不动摇）**：`release` verdict 永远不可自动覆盖（`beacon-release` HARD GATE：Human gate required; auto-pass forbidden）。agent 可自动合入 + 构建 + 跑 release 门禁，但**不得自动打 tag / 自动部署 / 自动发布**——最后一步 `manual_confirmation_required` 保持不变。
+- **前置条件（三条件缺一即退回人工）**：
+  1. 验证前置：合入前已有自动化验证通过证据（QA passed / 测试全绿）。
+  2. 可回滚：main 上变更可低成本撤销（git revert 可用、分支保留）。
+  3. 可观测：合入后有 evidence / trace / scorecard 可审计；异常可被发现定位。
+- **禁止**：无验证证据的自动合入（fake delivery）、自动发布到生产、自动部署。这些仍属人类 gate 保护范围。
+
 ## 5. Skill 哲学边界
 
 Beacon 的通用 skill / prompt 默认不得退化成“替强模型编排操作剧本”的说明书。
@@ -324,5 +337,12 @@ Beacon 默认必须同时满足两条：
 - Treating Beacon monorepo `docs/beacon/v1.6.9` as the default for an empty customer project
 - Using toolkit runtime patch as the product version of an external greenfield project
 - Silent major/minor bump without explicit user intent
+
+### External project hard rule (enforced)
+
+- `init` / `setup-context` / material-writing commands refuse `docs_version == runtime_version` on external (`external_greenfield` / `external_existing`) projects.
+- Omitting `-v` must default external docs to `v0.0.1` (greenfield) or the project delivery baseline (existing), never the toolkit runtime semver.
+- Doctor diagnostics/verify fail closed when an external project collapses the two axes or carries a runtime-named docs root.
+- The only explicit force is the documented override `BEACON_ALLOW_RUNTIME_AS_DOCS_VERSION=1`; there is no silent fallback.
 
 Runtime module: `beacon.utils.version_defaults` (`classify_project`, `default_target_version`, `default_hotfix_baseline`).
