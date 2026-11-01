@@ -69,8 +69,12 @@ const (
 	DefaultMaxReplyRunes = 100
 	// DefaultMaxDispatchAttempts is the retry ceiling from AC-005.
 	DefaultMaxDispatchAttempts = 3
-	// DefaultRouterAgentID is the worker the router hands new work to when the
-	// thread brings no live binding of its own.
+	// DefaultRouterAgentID is a placeholder, NOT a worker.
+	//
+	// AC-009: the router may never send work to an id it has not seen paseo
+	// confirm, and "main" is exactly such an unverified name. The constant stays
+	// only so the placeholder can be recognized (and refused) by name; it is
+	// never used as a dispatch target.
 	DefaultRouterAgentID = "main"
 	// decisionsFile is the audit trail name inside .beacon/.
 	decisionsFile = "adbd-decisions.jsonl"
@@ -143,6 +147,15 @@ type Dispatcher interface {
 	Dispatch(thread, agentID, text string) error
 }
 
+// WorkerResolver is the optional second capability of a Dispatcher: it turns a
+// thread plus a candidate id into a worker paseo has actually confirmed exists
+// (AC-009). A Dispatcher that does not implement it can still be dispatched to,
+// but the router then refuses to invent a target: no bound and no configured id
+// is an error, never "main".
+type WorkerResolver interface {
+	EnsureWorker(thread, current string) (string, error)
+}
+
 // traceRecord is one line of .beacon/adbd-decisions.jsonl. The field set is
 // frozen by AC-004: exactly these eight keys, emitted in this order. AC-008 adds
 // a ninth key, decider, which is only materialized when the verdict did not come
@@ -204,7 +217,9 @@ type Router struct {
 	// refreshes it, and the watchdog reads it as "the router is still draining"
 	// (watchdog AC-002).
 	HeartbeatPath string
-	// AgentID is the worker new work is dispatched to.
+	// AgentID is the configured standing worker (adbd_worker_agent_id). It is a
+	// candidate, not a verdict: AC-009 requires it to be confirmed with paseo
+	// before use, and empty means "create a worker instead".
 	AgentID string
 	// TTL is the lease granted by the binding a route decision creates.
 	TTL time.Duration
@@ -221,10 +236,13 @@ type Router struct {
 // NewRouter builds a Router with the frozen defaults.
 func NewRouter(store *Store, decider Decider, dispatcher Dispatcher) *Router {
 	return &Router{
-		Store:         store,
-		Decider:       decider,
-		Dispatcher:    dispatcher,
-		AgentID:       DefaultRouterAgentID,
+		Store:      store,
+		Decider:    decider,
+		Dispatcher: dispatcher,
+		// AC-009: no placeholder default. An empty AgentID means "configure no
+		// standing worker", which makes the router resolve one per message (bound
+		// id first, then a freshly created worker) instead of guessing "main".
+		AgentID:       "",
 		TTL:           DefaultTTL,
 		MaxAttempts:   DefaultMaxDispatchAttempts,
 		MaxReplyRunes: DefaultMaxReplyRunes,
@@ -246,11 +264,32 @@ func (r *Router) ttl() time.Duration {
 	return r.TTL
 }
 
+// agentID is the operator-configured standing worker (adbd_worker_agent_id / --
+// agent-id). Empty stays empty: a placeholder is never promoted to a target
+// (AC-009 ④).
 func (r *Router) agentID() string {
-	if id := strings.TrimSpace(r.AgentID); id != "" {
-		return id
+	id := strings.TrimSpace(r.AgentID)
+	if isPlaceholderAgentID(id) {
+		return ""
 	}
-	return DefaultRouterAgentID
+	return id
+}
+
+// placeholderAgentIDs name no verified worker. Sending work to one of them is
+// the bug AC-009 exists to kill, so every path that picks a target filters them.
+var placeholderAgentIDs = map[string]struct{}{
+	DefaultRouterAgentID: {},
+}
+
+// isPlaceholderAgentID reports whether id is a name that must never be used as a
+// dispatch target. Empty counts as no id at all.
+func isPlaceholderAgentID(id string) bool {
+	id = strings.TrimSpace(id)
+	if id == "" {
+		return true
+	}
+	_, placeholder := placeholderAgentIDs[id]
+	return placeholder
 }
 
 func (r *Router) limit() int {
@@ -420,12 +459,6 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 
 		switch decision.Decision {
 		case DecisionRoute:
-			agentID := r.agentID()
-			if binding := snap.Bindings[bindingKey(item.Channel, item.Thread)]; binding != nil &&
-				isLiveState(binding.State) && strings.TrimSpace(binding.AgentID) != "" {
-				// A bound thread keeps its own worker: route to the owner.
-				agentID = binding.AgentID
-			}
 			if item.Attempts >= r.maxAttempts() {
 				// AC-005: the retries are spent. Escalate instead of dispatching
 				// a fourth time.
@@ -434,10 +467,19 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 				res.Applied++
 				continue
 			}
-			if err := r.dispatch(item, agentID); err != nil {
+			// AC-009: resolve a worker paseo confirms exists before anything is
+			// sent. A stale binding is not a reason to drop the message, and an
+			// unverified name is never a target.
+			agentID, err := r.resolveWorker(item, snap.Bindings[bindingKey(item.Channel, item.Thread)])
+			if err == nil {
+				err = r.dispatch(item, agentID)
+			}
+			if err != nil {
 				// AC-005: backed_off -- the item keeps its attempts and stays
-				// queued, so the next drain retries it.
+				// queued, so the next drain retries it. AC-009 ④: a worker that
+				// could not be resolved is a dispatch failure, recorded as such.
 				item.Attempts++
+				item.ReasonCode = ReasonDispatchFailed
 				if item.Attempts >= r.maxAttempts() {
 					lines = append(lines, trace(item, DecisionEscalate, ReasonDispatchAttemptsExhausted))
 					seen[key] = struct{}{}
@@ -448,6 +490,8 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 				res.Failed++
 				continue
 			}
+			// The resolved id is what the binding keeps: the next message on this
+			// thread reuses the confirmed worker instead of creating another one.
 			if ensureBinding(snap, item, agentID, now, r.ttl()) {
 				stateDirty = true
 			}
@@ -534,6 +578,50 @@ func replyText(item QueueItem, d Decision) string {
 	return item.Text
 }
 
+// resolveWorker answers "which real worker takes this thread?" (AC-009):
+//
+//	① a live bound id (or the configured default) that paseo confirms -> reuse
+//	② otherwise ask the dispatcher to create one and parse its agentId
+//	③ with no resolver and no usable id -> error, never a placeholder target
+//
+// The candidate handed to the resolver is the bound id first, then the configured
+// default (adbd_worker_agent_id); empty means "none", so the resolver creates a
+// worker instead of guessing.
+func (r *Router) resolveWorker(item QueueItem, binding *Binding) (string, error) {
+	candidate := ""
+	if binding != nil && isLiveState(binding.State) {
+		if id := strings.TrimSpace(binding.AgentID); !isPlaceholderAgentID(id) {
+			// A bound thread keeps its own worker: route to the owner.
+			candidate = id
+		}
+	}
+	if candidate == "" {
+		candidate = r.agentID()
+	}
+
+	if resolver, ok := r.Dispatcher.(WorkerResolver); ok {
+		id, err := resolver.EnsureWorker(item.Thread, candidate)
+		if err != nil {
+			return "", err
+		}
+		if isPlaceholderAgentID(id) {
+			// Belt and braces: a resolver that hands back "main" has not resolved
+			// anything, and AC-009 forbids sending there.
+			return "", fmt.Errorf("adbd route: resolver returned no verified worker for thread %q (got %q)",
+				item.Thread, id)
+		}
+		return id, nil
+	}
+
+	if candidate == "" {
+		// No resolver and no id: the honest answer is "cannot dispatch", not a
+		// send to a placeholder nobody verified.
+		return "", fmt.Errorf("adbd route: no verified worker for thread %q: the dispatcher cannot resolve one and no bound or configured agent id is set",
+			item.Thread)
+	}
+	return candidate, nil
+}
+
 // dispatch is the only exit from the router to the outside world. The guard line
 // is added here, so no dispatcher can bypass it (AC-007).
 func (r *Router) dispatch(item QueueItem, agentID string) error {
@@ -572,6 +660,11 @@ func ensureBinding(snap *snapshot, item QueueItem, agentID string, now time.Time
 		}
 		binding.ExpiresAt = now.Add(lease)
 		binding.UpdatedAt = now
+		if id := strings.TrimSpace(agentID); !isPlaceholderAgentID(id) && binding.AgentID != id {
+			// AC-009: a worker resolved for this message replaces whatever id the
+			// binding carried, so the next message reuses the confirmed one.
+			binding.AgentID = id
+		}
 		return true
 	}
 	snap.Bindings[key] = &Binding{
@@ -841,7 +934,7 @@ func runRoute(args []string, stdout, stderr io.Writer) int {
 		tracePath = envOr("ADBD_TRACE", filepath.Join(cf.root, ".beacon", decisionsFile))
 	}
 	if agentID == "" {
-		agentID = envOr("ADBD_ROUTER_AGENT", cfg.RouterAgent)
+		agentID = envOr("ADBD_ROUTER_AGENT", cfg.WorkerAgentID)
 	}
 
 	// AC-008: the operator chooses the brain; a failed LLM batch falls back to
@@ -853,11 +946,17 @@ func runRoute(args []string, stdout, stderr io.Writer) int {
 	}
 
 	router := &Router{
-		Store:         &Store{Path: cf.statePath, SlowPath: cf.slowPath},
-		Decider:       decider,
-		Fallback:      fallback,
-		DeciderLabel:  deciderLabel,
-		Dispatcher:    PaseoDispatcher{Bin: bin},
+		Store:        &Store{Path: cf.statePath, SlowPath: cf.slowPath},
+		Decider:      decider,
+		Fallback:     fallback,
+		DeciderLabel: deciderLabel,
+		Dispatcher: PaseoDispatcher{
+			Bin:      bin,
+			WorkerID: agentID,
+			Provider: cfg.WorkerProvider,
+			Model:    cfg.WorkerModel,
+			Workdir:  workerWorkdir(cfg.WorkerWorkdir, cf.root),
+		},
 		TracePath:     tracePath,
 		AgentID:       agentID,
 		TTL:           DefaultTTL,
@@ -878,4 +977,13 @@ func runRoute(args []string, stdout, stderr io.Writer) int {
 		res.Batch, res.Decided, res.Applied, res.Failed, res.Skipped, res.Queued)
 	// AC-002: a rejected decision never changes the exit code; it is recorded.
 	return 0
+}
+
+// workerWorkdir prefers the operator-configured directory and falls back to the
+// daemon root, so a created worker never ends up in an unrelated checkout.
+func workerWorkdir(configured, root string) string {
+	if w := strings.TrimSpace(configured); w != "" {
+		return w
+	}
+	return root
 }

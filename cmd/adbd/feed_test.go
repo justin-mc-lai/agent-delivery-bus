@@ -226,10 +226,18 @@ func feedFields(t *testing.T, out string) map[string]string {
 // writeTextLogRunner writes a real #!/bin/sh stub that appends every dispatched
 // text verbatim to one file, so a multi-line UNTRUSTED_INPUT payload stays
 // readable instead of being cut at its newline.
+//
+// Like writeRecordingRunner it speaks the AC-009 worker-resolution verbs: any
+// `inspect` succeeds and `run --json` answers with an agent id, so only `send`
+// calls (the text the worker actually receives) reach the log.
 func writeTextLogRunner(t *testing.T, logPath string) string {
 	t.Helper()
 	script := filepath.Join(t.TempDir(), "stub-paseo-text.sh")
 	body := "#!/bin/sh\n" +
+		"case \"$1\" in\n" +
+		"  inspect) exit 0 ;;\n" +
+		"  run) printf '%s\\n' '{\"agentId\":\"ag-textlog-worker\"}'; exit 0 ;;\n" +
+		"esac\n" +
 		"printf '%s\\n' '--- call ---' >> " + shellQuote(logPath) + "\n" +
 		"printf '%s\\n' \"$3\" >> " + shellQuote(logPath) + "\n" +
 		"exit 0\n"

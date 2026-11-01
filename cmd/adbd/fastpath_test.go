@@ -39,11 +39,19 @@ const baseTime = "2026-02-06T09:00:00Z"
 
 // writeRecordingRunner writes a real #!/bin/sh executable that records its own
 // argv, one call per line as `arg|arg|arg|`. It never touches real paseo.
+//
+// It also speaks the two verbs worker resolution needs (truth.md AC-009): every
+// `inspect` succeeds and `run --json` answers with an agent id, so a route drain
+// behind this stub resolves a worker instead of failing.
 func writeRecordingRunner(t *testing.T, argvLog string) string {
 	t.Helper()
 	script := filepath.Join(t.TempDir(), "recording-paseo.sh")
 	var body strings.Builder
 	body.WriteString("#!/bin/sh\n")
+	body.WriteString("case \"$1\" in\n")
+	body.WriteString("  inspect) exit 0 ;;\n")
+	body.WriteString("  run) printf '%s\\n' '{\"agentId\":\"ag-recording-worker\"}'; exit 0 ;;\n")
+	body.WriteString("esac\n")
 	body.WriteString("printf '%s|' \"$@\" >> " + shellQuote(argvLog) + "\n")
 	body.WriteString("printf '\\n' >> " + shellQuote(argvLog) + "\n")
 	body.WriteString("exit 0\n")

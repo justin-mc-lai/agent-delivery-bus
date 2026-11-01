@@ -479,9 +479,22 @@ type Config struct {
 	AllowedChannels []string
 	// PaseoBin is adbd_paseo_bin, the runner binary path.
 	PaseoBin string
-	// RouterAgent is adbd_router_agent, the worker the router loop dispatches
-	// new slow-path work to. Empty means the daemon default ("main").
+	// RouterAgent is adbd_router_agent, the legacy spelling of the router's
+	// standing worker. Empty means "no standing worker".
 	RouterAgent string
+	// WorkerAgentID is adbd_worker_agent_id: the paseo agent id the router reuses
+	// when a thread brings no live binding (AC-009). Empty means a new worker is
+	// created per thread with `paseo run`.
+	WorkerAgentID string
+	// WorkerProvider is adbd_worker_provider, passed to `paseo run` for a new
+	// worker. Defaults to "opencode".
+	WorkerProvider string
+	// WorkerModel is adbd_worker_model, passed to `paseo run` for a new worker.
+	// Defaults to "deepseek/deepseek-flash".
+	WorkerModel string
+	// WorkerWorkdir is adbd_worker_workdir: the directory a newly created
+	// worker is placed in. Empty means "use the daemon root".
+	WorkerWorkdir string
 	// FeedChannel is adbd_feed_project_channel: the channel `adbd feed` stamps its
 	// events with when the caller names none. Empty means DefaultFeedChannel.
 	FeedChannel string
@@ -537,6 +550,8 @@ func defaultConfig() Config {
 		Interval:       DefaultAgentInterval,
 		GitHubLimit:    DefaultGitHubLimit,
 		GHBin:          DefaultGHBin,
+		WorkerProvider: DefaultWorkerProvider,
+		WorkerModel:    DefaultWorkerModel,
 	}
 }
 
@@ -588,6 +603,22 @@ func LoadConfig(path string) (Config, error) {
 	}
 	cfg.PaseoBin = values["adbd_paseo_bin"]
 	cfg.RouterAgent = values["adbd_router_agent"]
+	// AC-009 worker resolution. The id is a verified paseo agent id, or empty --
+	// never a placeholder: an unset id means "create a worker", not "send to
+	// main". Provider and model only describe how a new worker is created.
+	cfg.WorkerAgentID = strings.TrimSpace(values["adbd_worker_agent_id"])
+	if cfg.WorkerAgentID == "" {
+		// adbd_router_agent is the older spelling of the same setting.
+		cfg.WorkerAgentID = strings.TrimSpace(cfg.RouterAgent)
+	}
+	cfg.WorkerProvider = strings.TrimSpace(values["adbd_worker_provider"])
+	if cfg.WorkerProvider == "" {
+		cfg.WorkerProvider = DefaultWorkerProvider
+	}
+	cfg.WorkerModel = strings.TrimSpace(values["adbd_worker_model"])
+	if cfg.WorkerModel == "" {
+		cfg.WorkerModel = DefaultWorkerModel
+	}
 	cfg.FeedChannel = strings.TrimSpace(values["adbd_feed_project_channel"])
 
 	// GitHub source (feature github-issue). Repos and labels are comma separated
@@ -595,6 +626,7 @@ func LoadConfig(path string) (Config, error) {
 	// comma cannot invent a repo named "".
 	cfg.GitHubRepos = configList(values["adbd_github_repos"])
 	cfg.GitHubLabels = configList(values["adbd_github_labels"])
+	cfg.WorkerWorkdir = strings.TrimSpace(values["adbd_worker_workdir"])
 	cfg.GitHubProxy = strings.TrimSpace(values["adbd_github_proxy"])
 	if bin := strings.TrimSpace(values["adbd_gh_bin"]); bin != "" {
 		cfg.GHBin = bin

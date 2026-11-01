@@ -19,6 +19,12 @@ import (
 	"time"
 )
 
+// testRouterAgentID is a stand-in configured worker id (adbd_worker_agent_id).
+// The round-level tests below drive a stub dispatcher that cannot resolve
+// workers, so the router needs a standing id -- and "main" is deliberately not
+// it (truth.md AC-009: a placeholder is never a target).
+const testRouterAgentID = "ag-test-worker"
+
 // ---------------------------------------------------------------------------
 // stubs
 // ---------------------------------------------------------------------------
@@ -125,6 +131,9 @@ func newRouteHarness(t *testing.T, decider Decider) *routeHarness {
 	)
 	h.router.TracePath = h.tracePath
 	h.router.Now = h.clock.now
+	// AC-009: the stub dispatcher implements no WorkerResolver, so the standing
+	// configured id is the only target these tests can use.
+	h.router.AgentID = testRouterAgentID
 	return h
 }
 
@@ -809,12 +818,12 @@ func TestQueueStateWalks(t *testing.T) {
 	if got := len(h.dispatcher.calls); got != 1 {
 		t.Fatalf("dispatcher calls = %d, want 1", got)
 	}
-	if got := h.dispatcher.calls[0].agentID; got != DefaultRouterAgentID {
-		t.Fatalf("dispatch agent = %q, want %q", got, DefaultRouterAgentID)
+	if got := h.dispatcher.calls[0].agentID; got != testRouterAgentID {
+		t.Fatalf("dispatch agent = %q, want the configured worker %q", got, testRouterAgentID)
 	}
 	binding := h.binding("feishu", "t-walk")
-	if binding == nil || binding.State != StateBound || binding.AgentID != DefaultRouterAgentID {
-		t.Fatalf("binding after a route = %+v, want bound/%s", binding, DefaultRouterAgentID)
+	if binding == nil || binding.State != StateBound || binding.AgentID != testRouterAgentID {
+		t.Fatalf("binding after a route = %+v, want bound/%s", binding, testRouterAgentID)
 	}
 
 	h.enqueue(QueueItem{Channel: "feishu", Thread: "t-walk", MessageID: "m-2", Text: "also add pagination"})
@@ -828,8 +837,8 @@ func TestQueueStateWalks(t *testing.T) {
 	if got := len(h.dispatcher.calls); got != 2 {
 		t.Fatalf("dispatcher calls = %d, want 2", got)
 	}
-	if got := h.dispatcher.calls[1].agentID; got != DefaultRouterAgentID {
-		t.Fatalf("bound route dispatched to %q, want the bound worker %q", got, DefaultRouterAgentID)
+	if got := h.dispatcher.calls[1].agentID; got != testRouterAgentID {
+		t.Fatalf("bound route dispatched to %q, want the bound worker %q", got, testRouterAgentID)
 	}
 
 	// queued -> claimed -> decided -> failed (backed off, still queued).

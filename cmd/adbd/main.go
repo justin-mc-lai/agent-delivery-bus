@@ -105,7 +105,8 @@ route flags:
   --once             drain the slow-path backlog once and exit
   --list-tools       print the router execution toolset (always [])
   --limit N          drain at most N items; 0 (default) drains the whole queue
-  --agent-id A       worker for new dispatches, defaults to "main"
+  --agent-id A       standing worker id (verified with paseo inspect); empty
+                     means a worker is created per thread
   --trace PATH       decision trace, defaults to <root>/.beacon/adbd-decisions.jsonl
 
 watchdog flags:
@@ -135,7 +136,10 @@ config keys (.beacon/config, key=value):
   adbd_allow_channels=feishu,slack   allow-list; absent or empty means allow all
   adbd_feed_project_channel=skill    default channel for adbd feed
   adbd_paseo_bin=/usr/local/bin/paseo
-  adbd_router_agent=main             worker the router dispatches new work to
+  adbd_router_agent=...              legacy alias of adbd_worker_agent_id
+  adbd_worker_agent_id=<id>          paseo agent id to reuse; empty creates one
+  adbd_worker_provider=opencode      provider for a newly created worker
+  adbd_worker_model=deepseek/deepseek-flash  model for a newly created worker
   adbd_decider=rule                  rule (default) or llm
   adbd_llm_base_url=...              OpenAI-compatible endpoint root
   adbd_llm_model=deepseek-chat       model name
