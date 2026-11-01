@@ -8,6 +8,8 @@
 //	adbd status --channel C --thread T [--outcome json|text]
 //	adbd route  --once [--limit N] [--outcome json|text]
 //	adbd route  --list-tools
+//	adbd watchdog --once [--apply] [--outcome json|text]
+//	adbd agent  plist | status
 package main
 
 import (
@@ -50,6 +52,10 @@ func run(args []string, stdout, stderr io.Writer) int {
 		return runStatus(args[1:], stdout, stderr)
 	case "route":
 		return runRoute(args[1:], stdout, stderr)
+	case "watchdog":
+		return runWatchdog(args[1:], stdout, stderr)
+	case "agent":
+		return runAgent(args[1:], stdout, stderr)
 	default:
 		fmt.Fprintf(stderr, "adbd: unknown command %q\n", args[0])
 		usage(stderr)
@@ -67,6 +73,9 @@ usage:
   adbd status --channel C --thread T [--outcome json|text]
   adbd route  --once [--limit N] [--outcome json|text]
   adbd route  --list-tools
+  adbd watchdog --once [--apply] [--outcome json|text]
+  adbd agent  plist [--outcome json|text]
+  adbd agent  status [--outcome json|text]
 
 common flags:
   --root PATH        ADB root, defaults to "." (env ADBD_ROOT)
@@ -83,6 +92,18 @@ route flags:
   --agent-id A       worker for new dispatches, defaults to "main"
   --trace PATH       decision trace, defaults to <root>/.beacon/adbd-decisions.jsonl
 
+watchdog flags:
+  --once             run one watch pass and exit (the launchd rhythm)
+  --apply            act on a stall instead of only observing it
+  --decisions PATH   decision trace, defaults to <root>/.beacon/adbd-decisions.jsonl
+  --watch PATH       watchdog trace, defaults to <root>/.beacon/adbd-watchdog.jsonl
+  --heartbeat PATH   router heartbeat, defaults to <root>/.beacon/adbd-heartbeat.json
+  --watch-state PATH scan ledger, defaults to <root>/.beacon/adbd-watch-state.json
+
+agent subcommands:
+  plist              print the launchd job to stdout; writes no file, runs nothing
+  status             read-only report: plist on disk? loaded in launchd?
+
 config keys (.beacon/config, key=value):
   adbd_allow_channels=feishu,slack   allow-list; absent or empty means allow all
   adbd_paseo_bin=/usr/local/bin/paseo
@@ -92,6 +113,10 @@ config keys (.beacon/config, key=value):
   adbd_llm_model=deepseek-chat       model name
   adbd_llm_api_key=...               key; falls back to env ADBD_LLM_API_KEY
   adbd_llm_timeout=60s               single request ceiling
+  adbd_stall_after=20m               a bound thread idle this long is stalled
+  adbd_heartbeat_after=10m           a router heartbeat older than this is stale
+  adbd_repeat_window=6h              silence window for repeated alerts per thread
+  adbd_interval=10m                  StartInterval written into the launchd plist
 `)
 }
 

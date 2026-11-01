@@ -200,6 +200,10 @@ type Router struct {
 	Dispatcher Dispatcher
 	// TracePath defaults to <queue dir>/adbd-decisions.jsonl.
 	TracePath string
+	// HeartbeatPath defaults to <queue dir>/adbd-heartbeat.json. Every drain
+	// refreshes it, and the watchdog reads it as "the router is still draining"
+	// (watchdog AC-002).
+	HeartbeatPath string
 	// AgentID is the worker new work is dispatched to.
 	AgentID string
 	// TTL is the lease granted by the binding a route decision creates.
@@ -277,6 +281,21 @@ func (r *Router) tracePath() string {
 	return filepath.Join(filepath.Dir(r.Store.SlowPath), decisionsFile)
 }
 
+func (r *Router) heartbeatPath() string {
+	if path := strings.TrimSpace(r.HeartbeatPath); path != "" {
+		return path
+	}
+	return filepath.Join(filepath.Dir(r.Store.SlowPath), heartbeatFile)
+}
+
+// beat records that the router is alive and draining, for the watchdog to read
+// (watchdog AC-002). It is stamped on every completed drain, including the empty
+// one: "no backlog" is a heartbeat, "no drain at all" is the failure the
+// watchdog is looking for.
+func (r *Router) beat(now time.Time) error {
+	return writeHeartbeat(r.heartbeatPath(), now)
+}
+
 // DrainOnce claims the backlog, decides it, applies the verdicts and rewrites
 // the queue with what is still unapplied (AC-001, AC-006).
 //
@@ -304,8 +323,14 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 	if err != nil {
 		return res, err
 	}
+	now := r.now()
 	if len(items) == 0 {
 		// AC-001: an empty backlog calls the decider zero times and prints batch=0.
+		// It still refreshes the heartbeat: the router drained, which is exactly
+		// what the night watchman needs to know.
+		if err := r.beat(now); err != nil {
+			return res, err
+		}
 		return res, nil
 	}
 
@@ -329,7 +354,6 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 	}
 
 	// AC-001: exactly one decider call for the whole batch.
-	now := r.now()
 	res.Batch = len(batch)
 	label := r.DeciderLabel
 	decisions, err := r.Decider.Decide(batch)
@@ -467,6 +491,10 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 		return res, err
 	}
 	res.Queued = len(next)
+	// Watchdog AC-002: one drain, one heartbeat.
+	if err := r.beat(now); err != nil {
+		return res, err
+	}
 	return res, nil
 }
 

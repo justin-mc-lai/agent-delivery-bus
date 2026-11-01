@@ -492,16 +492,32 @@ type Config struct {
 	LLMAPIKey string
 	// LLMTimeout is adbd_llm_timeout, the single-request ceiling.
 	LLMTimeout time.Duration
+	// StallAfter is adbd_stall_after: how long a bound thread may go without
+	// real activity before the watchdog calls it stalled (AC-001).
+	StallAfter time.Duration
+	// HeartbeatAfter is adbd_heartbeat_after: how old a router heartbeat may be
+	// before the watchdog calls the router stalled (AC-002).
+	HeartbeatAfter time.Duration
+	// RepeatWindow is adbd_repeat_window: the silence window for repeated alerts
+	// on one thread (AC-005).
+	RepeatWindow time.Duration
+	// Interval is adbd_interval: the StartInterval written into the generated
+	// launchd plist (AC-006).
+	Interval time.Duration
 }
 
 // defaultConfig is the operator-facing baseline, so a missing or partial config
 // file still names a usable decider.
 func defaultConfig() Config {
 	return Config{
-		Decider:    DeciderLabelRule,
-		LLMBaseURL: DefaultLLMBaseURL,
-		LLMModel:   DefaultLLMModel,
-		LLMTimeout: DefaultLLMTimeout,
+		Decider:        DeciderLabelRule,
+		LLMBaseURL:     DefaultLLMBaseURL,
+		LLMModel:       DefaultLLMModel,
+		LLMTimeout:     DefaultLLMTimeout,
+		StallAfter:     DefaultStallAfter,
+		HeartbeatAfter: DefaultHeartbeatAfter,
+		RepeatWindow:   DefaultRepeatWindow,
+		Interval:       DefaultAgentInterval,
 	}
 }
 
@@ -581,7 +597,41 @@ func LoadConfig(path string) (Config, error) {
 		}
 		cfg.LLMTimeout = timeout
 	}
+
+	// Watchdog cadence (AC-001/AC-002/AC-005/AC-006). A value that does not parse
+	// is a loud error, never a silent fallback: a mistyped 20m that quietly became
+	// 20h would make the night watchman useless exactly when it is needed.
+	for _, item := range []struct {
+		key   string
+		dst   *time.Duration
+		value time.Duration
+	}{
+		{"adbd_stall_after", &cfg.StallAfter, DefaultStallAfter},
+		{"adbd_heartbeat_after", &cfg.HeartbeatAfter, DefaultHeartbeatAfter},
+		{"adbd_repeat_window", &cfg.RepeatWindow, DefaultRepeatWindow},
+		{"adbd_interval", &cfg.Interval, DefaultAgentInterval},
+	} {
+		parsed, err := configDuration(values, item.key, item.value)
+		if err != nil {
+			return cfg, err
+		}
+		*item.dst = parsed
+	}
 	return cfg, nil
+}
+
+// configDuration reads one positive duration key, keeping the frozen default when
+// the key is absent.
+func configDuration(values map[string]string, key string, fallback time.Duration) (time.Duration, error) {
+	raw := strings.TrimSpace(values[key])
+	if raw == "" {
+		return fallback, nil
+	}
+	d, err := time.ParseDuration(raw)
+	if err != nil || d <= 0 {
+		return fallback, fmt.Errorf("%s %q is not a positive duration (e.g. 20m, 10m, 6h)", key, raw)
+	}
+	return d, nil
 }
 
 // Core is the intake fastpath kernel:
