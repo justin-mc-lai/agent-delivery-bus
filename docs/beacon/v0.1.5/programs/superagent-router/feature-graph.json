@@ -123,12 +123,34 @@
       "status": "released",
       "summary": "External control loop on paseo schedule (outside adb process): judge substantive progress for workers AND router heartbeat; stay silent unless intervention is needed",
       "released_note": "v0.1.5 · AC-001..007 全 pass；进程外 launchd 托管"
+    },
+    {
+      "phase": 5,
+      "priority": "P0",
+      "slug": "skill-trigger",
+      "lake_or_ocean": "湖",
+      "depends_on": [
+        "router-loop"
+      ],
+      "parity_subset": [
+        "skill-entry-contract",
+        "content-idempotency-key",
+        "thread-shape-validation",
+        "end-to-end-trace",
+        "typed-error-codes",
+        "no-daemon-dependency"
+      ],
+      "harness_route": "beacon-gen-truth",
+      "status": "released",
+      "released_note": "v0.1.5 · AC-001..006 全 pass；真实二进制端到端验证",
+      "summary": "adbd feed: 一句话 -> skill:<project>:<slug> 事件 -> intake -> route -> worker"
     }
   ],
   "topology_order": [
     "requirement-index",
     "intake-fastpath",
     "router-loop",
-    "watchdog"
+    "watchdog",
+    "skill-trigger"
   ]
 }
