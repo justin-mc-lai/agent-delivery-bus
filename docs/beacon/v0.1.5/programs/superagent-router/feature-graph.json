@@ -120,8 +120,9 @@
         "repeat-failure-escalation"
       ],
       "harness_route": "beacon-gen-truth",
-      "status": "planned",
-      "summary": "External control loop on paseo schedule (outside adb process): judge substantive progress for workers AND router heartbeat; stay silent unless intervention is needed"
+      "status": "released",
+      "summary": "External control loop on paseo schedule (outside adb process): judge substantive progress for workers AND router heartbeat; stay silent unless intervention is needed",
+      "released_note": "v0.1.5 · AC-001..007 全 pass；进程外 launchd 托管"
     }
   ],
   "topology_order": [
