@@ -1,0 +1,130 @@
+{
+  "schema_version": "beacon-feature-graph-v1",
+  "program_slug": "superagent-router",
+  "version": "v0.1.5",
+  "plan_mode": "interactive",
+  "scope_mode": "new_capability",
+  "lake_or_ocean": "海拆湖",
+  "program_phase": "P1",
+  "p4_ack": false,
+  "owner_repo": "agent-delivery-bus",
+  "state_model_required": true,
+  "review_ref": "program-review-p2.md",
+  "external_dependencies": [
+    "paseo (CLI/daemon, not imported)",
+    "beacon runtime (read-only truth)"
+  ],
+  "user_decisions": {
+    "UD-SAR-001": "agent_delivery_bus_is_sole_owner_repo",
+    "UD-SAR-002": "no_monorepo_merge_other_five_repos_untouched",
+    "UD-SAR-003": "paseo_called_via_cli_only_no_fork_no_import",
+    "UD-SAR-004": "beacon_truth_read_only_format_unchanged",
+    "UD-SAR-005": "router_has_no_execution_tools_hard_constraint",
+    "UD-SAR-006": "cli_first_no_http_no_queue_no_router_sharding",
+    "UD-SAR-007": "index_splits_truth_stage_readonly_from_exec_state_writable",
+    "UD-SAR-008": "watchdog_runs_outside_adb_process_via_paseo_schedule"
+  },
+  "program_metrics": {
+    "human_relay_count": "steady_state_zero",
+    "time_to_first_worker": "p50_60s_p95_3min",
+    "task_completion": "p50_and_p95_both_recorded_p95_beats_manual_baseline",
+    "router_decisions_per_task": "drop_at_least_30_percent_after_fastpath_hits"
+  },
+  "failure_matrix": {
+    "paseo_agent_silent": "watchdog_probe_then_reassign_or_escalate",
+    "duplicate_webhook": "drop_by_intake_idempotency_key",
+    "lease_expiry_during_long_task": "renew_on_report_expiring_reminder_one_hour_before",
+    "worker_immediate_failure_loop": "backoff_after_three_consecutive_failures",
+    "router_process_killed": "replay_inbox_dedupe_no_duplicate_dispatch",
+    "prompt_injection_from_im": "tag_source_trust_untrusted_and_strip_imperative_prefix"
+  },
+  "lakes": [
+    {
+      "phase": 1,
+      "priority": "P0",
+      "slug": "requirement-index",
+      "lake_or_ocean": "湖",
+      "depends_on": [],
+      "parity_subset": [
+        "requirement-index-schema",
+        "projection-idempotent",
+        "missing-not-silent",
+        "single-file-parseable",
+        "truth-stage-readonly-exec-state-writable",
+        "index-budget-layering-at-10kb"
+      ],
+      "harness_route": "beacon-gen-truth",
+      "status": "planned",
+      "summary": "beacon truth packages + studio pool projected into one requirement-index.json; truth_stage is read-only from beacon, exec_state is writable by ADB"
+    },
+    {
+      "phase": 2,
+      "priority": "P0",
+      "slug": "intake-fastpath",
+      "lake_or_ocean": "湖",
+      "depends_on": [
+        "requirement-index"
+      ],
+      "parity_subset": [
+        "thread-binding-lookup",
+        "lease-expiry-fallback",
+        "lease-renew-on-report",
+        "no-cross-thread-leak",
+        "unknown-source-rejected",
+        "audit-event-recorded",
+        "intake-idempotency-key"
+      ],
+      "harness_route": "beacon-gen-truth",
+      "status": "planned",
+      "summary": "adb intake: hit agent_sessions.channel_thread and forward straight to the bound worker session; idempotent by (channel, thread, message_id)"
+    },
+    {
+      "phase": 3,
+      "priority": "P0",
+      "slug": "router-loop",
+      "lake_or_ocean": "湖",
+      "depends_on": [
+        "intake-fastpath"
+      ],
+      "parity_subset": [
+        "backlog-batching",
+        "four-way-decision",
+        "no-execution-tools-runtime-verified",
+        "decision-trace",
+        "idempotent-dispatch",
+        "restart-recovery",
+        "reply-word-limit",
+        "retry-backoff-with-escalation",
+        "untrusted-content-trust-boundary"
+      ],
+      "harness_route": "beacon-gen-truth",
+      "status": "planned",
+      "summary": "Resident loop: light model decides route/reply/ignore/escalate over batched backlog; no execution tools; recovers inbox on restart"
+    },
+    {
+      "phase": 4,
+      "priority": "P1",
+      "slug": "watchdog",
+      "lake_or_ocean": "湖",
+      "depends_on": [
+        "router-loop"
+      ],
+      "parity_subset": [
+        "progress-not-liveness",
+        "router-heartbeat-monitored-too",
+        "silent-by-default",
+        "intervention-audit",
+        "repeat-failure-escalation"
+      ],
+      "harness_route": "beacon-gen-truth",
+      "status": "planned",
+      "summary": "External control loop on paseo schedule (outside adb process): judge substantive progress for workers AND router heartbeat; stay silent unless intervention is needed"
+    }
+  ],
+  "topology_order": [
+    "requirement-index",
+    "intake-fastpath",
+    "router-loop",
+    "watchdog"
+  ]
+}
