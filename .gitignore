@@ -137,3 +137,6 @@ src/*.egg-info/
 /pi-curator/
 /session-routing/
 /channel-session-hardening/
+
+# adbd build output
+cmd/adbd/adbd
