@@ -17,6 +17,7 @@ materials_status: current
 | AC-005 | TC-RL-005 | behavior | `go test ./... -run DispatchRetryBackoffEscalates` | exit_code_0；失败 3 次后转 escalate 且 reason_code=dispatch_attempts_exhausted |
 | AC-006 | TC-RL-006 | behavior | `go test ./... -run RestartReplayNoDoubleDispatch` | exit_code_0；中途失败后队列保留未处理项；已 applied 的不再派活 |
 | AC-007 | TC-RL-007 | behavior | `go test ./... -run UntrustedGuardAndLimits` | exit_code_0；trace 标 untrusted=true；派活文本以 UNTRUSTED_INPUT 开头；高危动词转 escalate；超长 reply 记 reply_too_long |
+| AC-008 | TC-RL-009 | behavior | `go test ./... -run LLMDeciderContract` | exit_code_0；httptest 服务收到**一个**请求且 body 含整批；正常 JSON → 决策生效；坏 JSON/未知决策 → decision_invalid + failed；非 2xx → 回退规则且 trace 记 llm_fallback_rules；LLM 把高危文本判成 route 时被代码翻回 escalate |
 
 ## State machine slots
 

@@ -87,6 +87,7 @@ Every AC must trace to the intent or evidence it serves.
 | AC-005 | 状态模型：失败重试 | truth.md#状态模型 |
 | AC-006 | 状态模型：重启恢复 | truth.md#状态模型 |
 | AC-007 | constraints：不可信输入 | truth.md#Acceptance-Criteria |
+| AC-008 | 用户决策：先接 LLM 再发版 | truth.md#Acceptance-Criteria |
 
 ## Acceptance Criteria
 
@@ -99,6 +100,17 @@ Every AC must trace to the intent or evidence it serves.
 | AC-005 | 派活失败时条目进入 `backed_off` 并记录 `attempts`；连续失败 3 次后自动转 `escalate`（reason_code=`dispatch_attempts_exhausted`），不再重试 |
 | AC-006 | `route --once` 处理完成后把未 applied 的条目原子写回队列；进程在 drain 中途被杀，重启后这些条目仍在（测试：处理一半时模拟失败，断言队列仍含未处理项且已 applied 的不会被再次派活） |
 | AC-007 | 所有入站文本标记 `untrusted=true` 并写入 trace；派给 worker 的文本以固定守卫行开头（`UNTRUSTED_INPUT`）；含高危动词（`delete` / `push` / `release` / `deploy`）的 untrusted 文本不得判为 `route`，必须 `escalate`（reason_code=`untrusted_high_risk`）；`reply` 文本超过 100 个字符被拒绝（reason_code=`reply_too_long`） |
+| AC-008 | `adbd_decider=llm` 时启用 LLMDecider（实现同一 `Decider` 接口）：一次 drain 只发一个 OpenAI 兼容 `/chat/completions` 请求携带整批；响应必须是 JSON 数组且每项含 `message_id` / `decision` / `reason_code`；校验失败的条目记 `decision_invalid` 并置 failed；HTTP 超时、非 2xx 响应时回退 RuleDecider 并在 trace 记 `decider=llm_fallback_rules`；LLM 不得产出四选一以外的决策，也不得把高危 untrusted 文本判成 route（代码复核，不依赖提示词） |
+
+## 配置项
+
+| 键 | 默认 | 作用 |
+|----|------|------|
+| `adbd_decider` | `rule` | `rule` / `llm` |
+| `adbd_llm_base_url` | `https://api.deepseek.com/v1` | OpenAI 兼容端点 |
+| `adbd_llm_model` | `deepseek-chat` | 模型名 |
+| `adbd_llm_api_key` | 空（读 `ADBD_LLM_API_KEY`） | 密钥，不落日志 |
+| `adbd_llm_timeout` | `60s` | 单次请求超时 |
 
 ## 禁止的迁移（人工维护，内核不校验）
 
@@ -109,7 +121,7 @@ Every AC must trace to the intent or evidence it serves.
 ## Non-goals（冻结边界）
 
 - 不接 IM/飞书信道；`reply` 只记账不投递（M4 接）
-- 不调用真实 LLM；本期决策器是确定性规则，接口可注入（M2.5 换 LLM）
+- 不做多模型路由与成本优化；LLM 决策器只有一个端点
 - 不做 watchdog 进展判定（M3）
 - 不 fork paseo，不 import 它的代码
 - 不改 beacon 真相
