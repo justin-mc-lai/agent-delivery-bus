@@ -10,6 +10,7 @@
 //	adbd route  --once [--limit N] [--outcome json|text]
 //	adbd route  --list-tools
 //	adbd watchdog --once [--apply] [--outcome json|text]
+//	adbd poll-github --once [--root <dir>] [--outcome json|text]
 //	adbd agent  plist | status
 package main
 
@@ -57,6 +58,8 @@ func run(args []string, stdout, stderr io.Writer) int {
 		return runRoute(args[1:], stdout, stderr)
 	case "watchdog":
 		return runWatchdog(args[1:], stdout, stderr)
+	case "poll-github":
+		return runPollGitHub(args[1:], stdout, stderr)
 	case "agent":
 		return runAgent(args[1:], stdout, stderr)
 	default:
@@ -78,6 +81,7 @@ usage:
   adbd route  --once [--limit N] [--outcome json|text]
   adbd route  --list-tools
   adbd watchdog --once [--apply] [--outcome json|text]
+  adbd poll-github --once [--root <dir>] [--outcome json|text]
   adbd agent  plist [--outcome json|text]
   adbd agent  status [--outcome json|text]
 
@@ -116,6 +120,17 @@ agent subcommands:
   plist              print the launchd job to stdout; writes no file, runs nothing
   status             read-only report: plist on disk? loaded in launchd?
 
+poll-github flags:
+  --once             run one poll pass and exit (the scheduled rhythm); the
+                     poller has no resident mode, so a bare run is also one pass
+
+poll-github behaviour:
+  Polls the open issues of every adbd_github_repos entry through the gh CLI and
+  submits them to the same intake kernel as "adbd intake" / "adbd feed":
+  thread gh:<owner>/<repo>#<n>, message-id gh:<n>:<updatedAt>. An unchanged
+  issue is deduped; a new comment (new updatedAt) counts as a new event. Nothing
+  is ever written back to GitHub.
+
 config keys (.beacon/config, key=value):
   adbd_allow_channels=feishu,slack   allow-list; absent or empty means allow all
   adbd_feed_project_channel=skill    default channel for adbd feed
@@ -130,6 +145,13 @@ config keys (.beacon/config, key=value):
   adbd_heartbeat_after=10m           a router heartbeat older than this is stale
   adbd_repeat_window=6h              silence window for repeated alerts per thread
   adbd_interval=10m                  StartInterval written into the launchd plist
+  adbd_github_repos=owner/repo,...   open issues to poll; absent means nothing to poll
+  adbd_github_labels=bug,...         keep only issues carrying one of these labels
+  adbd_github_limit=50               issues fetched per repo per pass
+  adbd_github_proxy=http://host:port injected as HTTPS_PROXY/HTTP_PROXY for gh
+  adbd_gh_bin=gh                     gh executable path
+  note: polled issues arrive on channel "github", so add github to
+  adbd_allow_channels (or set adbd_allow_all=true) for them to reach intake
 `)
 }
 

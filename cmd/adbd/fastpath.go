@@ -24,6 +24,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -507,6 +508,19 @@ type Config struct {
 	// Interval is adbd_interval: the StartInterval written into the generated
 	// launchd plist (AC-006).
 	Interval time.Duration
+	// GitHubRepos is adbd_github_repos: the comma-separated owner/repo list the
+	// github-issue source polls. Empty means there is nothing to poll.
+	GitHubRepos []string
+	// GitHubLabels is adbd_github_labels: a label whitelist. Empty keeps every
+	// issue.
+	GitHubLabels []string
+	// GitHubLimit is adbd_github_limit: issues fetched per repo per pass.
+	GitHubLimit int
+	// GitHubProxy is adbd_github_proxy: injected into the gh child environment as
+	// HTTPS_PROXY/HTTP_PROXY. Empty means inherit the parent environment.
+	GitHubProxy string
+	// GHBin is adbd_gh_bin: the gh executable, defaulting to "gh".
+	GHBin string
 }
 
 // defaultConfig is the operator-facing baseline, so a missing or partial config
@@ -521,6 +535,8 @@ func defaultConfig() Config {
 		HeartbeatAfter: DefaultHeartbeatAfter,
 		RepeatWindow:   DefaultRepeatWindow,
 		Interval:       DefaultAgentInterval,
+		GitHubLimit:    DefaultGitHubLimit,
+		GHBin:          DefaultGHBin,
 	}
 }
 
@@ -574,6 +590,23 @@ func LoadConfig(path string) (Config, error) {
 	cfg.RouterAgent = values["adbd_router_agent"]
 	cfg.FeedChannel = strings.TrimSpace(values["adbd_feed_project_channel"])
 
+	// GitHub source (feature github-issue). Repos and labels are comma separated
+	// lists; every entry is trimmed and the empty ones dropped, so a trailing
+	// comma cannot invent a repo named "".
+	cfg.GitHubRepos = configList(values["adbd_github_repos"])
+	cfg.GitHubLabels = configList(values["adbd_github_labels"])
+	cfg.GitHubProxy = strings.TrimSpace(values["adbd_github_proxy"])
+	if bin := strings.TrimSpace(values["adbd_gh_bin"]); bin != "" {
+		cfg.GHBin = bin
+	}
+	if raw := strings.TrimSpace(values["adbd_github_limit"]); raw != "" {
+		limit, err := strconv.Atoi(raw)
+		if err != nil || limit <= 0 {
+			return cfg, fmt.Errorf("adbd_github_limit %q is not a positive integer (e.g. 50)", raw)
+		}
+		cfg.GitHubLimit = limit
+	}
+
 	// AC-008 decider selection. Anything that is not "llm" stays on the
 	// deterministic rules: an unreadable value must never silently enable a
 	// network call.
@@ -622,6 +655,17 @@ func LoadConfig(path string) (Config, error) {
 		*item.dst = parsed
 	}
 	return cfg, nil
+}
+
+// configList splits one comma-separated config value into its non-empty entries.
+func configList(raw string) []string {
+	var out []string
+	for _, item := range strings.Split(raw, ",") {
+		if item = strings.TrimSpace(item); item != "" {
+			out = append(out, item)
+		}
+	}
+	return out
 }
 
 // configDuration reads one positive duration key, keeping the frozen default when
