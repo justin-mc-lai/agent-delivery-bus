@@ -7,9 +7,9 @@ package_name: "agent-delivery-bus"
 package_version: "0.1.4"
 active_docs_line: "v0.1.4"
 runtime_toolchain: "beacon"
-runtime_version: "v1.6.12"
+runtime_version: "v1.6.16"
 git_tag: "v0.1.4"
-updated_at: "2026-08-17T00:00:00+00:00"
+updated_at: "2026-11-01T00:00:00+00:00"
 ---
 
 # Version Truth Catalog — agent-delivery-bus
@@ -24,7 +24,7 @@ updated_at: "2026-08-17T00:00:00+00:00"
 |------|---------|-----------------|
 | Package / Product | 本仓库作为产品的发布版本 | `0.1.4`（`pyproject.toml [project].version` 投影） |
 | Project docs line | 本仓库 Beacon 交付树的最新行 | `v0.1.4`（`docs/beacon/v0.1.4/` 投影） |
-| Runtime toolchain | 本仓库运行时依赖的 Beacon CLI | `v1.6.12`（工具链，不是产品版本） |
+| Runtime toolchain | 本仓库运行时依赖的 Beacon CLI | `v1.6.16`（工具链，不是产品版本） |
 | Git tag | release 时的版本投影 | `v0.1.4` |
 
 ## 交付行
@@ -56,6 +56,6 @@ updated_at: "2026-08-17T00:00:00+00:00"
 
 ## 边界
 
-- Beacon Runtime 版本（`v1.6.12`）是螺丝刀型号，不是本仓库的产品版本；不得把 runtime 版本投影为 package_version。
+- Beacon Runtime 版本（`v1.6.16`）是螺丝刀型号，不是本仓库的产品版本；不得把 runtime 版本投影为 package_version。
 - 校验工具：`scripts/verify-version-alignment.py`（模块 `agent_delivery_bus.version_truth`）。
 - 对本文件的结构性修改（新增交付行、升级 package_version）必须先过 truth 流程，再投影到其它表面。
