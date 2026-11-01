@@ -8,7 +8,7 @@ import uuid
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any, Iterator, Sequence
 
 from .errors import DeliveryBusError
 
@@ -17,7 +17,7 @@ def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 
 
 def _migrate_legacy_columns(conn: sqlite3.Connection) -> None:
@@ -73,6 +73,41 @@ def _migrate_executor_binding_columns(conn: sqlite3.Connection) -> None:
         conn.execute("ALTER TABLE dispatches ADD COLUMN executor_agent TEXT DEFAULT ''")
 
 
+def _create_requirement_exec_tables(conn: sqlite3.Connection) -> None:
+    """v4: requirement-index exec_state ledger (ADB-owned; never beacon truth)."""
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS requirement_exec_state (
+            req_id TEXT PRIMARY KEY,
+            exec_state TEXT NOT NULL DEFAULT 'unknown' CHECK(
+                exec_state IN ('queued','running','reported','done','failed','unknown')
+            ),
+            thread_id TEXT NOT NULL DEFAULT '',
+            worker TEXT NOT NULL DEFAULT '',
+            blockers_json TEXT NOT NULL DEFAULT '[]',
+            actor TEXT NOT NULL DEFAULT '',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        )
+        """
+    )
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS requirement_exec_events (
+            req_id TEXT NOT NULL,
+            sequence INTEGER NOT NULL,
+            from_state TEXT NOT NULL DEFAULT '',
+            to_state TEXT NOT NULL,
+            reason_code TEXT NOT NULL DEFAULT '',
+            actor TEXT NOT NULL DEFAULT '',
+            blockers_json TEXT NOT NULL DEFAULT '[]',
+            created_at TEXT NOT NULL,
+            PRIMARY KEY(req_id, sequence)
+        )
+        """
+    )
+
+
 # Ordered, append-only migrations. Version numbers must never be reused or
 # reordered; a gap between user_version and the next migration version is a
 # fail-closed state, never something to skip silently.
@@ -80,6 +115,7 @@ MIGRATIONS = (
     (1, "legacy_columns", _migrate_legacy_columns),
     (2, "approval_channel_actor", _add_approval_channel_actor),
     (3, "executor_binding_columns", _migrate_executor_binding_columns),
+    (4, "requirement_exec_state", _create_requirement_exec_tables),
 )
 
 
@@ -891,3 +927,140 @@ class Storage:
     def remove_machine(self, name: str) -> bool:
         cur = self.conn.execute("DELETE FROM machines WHERE name=?", (name,))
         return cur.rowcount > 0
+
+    # --- requirement-index exec_state ledger ---------------------------------
+    # Authority split (docs/beacon/v0.1.5/features/requirement-index/truth.md):
+    # exec_state/thread_id/worker/blockers are ADB-owned and live here only.
+    # truth_stage is beacon-owned and has no column on purpose.
+
+    @staticmethod
+    def _requirement_row(row: sqlite3.Row) -> dict[str, Any]:
+        payload = dict(row)
+        payload["blockers"] = json.loads(payload.pop("blockers_json") or "[]")
+        return payload
+
+    def get_requirement_exec_state(self, req_id: str) -> dict[str, Any] | None:
+        row = self.conn.execute(
+            "SELECT * FROM requirement_exec_state WHERE req_id=?", (req_id,)
+        ).fetchone()
+        return self._requirement_row(row) if row else None
+
+    def list_requirement_exec_states(self) -> list[dict[str, Any]]:
+        rows = self.conn.execute(
+            "SELECT * FROM requirement_exec_state ORDER BY req_id"
+        ).fetchall()
+        return [self._requirement_row(row) for row in rows]
+
+    def set_requirement_exec_state(
+        self,
+        req_id: str,
+        *,
+        exec_state: str | None = None,
+        thread_id: str | None = None,
+        worker: str | None = None,
+        blockers: Sequence[str] | None = None,
+        actor: str = "",
+        reason_code: str = "",
+    ) -> dict[str, Any]:
+        """Upsert one exec_state row and append the audit event.
+
+        Only ADB-owned columns are accepted; the SQL schema has no truth_stage
+        column, so a truth write is impossible by construction.
+        """
+        if not str(req_id).strip():
+            raise DeliveryBusError("req_id_invalid", "req_id must be a non-empty string")
+        timestamp = now_iso()
+        with self.transaction():
+            row = self.conn.execute(
+                "SELECT * FROM requirement_exec_state WHERE req_id=?", (req_id,)
+            ).fetchone()
+            current = self._requirement_row(row) if row else None
+            from_state = str(current["exec_state"]) if current else ""
+            to_state = (
+                str(exec_state)
+                if exec_state is not None
+                else (from_state or "unknown")
+            )
+            next_thread = (
+                str(thread_id)
+                if thread_id is not None
+                else (str(current["thread_id"]) if current else "")
+            )
+            next_worker = (
+                str(worker)
+                if worker is not None
+                else (str(current["worker"]) if current else "")
+            )
+            next_blockers = (
+                [str(item) for item in blockers]
+                if blockers is not None
+                else (list(current["blockers"]) if current else [])
+            )
+            blockers_json = json.dumps(next_blockers, ensure_ascii=False)
+            try:
+                self.conn.execute(
+                    """
+                    INSERT INTO requirement_exec_state(
+                      req_id,exec_state,thread_id,worker,blockers_json,actor,created_at,updated_at
+                    ) VALUES(?,?,?,?,?,?,?,?)
+                    ON CONFLICT(req_id) DO UPDATE SET
+                      exec_state=excluded.exec_state,
+                      thread_id=excluded.thread_id,
+                      worker=excluded.worker,
+                      blockers_json=excluded.blockers_json,
+                      actor=excluded.actor,
+                      updated_at=excluded.updated_at
+                    """,
+                    (
+                        req_id,
+                        to_state,
+                        next_thread,
+                        next_worker,
+                        blockers_json,
+                        str(actor),
+                        timestamp,
+                        timestamp,
+                    ),
+                )
+            except sqlite3.IntegrityError as exc:
+                raise DeliveryBusError(
+                    "exec_state_invalid",
+                    f"Unsupported exec_state {to_state!r}",
+                    resume_action="use one of queued/running/reported/done/failed/unknown",
+                ) from exc
+            sequence = self.conn.execute(
+                "SELECT COALESCE(MAX(sequence), 0) + 1 FROM requirement_exec_events WHERE req_id=?",
+                (req_id,),
+            ).fetchone()[0]
+            self.conn.execute(
+                """
+                INSERT INTO requirement_exec_events(
+                  req_id,sequence,from_state,to_state,reason_code,actor,blockers_json,created_at
+                ) VALUES(?,?,?,?,?,?,?,?)
+                """,
+                (
+                    req_id,
+                    int(sequence),
+                    from_state,
+                    to_state,
+                    str(reason_code),
+                    str(actor),
+                    blockers_json,
+                    timestamp,
+                ),
+            )
+        stored = self.get_requirement_exec_state(req_id)
+        assert stored is not None
+        return stored
+
+    def list_requirement_exec_events(self, req_id: str) -> list[dict[str, Any]]:
+        rows = self.conn.execute(
+            "SELECT * FROM requirement_exec_events WHERE req_id=? ORDER BY sequence",
+            (req_id,),
+        ).fetchall()
+        events = []
+        for row in rows:
+            event = dict(row)
+            event["blockers"] = json.loads(event.pop("blockers_json") or "[]")
+            events.append(event)
+        return events
