@@ -135,6 +135,16 @@ ADB 要当常驻前台，就必须在看一眼的地方知道「公司现在有�
 - [ ] TASK-011 Validate package gates (truth review + freeze ack) · ac=GATES · evidence=`.beacon/evidence/implement/requirement-index/GATES.json`
 - [ ] TASK-012 Run QA against AC↔TC matrix + exec-layer evidence · ac=QA · evidence=`.beacon/evidence/implement/requirement-index/QA-MATRIX.json`
 
+### M0 增量（change `chg_17fc1e57ef36` → AC-007 / AC-008）
+
+> **人话**：TASK-001..008 只证明了「给一批数据，能生成 JSON」。
+> 谁去把这批数据找出来？没人写。`adb index ...` 这条命令？也没有。
+> 所以现在缺两块：**自己找包的枚举器**（AC-007）+ **一条命令跑完的入口**（AC-008）。
+> truth 与 tests 已按这两条冻结，本文件只补台账，不重写 AC 措辞。
+
+- [ ] TASK-013 枚举器：`requirement_index.py` 新增 `EnumerationResult` + `enumerate_sources(project_roots, *, version="")`——扫 `<root>/docs/beacon/<version>/features/<slug>/truth.md`，只收 frontmatter `status: frozen` 的包，产出 `RequirementSource`（`req_id=req_id_for(project, feature)`；`project` 取 root 目录名，允许 CLI 传 `slug=path` 显式覆盖；`payload_path` 优先指向 `<feature>/.machine/requirement/<slug>.requirement-package.json`，该文件不存在时仍产出 source，由 `build_index` 按 AC-003 记 `source_missing`，**不伪造 lifecycle**）。版本选择：显式 `--version` 优先，否则取 `docs/beacon/` 下最高 `vX.Y.Z`；同一 root 重复传入按 `Path.resolve()` 去重只枚举一次；未冻结 / 无 frontmatter / frontmatter 不可读 / truth.md 缺失 / root 不存在 → 记入 `skipped[]`（`reason` + `project` + `path`）后继续，**不抛栈**；输出按 `(project, feature)` 固定排序（幂等前提）。配套 `tests/test_requirement_index.py -k enumerator`（TC-RI-007）与 `-k enumerator_missing_root`（TC-RI-ILL-003）· ac=AC-007 · evidence=`.beacon/evidence/implement/requirement-index/AC-007.json`
+- [ ] TASK-014 `adb index` CLI：`cli.py` 新增 `index` 子命令组，复用 `envelope()` 与 `main()` 的 blocked→exit 2 约定。① `adb index generate --projects a,b[,slug=path] --out <path> [--version] [--budget] [--strict] [--json]`：枚举 → `generate_index(storage=Storage)` 合并 ADB `exec_state` → `write_index()` 原子落盘 → `status=pass` + exit 0，`skipped[]`/`missing[]` 计数进 `data`（`--strict` 下非空即 blocked，沿用 TASK-003 语义）。② `adb index status --out <path> [--json]`：打印 `requirements` 条数、`format`、`missing` 计数；文件不存在 → `DeliveryBusError("index_file_missing")` 经 `main()` 返回 **exit 2**，JSON 解析失败 → `index_file_invalid`（同样 exit 2）。③ 时钟走 `requirement_index.CLOCK_ENV`（`ADB_REQUIREMENT_INDEX_NOW`）：同一输入两次 generate **字节一致**。④ 副作用边界：generate 不写 `docs/beacon/**`、不碰 `truth_stage`（TASK-009 复跑校验）。配套 `tests/test_requirement_index.py -k cli`（TC-RI-008）· ac=AC-008 · evidence=`.beacon/evidence/implement/requirement-index/AC-008.json`
+
 ## 依赖顺序（一个方向，不绕圈）
 
 ```text
@@ -146,10 +156,14 @@ TASK-001 契约
 TASK-009 副作用证明（依赖 007）
 TASK-010 回归（全绿后）
 TASK-011 门 ─▶ TASK-012 QA
+
+M0 增量（change chg_17fc1e57ef36）：
+TASK-001/002 已有 ─▶ TASK-013 枚举器 ─▶ TASK-014 adb index CLI ─▶ TASK-009 副作用证明复跑
 ```
 
 先做 001（契约），是因为 002–008 都在写同一个 schema；契约返工会全返工。
 007 放最后，因为 CLI 只是入口，逻辑全在 001–008。
+M0 里 013 先于 014：CLI 的 `--projects` 只是把参数交给枚举器，找包的逻辑只有一份。
 
 ## AC 映射（program parity_subset → 本湖 AC）
 
@@ -163,6 +177,12 @@ TASK-011 门 ─▶ TASK-012 QA
 | `index-budget-layering-at-10kb` | AC-RI-006 | 超限分层三面齐全；阈值边界（恰好 10240 / 10241） |
 
 > AC 编号是**计划期占位**，truth 阶段必须以这 6 个编号落定（改名则本台账同步重生成）。
+> 上表 AC-RI-001..006 现已在 truth 中落成 **AC-001..AC-006**（本文件历史行保留旧占位名，执行时按 AC-00x 记账）。
+
+| program 能力键（M0 补强） | 落定 AC | 主要 TC 方向 |
+|---------------------------|---------|--------------|
+| `requirement-index-schema` + `missing-not-silent` | AC-007 | TC-RI-007：两个假项目树只收 frozen 包、`req_id=req:<project>:<feature>`、未冻结/无 frontmatter 进 `skipped[]`、重复 root 只枚举一次；TC-RI-ILL-003：不存在的 root 进 `skipped[]` 不抛栈 |
+| `single-file-parseable` + `missing-not-silent` | AC-008 | TC-RI-008：`adb index generate` 落盘并 exit 0；`status` 打印条数/格式/missing 计数；文件缺失 exit 2 + `index_file_missing`；固定 `ADB_REQUIREMENT_INDEX_NOW` 后两次生成字节一致 |
 
 ## 本湖失败矩阵（program 失败矩阵的湖内投影）
 
