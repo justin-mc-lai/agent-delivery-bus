@@ -98,7 +98,7 @@ Use beacon truth ask / beacon truth answer to drive this ledger.
 | AC-006 | 索引体积超过 10240 字节时自动分层：`requirement-index.json`（summary）+ `requirements/<project>.json`（分片）；summary 每条仍保留 `req_id`/`truth_stage`/`exec_state`/`truth_ref`；未超阈值时不产生分片 |
 | AC-007 | 给定一组 project root，枚举器发现其中 `docs/beacon/<version>/features/<slug>/truth.md` 且 frontmatter `status: frozen` 的包，产出 `RequirementSource` 列表；`req_id = req:<project>:<feature>`；未冻结、无 frontmatter、不可读的包记入 `skipped[]` 并继续；同一 project root 重复传入只算一次 |
 | AC-008 | `adb index generate --projects a,b --out <path>` 一条命令完成枚举→生成→落盘并 exit 0；`adb index status --out <path>` 打印条数、格式、missing 计数；文件不存在时 exit 2 且 reason_code 为 `index_file_missing`；`ADB_REQUIREMENT_INDEX_NOW` 可固定时钟使两次运行字节一致 |
-| AC-009 | `truth_stage` 只取自真实生命周期源，优先级：① `beacon-go truth list --project <root> --json` 返回的 `lifecycle_stage`；② 取不到时标 `unknown` 并写入 `missing[]`（reason=`lifecycle_source_missing`）。禁止用 frontmatter 的 `status` 或目录名推断阶段；枚举器接受可注入的 lifecycle provider，测试不依赖真实内核 |
+| AC-009 | `truth_stage` 只取自真实生命周期源，优先级：① `beacon-go truth list --project <root> --json` 返回的 `lifecycle_stage`；② 取不到时标 `unknown` 并写入 `missing[]`（reason=`lifecycle_source_missing`）。禁止用 frontmatter 的 `status`、目录名推断阶段；枚举器接受可注入的 lifecycle provider，测试不依赖真实内核 |
 
 ## Parity Matrix
 

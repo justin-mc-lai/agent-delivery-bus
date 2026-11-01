@@ -1,7 +1,7 @@
 ---
 slug: requirement-index
 version: v0.1.5
-materials_status: stale
+materials_status: current
 task_source: acceptance_criteria
 plan_mode: feature_projection_from_program
 program_ref: docs/beacon/v0.1.5/programs/superagent-router
