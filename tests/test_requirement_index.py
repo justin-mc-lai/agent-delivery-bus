@@ -1,4 +1,4 @@
-"""AC-001..AC-008: requirement-index projection (beacon truth + ADB exec state)."""
+"""AC-001..AC-009: requirement-index projection (beacon truth + ADB exec state)."""
 
 from __future__ import annotations
 
@@ -11,17 +11,21 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from agent_delivery_bus.errors import DeliveryBusError
 from agent_delivery_bus.requirement_index import (
     BUDGET_BYTES,
     EXEC_STATES,
+    LIFECYCLE_SOURCE_MISSING,
     RECORD_FIELDS,
     SCHEMA_VERSION,
+    SKIP_STORE_NOT_REGISTERED,
     TRUTH_STAGES,
     RequirementSource,
     build_index,
     choose_format,
+    default_lifecycle_provider,
     describe_index,
     dumps,
     enumerate_sources,
@@ -269,7 +273,8 @@ class RequirementIndexMissingSourceTests(unittest.TestCase):
             self.assertEqual(record["source_status"], "unknown")
             self.assertEqual(record["truth_stage"], "unknown")
             self.assertEqual(record["truth_ref"], "docs/truth.md")
-            self.assertEqual(document["missing"][0]["reason"], "lifecycle_missing")
+            # The payload loaded but carries no lifecycle answer (AC-009).
+            self.assertEqual(document["missing"][0]["reason"], LIFECYCLE_SOURCE_MISSING)
 
 
 class RequirementIndexSelfContainedTests(unittest.TestCase):
@@ -561,6 +566,30 @@ def _cli_env(**overrides: str) -> dict[str, str]:
     return env
 
 
+def _fake_lifecycle(mapping: dict[str, dict[str, str]] | None = None):
+    """Injected lifecycle provider; tests never spawn the real ``beacon-go``."""
+    stages = {slug: dict(value) for slug, value in (mapping or {}).items()}
+
+    def provider(root: Path) -> dict[str, dict[str, str]]:
+        return {slug: dict(value) for slug, value in stages.items()}
+
+    return provider
+
+
+def _fake_kernel_bin(directory: Path, payload: dict[str, object]) -> Path:
+    """Write a ``beacon-go`` stub printing ``payload`` (keeps PATH hermetic)."""
+    directory.mkdir(parents=True, exist_ok=True)
+    stub = directory / "beacon-go"
+    stub.write_text(
+        f"#!{sys.executable}\n"
+        "import json\n"
+        f"print(json.dumps({payload!r}))\n",
+        encoding="utf-8",
+    )
+    stub.chmod(0o755)
+    return directory
+
+
 class RequirementIndexEnumeratorTests(unittest.TestCase):
     """AC-007: only frozen beacon packages are enumerated; the rest are recorded."""
 
@@ -585,8 +614,13 @@ class RequirementIndexEnumeratorTests(unittest.TestCase):
             )
 
             # The third entry is the same root spelled differently: it must not
-            # be enumerated twice.
-            sources, skipped = enumerate_sources([alpha, beta, alpha / "."])
+            # be enumerated twice.  The lifecycle store is injected (never the
+            # real kernel) and knows no slug here, so every record is missing
+            # its stage.
+            sources, skipped = enumerate_sources(
+                [alpha, beta, alpha / "."],
+                lifecycle_provider=_fake_lifecycle({"unrelated": {"stage": "plan"}}),
+            )
 
             self.assertEqual(
                 [source.req_id for source in sources],
@@ -605,9 +639,10 @@ class RequirementIndexEnumeratorTests(unittest.TestCase):
                 "docs/beacon/v0.1.5/features/requirement-index/evidence.md",
             )
             self.assertEqual(beta_source.evidence_ref, "")
-            # Frontmatter facts travel with the source; no stage is claimed.
+            # Frontmatter facts travel with the source; the lifecycle store had
+            # nothing to say, so no stage is claimed.
             self.assertEqual(alpha_source.payload["frontmatter"]["status"], "frozen")
-            self.assertNotIn("lifecycle", alpha_source.payload)
+            self.assertEqual(alpha_source.payload["lifecycle"], {})
 
             self.assertEqual(
                 [(entry["reason"], Path(entry["source"]).name) for entry in skipped],
@@ -632,7 +667,7 @@ class RequirementIndexEnumeratorTests(unittest.TestCase):
             )
 
             # Enumerated packages feed the projection: all 11 fields, but the
-            # lifecycle stage stays unknown (and is recorded as missing).
+            # lifecycle stage stays unknown (the provider answered with {}).
             document = build_index(sources, generated_at=STAMP).document
             self.assertEqual(len(document["requirements"]), 2)
             for record in document["requirements"]:
@@ -641,7 +676,7 @@ class RequirementIndexEnumeratorTests(unittest.TestCase):
                 self.assertEqual(record["source_status"], "unknown")
             self.assertEqual(
                 sorted(entry["reason"] for entry in document["missing"]),
-                ["lifecycle_missing", "lifecycle_missing"],
+                [LIFECYCLE_SOURCE_MISSING, LIFECYCLE_SOURCE_MISSING],
             )
 
     def test_enumerator_missing_root_does_not_raise(self):
@@ -654,7 +689,8 @@ class RequirementIndexEnumeratorTests(unittest.TestCase):
             bare.mkdir()
 
             sources, skipped = enumerate_sources(
-                [workspace / "does-not-exist", "", bare, alpha]
+                [workspace / "does-not-exist", "", bare, alpha],
+                lifecycle_provider=_fake_lifecycle({"one": {"stage": "truth"}}),
             )
 
             self.assertEqual([source.req_id for source in sources], ["req:alpha:one"])
@@ -676,14 +712,21 @@ class RequirementIndexEnumeratorTests(unittest.TestCase):
             self.assertEqual(resolve_version(gamma), "v0.1.10")  # numeric, not lexical
             self.assertEqual(resolve_version(gamma, "v0.1.9"), "v0.1.9")
 
-            sources, skipped = enumerate_sources([gamma])
+            provider = _fake_lifecycle(
+                {"nine": {"stage": "truth"}, "ten": {"stage": "implement"}}
+            )
+            sources, skipped = enumerate_sources([gamma], lifecycle_provider=provider)
             self.assertEqual([source.req_id for source in sources], ["req:gamma:ten"])
             self.assertEqual(skipped, [])
 
-            sources, skipped = enumerate_sources([gamma], version="v0.1.9")
+            sources, skipped = enumerate_sources(
+                [gamma], version="v0.1.9", lifecycle_provider=provider
+            )
             self.assertEqual([source.req_id for source in sources], ["req:gamma:nine"])
 
-            sources, skipped = enumerate_sources([gamma], version="v9.9.9")
+            sources, skipped = enumerate_sources(
+                [gamma], version="v9.9.9", lifecycle_provider=provider
+            )
             self.assertEqual(sources, [])
             self.assertEqual([entry["reason"] for entry in skipped], ["features_missing"])
 
@@ -712,7 +755,18 @@ class RequirementIndexCliTests(unittest.TestCase):
 
             out = workspace / "out" / "requirement-index.json"
             db = workspace / "adb.sqlite3"
+            # Hermetic kernel: a stub on PATH answers the lifecycle query, so the
+            # test never runs the real `beacon-go`.
+            bin_dir = _fake_kernel_bin(
+                workspace / "bin",
+                {
+                    "features": [
+                        {"slug": "one", "lifecycle_stage": "truth", "lifecycle_status": "Completed"}
+                    ]
+                },
+            )
             env = _cli_env(ADB_REQUIREMENT_INDEX_NOW=STAMP)
+            env["PATH"] = str(bin_dir) + os.pathsep + env.get("PATH", "")
             generate = CLI + [
                 "--db",
                 str(db),
@@ -744,6 +798,7 @@ class RequirementIndexCliTests(unittest.TestCase):
                 [record["req_id"] for record in document["requirements"]],
                 ["req:alpha:one"],
             )
+            self.assertEqual(document["requirements"][0]["truth_stage"], "truth")
             self.assertEqual(document["generated_at"], STAMP)
 
             # ADB_REQUIREMENT_INDEX_NOW pins the clock: two runs are byte equal.
@@ -765,7 +820,7 @@ class RequirementIndexCliTests(unittest.TestCase):
             info = json.loads(status.stdout)["data"]
             self.assertEqual(info["count"], 1)
             self.assertEqual(info["format"], "full")
-            self.assertEqual(info["missing_count"], 1)  # lifecycle store not wired yet
+            self.assertEqual(info["missing_count"], 0)  # the stub answered every slug
             self.assertEqual(info["schema_version"], SCHEMA_VERSION)
 
             text_mode = subprocess.run(
@@ -777,7 +832,7 @@ class RequirementIndexCliTests(unittest.TestCase):
             )
             self.assertEqual(text_mode.returncode, 0, text_mode.stderr + text_mode.stdout)
             self.assertIn("count=1", text_mode.stdout)
-            self.assertIn("missing=1", text_mode.stdout)
+            self.assertIn("missing=0", text_mode.stdout)
             self.assertIn("format=full", text_mode.stdout)
 
     def test_cli_status_missing_file_exits_2(self):
@@ -808,6 +863,169 @@ class RequirementIndexCliTests(unittest.TestCase):
             with self.assertRaises(DeliveryBusError) as ctx:
                 describe_index(missing)
             self.assertEqual(ctx.exception.reason_code, "index_file_missing")
+
+
+class RequirementIndexLifecycleSourceTests(unittest.TestCase):
+    """AC-009: ``truth_stage`` comes from the kernel lifecycle store only."""
+
+    def test_lifecycle_source_provider_sets_truth_stage(self):
+        """TC-RI-009: injected provider wins; an empty answer is recorded."""
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "delta"
+            root.mkdir()
+            _beacon_project(root, "feat-a", evidence=True)
+
+            asked: list[Path] = []
+
+            def provider(path: Path) -> dict[str, dict[str, str]]:
+                asked.append(path)
+                return {"feat-a": {"stage": "qa", "status": "InProgress"}}
+
+            sources, skipped = enumerate_sources([root], lifecycle_provider=provider)
+            self.assertEqual(len(asked), 1)  # one kernel call per root
+            self.assertEqual(asked[0].name, "delta")
+            self.assertEqual(skipped, [])
+            self.assertEqual(
+                sources[0].payload["lifecycle"],
+                {"stage": "qa", "status": "InProgress"},
+            )
+
+            document = build_index(sources, generated_at=STAMP).document
+            record = document["requirements"][0]
+            self.assertEqual(record["req_id"], "req:delta:feat-a")
+            self.assertEqual(record["truth_stage"], "qa")
+            self.assertEqual(record["source_status"], "ok")
+            self.assertEqual(document["missing"], [])
+
+            # Same package, a store that knows nothing: unknown + recorded why.
+            sources, skipped = enumerate_sources([root], lifecycle_provider=_fake_lifecycle())
+            document = build_index(sources, generated_at=STAMP).document
+            record = document["requirements"][0]
+            self.assertEqual(record["truth_stage"], "unknown")
+            self.assertEqual(record["source_status"], "unknown")
+            self.assertEqual(
+                [entry["reason"] for entry in document["missing"]],
+                [LIFECYCLE_SOURCE_MISSING],
+            )
+            self.assertEqual(
+                [entry["reason"] for entry in skipped], [SKIP_STORE_NOT_REGISTERED]
+            )
+            self.assertEqual(skipped[0]["source"], str(root.resolve()))
+
+    def test_lifecycle_source_broken_provider_never_blocks(self):
+        """TC-RI-009: a provider that raises or answers garbage degrades to {}."""
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "zeta"
+            root.mkdir()
+            _beacon_project(root, "feat-z")
+
+            def boom(path: Path) -> dict[str, dict[str, str]]:
+                raise RuntimeError("kernel exploded")
+
+            sources, skipped = enumerate_sources([root], lifecycle_provider=boom)
+            self.assertEqual([source.req_id for source in sources], ["req:zeta:feat-z"])
+            self.assertEqual(
+                [entry["reason"] for entry in skipped], [SKIP_STORE_NOT_REGISTERED]
+            )
+
+            def wrong_shape(path: Path):
+                return {"feat-z": "qa"}
+
+            sources, _ = enumerate_sources([root], lifecycle_provider=wrong_shape)
+            document = build_index(sources, generated_at=STAMP).document
+            self.assertEqual(document["requirements"][0]["truth_stage"], "unknown")
+            self.assertEqual(
+                [entry["reason"] for entry in document["missing"]],
+                [LIFECYCLE_SOURCE_MISSING],
+            )
+
+    def test_lifecycle_source_default_provider_fails_closed(self):
+        """TC-RI-009: the kernel call is parsed strictly and never raises."""
+        root = Path("/nonexistent/project")
+        healthy = mock.Mock(
+            returncode=0,
+            stdout=json.dumps(
+                {
+                    "features": [
+                        {
+                            "slug": "feat-a",
+                            "lifecycle_stage": "qa",
+                            "lifecycle_status": "InProgress",
+                        },
+                        {"slug": "", "lifecycle_stage": "plan"},
+                        "not-a-feature",
+                    ]
+                }
+            ),
+        )
+        with mock.patch("subprocess.run", return_value=healthy) as run:
+            self.assertEqual(
+                default_lifecycle_provider(root),
+                {"feat-a": {"stage": "qa", "status": "InProgress"}},
+            )
+            args, kwargs = run.call_args
+            self.assertEqual(args[0][:3], ["beacon-go", "truth", "list"])
+            self.assertIn("--project", args[0])
+            self.assertIn(str(root), args[0])
+            self.assertIn("--json", args[0])
+            self.assertTrue(kwargs["capture_output"])
+            self.assertTrue(kwargs["text"])
+            self.assertEqual(kwargs["timeout"], 30)
+
+        for broken in (
+            mock.Mock(returncode=2, stdout=""),
+            mock.Mock(returncode=0, stdout="not json"),
+            mock.Mock(returncode=0, stdout=json.dumps([1, 2])),
+            mock.Mock(returncode=0, stdout=json.dumps({"features": "nope"})),
+        ):
+            with mock.patch("subprocess.run", return_value=broken):
+                self.assertEqual(default_lifecycle_provider(root), {})
+
+        for failure in (
+            FileNotFoundError("beacon-go"),
+            subprocess.TimeoutExpired("beacon-go", 30),
+            subprocess.CalledProcessError(1, "beacon-go"),
+        ):
+            with mock.patch("subprocess.run", side_effect=failure):
+                self.assertEqual(default_lifecycle_provider(root), {})
+
+    def test_lifecycle_not_guessed_from_frontmatter(self):
+        """TC-RI-ILL-004: flipping ``status`` never moves ``truth_stage``."""
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "eta"
+            root.mkdir()
+            package = _beacon_project(root, "flip", status="draft")
+
+            registered = _fake_lifecycle({"other": {"stage": "plan"}})
+            sources, skipped = enumerate_sources([root], lifecycle_provider=registered)
+            self.assertEqual(sources, [])
+            self.assertEqual([entry["reason"] for entry in skipped], ["not_frozen"])
+            before = build_index(sources, generated_at=STAMP).document
+            self.assertEqual(before["requirements"], [])
+
+            # Flip only the frontmatter status; the kernel still knows no stage.
+            truth = package / "truth.md"
+            truth.write_text(
+                truth.read_text(encoding="utf-8").replace("status: draft", "status: frozen"),
+                encoding="utf-8",
+            )
+            sources, _ = enumerate_sources([root], lifecycle_provider=registered)
+            self.assertEqual([source.req_id for source in sources], ["req:eta:flip"])
+            after = build_index(sources, generated_at=STAMP).document
+            self.assertEqual(after["requirements"][0]["truth_stage"], "unknown")
+            self.assertEqual(after["requirements"][0]["source_status"], "unknown")
+            self.assertEqual(
+                [entry["reason"] for entry in after["missing"]],
+                [LIFECYCLE_SOURCE_MISSING],
+            )
+
+            # A stage the kernel does report is used verbatim — never the status.
+            sources, _ = enumerate_sources(
+                [root],
+                lifecycle_provider=_fake_lifecycle({"flip": {"stage": "implement"}}),
+            )
+            document = build_index(sources, generated_at=STAMP).document
+            self.assertEqual(document["requirements"][0]["truth_stage"], "implement")
 
 
 if __name__ == "__main__":

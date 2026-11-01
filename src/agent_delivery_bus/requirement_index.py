@@ -25,9 +25,13 @@ frontmatter says ``status: frozen`` and turns them into ``RequirementSource``
 rows.  Anything it cannot accept (missing root, missing/unreadable truth.md,
 unparsable frontmatter, not frozen) lands in ``skipped[]`` instead of aborting
 the run.  Discovery reads the *frontmatter* only to decide membership; the
-lifecycle stage still comes from the beacon lifecycle store, so a package that
-ships no lifecycle projection keeps ``truth_stage=unknown`` and shows up in
-``missing[]`` as ``lifecycle_missing`` rather than being guessed at.
+lifecycle stage still comes from the beacon lifecycle store (AC-009):
+``enumerate_sources`` asks the kernel (``beacon-go truth list --json``, via an
+injectable ``LifecycleProvider``) for each root, so a package that the store
+does not know keeps ``truth_stage=unknown`` and shows up in ``missing[]`` as
+``lifecycle_source_missing`` rather than being guessed at.  A root the kernel
+does not know at all is recorded once in ``skipped[]`` as
+``store_not_registered``; its packages are still enumerated.
 """
 
 from __future__ import annotations
@@ -36,11 +40,12 @@ import hashlib
 import json
 import os
 import re
+import subprocess
 import tempfile
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Callable, Iterable, Mapping, Sequence
 
 from .errors import DeliveryBusError
 
@@ -99,6 +104,8 @@ SOURCE_MISSING = "source_missing"
 SOURCE_UNREADABLE = "source_unreadable"
 SOURCE_INVALID_JSON = "source_invalid_json"
 LIFECYCLE_MISSING = "lifecycle_missing"
+#: The lifecycle source answered but knows no stage for this slug (AC-009).
+LIFECYCLE_SOURCE_MISSING = "lifecycle_source_missing"
 DUPLICATE_SOURCE = "duplicate_source"
 TRUTH_STAGE_READONLY = "truth_stage_readonly"
 EXEC_STATE_INVALID = "exec_state_invalid"
@@ -232,6 +239,20 @@ def _load_payload(source: RequirementSource) -> tuple[dict[str, Any] | None, str
     return payload, ""
 
 
+#: The kernel's lifecycle vocabulary -> this index's five stages
+#: (AC-001). Not a guess: the kernel is the authority for its own stage
+#: names, and AC-001 fixes the vocabulary this view speaks. Freeze closes
+#: the truth stage; Prd is still planning.
+_KERNEL_STAGE_MAP = {
+    "prd": "plan",
+    "think": "truth",
+    "freeze": "truth",
+    "implement": "implement",
+    "qa": "qa",
+    "release": "release",
+}
+
+
 def _stage_from_payload(payload: Mapping[str, Any]) -> str:
     """Read the lifecycle stage from the frozen package; never guess."""
     stage = ""
@@ -240,7 +261,11 @@ def _stage_from_payload(payload: Mapping[str, Any]) -> str:
         stage = str(lifecycle.get("stage") or "").strip()
     if not stage:
         stage = str(payload.get("truth_stage") or "").strip()
-    return stage if stage in LIFECYCLE_STAGES else ""
+    if not stage:
+        return ""
+    if stage in LIFECYCLE_STAGES:
+        return stage
+    return _KERNEL_STAGE_MAP.get(stage.casefold(), "")
 
 
 # --- enumeration (AC-007) ---------------------------------------------------
@@ -259,9 +284,65 @@ SKIP_TRUTH_MISSING = "truth_missing"
 SKIP_TRUTH_UNREADABLE = "truth_unreadable"
 SKIP_FRONTMATTER_INVALID = "frontmatter_invalid"
 SKIP_NOT_FROZEN = "not_frozen"
+#: Root-level notice: the beacon lifecycle store does not know this project yet
+#: (``beacon-go projects register``).  Its packages are still enumerated (AC-009).
+SKIP_STORE_NOT_REGISTERED = "store_not_registered"
 
 _FRONTMATTER_BLOCK = re.compile(r"\A---\n(.*?)\n---", re.DOTALL)
 _FRONTMATTER_KEY = re.compile(r"[a-z_][a-z0-9_]*\Z")
+
+# --- lifecycle source (AC-009) ----------------------------------------------
+
+#: Kernel command whose answer is the *only* legitimate ``truth_stage`` source.
+LIFECYCLE_COMMAND = ("beacon-go", "truth", "list")
+LIFECYCLE_TIMEOUT_SECONDS = 30
+
+#: ``root -> {slug: {"stage": ..., "status": ...}}``.  Injected so tests never
+#: need the real kernel binary.
+LifecycleProvider = Callable[[Path], Mapping[str, Mapping[str, str]]]
+
+
+def default_lifecycle_provider(root: Path) -> dict[str, dict[str, str]]:
+    """Ask the beacon kernel for every slug's real lifecycle stage.
+
+    Runs ``beacon-go truth list --project <root> --json`` and maps
+    ``features[].slug`` to ``{"stage": lifecycle_stage, "status":
+    lifecycle_status}``.  Fails closed: a missing binary, a non-zero exit, a
+    timeout or unparsable JSON all yield ``{}`` (the caller then records
+    ``store_not_registered`` / ``lifecycle_source_missing``).  Never raises.
+    """
+    try:
+        completed = subprocess.run(
+            [*LIFECYCLE_COMMAND, "--project", str(root), "--json"],
+            capture_output=True,
+            text=True,
+            timeout=LIFECYCLE_TIMEOUT_SECONDS,
+        )
+    except (OSError, subprocess.SubprocessError):  # missing binary, timeout
+        return {}
+    if completed.returncode != 0:
+        return {}
+    try:
+        document = json.loads(completed.stdout or "")
+    except (TypeError, ValueError):
+        return {}
+    if not isinstance(document, Mapping):
+        return {}
+    features = document.get("features")
+    if isinstance(features, (str, bytes)) or not isinstance(features, Sequence):
+        return {}
+    stages: dict[str, dict[str, str]] = {}
+    for feature in features:
+        if not isinstance(feature, Mapping):
+            continue
+        slug = str(feature.get("slug") or "").strip()
+        if not slug:
+            continue
+        stages[slug] = {
+            "stage": str(feature.get("lifecycle_stage") or "").strip(),
+            "status": str(feature.get("lifecycle_status") or "").strip(),
+        }
+    return stages
 
 
 def parse_frontmatter(text: str) -> dict[str, str] | None:
@@ -340,11 +421,18 @@ def _source_for(
     package: Path,
     truth_path: Path,
     frontmatter: Mapping[str, str],
+    lifecycle: Mapping[str, str] | None = None,
 ) -> RequirementSource:
-    """One frozen package as a ``RequirementSource`` (no lifecycle claimed)."""
+    """One frozen package as a ``RequirementSource``.
+
+    ``lifecycle`` is the kernel's answer for this slug (or ``{}``).  It is
+    carried verbatim in the payload; the stage is never inferred from the
+    frontmatter or from the directory name (AC-009).
+    """
     evidence_path = package / EVIDENCE_FILENAME
     project = root.name
     payload: dict[str, Any] = {
+        "lifecycle": dict(lifecycle or {}),
         "truth_ref": _relative_path(truth_path, root),
         "evidence_ref": (
             _relative_path(evidence_path, root) if evidence_path.is_file() else ""
@@ -363,6 +451,26 @@ def _source_for(
     )
 
 
+def _stages_for_root(
+    provider: LifecycleProvider,
+    root: Path,
+) -> dict[str, dict[str, str]]:
+    """One root's lifecycle projection; a broken provider degrades to ``{}``."""
+    try:
+        raw = provider(root)
+    except Exception:  # a provider must never break the whole run
+        return {}
+    if not isinstance(raw, Mapping):
+        return {}
+    stages: dict[str, dict[str, str]] = {}
+    for slug, value in raw.items():
+        key = str(slug).strip()
+        if not key or not isinstance(value, Mapping):
+            continue
+        stages[key] = {str(name): str(item) for name, item in value.items()}
+    return stages
+
+
 def _feature_packages(features_dir: Path) -> list[Path]:
     """Directories under ``features/``; an unreadable tree yields none."""
     try:
@@ -375,17 +483,28 @@ def _feature_packages(features_dir: Path) -> list[Path]:
 def enumerate_sources(
     project_roots: Iterable[str | Path],
     version: str | None = None,
+    lifecycle_provider: LifecycleProvider | None = None,
 ) -> tuple[list[RequirementSource], list[dict[str, Any]]]:
     """Discover frozen beacon packages under the given project roots.
 
     Returns ``(sources, skipped)``.  ``skipped`` entries are
     ``{"source": <path>, "reason": <code>}`` and each names one of
     ``root_missing`` / ``features_missing`` / ``truth_missing`` /
-    ``truth_unreadable`` / ``frontmatter_invalid`` / ``not_frozen``.
+    ``truth_unreadable`` / ``frontmatter_invalid`` / ``not_frozen`` /
+    ``store_not_registered``.
+
+    ``lifecycle_provider`` supplies each root's ``{slug: {stage, status}}``
+    (AC-009); it defaults to :func:`default_lifecycle_provider` (the kernel).  A
+    root the provider does not know is recorded once as
+    ``store_not_registered`` and its packages are still enumerated, so the gap
+    is visible in ``missing[]`` instead of silently guessing a stage.
 
     A bad root is a recorded skip, never an exception, and the same root passed
     twice is enumerated once.
     """
+    provider = (
+        lifecycle_provider if lifecycle_provider is not None else default_lifecycle_provider
+    )
     sources: list[RequirementSource] = []
     skipped: list[dict[str, Any]] = []
     seen_roots: set[str] = set()
@@ -418,6 +537,13 @@ def enumerate_sources(
             )
             continue
 
+        # AC-009: the stage comes from the kernel store, once per root.  When
+        # the store knows nothing this is a root-level notice, not a reason to
+        # drop the packages (they still land in ``missing[]`` per record).
+        stages = _stages_for_root(provider, resolved)
+        if not stages:
+            skipped.append({"source": str(resolved), "reason": SKIP_STORE_NOT_REGISTERED})
+
         for package in _feature_packages(features_dir):
             truth_path = package / TRUTH_FILENAME
             if not truth_path.is_file():
@@ -435,7 +561,15 @@ def enumerate_sources(
             if str(frontmatter.get("status") or "").strip().casefold() != FROZEN_STATUS:
                 skipped.append({"source": str(truth_path), "reason": SKIP_NOT_FROZEN})
                 continue
-            sources.append(_source_for(resolved, package, truth_path, frontmatter))
+            sources.append(
+                _source_for(
+                    resolved,
+                    package,
+                    truth_path,
+                    frontmatter,
+                    stages.get(package.name, {}),
+                )
+            )
 
     sources.sort(key=lambda item: (item.req_id, item.payload_path))
     skipped.sort(key=lambda item: (item["reason"], item["source"]))
@@ -506,8 +640,11 @@ def build_index(
         seen[source.req_id] = str(source.payload_path)
 
         payload, reason = _load_payload(source)
-        if payload is not None and not reason and not _stage_from_payload(payload):
-            reason = LIFECYCLE_MISSING
+        if not reason and not _stage_from_payload(payload or {}):
+            # A payload we could read but that yields no stage means the
+            # lifecycle source itself had nothing to say (AC-009); only a
+            # payload that could not be loaded keeps ``lifecycle_missing``.
+            reason = LIFECYCLE_SOURCE_MISSING if payload is not None else LIFECYCLE_MISSING
         exec_row = rows.get(source.req_id) or {}
         records.append(_build_record(source, payload, exec_row, stamp, reason))
         if reason:
