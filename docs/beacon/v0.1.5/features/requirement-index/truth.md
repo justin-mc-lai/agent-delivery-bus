@@ -1,15 +1,15 @@
 ---
 slug: requirement-index
 version: v0.1.5
-status: draft
+status: frozen
 language: zh
 domain_required: false
 ux_required: false
 parser_contract: beacon-feature-package-v2
 truth_source_model: feature_package_authoritative
 package_maturity: draft
-materials_status: draft
-intent_confirmed: false
+materials_status: current
+intent_confirmed: true
 canonical_refs:
   truth: docs/beacon/v0.1.5/features/requirement-index/truth.md
   tests: docs/beacon/v0.1.5/features/requirement-index/tests.md

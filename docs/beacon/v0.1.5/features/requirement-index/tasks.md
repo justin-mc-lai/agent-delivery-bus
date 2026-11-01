@@ -1,7 +1,7 @@
 ---
 slug: requirement-index
 version: v0.1.5
-materials_status: draft
+materials_status: current
 task_source: acceptance_criteria
 plan_mode: feature_projection_from_program
 program_ref: docs/beacon/v0.1.5/programs/superagent-router
@@ -180,7 +180,7 @@ TASK-011 门 ─▶ TASK-012 QA
 
 | Q | 问题 | 计划倾向 | 影响 |
 |---|------|----------|------|
-| Q-RI-1 | index 是全公司一个文件，还是 per-project 一个再汇总？（program「待定」项） | 一个文件 + 10KB 分层（分层天然解决规模） | 影响 CLI 默认路径与 summary 结构 |
+| Q-RI-1 | index 是全公司一个文件，还是 per-project 一个再汇总？（program 遗留项） | 一个文件 + 10KB 分层（分层天然解决规模） | 影响 CLI 默认路径与 summary 结构 |
 | Q-RI-2 | studio 池路径放 `config/projects.json` 顶层 `requirement_index` 块，还是 CLI `--studio-pool`？ | 配置块（可被 `registry.raw` 保留，`save()` 不丢） | 影响配置契约 |
 | Q-RI-3 | `exec_state` 取值集合是否与 `router-loop` 完全共用？ | 共用一套枚举，本湖先冻结 | 影响跨湖契约 |
 | Q-RI-4 | 池内 `绑定: <slug> (vX feature <slug>)` 的解析规则（正则 vs 结构化字段） | 正则 + 解析失败进 `missing` | 影响池源可用性 |
