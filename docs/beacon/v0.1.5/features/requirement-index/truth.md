@@ -82,6 +82,8 @@ Use beacon truth ask / beacon truth answer to drive this ledger.
 | AC-004 | constraints：json.load 直接可读 | truth.md#Acceptance-Criteria |
 | AC-005 | goal + non_goals：不反写真相 | truth.md#数据契约 |
 | AC-006 | constraints：超 10KB 分层 | truth.md#Acceptance-Criteria |
+| AC-007 | goal：单一文件看清全局（前提是能自己找到包） | truth.md#枚举规则 |
+| AC-008 | 用户原话："只用一条命令" | truth.md#Acceptance-Criteria |
 
 ## Acceptance Criteria
 
@@ -93,10 +95,26 @@ Use beacon truth ask / beacon truth answer to drive this ledger.
 | AC-004 | 单文件自洽：只把 `requirement-index.json` 拷到别处，`json.load` 仍成功且字段完整；分层模式下 summary 文件同样自洽，并可凭 `truth_ref` 定位到分片 |
 | AC-005 | 提供写接口接受 `exec_state`/`thread_id`/`worker`/`blockers` 并成功落 ADB SQLite；任何携带 `truth_stage` 的写请求被拒绝，返回 `truth_stage_readonly`，且索引内容不变 |
 | AC-006 | 索引体积超过 10240 字节时自动分层：`requirement-index.json`（summary）+ `requirements/<project>.json`（分片）；summary 每条仍保留 `req_id`/`truth_stage`/`exec_state`/`truth_ref`；未超阈值时不产生分片 |
+| AC-007 | 给定一组 project root，枚举器发现其中 `docs/beacon/<version>/features/<slug>/truth.md` 且 frontmatter `status: frozen` 的包，产出 `RequirementSource` 列表；`req_id = req:<project>:<feature>`；未冻结、无 frontmatter、不可读的包记入 `skipped[]` 并继续；同一 project root 重复传入只算一次 |
+| AC-008 | `adb index generate --projects a,b --out <path>` 一条命令完成枚举→生成→落盘并 exit 0；`adb index status --out <path>` 打印条数、格式、missing 计数；文件不存在时 exit 2 且 reason_code 为 `index_file_missing`；`ADB_REQUIREMENT_INDEX_NOW` 可固定时钟使两次运行字节一致 |
 
 ## Parity Matrix
 
 不适用：`scope_mode: lake`，无上游 OSS 需要对齐。能力清单见 `feature-graph.json` 的 `parity_subset`。
+
+## 枚举规则
+
+谁进索引、谁不进：
+
+| 情况 | 处置 |
+|------|------|
+| `docs/beacon/<version>/features/<slug>/truth.md` 存在且 `status: frozen` | 收，`req_id=req:<project>:<feature>` |
+| frontmatter 缺失 / 解析失败 / `status` 不是 frozen | 跳过，记 `skipped[]`（reason 说明是哪一种） |
+| 目录存在但 truth.md 不存在 | 跳过，记 `skipped[]` |
+| 同一 project root 传入两次 | 只枚举一次 |
+| 同一 project 下多个 version | 取 `projects.json` 或 `docs/beacon/` 的最高版本；显式 `--version` 覆盖 |
+
+项目列表由调用方显式给出（`--projects`），不读隐式全局状态。
 
 ## Non-goals（冻结边界）
 
@@ -105,3 +123,5 @@ Use beacon truth ask / beacon truth answer to drive this ledger.
 - 不做 UI / dashboard
 - 不做 Router 派活（router-loop 湖）
 - 不做 watchdog 判定（watchdog 湖）
+- 不扫描未注册/未冻结的包（只读已冻结真相）
+- 不做守护进程（那是 adbd 的事）
