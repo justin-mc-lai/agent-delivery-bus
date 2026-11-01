@@ -140,3 +140,7 @@ src/*.egg-info/
 
 # adbd build output
 cmd/adbd/adbd
+
+# adbd runtime config (may carry operator secrets)
+.beacon/config
+.beacon/adbd-*
