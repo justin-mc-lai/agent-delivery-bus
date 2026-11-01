@@ -144,6 +144,27 @@
       "status": "released",
       "released_note": "v0.1.5 · AC-001..006 全 pass；真实二进制端到端验证",
       "summary": "adbd feed: 一句话 -> skill:<project>:<slug> 事件 -> intake -> route -> worker"
+    },
+    {
+      "phase": 6,
+      "priority": "P1",
+      "slug": "github-issue",
+      "lake_or_ocean": "湖",
+      "depends_on": [
+        "skill-trigger"
+      ],
+      "parity_subset": [
+        "gh-poll-mapping",
+        "updatedat-idempotency",
+        "label-filter",
+        "proxy-injection",
+        "typed-gh-errors",
+        "read-only-github"
+      ],
+      "harness_route": "beacon-gen-truth",
+      "status": "released",
+      "released_note": "v0.1.5 · AC-001..006 全 pass（测试用真实进程边界；真实公网因代理不稳未验证）",
+      "summary": "adbd poll-github: open issue -> gh:<repo>#<n> 事件 -> intake"
     }
   ],
   "topology_order": [
@@ -151,6 +172,7 @@
     "intake-fastpath",
     "router-loop",
     "watchdog",
-    "skill-trigger"
+    "skill-trigger",
+    "github-issue"
   ]
 }
