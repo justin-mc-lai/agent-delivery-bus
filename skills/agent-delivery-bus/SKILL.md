@@ -96,6 +96,26 @@ dispatch stage by default.
 Read [references/contracts.md](references/contracts.md) before performing a real
 dispatch or interpreting reconciliation.
 
+## 触发 router（skill intake）
+
+从任意会话把一件事送进 router，只用这一条命令（唯一入口）：
+
+```bash
+adbd feed --project <p> --slug <s> --text <t> [--channel skill]
+```
+
+- 这是触发 router 的**唯一入口**。thread（固定为 `skill:<project>:<slug>`）和幂等键都由
+  `adbd feed` 生成，不要再手拼 `adbd intake`：拼错线程名会串线，手写键会丢掉去重。
+- `<p>`（project）和 `<s>`（slug）各自只允许 `[a-z0-9._-]`、长度 1–64；不合法立即返回
+  `reason_code=thread_invalid`，不写任何队列。
+- `--text` 为空或全为空白 → `reason_code=text_empty`；交给 worker 时失败 →
+  `reason_code=dispatch_failed`（条目留在慢路径队列，等 router 重试）。这两种与
+  `thread_invalid` 一样退出码为 2；成功输出 `route=fast` / `route=slow` /
+  `route=deduped`，退出码为 0。
+- 不给 `--message-id` 时按 `sha256(channel|thread|text)` 前 16 位十六进制生成：同一句话
+  重复触发得到 `route=deduped`，不会重复派活。
+- 它是同步单次命令：不读心跳、不依赖 launchd、不需要常驻进程，任何 shell 里都能直接跑。
+
 ## Session routing resolution order
 
 聊天里用 `adb <项目编号> <业务描述>` 触发调度时，目标 agent 按以下决议顺序确定（绝不静默跳级）：

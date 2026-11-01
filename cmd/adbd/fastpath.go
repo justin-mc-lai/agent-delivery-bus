@@ -481,6 +481,9 @@ type Config struct {
 	// RouterAgent is adbd_router_agent, the worker the router loop dispatches
 	// new slow-path work to. Empty means the daemon default ("main").
 	RouterAgent string
+	// FeedChannel is adbd_feed_project_channel: the channel `adbd feed` stamps its
+	// events with when the caller names none. Empty means DefaultFeedChannel.
+	FeedChannel string
 	// Decider is adbd_decider: "rule" (default) or "llm" (AC-008).
 	Decider string
 	// LLMBaseURL is adbd_llm_base_url, an OpenAI-compatible endpoint root.
@@ -569,6 +572,7 @@ func LoadConfig(path string) (Config, error) {
 	}
 	cfg.PaseoBin = values["adbd_paseo_bin"]
 	cfg.RouterAgent = values["adbd_router_agent"]
+	cfg.FeedChannel = strings.TrimSpace(values["adbd_feed_project_channel"])
 
 	// AC-008 decider selection. Anything that is not "llm" stays on the
 	// deterministic rules: an unreadable value must never silently enable a

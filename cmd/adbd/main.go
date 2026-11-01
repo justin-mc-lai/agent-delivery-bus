@@ -4,6 +4,7 @@
 //
 //	adbd --version
 //	adbd bind   --channel C --thread T --agent-id A [--ttl 24h]
+//	adbd feed   --project P --slug S --text T [--channel C] [--message-id M]
 //	adbd intake --channel C --thread T --message-id M --text S [--outcome json|text]
 //	adbd status --channel C --thread T [--outcome json|text]
 //	adbd route  --once [--limit N] [--outcome json|text]
@@ -46,6 +47,8 @@ func run(args []string, stdout, stderr io.Writer) int {
 		return 0
 	case "bind":
 		return runBind(args[1:], stdout, stderr)
+	case "feed":
+		return runFeed(args[1:], stdout, stderr)
 	case "intake":
 		return runIntake(args[1:], stdout, stderr)
 	case "status":
@@ -69,6 +72,7 @@ func usage(w io.Writer) {
 usage:
   adbd --version
   adbd bind   --channel C --thread T --agent-id A [--ttl 24h]
+  adbd feed   --project P --slug S --text T [--channel C] [--message-id M]
   adbd intake --channel C --thread T --message-id M --text S [--outcome json|text]
   adbd status --channel C --thread T [--outcome json|text]
   adbd route  --once [--limit N] [--outcome json|text]
@@ -84,6 +88,14 @@ common flags:
   --config PATH      config file, defaults to <root>/.beacon/config
   --runner-bin PATH  runner binary, defaults to config adbd_paseo_bin or "paseo"
   --outcome FORMAT   text (default) or json
+
+feed flags:
+  --project P        project slug; must match [a-z0-9._-]{1,64}
+  --slug S           feature slug; same alphabet
+  --text T           the utterance to feed (untrusted input)
+  --channel C        source channel, defaults to adbd_feed_project_channel or skill
+  --message-id M     idempotency key, defaults to sha256(channel|thread|text)[:16]
+  --trace PATH       decision trace, defaults to <root>/.beacon/adbd-decisions.jsonl
 
 route flags:
   --once             drain the slow-path backlog once and exit
@@ -106,6 +118,7 @@ agent subcommands:
 
 config keys (.beacon/config, key=value):
   adbd_allow_channels=feishu,slack   allow-list; absent or empty means allow all
+  adbd_feed_project_channel=skill    default channel for adbd feed
   adbd_paseo_bin=/usr/local/bin/paseo
   adbd_router_agent=main             worker the router dispatches new work to
   adbd_decider=rule                  rule (default) or llm

@@ -544,7 +544,15 @@ func (r *Router) dispatch(item QueueItem, agentID string) error {
 }
 
 // guardedText marks inbound text as untrusted data, not instructions.
+//
+// It is idempotent: the guard is already present exactly when the first line of
+// the text is the guard line. That matters because a fed message is tagged once at
+// the trigger boundary (feed.go) and once again here on its way out of the router;
+// stacking the tag would turn one message into two guard lines.
 func guardedText(text string) string {
+	if strings.HasPrefix(text, UntrustedGuardLine) {
+		return text
+	}
 	return UntrustedGuardLine + "\n" + text
 }
 
