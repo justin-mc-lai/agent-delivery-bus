@@ -87,6 +87,11 @@ config keys (.beacon/config, key=value):
   adbd_allow_channels=feishu,slack   allow-list; absent or empty means allow all
   adbd_paseo_bin=/usr/local/bin/paseo
   adbd_router_agent=main             worker the router dispatches new work to
+  adbd_decider=rule                  rule (default) or llm
+  adbd_llm_base_url=...              OpenAI-compatible endpoint root
+  adbd_llm_model=deepseek-chat       model name
+  adbd_llm_api_key=...               key; falls back to env ADBD_LLM_API_KEY
+  adbd_llm_timeout=60s               single request ceiling
 `)
 }
 

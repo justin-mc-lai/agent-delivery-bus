@@ -481,6 +481,28 @@ type Config struct {
 	// RouterAgent is adbd_router_agent, the worker the router loop dispatches
 	// new slow-path work to. Empty means the daemon default ("main").
 	RouterAgent string
+	// Decider is adbd_decider: "rule" (default) or "llm" (AC-008).
+	Decider string
+	// LLMBaseURL is adbd_llm_base_url, an OpenAI-compatible endpoint root.
+	LLMBaseURL string
+	// LLMModel is adbd_llm_model, the model name.
+	LLMModel string
+	// LLMAPIKey is adbd_llm_api_key, falling back to env ADBD_LLM_API_KEY. It is
+	// never logged and never written back to disk by the daemon.
+	LLMAPIKey string
+	// LLMTimeout is adbd_llm_timeout, the single-request ceiling.
+	LLMTimeout time.Duration
+}
+
+// defaultConfig is the operator-facing baseline, so a missing or partial config
+// file still names a usable decider.
+func defaultConfig() Config {
+	return Config{
+		Decider:    DeciderLabelRule,
+		LLMBaseURL: DefaultLLMBaseURL,
+		LLMModel:   DefaultLLMModel,
+		LLMTimeout: DefaultLLMTimeout,
+	}
 }
 
 // LoadConfig reads a key=value config file. A missing file, or a file without
@@ -488,7 +510,7 @@ type Config struct {
 // operator names the allowed ones (AC-005). adbd_allow_all=true is the
 // explicit, opt-in escape for local development.
 func LoadConfig(path string) (Config, error) {
-	cfg := Config{}
+	cfg := defaultConfig()
 	if strings.TrimSpace(path) == "" {
 		return cfg, nil
 	}
@@ -531,6 +553,34 @@ func LoadConfig(path string) (Config, error) {
 	}
 	cfg.PaseoBin = values["adbd_paseo_bin"]
 	cfg.RouterAgent = values["adbd_router_agent"]
+
+	// AC-008 decider selection. Anything that is not "llm" stays on the
+	// deterministic rules: an unreadable value must never silently enable a
+	// network call.
+	if strings.EqualFold(strings.TrimSpace(values["adbd_decider"]), DeciderLabelLLM) {
+		cfg.Decider = DeciderLabelLLM
+	}
+	cfg.LLMBaseURL = strings.TrimSpace(values["adbd_llm_base_url"])
+	if cfg.LLMBaseURL == "" {
+		cfg.LLMBaseURL = DefaultLLMBaseURL
+	}
+	if model := strings.TrimSpace(values["adbd_llm_model"]); model != "" {
+		cfg.LLMModel = model
+	}
+	// The key lives in the local config file or the environment, never in argv
+	// and never in the trace.
+	cfg.LLMAPIKey = strings.TrimSpace(values["adbd_llm_api_key"])
+	if cfg.LLMAPIKey == "" {
+		cfg.LLMAPIKey = strings.TrimSpace(os.Getenv("ADBD_LLM_API_KEY"))
+	}
+	cfg.LLMTimeout = DefaultLLMTimeout
+	if raw := strings.TrimSpace(values["adbd_llm_timeout"]); raw != "" {
+		timeout, err := time.ParseDuration(raw)
+		if err != nil || timeout <= 0 {
+			return cfg, fmt.Errorf("adbd_llm_timeout %q is neither a positive duration nor a valid one (e.g. 60s)", raw)
+		}
+		cfg.LLMTimeout = timeout
+	}
 	return cfg, nil
 }
 

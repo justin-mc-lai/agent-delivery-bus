@@ -88,6 +88,21 @@ var routerToolset = []string{}
 // override it to inject a stub.
 var deciderFor = func() Decider { return RuleDecider{} }
 
+// decidersFor builds the pair the router drains with (AC-008): the primary
+// decider, and -- only when the operator chose adbd_decider=llm -- the
+// deterministic rules that take over a batch the model failed to answer. label
+// is what the trace records; the rule path stays implicit (see traceDecider).
+var decidersFor = func(cfg Config) (Decider, Decider, string, error) {
+	if strings.EqualFold(strings.TrimSpace(cfg.Decider), DeciderLabelLLM) {
+		llm, err := NewLLMDecider(cfg)
+		if err != nil {
+			return nil, nil, "", err
+		}
+		return llm, RuleDecider{}, DeciderLabelLLM, nil
+	}
+	return deciderFor(), nil, DeciderLabelRule, nil
+}
+
 // QueueItem is one slow-path queue line plus the drain-time view of it.
 type QueueItem struct {
 	Channel    string `json:"channel"`
@@ -129,7 +144,9 @@ type Dispatcher interface {
 }
 
 // traceRecord is one line of .beacon/adbd-decisions.jsonl. The field set is
-// frozen by AC-004: exactly these eight keys, emitted in this order.
+// frozen by AC-004: exactly these eight keys, emitted in this order. AC-008 adds
+// a ninth key, decider, which is only materialized when the verdict did not come
+// from the default deterministic rules (see traceDecider).
 type traceRecord struct {
 	Channel    string `json:"channel"`
 	Thread     string `json:"thread"`
@@ -139,6 +156,20 @@ type traceRecord struct {
 	BatchSize  int    `json:"batch_size"`
 	Untrusted  bool   `json:"untrusted"`
 	DecidedAt  string `json:"decided_at"`
+	// Decider is "rule" (implicit, omitted), "llm", or "llm_fallback_rules".
+	Decider string `json:"decider,omitempty"`
+}
+
+// traceDecider maps a decider label to the value the trace carries. The default
+// rule path writes no field at all: AC-004 froze the trace key set at eight and
+// TC-RL-004 asserts exactly those keys, so only a non-default decider is spelled
+// out -- which is precisely the case an operator needs to see.
+func traceDecider(label string) string {
+	label = strings.TrimSpace(label)
+	if label == "" || label == DeciderLabelRule {
+		return ""
+	}
+	return label
 }
 
 // DrainResult is one drain, in the shape the CLI prints.
@@ -158,6 +189,13 @@ type Router struct {
 	Store *Store
 	// Decider is the injected brain; the router never decides on its own.
 	Decider Decider
+	// Fallback is the deterministic decider used for a whole batch when Decider
+	// fails (AC-008). It is nil on the rule path, where a decider failure is a
+	// real infrastructure error and must not be papered over.
+	Fallback Decider
+	// DeciderLabel names the primary decider in the trace: "rule", "llm" or
+	// "llm_fallback_rules". Empty means the default rules.
+	DeciderLabel string
 	// Dispatcher is the injected hands; the router owns no execution tool.
 	Dispatcher Dispatcher
 	// TracePath defaults to <queue dir>/adbd-decisions.jsonl.
@@ -291,17 +329,36 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 	}
 
 	// AC-001: exactly one decider call for the whole batch.
+	now := r.now()
+	res.Batch = len(batch)
+	label := r.DeciderLabel
 	decisions, err := r.Decider.Decide(batch)
 	if err != nil {
-		return res, err
+		if r.Fallback == nil {
+			return res, err
+		}
+		// AC-008: one failed batch (transport, non-2xx, timeout, unparsable) must
+		// never stall the backlog. The deterministic rules decide this batch and
+		// every line says so, so a silent downgrade is impossible.
+		fallbackDecisions, fallbackErr := r.Fallback.Decide(batch)
+		if fallbackErr != nil {
+			return res, fmt.Errorf("adbd route: llm decider failed (%w) and the rules failed too: %v", err, fallbackErr)
+		}
+		decisions = fallbackDecisions
+		label = DeciderLabelFallback
+	}
+	// trace is the local helper that stamps the freeze-time fields of one line:
+	// batch size, clock and the decider that actually produced the verdict.
+	trace := func(item QueueItem, decision, reason string) traceRecord {
+		rec := newTrace(item, decision, reason, res.Batch, now)
+		rec.Decider = traceDecider(label)
+		return rec
 	}
 	byKey := make(map[string]Decision, len(decisions))
 	for _, d := range decisions {
 		byKey[dedupeKey(d.Channel, d.Thread, d.MessageID)] = d
 	}
 
-	now := r.now()
-	res.Batch = len(batch)
 	pending := make([]QueueItem, 0, len(batch))
 	lines := make([]traceRecord, 0, len(batch))
 	stateDirty := false
@@ -319,18 +376,19 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 
 		decision, ok := byKey[key]
 		if !ok {
-			decision = Decision{
-				Channel:   item.Channel,
-				Thread:    item.Thread,
-				MessageID: item.MessageID,
-				Decision:  DecisionInvalid,
-			}
+			// AC-008: a decider that returns no verdict for an item has not
+			// decided it -- a model that drops a message_id gets no guessing in
+			// return. The item keeps its queued state and is asked again next
+			// drain; without an audit line it is not counted as applied.
+			pending = append(pending, item)
+			res.Failed++
+			continue
 		}
 		decision, reject, usable := r.validate(item, decision)
 		if !usable {
 			// AC-002 / AC-007: an unusable verdict is recorded and the item is
 			// left failed; it never re-enters the backlog.
-			lines = append(lines, newTrace(item, decision.Decision, reject, res.Batch, now))
+			lines = append(lines, trace(item, decision.Decision, reject))
 			seen[key] = struct{}{}
 			res.Failed++
 			continue
@@ -347,7 +405,7 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 			if item.Attempts >= r.maxAttempts() {
 				// AC-005: the retries are spent. Escalate instead of dispatching
 				// a fourth time.
-				lines = append(lines, newTrace(item, DecisionEscalate, ReasonDispatchAttemptsExhausted, res.Batch, now))
+				lines = append(lines, trace(item, DecisionEscalate, ReasonDispatchAttemptsExhausted))
 				seen[key] = struct{}{}
 				res.Applied++
 				continue
@@ -357,7 +415,7 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 				// queued, so the next drain retries it.
 				item.Attempts++
 				if item.Attempts >= r.maxAttempts() {
-					lines = append(lines, newTrace(item, DecisionEscalate, ReasonDispatchAttemptsExhausted, res.Batch, now))
+					lines = append(lines, trace(item, DecisionEscalate, ReasonDispatchAttemptsExhausted))
 					seen[key] = struct{}{}
 					res.Applied++
 					continue
@@ -369,7 +427,7 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 			if ensureBinding(snap, item, agentID, now, r.ttl()) {
 				stateDirty = true
 			}
-			lines = append(lines, newTrace(item, DecisionRoute, decision.ReasonCode, res.Batch, now))
+			lines = append(lines, trace(item, DecisionRoute, decision.ReasonCode))
 			seen[key] = struct{}{}
 			res.Applied++
 
@@ -377,14 +435,14 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 			// reply is recorded, not delivered (Q2); ignore and escalate are
 			// accounting only. All three are terminal, so the item leaves the
 			// queue.
-			lines = append(lines, newTrace(item, decision.Decision, decision.ReasonCode, res.Batch, now))
+			lines = append(lines, trace(item, decision.Decision, decision.ReasonCode))
 			seen[key] = struct{}{}
 			res.Applied++
 
 		default:
 			// validate() rejects everything outside the four, so this is only a
 			// belt-and-braces branch.
-			lines = append(lines, newTrace(item, DecisionInvalid, ReasonDecisionInvalid, res.Batch, now))
+			lines = append(lines, trace(item, DecisionInvalid, ReasonDecisionInvalid))
 			seen[key] = struct{}{}
 			res.Failed++
 		}
@@ -750,9 +808,19 @@ func runRoute(args []string, stdout, stderr io.Writer) int {
 		agentID = envOr("ADBD_ROUTER_AGENT", cfg.RouterAgent)
 	}
 
+	// AC-008: the operator chooses the brain; a failed LLM batch falls back to
+	// the deterministic rules inside the router, so the CLI only builds the pair.
+	decider, fallback, deciderLabel, err := decidersFor(cfg)
+	if err != nil {
+		fmt.Fprintf(stderr, "adbd route: %v\n", err)
+		return 1
+	}
+
 	router := &Router{
 		Store:         &Store{Path: cf.statePath, SlowPath: cf.slowPath},
-		Decider:       deciderFor(),
+		Decider:       decider,
+		Fallback:      fallback,
+		DeciderLabel:  deciderLabel,
 		Dispatcher:    PaseoDispatcher{Bin: bin},
 		TracePath:     tracePath,
 		AgentID:       agentID,
