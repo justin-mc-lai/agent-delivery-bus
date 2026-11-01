@@ -1,7 +1,7 @@
 ---
 slug: requirement-index
 version: v0.1.5
-materials_status: current
+materials_status: stale
 ---
 
 # Tests: requirement-index
@@ -17,6 +17,7 @@ materials_status: current
 | AC-005 | TC-RI-005 | unit | `python3 -m pytest -q tests/test_requirement_index.py -k write_authority --tb=short` | exit_code_0；写 `exec_state` 落库成功；写 `truth_stage` 返回 `truth_stage_readonly` 且文件内容哈希不变 |
 | AC-006 | TC-RI-006 | unit | `python3 -m pytest -q tests/test_requirement_index.py -k layering --tb=short` | exit_code_0；超过 10240 字节产生分片；summary 保留 req_id/truth_stage/exec_state/truth_ref；未超阈值不产分片 |
 | AC-007 | TC-RI-007 | unit | `python3 -m pytest -q tests/test_requirement_index.py -k enumerator --tb=short` | exit_code_0；两个假项目树中只收 frozen 的包；未冻结/无 frontmatter 进 `skipped[]`；重复 root 只枚举一次；req_id 形态为 `req:<project>:<feature>` |
+| AC-009 | TC-RI-009 | unit | `python3 -m pytest -q tests/test_requirement_index.py -k lifecycle_source --tb=short` | exit_code_0；注入 fake provider 时 `truth_stage` 取 provider 值；provider 无该 slug 时 `unknown` + `missing[]` reason=`lifecycle_source_missing`；frontmatter 的 `status: frozen` 不改变 `truth_stage` |
 | AC-008 | TC-RI-008 | integration | `python3 -m pytest -q tests/test_requirement_index.py -k cli --tb=short` | exit_code_0；`adb index generate` 写文件并 exit 0；`adb index status` 输出条数；文件缺失 exit 2 且 reason_code=index_file_missing；固定 `ADB_REQUIREMENT_INDEX_NOW` 后两次生成字节一致 |
 
 ## Illegal TC slots
@@ -25,6 +26,7 @@ materials_status: current
 |-------|-------|-------|---------|-----------|
 | AC-005 | TC-RI-ILL-001 | unit | `python3 -m pytest -q tests/test_requirement_index.py -k illegal_truth_stage --tb=short` | exit_code_0；直接调写入接口改 `truth_stage` 得到 `truth_stage_readonly`，索引内容不变 |
 | AC-003 | TC-RI-ILL-002 | unit | `python3 -m pytest -q tests/test_requirement_index.py -k illegal_source --tb=short` | exit_code_0；来源 JSON 语法错误写入 `missing[]`，进程正常退出 |
+| AC-009 | TC-RI-ILL-004 | unit | `python3 -m pytest -q tests/test_requirement_index.py -k lifecycle_not_guessed --tb=short` | exit_code_0；只改 frontmatter `status` 不会让 `truth_stage` 从 `unknown` 变成任何阶段 |
 | AC-007 | TC-RI-ILL-003 | unit | `python3 -m pytest -q tests/test_requirement_index.py -k enumerator_missing_root --tb=short` | exit_code_0；传入不存在的 project root → 记入 `skipped[]`，不抛栈 |
 
 ## Execution slots
