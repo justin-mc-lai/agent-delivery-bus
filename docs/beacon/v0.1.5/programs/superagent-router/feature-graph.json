@@ -100,8 +100,9 @@
         "untrusted-content-trust-boundary"
       ],
       "harness_route": "beacon-gen-truth",
-      "status": "planned",
-      "summary": "Resident loop: light model decides route/reply/ignore/escalate over batched backlog; no execution tools; recovers inbox on restart"
+      "status": "released",
+      "summary": "Resident loop: light model decides route/reply/ignore/escalate over batched backlog; no execution tools; recovers inbox on restart",
+      "released_note": "v0.1.5 · AC-001..008 全 pass；LLM 决策器真实 DeepSeek 冒烟通过"
     },
     {
       "phase": 4,
