@@ -20,6 +20,12 @@ from .pending import pending_approval_views, render_pending_channel
 from .pi_curator import CuratorService
 from .preflight import Preflight
 from .registry import ALLOWED_CLASSES, ProjectRegistry
+from .requirement_index import (
+    describe_index,
+    enumerate_sources,
+    generate_index,
+    write_index,
+)
 from .schedule import ScheduleService, hermes_cron_tick_script, hermes_reconcile_tick_script
 from .session import SessionRegistry
 from .service import DeliveryService
@@ -199,6 +205,28 @@ def build_parser() -> argparse.ArgumentParser:
     doctor = sub.add_parser("doctor")
     doctor.add_argument("--project")
     doctor.add_argument("--json", action="store_true")
+
+    index = sub.add_parser(
+        "index",
+        help="requirement-index: enumerate frozen beacon packages into one JSON view",
+    )
+    index_sub = index.add_subparsers(dest="index_command", required=True)
+    index_generate = index_sub.add_parser(
+        "generate", help="enumerate project roots -> generate -> write requirement-index.json"
+    )
+    index_generate.add_argument(
+        "--projects", required=True, help="comma-separated project root paths"
+    )
+    index_generate.add_argument("--out", required=True, help="requirement-index.json path")
+    index_generate.add_argument(
+        "--version", default="", help="force one docs/beacon version for every root"
+    )
+    index_generate.add_argument("--json", action="store_true")
+    index_status = index_sub.add_parser(
+        "status", help="print count/format/missing for an existing index file"
+    )
+    index_status.add_argument("--out", required=True, help="requirement-index.json path")
+    index_status.add_argument("--json", action="store_true")
 
     boards = sub.add_parser("boards")
     boards_sub = boards.add_subparsers(dest="boards_command", required=True)
@@ -888,6 +916,61 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
     if args.command == "install-skills":
         skill = ROOT / "skills" / "agent-delivery-bus"
         return envelope(status="pass", data=install_skill(skill, dry_run=args.dry_run))
+
+    if args.command == "index":
+        # requirement-index needs project roots, not the registry: it stays off
+        # the control-plane path and never writes beacon truth.
+        if args.index_command == "generate":
+            roots = [item.strip() for item in str(args.projects or "").split(",") if item.strip()]
+            if not roots:
+                raise DeliveryBusError(
+                    "index_projects_empty",
+                    "--projects needs at least one project root",
+                    resume_action="pass --projects /path/to/repo[,/path/to/other]",
+                )
+            sources, skipped = enumerate_sources(roots, version=args.version or None)
+            storage = Storage(args.db)
+            try:
+                bundle = generate_index(sources, storage=storage)
+            finally:
+                storage.close()
+            written = write_index(bundle, args.out)
+            counted = len(bundle.document["requirements"])
+            missing_count = len(bundle.document["missing"])
+            return envelope(
+                status="pass",
+                data={
+                    "path": written["path"],
+                    "count": counted,
+                    "format": written["format"],
+                    "missing_count": missing_count,
+                    "requirements": [
+                        str(record["req_id"]) for record in bundle.document["requirements"]
+                    ],
+                    "skipped": skipped,
+                    "write": written,
+                    "text": (
+                        f"count={counted} missing={missing_count} "
+                        f"skipped={len(skipped)} format={written['format']} "
+                        f"path={written['path']}"
+                    ),
+                },
+            )
+        if args.index_command == "status":
+            info = describe_index(args.out)
+            return envelope(
+                status="pass",
+                data={
+                    **info,
+                    "text": (
+                        f"count={info['count']} missing={info['missing_count']} "
+                        f"format={info['format']} path={info['path']}"
+                    ),
+                },
+            )
+        raise DeliveryBusError(
+            "index_command_invalid", f"Unknown index command: {args.index_command}"
+        )
 
     registry = ProjectRegistry.load(args.config)
     storage = Storage(args.db)

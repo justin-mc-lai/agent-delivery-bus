@@ -18,6 +18,16 @@ sorted keys, and the clock is injectable (``generated_at=``), so the same input
 produces byte-identical output.  ``content_hash`` deliberately ignores the
 volatile timestamps so two runs at different wall-clock times are still
 recognisably identical.
+
+``enumerate_sources`` (AC-007) does the discovery half: given project roots it
+finds ``docs/beacon/<version>/features/<slug>/truth.md`` packages whose
+frontmatter says ``status: frozen`` and turns them into ``RequirementSource``
+rows.  Anything it cannot accept (missing root, missing/unreadable truth.md,
+unparsable frontmatter, not frozen) lands in ``skipped[]`` instead of aborting
+the run.  Discovery reads the *frontmatter* only to decide membership; the
+lifecycle stage still comes from the beacon lifecycle store, so a package that
+ships no lifecycle projection keeps ``truth_stage=unknown`` and shows up in
+``missing[]`` as ``lifecycle_missing`` rather than being guessed at.
 """
 
 from __future__ import annotations
@@ -93,6 +103,9 @@ DUPLICATE_SOURCE = "duplicate_source"
 TRUTH_STAGE_READONLY = "truth_stage_readonly"
 EXEC_STATE_INVALID = "exec_state_invalid"
 WRITE_NOT_ALLOWED = "write_not_allowed"
+INDEX_FILE_MISSING = "index_file_missing"
+INDEX_FILE_UNREADABLE = "index_file_unreadable"
+INDEX_FILE_INVALID = "index_file_invalid"
 
 #: Environment override for the injected clock (reproducible CLI runs).
 CLOCK_ENV = "ADB_REQUIREMENT_INDEX_NOW"
@@ -129,6 +142,10 @@ class RequirementSource:
     payload_path: str
     truth_ref: str = ""
     evidence_ref: str = ""
+    #: Inline projection already read by the caller (the enumerator).  When set
+    #: it wins over ``payload_path``; ``payload_path`` then only records where
+    #: the projection came from.
+    payload: Mapping[str, Any] | None = None
 
 
 @dataclass(frozen=True)
@@ -197,6 +214,8 @@ def shard_path_for(project: str) -> str:
 
 def _load_payload(source: RequirementSource) -> tuple[dict[str, Any] | None, str]:
     """Read one beacon projection. Returns ``(payload, reason_code)``."""
+    if source.payload is not None:
+        return dict(source.payload), ""
     path = Path(source.payload_path).expanduser()
     if not path.exists():
         return None, SOURCE_MISSING
@@ -222,6 +241,205 @@ def _stage_from_payload(payload: Mapping[str, Any]) -> str:
     if not stage:
         stage = str(payload.get("truth_stage") or "").strip()
     return stage if stage in LIFECYCLE_STAGES else ""
+
+
+# --- enumeration (AC-007) ---------------------------------------------------
+
+#: Where a project root keeps its beacon docs tree.
+BEACON_DOCS_ROOT = Path("docs") / "beacon"
+FEATURES_DIRNAME = "features"
+TRUTH_FILENAME = "truth.md"
+EVIDENCE_FILENAME = "evidence.md"
+FROZEN_STATUS = "frozen"
+
+#: ``skipped[]`` reasons: every rejected package says why it was rejected.
+SKIP_ROOT_MISSING = "root_missing"
+SKIP_FEATURES_MISSING = "features_missing"
+SKIP_TRUTH_MISSING = "truth_missing"
+SKIP_TRUTH_UNREADABLE = "truth_unreadable"
+SKIP_FRONTMATTER_INVALID = "frontmatter_invalid"
+SKIP_NOT_FROZEN = "not_frozen"
+
+_FRONTMATTER_BLOCK = re.compile(r"\A---\n(.*?)\n---", re.DOTALL)
+_FRONTMATTER_KEY = re.compile(r"[a-z_][a-z0-9_]*\Z")
+
+
+def parse_frontmatter(text: str) -> dict[str, str] | None:
+    """Parse the flat YAML-ish frontmatter beacon writes; ``None`` if unparsable.
+
+    Stdlib only and strict on purpose: a package whose frontmatter cannot be
+    read must be skipped *and recorded*, never guessed at.  Indented keys (a
+    nested ``canonical_refs:`` block) are kept flat; the enumerator only needs
+    scalar facts such as ``status``.
+    """
+    normalised = text.replace("\r\n", "\n").replace("\r", "\n")
+    match = _FRONTMATTER_BLOCK.match(normalised)
+    if match is None:
+        return None
+    block = match.group(1)
+    if not block.strip():
+        return None
+    fields: dict[str, str] = {}
+    for raw in block.splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        key, separator, value = line.partition(":")
+        key = key.strip()
+        if not separator:
+            # YAML list item or continuation line (e.g. a `provenance:`
+            # block). It carries no scalar fact this enumerator needs.
+            continue
+        if _FRONTMATTER_KEY.match(key) is None:
+            # Nested/indented key: kept flat, and not a scalar fact.
+            continue
+        fields[key] = value.strip().strip('"').strip("'")
+    return fields or None
+
+
+def _version_sort_key(name: str) -> tuple[tuple[int, ...], str]:
+    """Numeric-aware ordering so ``v0.1.10`` beats ``v0.1.9``."""
+    return (tuple(int(part) for part in re.findall(r"\d+", name)), name)
+
+
+def resolve_version(root: str | Path, version: str | None = None) -> str:
+    """Explicit version wins; otherwise the highest ``docs/beacon/<v>`` with ``features/``.
+
+    Returns ``""`` when the root has no beacon docs tree at all.
+    """
+    explicit = str(version or "").strip()
+    if explicit:
+        return explicit
+    base = Path(root).expanduser() / BEACON_DOCS_ROOT
+    if not base.is_dir():
+        return ""
+    try:
+        children = list(base.iterdir())
+    except OSError:  # an unreadable docs tree is handled by the caller as a skip
+        return ""
+    candidates = [
+        child.name
+        for child in children
+        if child.is_dir() and (child / FEATURES_DIRNAME).is_dir()
+    ]
+    if not candidates:
+        return ""
+    return max(candidates, key=_version_sort_key)
+
+
+def _relative_path(path: Path, root: Path) -> str:
+    """POSIX-relative pointer when possible, absolute otherwise."""
+    try:
+        return path.relative_to(root).as_posix()
+    except ValueError:
+        return path.as_posix()
+
+
+def _source_for(
+    root: Path,
+    package: Path,
+    truth_path: Path,
+    frontmatter: Mapping[str, str],
+) -> RequirementSource:
+    """One frozen package as a ``RequirementSource`` (no lifecycle claimed)."""
+    evidence_path = package / EVIDENCE_FILENAME
+    project = root.name
+    payload: dict[str, Any] = {
+        "truth_ref": _relative_path(truth_path, root),
+        "evidence_ref": (
+            _relative_path(evidence_path, root) if evidence_path.is_file() else ""
+        ),
+        # Frontmatter facts are safe to carry; the lifecycle stage is not —
+        # ``status: frozen`` proves the package is frozen, not how far it ran.
+        "frontmatter": dict(frontmatter),
+    }
+    return RequirementSource(
+        req_id=req_id_for(project, package.name),
+        project=project,
+        payload_path=str(truth_path),
+        truth_ref=str(payload["truth_ref"]),
+        evidence_ref=str(payload["evidence_ref"]),
+        payload=payload,
+    )
+
+
+def _feature_packages(features_dir: Path) -> list[Path]:
+    """Directories under ``features/``; an unreadable tree yields none."""
+    try:
+        children = list(features_dir.iterdir())
+    except OSError:  # pragma: no cover - permissions on the docs tree
+        return []
+    return sorted(child for child in children if child.is_dir())
+
+
+def enumerate_sources(
+    project_roots: Iterable[str | Path],
+    version: str | None = None,
+) -> tuple[list[RequirementSource], list[dict[str, Any]]]:
+    """Discover frozen beacon packages under the given project roots.
+
+    Returns ``(sources, skipped)``.  ``skipped`` entries are
+    ``{"source": <path>, "reason": <code>}`` and each names one of
+    ``root_missing`` / ``features_missing`` / ``truth_missing`` /
+    ``truth_unreadable`` / ``frontmatter_invalid`` / ``not_frozen``.
+
+    A bad root is a recorded skip, never an exception, and the same root passed
+    twice is enumerated once.
+    """
+    sources: list[RequirementSource] = []
+    skipped: list[dict[str, Any]] = []
+    seen_roots: set[str] = set()
+
+    for raw_root in project_roots:
+        if not str(raw_root).strip():
+            skipped.append({"source": str(raw_root), "reason": SKIP_ROOT_MISSING})
+            continue
+        root = Path(str(raw_root)).expanduser()
+        try:
+            resolved = root.resolve()
+        except OSError:  # pragma: no cover - unreadable path components
+            resolved = root
+        marker = str(resolved)
+        if marker in seen_roots:  # the same root twice counts once
+            continue
+        seen_roots.add(marker)
+        if not resolved.is_dir() or not resolved.name:
+            skipped.append({"source": str(root), "reason": SKIP_ROOT_MISSING})
+            continue
+
+        chosen = resolve_version(resolved, version)
+        features_dir = resolved / BEACON_DOCS_ROOT / chosen / FEATURES_DIRNAME if chosen else None
+        if features_dir is None or not features_dir.is_dir():
+            skipped.append(
+                {
+                    "source": str(resolved / BEACON_DOCS_ROOT / chosen) if chosen else str(resolved),
+                    "reason": SKIP_FEATURES_MISSING,
+                }
+            )
+            continue
+
+        for package in _feature_packages(features_dir):
+            truth_path = package / TRUTH_FILENAME
+            if not truth_path.is_file():
+                skipped.append({"source": str(package), "reason": SKIP_TRUTH_MISSING})
+                continue
+            try:
+                text = truth_path.read_text(encoding="utf-8")
+            except (OSError, UnicodeDecodeError):
+                skipped.append({"source": str(truth_path), "reason": SKIP_TRUTH_UNREADABLE})
+                continue
+            frontmatter = parse_frontmatter(text)
+            if frontmatter is None:
+                skipped.append({"source": str(truth_path), "reason": SKIP_FRONTMATTER_INVALID})
+                continue
+            if str(frontmatter.get("status") or "").strip().casefold() != FROZEN_STATUS:
+                skipped.append({"source": str(truth_path), "reason": SKIP_NOT_FROZEN})
+                continue
+            sources.append(_source_for(resolved, package, truth_path, frontmatter))
+
+    sources.sort(key=lambda item: (item.req_id, item.payload_path))
+    skipped.sort(key=lambda item: (item["reason"], item["source"]))
+    return sources, skipped
 
 
 # --- record + document building --------------------------------------------
@@ -448,6 +666,54 @@ def write_index(bundle: IndexBundle, out_path: str | Path) -> dict[str, Any]:
         "size_bytes": bundle.size_bytes,
         "written": written,
         "skipped": skipped,
+    }
+
+
+def describe_index(out_path: str | Path) -> dict[str, Any]:
+    """Read one generated index file and summarise it (``adb index status``).
+
+    Fails closed: a missing file is ``index_file_missing``, an unreadable one
+    ``index_file_unreadable`` and a non-JSON one ``index_file_invalid``.
+    """
+    path = Path(out_path).expanduser()
+    if not path.is_file():
+        raise DeliveryBusError(
+            INDEX_FILE_MISSING,
+            f"requirement index not found: {path}",
+            resume_action="run `adb index generate --projects <roots> --out <path>` first",
+        )
+    try:
+        text = path.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError) as exc:
+        raise DeliveryBusError(
+            INDEX_FILE_UNREADABLE,
+            f"requirement index unreadable: {path} ({exc})",
+            resume_action="check file permissions, then regenerate the index",
+        ) from None
+    try:
+        document = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise DeliveryBusError(
+            INDEX_FILE_INVALID,
+            f"requirement index is not JSON: {path} ({exc})",
+            resume_action="regenerate the file with `adb index generate`",
+        ) from None
+    if not isinstance(document, dict):
+        raise DeliveryBusError(
+            INDEX_FILE_INVALID,
+            f"requirement index is not a JSON object: {path}",
+            resume_action="regenerate the file with `adb index generate`",
+        )
+    requirements = document.get("requirements")
+    missing = document.get("missing")
+    return {
+        "path": str(path),
+        "schema_version": str(document.get("schema_version") or ""),
+        "format": str(document.get("format") or "full"),
+        "count": len(requirements) if isinstance(requirements, list) else 0,
+        "missing_count": len(missing) if isinstance(missing, list) else 0,
+        "generated_at": str(document.get("generated_at") or ""),
+        "content_hash": str(document.get("content_hash") or ""),
     }
 
 

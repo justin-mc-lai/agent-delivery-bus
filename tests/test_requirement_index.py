@@ -1,4 +1,4 @@
-"""AC-001..AC-006: requirement-index projection (beacon truth + ADB exec state)."""
+"""AC-001..AC-008: requirement-index projection (beacon truth + ADB exec state)."""
 
 from __future__ import annotations
 
@@ -6,6 +6,8 @@ import hashlib
 import json
 import os
 import shutil
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -20,9 +22,13 @@ from agent_delivery_bus.requirement_index import (
     RequirementSource,
     build_index,
     choose_format,
+    describe_index,
     dumps,
+    enumerate_sources,
     generate_index,
+    parse_frontmatter,
     req_id_for,
+    resolve_version,
     set_exec_state,
     shard_path_for,
     write_index,
@@ -30,6 +36,9 @@ from agent_delivery_bus.requirement_index import (
 from agent_delivery_bus.storage import Storage
 
 STAMP = "2026-11-01T07:41:10+00:00"
+
+ROOT = Path(__file__).resolve().parents[1]
+CLI = [sys.executable, "-m", "agent_delivery_bus.cli"]
 
 
 def _sha256(path: Path) -> str:
@@ -508,6 +517,297 @@ class RequirementIndexIllegalSourceTests(unittest.TestCase):
                 _by_req_id(document)["req:alpha:broken"]["source_status"], "unknown"
             )
             self.assertEqual(json.loads(dumps(document))["schema_version"], SCHEMA_VERSION)
+
+
+def _beacon_project(
+    root: Path,
+    feature: str,
+    *,
+    version: str = "v0.1.5",
+    status: str = "frozen",
+    frontmatter: str | None = None,
+    evidence: bool = False,
+    write_truth: bool = True,
+) -> Path:
+    """Write one beacon feature package under ``<root>/docs/beacon/<version>``."""
+    package = root / "docs" / "beacon" / version / "features" / feature
+    package.mkdir(parents=True, exist_ok=True)
+    if write_truth:
+        if frontmatter is None:
+            frontmatter = (
+                "---\n"
+                f"slug: {feature}\n"
+                f"version: {version}\n"
+                f"status: {status}\n"
+                "language: zh\n"
+                "canonical_refs:\n"
+                f"  truth: docs/beacon/{version}/features/{feature}/truth.md\n"
+                "---\n\n"
+                f"# Truth: {feature}\n"
+            )
+        (package / "truth.md").write_text(frontmatter, encoding="utf-8")
+    if evidence:
+        (package / "evidence.md").write_text("# Evidence\n", encoding="utf-8")
+    return package
+
+
+def _cli_env(**overrides: str) -> dict[str, str]:
+    """Environment for the ``adb`` subprocess: src on path, no inherited clock."""
+    env = dict(os.environ)
+    existing = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = str(ROOT / "src") + (os.pathsep + existing if existing else "")
+    env.pop("ADB_REQUIREMENT_INDEX_NOW", None)
+    env.update(overrides)
+    return env
+
+
+class RequirementIndexEnumeratorTests(unittest.TestCase):
+    """AC-007: only frozen beacon packages are enumerated; the rest are recorded."""
+
+    def test_enumerator_collects_only_frozen_packages(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp)
+            alpha = workspace / "alpha"
+            alpha.mkdir()
+            _beacon_project(alpha, "requirement-index", evidence=True)
+
+            beta = workspace / "beta"
+            beta.mkdir()
+            _beacon_project(beta, "frozen-two")
+            _beacon_project(beta, "still-draft", status="draft")
+            _beacon_project(
+                beta, "broken-frontmatter", frontmatter="---\n- not a key/value pair\n---\n"
+            )
+            _beacon_project(beta, "no-frontmatter", frontmatter="# truth without frontmatter\n")
+            _beacon_project(beta, "empty-dir", write_truth=False)
+            (beta / "docs" / "beacon" / "v0.1.5" / "features" / "README.txt").write_text(
+                "not a package", encoding="utf-8"
+            )
+
+            # The third entry is the same root spelled differently: it must not
+            # be enumerated twice.
+            sources, skipped = enumerate_sources([alpha, beta, alpha / "."])
+
+            self.assertEqual(
+                [source.req_id for source in sources],
+                ["req:alpha:requirement-index", "req:beta:frozen-two"],
+            )
+            self.assertEqual(
+                [source.project for source in sources], ["alpha", "beta"]
+            )
+            alpha_source, beta_source = sources
+            self.assertEqual(
+                alpha_source.truth_ref,
+                "docs/beacon/v0.1.5/features/requirement-index/truth.md",
+            )
+            self.assertEqual(
+                alpha_source.evidence_ref,
+                "docs/beacon/v0.1.5/features/requirement-index/evidence.md",
+            )
+            self.assertEqual(beta_source.evidence_ref, "")
+            # Frontmatter facts travel with the source; no stage is claimed.
+            self.assertEqual(alpha_source.payload["frontmatter"]["status"], "frozen")
+            self.assertNotIn("lifecycle", alpha_source.payload)
+
+            self.assertEqual(
+                [(entry["reason"], Path(entry["source"]).name) for entry in skipped],
+                [
+                    ("frontmatter_invalid", "truth.md"),
+                    ("frontmatter_invalid", "truth.md"),
+                    ("not_frozen", "truth.md"),
+                    ("truth_missing", "empty-dir"),
+                ],
+            )
+            self.assertEqual(
+                {Path(entry["source"]).parent.name for entry in skipped if entry["reason"] == "frontmatter_invalid"},
+                {"broken-frontmatter", "no-frontmatter"},
+            )
+            self.assertIn(
+                "still-draft",
+                [
+                    Path(entry["source"]).parent.name
+                    for entry in skipped
+                    if entry["reason"] == "not_frozen"
+                ],
+            )
+
+            # Enumerated packages feed the projection: all 11 fields, but the
+            # lifecycle stage stays unknown (and is recorded as missing).
+            document = build_index(sources, generated_at=STAMP).document
+            self.assertEqual(len(document["requirements"]), 2)
+            for record in document["requirements"]:
+                self.assertEqual(set(record), set(RECORD_FIELDS))
+                self.assertEqual(record["truth_stage"], "unknown")
+                self.assertEqual(record["source_status"], "unknown")
+            self.assertEqual(
+                sorted(entry["reason"] for entry in document["missing"]),
+                ["lifecycle_missing", "lifecycle_missing"],
+            )
+
+    def test_enumerator_missing_root_does_not_raise(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp)
+            alpha = workspace / "alpha"
+            alpha.mkdir()
+            _beacon_project(alpha, "one")
+            bare = workspace / "bare"
+            bare.mkdir()
+
+            sources, skipped = enumerate_sources(
+                [workspace / "does-not-exist", "", bare, alpha]
+            )
+
+            self.assertEqual([source.req_id for source in sources], ["req:alpha:one"])
+            self.assertEqual(
+                [entry["reason"] for entry in skipped],
+                ["features_missing", "root_missing", "root_missing"],
+            )
+            self.assertEqual(str(workspace / "does-not-exist"), skipped[2]["source"])
+            self.assertEqual("", skipped[1]["source"])
+
+    def test_enumerator_picks_highest_version_and_honours_explicit_version(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp)
+            gamma = workspace / "gamma"
+            gamma.mkdir()
+            _beacon_project(gamma, "nine", version="v0.1.9")
+            _beacon_project(gamma, "ten", version="v0.1.10")
+
+            self.assertEqual(resolve_version(gamma), "v0.1.10")  # numeric, not lexical
+            self.assertEqual(resolve_version(gamma, "v0.1.9"), "v0.1.9")
+
+            sources, skipped = enumerate_sources([gamma])
+            self.assertEqual([source.req_id for source in sources], ["req:gamma:ten"])
+            self.assertEqual(skipped, [])
+
+            sources, skipped = enumerate_sources([gamma], version="v0.1.9")
+            self.assertEqual([source.req_id for source in sources], ["req:gamma:nine"])
+
+            sources, skipped = enumerate_sources([gamma], version="v9.9.9")
+            self.assertEqual(sources, [])
+            self.assertEqual([entry["reason"] for entry in skipped], ["features_missing"])
+
+    def test_enumerator_frontmatter_parser_is_strict(self):
+        self.assertIsNone(parse_frontmatter("no frontmatter at all\n"))
+        self.assertIsNone(parse_frontmatter("---\n---\n"))
+        self.assertIsNone(parse_frontmatter("---\n- item\n---\n"))
+        self.assertEqual(parse_frontmatter("---\nstatus: frozen\n---\n")["status"], "frozen")
+        self.assertEqual(
+            parse_frontmatter("---\r\nstatus: \"frozen\"\r\n---\r\n")["status"], "frozen"
+        )
+
+
+class RequirementIndexCliTests(unittest.TestCase):
+    """AC-008: one command generates, one command reports, missing file exits 2."""
+
+    def test_cli_generate_and_status(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp)
+            alpha = workspace / "alpha"
+            alpha.mkdir()
+            _beacon_project(alpha, "one")
+            beta = workspace / "beta"
+            beta.mkdir()
+            _beacon_project(beta, "two", status="draft")
+
+            out = workspace / "out" / "requirement-index.json"
+            db = workspace / "adb.sqlite3"
+            env = _cli_env(ADB_REQUIREMENT_INDEX_NOW=STAMP)
+            generate = CLI + [
+                "--db",
+                str(db),
+                "index",
+                "generate",
+                "--projects",
+                f"{alpha},{beta}",
+                "--out",
+                str(out),
+                "--json",
+            ]
+
+            first = subprocess.run(
+                generate, capture_output=True, text=True, env=env, cwd=str(workspace)
+            )
+            self.assertEqual(first.returncode, 0, first.stderr + first.stdout)
+            payload = json.loads(first.stdout)
+            self.assertEqual(payload["status"], "pass")
+            self.assertEqual(payload["data"]["count"], 1)
+            self.assertEqual(payload["data"]["format"], "full")
+            self.assertEqual(payload["data"]["requirements"], ["req:alpha:one"])
+            self.assertEqual(
+                [entry["reason"] for entry in payload["data"]["skipped"]], ["not_frozen"]
+            )
+            self.assertTrue(out.is_file())
+            document = json.loads(out.read_text(encoding="utf-8"))
+            self.assertEqual(document["schema_version"], SCHEMA_VERSION)
+            self.assertEqual(
+                [record["req_id"] for record in document["requirements"]],
+                ["req:alpha:one"],
+            )
+            self.assertEqual(document["generated_at"], STAMP)
+
+            # ADB_REQUIREMENT_INDEX_NOW pins the clock: two runs are byte equal.
+            first_bytes = out.read_bytes()
+            second = subprocess.run(
+                generate, capture_output=True, text=True, env=env, cwd=str(workspace)
+            )
+            self.assertEqual(second.returncode, 0, second.stderr + second.stdout)
+            self.assertEqual(out.read_bytes(), first_bytes)
+
+            status = subprocess.run(
+                CLI + ["--db", str(db), "index", "status", "--out", str(out), "--json"],
+                capture_output=True,
+                text=True,
+                env=env,
+                cwd=str(workspace),
+            )
+            self.assertEqual(status.returncode, 0, status.stderr + status.stdout)
+            info = json.loads(status.stdout)["data"]
+            self.assertEqual(info["count"], 1)
+            self.assertEqual(info["format"], "full")
+            self.assertEqual(info["missing_count"], 1)  # lifecycle store not wired yet
+            self.assertEqual(info["schema_version"], SCHEMA_VERSION)
+
+            text_mode = subprocess.run(
+                CLI + ["--db", str(db), "index", "status", "--out", str(out)],
+                capture_output=True,
+                text=True,
+                env=env,
+                cwd=str(workspace),
+            )
+            self.assertEqual(text_mode.returncode, 0, text_mode.stderr + text_mode.stdout)
+            self.assertIn("count=1", text_mode.stdout)
+            self.assertIn("missing=1", text_mode.stdout)
+            self.assertIn("format=full", text_mode.stdout)
+
+    def test_cli_status_missing_file_exits_2(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp)
+            missing = workspace / "nowhere" / "requirement-index.json"
+            result = subprocess.run(
+                CLI + [
+                    "--db",
+                    str(workspace / "adb.sqlite3"),
+                    "index",
+                    "status",
+                    "--out",
+                    str(missing),
+                    "--json",
+                ],
+                capture_output=True,
+                text=True,
+                env=_cli_env(),
+                cwd=str(workspace),
+            )
+            self.assertEqual(result.returncode, 2, result.stderr + result.stdout)
+            payload = json.loads(result.stdout)
+            self.assertTrue(payload["blocked"])
+            self.assertEqual(payload["reason_code"], "index_file_missing")
+            self.assertFalse(missing.exists())
+
+            with self.assertRaises(DeliveryBusError) as ctx:
+                describe_index(missing)
+            self.assertEqual(ctx.exception.reason_code, "index_file_missing")
 
 
 if __name__ == "__main__":
