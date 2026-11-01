@@ -54,8 +54,9 @@
         "index-budget-layering-at-10kb"
       ],
       "harness_route": "beacon-gen-truth",
-      "status": "planned",
-      "summary": "beacon truth packages + studio pool projected into one requirement-index.json; truth_stage is read-only from beacon, exec_state is writable by ADB"
+      "status": "released",
+      "summary": "beacon truth packages + studio pool projected into one requirement-index.json; truth_stage is read-only from beacon, exec_state is writable by ADB",
+      "released_note": "v0.1.5 · gate truth_freeze/implement/qa/release 全 pass"
     },
     {
       "phase": 2,
@@ -75,8 +76,9 @@
         "intake-idempotency-key"
       ],
       "harness_route": "beacon-gen-truth",
-      "status": "planned",
-      "summary": "adb intake: hit agent_sessions.channel_thread and forward straight to the bound worker session; idempotent by (channel, thread, message_id)"
+      "status": "released",
+      "summary": "adb intake: hit agent_sessions.channel_thread and forward straight to the bound worker session; idempotent by (channel, thread, message_id)",
+      "released_note": "v0.1.5 · gate truth_freeze/implement/qa/release 全 pass"
     },
     {
       "phase": 3,
