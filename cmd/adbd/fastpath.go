@@ -478,6 +478,9 @@ type Config struct {
 	AllowedChannels []string
 	// PaseoBin is adbd_paseo_bin, the runner binary path.
 	PaseoBin string
+	// RouterAgent is adbd_router_agent, the worker the router loop dispatches
+	// new slow-path work to. Empty means the daemon default ("main").
+	RouterAgent string
 }
 
 // LoadConfig reads a key=value config file. A missing file, or a file without
@@ -527,6 +530,7 @@ func LoadConfig(path string) (Config, error) {
 		}
 	}
 	cfg.PaseoBin = values["adbd_paseo_bin"]
+	cfg.RouterAgent = values["adbd_router_agent"]
 	return cfg, nil
 }
 

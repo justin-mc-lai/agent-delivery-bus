@@ -1,0 +1,117 @@
+{
+  "schema": "truth-review-gate.v1",
+  "schema_version": "1.0",
+  "feature": "router-loop",
+  "version": "v0.1.5",
+  "pass": true,
+  "blocked": false,
+  "review_gate_pass": true,
+  "abc_pass": true,
+  "reason_code": "",
+  "domain_required": false,
+  "checks": {
+    "A_intent_coverage": {
+      "pass": true,
+      "check": "A",
+      "name": "intent_coverage",
+      "required": false,
+      "matrix_rows": 0,
+      "missing_must": [],
+      "reason": "",
+      "findings": [],
+      "skipped": true
+    },
+    "B_fsm_audit": {
+      "pass": true,
+      "check": "B",
+      "name": "fsm_audit",
+      "required": false,
+      "skipped": true,
+      "reason": "",
+      "findings": []
+    },
+    "C_testability": {
+      "pass": true,
+      "check": "C",
+      "name": "testability",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "ac_count": 7,
+      "tc_count": 10,
+      "missing_ac": [],
+      "covered": {
+        "AC-001": [
+          "TC-RL-001",
+          "TC-RL-EXEC-001",
+          "TC-RL-EXEC-002"
+        ],
+        "AC-002": [
+          "TC-RL-002"
+        ],
+        "AC-003": [
+          "TC-RL-003"
+        ],
+        "AC-004": [
+          "TC-RL-004"
+        ],
+        "AC-005": [
+          "TC-RL-005"
+        ],
+        "AC-006": [
+          "TC-RL-006",
+          "TC-RL-008"
+        ],
+        "AC-007": [
+          "TC-RL-007"
+        ]
+      }
+    },
+    "C_domain_exec_layer": {
+      "pass": true,
+      "check": "C_exec",
+      "name": "domain_exec_layer",
+      "required": false,
+      "skipped": true,
+      "reason": "",
+      "findings": [],
+      "exec_tc_count": 0,
+      "domain_kind": "general"
+    },
+    "D_fill_depth": {
+      "pass": true,
+      "check": "D",
+      "name": "fill_depth",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "package_maturity": "draft",
+      "domain_kind": "general",
+      "business_domain": false
+    },
+    "E_vague_disjunction": {
+      "pass": true,
+      "check": "E",
+      "name": "vague_disjunction",
+      "required": true,
+      "reason": "",
+      "findings": [],
+      "ac_count": 7,
+      "vague_hits": 0
+    }
+  },
+  "findings": [],
+  "humanizer": {
+    "rule": "humanizer_only_after_abc_pass_before_freeze",
+    "abc_pass": true,
+    "allowed_now": true,
+    "fill_depth_pass": true,
+    "note": "Polish L0/narrative only after A/B/C; preserve_machine_fields=true; freeze needs D+exec too"
+  },
+  "evaluated_at": "2026-11-01T15:44:13.910191+00:00",
+  "paths": {
+    "truth": "docs/beacon/v0.1.5/features/router-loop/truth.md",
+    "tests": "docs/beacon/v0.1.5/features/router-loop/tests.md",
+    "report": "docs/beacon/v0.1.5/.machine/execution/router-loop.truth-review-gate.json"
+  }
+}

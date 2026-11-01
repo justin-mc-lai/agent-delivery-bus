@@ -6,6 +6,8 @@
 //	adbd bind   --channel C --thread T --agent-id A [--ttl 24h]
 //	adbd intake --channel C --thread T --message-id M --text S [--outcome json|text]
 //	adbd status --channel C --thread T [--outcome json|text]
+//	adbd route  --once [--limit N] [--outcome json|text]
+//	adbd route  --list-tools
 package main
 
 import (
@@ -46,6 +48,8 @@ func run(args []string, stdout, stderr io.Writer) int {
 		return runIntake(args[1:], stdout, stderr)
 	case "status":
 		return runStatus(args[1:], stdout, stderr)
+	case "route":
+		return runRoute(args[1:], stdout, stderr)
 	default:
 		fmt.Fprintf(stderr, "adbd: unknown command %q\n", args[0])
 		usage(stderr)
@@ -61,6 +65,8 @@ usage:
   adbd bind   --channel C --thread T --agent-id A [--ttl 24h]
   adbd intake --channel C --thread T --message-id M --text S [--outcome json|text]
   adbd status --channel C --thread T [--outcome json|text]
+  adbd route  --once [--limit N] [--outcome json|text]
+  adbd route  --list-tools
 
 common flags:
   --root PATH        ADB root, defaults to "." (env ADBD_ROOT)
@@ -70,9 +76,17 @@ common flags:
   --runner-bin PATH  runner binary, defaults to config adbd_paseo_bin or "paseo"
   --outcome FORMAT   text (default) or json
 
+route flags:
+  --once             drain the slow-path backlog once and exit
+  --list-tools       print the router execution toolset (always [])
+  --limit N          drain at most N items; 0 (default) drains the whole queue
+  --agent-id A       worker for new dispatches, defaults to "main"
+  --trace PATH       decision trace, defaults to <root>/.beacon/adbd-decisions.jsonl
+
 config keys (.beacon/config, key=value):
   adbd_allow_channels=feishu,slack   allow-list; absent or empty means allow all
   adbd_paseo_bin=/usr/local/bin/paseo
+  adbd_router_agent=main             worker the router dispatches new work to
 `)
 }
 

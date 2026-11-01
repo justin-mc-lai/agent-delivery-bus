@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "feature": "router-loop",
+  "feature_slug": "router-loop",
+  "version": "v0.1.5",
+  "status": "blocked",
+  "blocked": true,
+  "reason_code": "feature_package_validation_failed",
+  "generated_at": "2026-11-01T15:44:13.586098+00:00",
+  "package_dir": "docs/beacon/v0.1.5/features/router-loop",
+  "truth_frontmatter": {
+    "slug": "router-loop",
+    "version": "v0.1.5",
+    "status": "frozen",
+    "language": "zh",
+    "domain_required": "false",
+    "ux_required": "false",
+    "parser_contract": "beacon-feature-package-v2",
+    "truth_source_model": "feature_package_authoritative",
+    "package_maturity": "draft",
+    "materials_status": "current",
+    "intent_confirmed": "true",
+    "canonical_refs": {
+      "truth": "docs/beacon/v0.1.5/features/router-loop/truth.md",
+      "tests": "docs/beacon/v0.1.5/features/router-loop/tests.md",
+      "tasks": "docs/beacon/v0.1.5/features/router-loop/tasks.md",
+      "evidence": "docs/beacon/v0.1.5/features/router-loop/evidence.md"
+    }
+  },
+  "ac_count": 7,
+  "test_count": 7,
+  "checkbox_count": 2,
+  "evidence_row_count": 4,
+  "gate_authority": "canonical_surfaces_preserved",
+  "checkbox_gate_bypass": false,
+  "task_evidence_gate": {
+    "pass": false,
+    "checked_ok": 0,
+    "checked_bad": 0,
+    "unbound": 2,
+    "findings": [
+      {
+        "kind": "task_binding_missing",
+        "text": "TASK-001 missing ac=/evidence= binding — replan+freeze new truth (no old-shape compat; see global-boundaries §2.1)",
+        "task_id": "TASK-001"
+      },
+      {
+        "kind": "task_binding_missing",
+        "text": "TASK-002 missing ac=/evidence= binding — replan+freeze new truth (no old-shape compat; see global-boundaries §2.1)",
+        "task_id": "TASK-002"
+      }
+    ],
+    "reason_code": "task_checkbox_evidence_failed"
+  },
+  "evidence_gate_truth": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "code": "task_binding_missing",
+      "path": "docs/beacon/v0.1.5/features/router-loop/tasks.md",
+      "text": "TASK-001 missing ac=/evidence= binding — replan+freeze new truth (no old-shape compat; see global-boundaries §2.1)",
+      "task_id": "TASK-001",
+      "evidence_path": null,
+      "ac_id": null
+    },
+    {
+      "severity": "error",
+      "code": "task_binding_missing",
+      "path": "docs/beacon/v0.1.5/features/router-loop/tasks.md",
+      "text": "TASK-002 missing ac=/evidence= binding — replan+freeze new truth (no old-shape compat; see global-boundaries §2.1)",
+      "task_id": "TASK-002",
+      "evidence_path": null,
+      "ac_id": null
+    }
+  ]
+}
