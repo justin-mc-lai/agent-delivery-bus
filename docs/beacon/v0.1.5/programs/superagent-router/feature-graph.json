@@ -187,6 +187,27 @@
       "status": "released",
       "released_note": "v0.1.5 · AC-001..007 全 pass；真机 done=1 -> 索引 exec_state=done -> watchdog NOTHING",
       "summary": "adbd reconcile: 观察 agent running->idle（或宽限后 idle）-> 回执 + exec_state"
+    },
+    {
+      "phase": 8,
+      "priority": "P0",
+      "slug": "thread-workdir",
+      "lake_or_ocean": "湖",
+      "depends_on": [
+        "worker-report"
+      ],
+      "parity_subset": [
+        "thread-parse",
+        "registry-reuse",
+        "cwd-resolution",
+        "fallback-recorded",
+        "bound-skips-resolution",
+        "e2e-two-threads"
+      ],
+      "harness_route": "beacon-gen-truth",
+      "status": "released",
+      "released_note": "v0.1.5 · AC-001..006 全 pass；真机 studio 目录命中、未登记回落并留痕",
+      "summary": "按 thread 解析目标仓库，解析不到回落并记录"
     }
   ],
   "topology_order": [
@@ -196,6 +217,7 @@
     "watchdog",
     "skill-trigger",
     "github-issue",
-    "worker-report"
+    "worker-report",
+    "thread-workdir"
   ]
 }
