@@ -17,6 +17,7 @@
 //	adbd adopt     [--apply] [--root <dir>] [--outcome json|text]
 //	adbd supervise [--apply] [--root <dir>] [--outcome json|text]
 //	adbd inbox     [--root <dir>] [--outcome json|text]
+//	adbd worker list | show | create | update | archive
 package main
 
 import (
@@ -79,6 +80,8 @@ func run(args []string, stdout, stderr io.Writer) int {
 		return runSupervise(args[1:], stdout, stderr)
 	case "inbox":
 		return runInbox(args[1:], stdout, stderr)
+	case "worker":
+		return runWorker(args[1:], stdout, stderr)
 	case "install":
 		return runInstall(args[1:], stdout, stderr)
 	default:
@@ -109,6 +112,11 @@ usage:
   adbd adopt     [--apply] [--root R] [--outcome json|text]
   adbd supervise [--apply] [--root R] [--outcome json|text]
   adbd inbox     [--root R] [--outcome json|text]
+  adbd worker list   [--project S] [--state S] [--owned] [--json]
+  adbd worker show   <id> [--json]
+  adbd worker create --project S --item I [--prompt T] [--provider P] [--model M] [--mode M] [--json]
+  adbd worker update <id> [--name N] [--label k=v] [--mode M] [--json]
+  adbd worker archive <id> [--force] [--json]
   adbd install --dry-run | --apply | --uninstall | --status [--root R] [--home H]
 
 common flags:
@@ -187,6 +195,30 @@ inbox behaviour (agent-supervisor AC-009):
   Recomputes the same classification read-only and prints only the items waiting
   on a human -- waiting_permission and waiting_input -- longest wait first. An
   empty inbox prints exactly NOTHING and exits 0.
+
+worker behaviour (worker-crud AC-001..AC-008):
+  One management surface over the paseo agent population, mapped to projects.
+  The mapping table is config/workspaces.json (adbd_workspaces_file):
+  {"workspaces":[{"slug","path","root","aliases"}]}, and a worker's cwd
+  resolves to the project with the LONGEST matching path prefix, so a checkout
+  inside a checkout belongs to the inner project. list prints
+  id= name= project= ownership= state= age= (project "-" when nothing matches)
+  and its --project/--state/--owned filters compose. show reads
+  "paseo inspect <id> --json" and prints the nine facts plus the project and
+  ownership; an unknown id is agent_not_found with exit 2. create resolves
+  --project to an absolute directory (missing or unregistered ->
+  project_not_registered, exit 2, no paseo call at all) and starts the worker
+  with --new-workspace local --cwd <dir> --title <item> --label adbd.item=<item>.
+  update maps --name/--label onto "paseo agent update" and --mode onto
+  "paseo agent mode"; --cwd/--provider/--model are field_not_updatable (exit 2)
+  because paseo cannot move or re-model an existing agent. archive is the only
+  removal verb -- there is no hard-delete command -- it refuses an agent that
+  carries neither adbd.item nor adbd.foreign (ownership_unknown, exit 2), is a
+  no-op success when the agent is already archived, and appends one line to
+  .beacon/adbd-worker.jsonl per successful archive. A broken mapping table is
+  workspaces_invalid with exit 2 rather than a screen of "-" rows. On this
+  surface --state is the agent state filter (running|idle|error|archived), not the
+  binding document the other commands call --state.
 
 install flags (exactly one action per call):
   --dry-run          print the four resident jobs (label, plist path, verb,
@@ -277,6 +309,8 @@ config keys (.beacon/config, key=value):
   adbd_worker_workdir=<root>         --cwd when a thread names no registered project
   adbd_projects_file=<root>/config/projects.json  project registry a thread is resolved against
                                      (entries may carry slug/aliases/repo and an optional github=owner/repo)
+  adbd_workspaces_file=<root>/config/workspaces.json  worker -> project mapping table
+                                     (entries carry slug/path/root/aliases; also honour ADBD_WORKSPACES_FILE)
   adbd_decider=rule                  rule (default) or llm
   adbd_llm_base_url=...              OpenAI-compatible endpoint root
   adbd_llm_model=deepseek-chat       model name

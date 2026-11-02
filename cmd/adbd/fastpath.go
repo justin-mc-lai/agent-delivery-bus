@@ -515,6 +515,9 @@ type Config struct {
 	// resolved against (feature thread-workdir). Empty means
 	// <root>/config/projects.json.
 	ProjectsFile string
+	// WorkspacesFile is adbd_workspaces_file: the worker -> project mapping
+	// table (feature worker-crud). Empty means <root>/config/workspaces.json.
+	WorkspacesFile string
 	// FeedChannel is adbd_feed_project_channel: the channel `adbd feed` stamps its
 	// events with when the caller names none. Empty means DefaultFeedChannel.
 	FeedChannel string
@@ -673,6 +676,10 @@ func LoadConfig(path string) (Config, error) {
 	// the <root>/config/projects.json default (resolved by the caller, which is
 	// the only place that knows the root).
 	cfg.ProjectsFile = strings.TrimSpace(values["adbd_projects_file"])
+	// worker-crud AC-008: the worker -> project mapping table is overridable for
+	// the same reason the project registry is -- a test or a second machine must
+	// be able to point at its own file without editing the root.
+	cfg.WorkspacesFile = strings.TrimSpace(values["adbd_workspaces_file"])
 	cfg.GitHubProxy = strings.TrimSpace(values["adbd_github_proxy"])
 	if bin := strings.TrimSpace(values["adbd_gh_bin"]); bin != "" {
 		cfg.GHBin = bin
