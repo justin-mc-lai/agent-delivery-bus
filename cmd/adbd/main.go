@@ -12,6 +12,7 @@
 //	adbd reconcile --once [--root <dir>] [--outcome json|text]
 //	adbd watchdog --once [--apply] [--outcome json|text]
 //	adbd poll-github --once [--root <dir>] [--outcome json|text]
+//	adbd feishu-feed [--root <dir>] [--outcome json|text]  (NDJSON on stdin)
 //	adbd agent  plist | status
 package main
 
@@ -63,6 +64,8 @@ func run(args []string, stdout, stderr io.Writer) int {
 		return runWatchdog(args[1:], stdout, stderr)
 	case "poll-github":
 		return runPollGitHub(args[1:], stdout, stderr)
+	case "feishu-feed":
+		return runFeishuFeed(args[1:], stdout, stderr)
 	case "metrics":
 		return runMetrics(args[1:], stdout, stderr)
 	case "agent":
@@ -88,6 +91,7 @@ usage:
   adbd reconcile --once [--outcome json|text]
   adbd watchdog --once [--apply] [--outcome json|text]
   adbd poll-github --once [--root <dir>] [--outcome json|text]
+  adbd feishu-feed [--root <dir>] [--outcome json|text]
   adbd metrics --once [--since RFC3339] [--root <dir>] [--outcome json|text]
   adbd agent  plist [--outcome json|text]
   adbd agent  status [--outcome json|text]
@@ -146,6 +150,20 @@ reconcile behaviour:
 poll-github flags:
   --once             run one poll pass and exit (the scheduled rhythm); the
                      poller has no resident mode, so a bare run is also one pass
+
+feishu-feed behaviour:
+  Reads the NDJSON event stream that "lark-cli event consume" prints on stdin,
+  one event per line, and submits each usable one to the same intake kernel as
+  "adbd intake": channel feishu, thread feishu:<chat_id>, message-id
+  <message_id>, text <content>. message_type other than text is skipped
+  (reason=unsupported_message_type), sender_type=bot is skipped
+  (reason=from_bot), a line that is not JSON or that lacks
+  chat_id/message_id/content is skipped (reason=invalid_json|missing_field) and
+  the lines after it are still processed. Everything else is counted as
+  accepted (fast or slow route) or deduped (the same message_id seen again).
+  A bad line is data, not a crash: the command always ends 0 and prints
+  accepted=<n> skipped=<m> deduped=<k> as its final line. It opens no socket,
+  keeps no state of its own and never replies; lark-cli owns the connection.
 
 metrics flags:
   --once             collect one metrics snapshot and exit; there is no
