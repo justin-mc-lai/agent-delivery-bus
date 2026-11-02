@@ -60,6 +60,10 @@ const (
 	ReasonReplyTooLong              = "reply_too_long"
 	ReasonDecisionInvalid           = "decision_invalid"
 	ReasonDispatchAttemptsExhausted = "dispatch_attempts_exhausted"
+	// ReasonMaxActiveReached is AC-008 of the agent-supervisor lake: the ceiling
+	// on owned, working agents is reached, so no new worker is created and the
+	// queue item keeps its place instead of being lost.
+	ReasonMaxActiveReached = "max_active_reached"
 )
 
 const (
@@ -205,6 +209,9 @@ type DrainResult struct {
 	Skipped int           `json:"skipped"`
 	Queued  int           `json:"queued"`
 	Traces  []traceRecord `json:"traces"`
+	// ReasonCode is set when the drain deliberately did less than it could, so a
+	// scheduler can tell "nothing to do" from "refused on purpose" (AC-008).
+	ReasonCode string `json:"reason_code,omitempty"`
 }
 
 // Router is the resident front desk.
@@ -247,9 +254,23 @@ type Router struct {
 	MaxAttempts int
 	// MaxReplyRunes is the reply ceiling (AC-007).
 	MaxReplyRunes int
+	// MaxActive is adbd_max_active: the ceiling on owned agents that are working
+	// right now (agent-supervisor AC-008). Zero or negative disables the ceiling.
+	MaxActive int
+	// ActiveCounter answers "how many owned agents are working right now?". It is
+	// called at most once per drain, only when a route verdict needs a new worker,
+	// and it is handed the drain's own bindings so it never reaches back into the
+	// locked state document. A nil counter or a failed read leaves the ceiling
+	// unapplied rather than blocking work behind a broken probe.
+	ActiveCounter ActiveCounter
 	// Now is injectable so the trace timestamp is exact in tests.
 	Now func() time.Time
 }
+
+// ActiveCounter is the router's window onto the agent population (AC-008 of the
+// agent-supervisor lake). It is a function, not a number, because one drain asks
+// exactly once and the answer must not be a stale snapshot from an earlier run.
+type ActiveCounter func(bindings []Binding) (int, error)
 
 // NewRouter builds a Router with the frozen defaults.
 func NewRouter(store *Store, decider Decider, dispatcher Dispatcher) *Router {
@@ -331,6 +352,26 @@ func (r *Router) maxReplyRunes() int {
 	return r.MaxReplyRunes
 }
 
+// maxActive is the ceiling from AC-008 of the agent-supervisor lake; zero or
+// negative means "no ceiling set", never "ceiling of zero".
+func (r *Router) maxActive() int {
+	if r.MaxActive <= 0 {
+		return 0
+	}
+	return r.MaxActive
+}
+
+// needsNewWorker reports whether routing this item would *create* a worker. It
+// is AC-008's precondition: the ceiling only applies to creation, so a thread
+// that already owns a live worker (or that has a configured standing worker to
+// reuse) is never blocked by it.
+func (r *Router) needsNewWorker(binding *Binding) bool {
+	if binding != nil && isLiveState(binding.State) && !isPlaceholderAgentID(binding.AgentID) {
+		return false
+	}
+	return r.agentID() == ""
+}
+
 func (r *Router) tracePath() string {
 	if path := strings.TrimSpace(r.TracePath); path != "" {
 		return path
@@ -408,6 +449,25 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 	seen, err := readTraceIndex(r.tracePath())
 	if err != nil {
 		return res, err
+	}
+
+	// AC-008 (agent-supervisor): the ceiling on owned, working agents. The count
+	// is asked for lazily -- only when a route verdict actually needs a brand new
+	// worker -- because the probe runs an external CLI and most drains create
+	// nothing. It is asked at most once per drain, and a probe that fails leaves
+	// the ceiling off: an unreadable agent list must never be read as "the bus is
+	// full".
+	counted, activeKnown, active := false, false, 0
+	activeCount := func() (int, bool) {
+		if !counted {
+			counted = true
+			if r.maxActive() > 0 && r.ActiveCounter != nil {
+				if count, err := r.ActiveCounter(bindingRows(snap)); err == nil {
+					active, activeKnown = count, true
+				}
+			}
+		}
+		return active, activeKnown
 	}
 
 	// AC-001: exactly one decider call for the whole batch.
@@ -490,6 +550,20 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 			// AC-009: resolve a worker paseo confirms exists before anything is
 			// sent. A stale binding is not a reason to drop the message, and an
 			// unverified name is never a target.
+			needsNew := r.needsNewWorker(snap.Bindings[bindingKey(item.Channel, item.Thread)])
+			if needsNew && r.maxActive() > 0 {
+				if count, known := activeCount(); known && count >= r.maxActive() {
+					// AC-008 (agent-supervisor): the ceiling on owned, working
+					// agents is reached. No new worker, no send, no attempt burned --
+					// the item keeps its place in the queue and the next drain
+					// re-asks.
+					item.ReasonCode = ReasonMaxActiveReached
+					pending = append(pending, item)
+					res.Failed++
+					res.ReasonCode = ReasonMaxActiveReached
+					continue
+				}
+			}
 			agentID, err := r.resolveWorker(item, snap.Bindings[bindingKey(item.Channel, item.Thread)])
 			if err == nil {
 				err = r.dispatch(item, agentID)
@@ -514,6 +588,11 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 			// thread reuses the confirmed worker instead of creating another one.
 			if ensureBinding(snap, item, agentID, now, r.ttl()) {
 				stateDirty = true
+			}
+			if needsNew && activeKnown {
+				// Keep the ceiling honest inside one drain: a pass that creates two
+				// workers must not sail past the limit on a count it read once.
+				active++
 			}
 			lines = append(lines, trace(item, DecisionRoute, decision.ReasonCode))
 			seen[key] = struct{}{}
@@ -1011,7 +1090,18 @@ func runRoute(args []string, stdout, stderr io.Writer) int {
 		Limit:         limit,
 		MaxAttempts:   DefaultMaxDispatchAttempts,
 		MaxReplyRunes: DefaultMaxReplyRunes,
+		MaxActive:     cfg.MaxActive,
 		Now:           time.Now,
+	}
+	// AC-008 (agent-supervisor): the ceiling counts owned agents that are working
+	// right now, so the counter reads the same ownership truth supervision uses --
+	// `paseo ls --json` narrowed to bound work items. Only wired when a ceiling is
+	// configured, so a daemon that never set adbd_max_active pays nothing.
+	if cfg.MaxActive > 0 {
+		runner := PaseoCliRunner{Bin: bin}
+		router.ActiveCounter = func(bindings []Binding) (int, error) {
+			return CountActiveOwned(runner, bindings)
+		}
 	}
 	res, err := router.DrainOnce()
 	if err != nil {
@@ -1023,6 +1113,10 @@ func runRoute(args []string, stdout, stderr io.Writer) int {
 	}
 	fmt.Fprintf(stdout, "batch=%d decided=%d applied=%d failed=%d skipped=%d queued=%d\n",
 		res.Batch, res.Decided, res.Applied, res.Failed, res.Skipped, res.Queued)
+	if res.ReasonCode != "" {
+		// AC-008: the drain stopped on purpose; say so instead of looking idle.
+		fmt.Fprintln(stdout, "reason_code="+res.ReasonCode)
+	}
 	// AC-002: a rejected decision never changes the exit code; it is recorded.
 	return 0
 }

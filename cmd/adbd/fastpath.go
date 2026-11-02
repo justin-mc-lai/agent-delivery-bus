@@ -561,6 +561,17 @@ type Config struct {
 	// ReplyIdentity is adbd_reply_identity: the sender identity a reply is sent
 	// as, "bot" by default (reply-delivery AC-001).
 	ReplyIdentity string
+	// GraceAfter is adbd_grace_after: how long an owned agent may sit idle
+	// without a work item report before supervision calls it orphan
+	// (agent-supervisor AC-006).
+	GraceAfter time.Duration
+	// MaxActive is adbd_max_active: the ceiling on owned, working agents; the
+	// router creates no new worker once it is reached (agent-supervisor AC-008).
+	MaxActive int
+	// ReportDir is adbd_report_dir: where a work item publishes
+	// <item>.json. Empty means <root>/.beacon/adbd-reports, resolved by the
+	// caller, which is the only place that knows the root.
+	ReportDir string
 }
 
 // defaultConfig is the operator-facing baseline, so a missing or partial config
@@ -580,6 +591,8 @@ func defaultConfig() Config {
 		WorkerProvider: DefaultWorkerProvider,
 		WorkerModel:    DefaultWorkerModel,
 		ReplyIdentity:  DefaultReplyIdentity,
+		GraceAfter:     DefaultGraceAfter,
+		MaxActive:      DefaultMaxActive,
 	}
 }
 
@@ -672,6 +685,24 @@ func LoadConfig(path string) (Config, error) {
 	cfg.ReplyIdentity = strings.TrimSpace(values["adbd_reply_identity"])
 	if cfg.ReplyIdentity == "" {
 		cfg.ReplyIdentity = DefaultReplyIdentity
+	}
+	// agent-supervisor (v0.1.5): the grace window and the active ceiling. An
+	// unreadable value is a configuration error, not a silent default: a ceiling
+	// that quietly becomes "no ceiling" is how a machine ends up with 176 agents.
+	cfg.ReportDir = strings.TrimSpace(values["adbd_report_dir"])
+	if raw := strings.TrimSpace(values["adbd_grace_after"]); raw != "" {
+		grace, err := time.ParseDuration(raw)
+		if err != nil || grace <= 0 {
+			return cfg, fmt.Errorf("adbd_grace_after %q is not a positive duration (e.g. 5m)", raw)
+		}
+		cfg.GraceAfter = grace
+	}
+	if raw := strings.TrimSpace(values["adbd_max_active"]); raw != "" {
+		limit, err := strconv.Atoi(raw)
+		if err != nil || limit <= 0 {
+			return cfg, fmt.Errorf("adbd_max_active %q is not a positive integer (e.g. 8)", raw)
+		}
+		cfg.MaxActive = limit
 	}
 	if raw := strings.TrimSpace(values["adbd_github_limit"]); raw != "" {
 		limit, err := strconv.Atoi(raw)

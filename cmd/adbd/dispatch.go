@@ -165,6 +165,10 @@ func (d PaseoDispatcher) inspect(agentID string) error {
 // the agentId paseo printed. --no-wait keeps the router non-blocking (the message
 // itself goes out right after with `paseo send`), and --json is the only contract
 // this file relies on.
+//
+// AC-001 (agent-supervisor): the worker is created already claimed -- the argv
+// carries `--label adbd.item=<thread>`, so supervision owns it from the first
+// second instead of having to adopt it later.
 func (d PaseoDispatcher) create(thread string) (string, error) {
 	bin := d.bin()
 	title := strings.TrimSpace(thread)
@@ -203,8 +207,15 @@ func (d PaseoDispatcher) create(thread string) (string, error) {
 		"--cwd", workdir,
 		"--provider", provider,
 		"--model", model,
-		workerBootstrapPrompt(title),
 	}
+	// AC-001 (agent-supervisor): a worker is born claimed. The label names the
+	// work item, which is the thread string itself, so a freshly created worker
+	// is owned from its first second and `adbd adopt` afterwards has nothing to
+	// fix. An empty thread is not a work item, so no label is invented for it.
+	if thread = strings.TrimSpace(thread); thread != "" {
+		args = append(args, "--label", OwnershipLabel+"="+thread)
+	}
+	args = append(args, workerBootstrapPrompt(title))
 	out, err := exec.Command(bin, args...).Output()
 	if err != nil {
 		detail := ""

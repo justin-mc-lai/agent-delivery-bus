@@ -14,6 +14,9 @@
 //	adbd poll-github --once [--root <dir>] [--outcome json|text]
 //	adbd feishu-feed [--root <dir>] [--outcome json|text]  (NDJSON on stdin)
 //	adbd agent  plist | status
+//	adbd adopt     [--apply] [--root <dir>] [--outcome json|text]
+//	adbd supervise [--apply] [--root <dir>] [--outcome json|text]
+//	adbd inbox     [--root <dir>] [--outcome json|text]
 package main
 
 import (
@@ -70,6 +73,12 @@ func run(args []string, stdout, stderr io.Writer) int {
 		return runMetrics(args[1:], stdout, stderr)
 	case "agent":
 		return runAgent(args[1:], stdout, stderr)
+	case "adopt":
+		return runAdopt(args[1:], stdout, stderr)
+	case "supervise":
+		return runSupervise(args[1:], stdout, stderr)
+	case "inbox":
+		return runInbox(args[1:], stdout, stderr)
 	case "install":
 		return runInstall(args[1:], stdout, stderr)
 	default:
@@ -97,6 +106,9 @@ usage:
   adbd metrics --once [--since RFC3339] [--root <dir>] [--outcome json|text]
   adbd agent  plist [--outcome json|text]
   adbd agent  status [--outcome json|text]
+  adbd adopt     [--apply] [--root R] [--outcome json|text]
+  adbd supervise [--apply] [--root R] [--outcome json|text]
+  adbd inbox     [--root R] [--outcome json|text]
   adbd install --dry-run | --apply | --uninstall | --status [--root R] [--home H]
 
 common flags:
@@ -141,6 +153,40 @@ watchdog flags:
 agent subcommands:
   plist              print the launchd job to stdout; writes no file, runs nothing
   status             read-only report: plist on disk? loaded in launchd?
+
+adopt behaviour (agent-supervisor AC-001..AC-003):
+  One pass reads "paseo ls --json" and splits every agent by whether it carries
+  the label adbd.item=<thread> or its name equals a bound thread. A match gets
+  (or keeps) adbd.item=<thread>; everything else gets adbd.foreign=1 and is
+  never managed again. A dry run (the default) prints mode=dry_run owned=<n>
+  foreign=<n> and one row per agent, then exits: it writes no label, changes no
+  agent and calls no other verb. --apply writes only the labels that are
+  missing, so a second --apply issues no update call at all.
+
+supervise flags:
+  --apply            act on the judgement; without it nothing is called
+  --grace DUR         override adbd_grace_after for this pass
+  --reports PATH      work item report directory, defaults to
+                      <root>/.beacon/adbd-reports
+  --audit PATH        audit ledger, defaults to <root>/.beacon/adbd-supervise.jsonl
+
+supervise behaviour (agent-supervisor AC-004..AC-007):
+  One pass classifies every owned work item by four facts, in this priority:
+  pending permission -> waiting_permission; status running -> working; status
+  idle + report ready -> done; idle + report attention -> waiting_input; idle
+  with no report inside the grace window -> grace; idle with no report past it
+  -> orphan; status error -> failed; anything else -> unknown. A dry run prints
+  item=<id> state=<state> because=<fact> and does nothing else. --apply allows
+  every open permission whose tool name is free of delete/push/release/deploy
+  (otherwise action=escalate and no call), probes an orphan once and fails it if
+  the probe goes unanswered, archives done/failed items (never deletes), and
+  appends one line per action to adbd-supervise.jsonl. An archived agent is not
+  acted on again.
+
+inbox behaviour (agent-supervisor AC-009):
+  Recomputes the same classification read-only and prints only the items waiting
+  on a human -- waiting_permission and waiting_input -- longest wait first. An
+  empty inbox prints exactly NOTHING and exits 0.
 
 install flags (exactly one action per call):
   --dry-run          print the four resident jobs (label, plist path, verb,
@@ -248,6 +294,9 @@ config keys (.beacon/config, key=value):
   adbd_reply_bin=                    outbound sender binary (e.g. lark-cli);
                                      empty means reply delivery is off (default)
   adbd_reply_identity=bot            identity a reply is sent as: bot or user
+  adbd_grace_after=5m                idle, unreported owned agent -> orphan after this
+  adbd_max_active=8                  ceiling on owned+working agents (0=default 8)
+  adbd_report_dir=<root>/.beacon/adbd-reports  where <item>.json reports live
   note: polled issues arrive on channel "github", so add github to
   adbd_allow_channels (or set adbd_allow_all=true) for them to reach intake
 `)
