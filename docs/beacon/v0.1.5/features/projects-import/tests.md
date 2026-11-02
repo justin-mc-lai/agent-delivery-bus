@@ -1,7 +1,7 @@
 ---
 slug: projects-import
 version: v0.1.5
-materials_status: draft
+materials_status: current
 ---
 
 # Tests: projects-import

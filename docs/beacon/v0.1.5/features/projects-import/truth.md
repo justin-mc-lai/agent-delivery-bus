@@ -1,14 +1,14 @@
 ---
 slug: projects-import
 version: v0.1.5
-status: draft
+status: frozen
 language: zh
 domain_required: false
 ux_required: false
 parser_contract: beacon-feature-package-v2
 truth_source_model: feature_package_authoritative
 package_maturity: draft
-materials_status: draft
+materials_status: current
 intent_confirmed: true
 canonical_refs:
   truth: docs/beacon/v0.1.5/features/projects-import/truth.md

@@ -16,4 +16,4 @@ materials_status: draft
 ## 证据要求（冻结后由 implement 与 qa 填）
 
 - AC-001..006：pytest 输出
-- AC-003：真实扫描后 config/projects.json 的条数
+- AC-003：真实扫描后登记表的条数
