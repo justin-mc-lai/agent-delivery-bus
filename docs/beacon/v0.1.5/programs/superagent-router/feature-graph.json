@@ -269,6 +269,49 @@
       "status": "released",
       "released_note": "v0.1.5 · AC-001..005 全 pass；fixture 实测 accepted=1 skipped=4 deduped=1",
       "summary": "lark-cli event consume 的 NDJSON -> intake；缺 bot 进群未做真机验证"
+    },
+    {
+      "phase": 12,
+      "priority": "P1",
+      "slug": "install",
+      "lake_or_ocean": "湖",
+      "depends_on": [
+        "watchdog"
+      ],
+      "parity_subset": [
+        "dry-run",
+        "apply-idempotent",
+        "plist-shape",
+        "secret-not-printed",
+        "uninstall-idempotent",
+        "status-readonly",
+        "write-failure-loud"
+      ],
+      "harness_route": "beacon-gen-truth",
+      "status": "released",
+      "released_note": "v0.1.5 · AC-001..007 全 pass；实测 apply 后四任务 last_exit=0",
+      "summary": "adbd install 一键安装/卸载/状态（4 个 launchd）"
+    },
+    {
+      "phase": 13,
+      "priority": "P1",
+      "slug": "projects-import",
+      "lake_or_ocean": "湖",
+      "depends_on": [
+        "thread-workdir"
+      ],
+      "parity_subset": [
+        "scan-features",
+        "dry-run",
+        "preserve-fields",
+        "existing-skip-overwrite",
+        "kernel-register-optional",
+        "typed-errors"
+      ],
+      "harness_route": "beacon-gen-truth",
+      "status": "released",
+      "released_note": "v0.1.5 · AC-001..006 全 pass；实测登记表 12 -> 28 条",
+      "summary": "adb projects import --scan 扫描登记项目"
     }
   ],
   "topology_order": [
@@ -282,6 +325,8 @@
     "thread-workdir",
     "reply-delivery",
     "metrics",
-    "feishu-inbound"
+    "feishu-inbound",
+    "install",
+    "projects-import"
   ]
 }
