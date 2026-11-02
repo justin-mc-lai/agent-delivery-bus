@@ -1,7 +1,7 @@
 ---
 slug: worker-report
 version: v0.1.5
-materials_status: stale
+materials_status: current
 ---
 
 # Tests: worker-report
