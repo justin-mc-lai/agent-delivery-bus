@@ -229,6 +229,26 @@
       "status": "released",
       "released_note": "v0.1.5 · AC-001..006 全 pass；fake 发送器验证 argv 与裸 chat_id",
       "summary": "reply 决策真投递到飞书（默认可关闭）"
+    },
+    {
+      "phase": 10,
+      "priority": "P1",
+      "slug": "metrics",
+      "lake_or_ocean": "湖",
+      "depends_on": [
+        "worker-report"
+      ],
+      "parity_subset": [
+        "ttfw-percentiles",
+        "completion-percentiles",
+        "decisions-per-thread",
+        "fastpath-share",
+        "explicit-insufficient-data"
+      ],
+      "harness_route": "beacon-gen-truth",
+      "status": "released",
+      "released_note": "v0.1.5 · AC-001..005 全 pass；真实输出 task_completion p50=113s",
+      "summary": "四个效果指标，从已有流水聚合"
     }
   ],
   "topology_order": [
@@ -240,6 +260,7 @@
     "github-issue",
     "worker-report",
     "thread-workdir",
-    "reply-delivery"
+    "reply-delivery",
+    "metrics"
   ]
 }
