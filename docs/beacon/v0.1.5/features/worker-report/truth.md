@@ -80,8 +80,8 @@ Every AC must trace to the intent or evidence it serves.
 
 | AC ID | Criterion |
 |-------|-----------|
-| AC-001 | `adbd reconcile --once` 遍历所有持租约的绑定，通过可注入的 status runner 读取每个 agent 的状态（`paseo inspect <id> --json` 的 `Status`）；输出 `checked=<n> done=<m> running=<k>`；无绑定时输出 `checked=0` |
-| AC-002 | 观察到 `running → idle` 迁移时：绑定 `state` 置 `done`，向 `.beacon/adbd-reports.jsonl` 追加一行，字段固定 `thread`/`agent_id`/`dispatched_at`/`finished_at`/`status`；同一 agent 只写一次 |
+| AC-001 | `adbd reconcile --once` 遍历所有持租约的绑定；agent 已不存在（paseo 返回 AGENT_NOT_FOUND）时释放该绑定并继续，不中断整轮，通过可注入的 status runner 读取每个 agent 的状态（`paseo inspect <id> --json` 的 `Status`）；输出 `checked=<n> done=<m> running=<k>`；无绑定时输出 `checked=0` |
+| AC-002 | 观察到完成时（两种形态之一：`running → idle` 迁移；或派发后从未观察到 running、且 idle 已持续超过 60s 宽限期）：绑定 `state` 置 `done`，向 `.beacon/adbd-reports.jsonl` 追加一行，字段固定 `thread`/`agent_id`/`dispatched_at`/`finished_at`/`status`；同一 agent 只写一次 |
 | AC-003 | 同时写 `.beacon/adbd-exec-state.json`：`{"<req_id>": {"exec_state","worker","thread","updated_at"}}`；`skill:<project>:<slug>` 映射为 `req:<project>:<slug>`；非 skill thread 不产生条目；文件原子写入 |
 | AC-004 | `adb index generate` 读取 `.beacon/adbd-exec-state.json`（若存在）：对应 `req_id` 的 `exec_state` 取文件值，缺失的仍为 `unknown`；`truth_stage` 不受影响；文件不存在时行为不变 |
 | AC-005 | 重复 `reconcile` 不产生重复回执行；绑定已 `done` 的线程不再被统计为 done（输出里 `done` 只计本次新完成的） |
