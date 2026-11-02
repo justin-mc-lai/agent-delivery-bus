@@ -956,6 +956,7 @@ func runRoute(args []string, stdout, stderr io.Writer) int {
 			Provider: cfg.WorkerProvider,
 			Model:    cfg.WorkerModel,
 			Workdir:  workerWorkdir(cfg.WorkerWorkdir, cf.root),
+			Mode:     cfg.WorkerMode,
 		},
 		TracePath:     tracePath,
 		AgentID:       agentID,

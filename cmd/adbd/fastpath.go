@@ -495,6 +495,10 @@ type Config struct {
 	// WorkerWorkdir is adbd_worker_workdir: the directory a newly created
 	// worker is placed in. Empty means "use the daemon root".
 	WorkerWorkdir string
+	// WorkerMode is adbd_worker_mode: the provider mode a created worker runs
+	// in. Empty means DefaultWorkerMode (build) — the provider default asks a
+	// human and an unattended worker would sit on a permission request forever.
+	WorkerMode string
 	// FeedChannel is adbd_feed_project_channel: the channel `adbd feed` stamps its
 	// events with when the caller names none. Empty means DefaultFeedChannel.
 	FeedChannel string
@@ -627,6 +631,7 @@ func LoadConfig(path string) (Config, error) {
 	cfg.GitHubRepos = configList(values["adbd_github_repos"])
 	cfg.GitHubLabels = configList(values["adbd_github_labels"])
 	cfg.WorkerWorkdir = strings.TrimSpace(values["adbd_worker_workdir"])
+	cfg.WorkerMode = strings.TrimSpace(values["adbd_worker_mode"])
 	cfg.GitHubProxy = strings.TrimSpace(values["adbd_github_proxy"])
 	if bin := strings.TrimSpace(values["adbd_gh_bin"]); bin != "" {
 		cfg.GHBin = bin

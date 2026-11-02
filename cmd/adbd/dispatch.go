@@ -31,6 +31,11 @@ const (
 	// DefaultWorkerWorkdir is used only when no root is configured; the daemon
 	// always passes its real root.
 	DefaultWorkerWorkdir = "."
+	// DefaultWorkerMode is the operational mode a created worker runs in. The
+	// provider default asks a human before touching anything (external_directory
+	// requests pile up and the worker sits there), so unattended workers must be
+	// created in an edit-capable mode.
+	DefaultWorkerMode = "build"
 )
 
 // WorkerResolveError is the typed failure of the worker-resolution seam. Callers
@@ -68,6 +73,9 @@ type PaseoDispatcher struct {
 	Model string
 	// Workdir is the repository root a new worker is pointed at (`--cwd`).
 	Workdir string
+	// Mode is the provider mode for a new worker (opencode: build|plan,
+	// claude: bypass, codex: full-access). Empty means DefaultWorkerMode.
+	Mode string
 }
 
 // compile-time proof that the production dispatcher satisfies both seams.
@@ -157,8 +165,14 @@ func (d PaseoDispatcher) create(thread string) (string, error) {
 		workdir = DefaultWorkerWorkdir
 	}
 
+	mode := strings.TrimSpace(d.Mode)
+	if mode == "" {
+		mode = DefaultWorkerMode
+	}
+
 	args := []string{
 		"run", "--no-wait", "--json",
+		"--mode", mode,
 		// Without --new-workspace paseo reuses the caller workspace and
 		// ignores --cwd, so the worker would land in whichever repo the
 		// daemon happened to be started from.

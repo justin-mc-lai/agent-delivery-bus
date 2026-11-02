@@ -252,6 +252,9 @@ func TestWorkerResolution(t *testing.T) {
 			"--cwd " + workdir,
 			"--provider " + DefaultWorkerProvider,
 			"--model " + DefaultWorkerModel,
+			// A worker created without an edit-capable mode sits on a
+			// permission request forever; the argv must carry one.
+			"--mode " + DefaultWorkerMode,
 		} {
 			if !strings.Contains(runs[0], want) {
 				t.Fatalf("run argv = %q, want it to contain %q", runs[0], want)
