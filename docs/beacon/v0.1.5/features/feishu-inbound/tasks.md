@@ -9,8 +9,8 @@ task_source: acceptance_criteria
 
 ## Task Ledger
 
-- [ ] TASK-001 Implement AC-001 · ac=AC-001
-- [ ] TASK-002 Validate package gates (truth review + freeze) · ac=GATES
+- [ ] TASK-001 Implement AC-001 · ac=AC-001 · evidence=`.beacon/evidence/implement/feishu-inbound/TASK-001.json`
+- [ ] TASK-002 Validate package gates (truth review + freeze) · ac=GATES · evidence=`.beacon/evidence/implement/feishu-inbound/TASK-002.json`
 
 ## Boundary
 
