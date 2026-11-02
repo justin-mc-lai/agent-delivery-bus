@@ -33,8 +33,10 @@ This file is Beacon-managed agent operation guidance.
 - Repo checks that still matter:
   - `python3 -m pytest tests/ -q`
   - `cd cmd/adbd && go test ./...`
-- No beacon-go equivalent yet (open gap): program graph validation (`beacon program
-  validate-graph`) and v1 feature-package validation (`beacon validate-feature-package`).
+- No beacon-go equivalent yet (tracked in justin-mc-lai/beacon-go#2):
+  - program graph validation (v1 `beacon program validate-graph`)
+  - the `task_binding_missing` rule of v1 `validate-feature-package`
+    (`beacon-go gate integrity` already covers the rest).
 <!-- BEACON:END -->
 
 
