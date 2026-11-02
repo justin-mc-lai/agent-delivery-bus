@@ -1,15 +1,15 @@
 {
   "schema_version": "1.0",
-  "feature": "watchdog",
-  "feature_slug": "watchdog",
+  "feature": "projects-import",
+  "feature_slug": "projects-import",
   "version": "v0.1.5",
-  "status": "blocked",
-  "blocked": true,
-  "reason_code": "feature_package_validation_failed",
-  "generated_at": "2026-11-02T03:26:28.165800+00:00",
-  "package_dir": "docs/beacon/v0.1.5/features/watchdog",
+  "status": "pass",
+  "blocked": false,
+  "reason_code": "",
+  "generated_at": "2026-11-02T03:27:53.442821+00:00",
+  "package_dir": "docs/beacon/v0.1.5/features/projects-import",
   "truth_frontmatter": {
-    "slug": "watchdog",
+    "slug": "projects-import",
     "version": "v0.1.5",
     "status": "frozen",
     "language": "zh",
@@ -21,56 +21,26 @@
     "materials_status": "current",
     "intent_confirmed": "true",
     "canonical_refs": {
-      "truth": "docs/beacon/v0.1.5/features/watchdog/truth.md",
-      "tests": "docs/beacon/v0.1.5/features/watchdog/tests.md",
-      "tasks": "docs/beacon/v0.1.5/features/watchdog/tasks.md",
-      "evidence": "docs/beacon/v0.1.5/features/watchdog/evidence.md"
+      "truth": "docs/beacon/v0.1.5/features/projects-import/truth.md",
+      "tests": "docs/beacon/v0.1.5/features/projects-import/tests.md",
+      "tasks": "docs/beacon/v0.1.5/features/projects-import/tasks.md",
+      "evidence": "docs/beacon/v0.1.5/features/projects-import/evidence.md"
     }
   },
-  "ac_count": 7,
-  "test_count": 7,
+  "ac_count": 6,
+  "test_count": 6,
   "checkbox_count": 2,
   "evidence_row_count": 4,
   "gate_authority": "canonical_surfaces_preserved",
   "checkbox_gate_bypass": false,
   "task_evidence_gate": {
-    "pass": false,
+    "pass": true,
     "checked_ok": 0,
     "checked_bad": 0,
-    "unbound": 2,
-    "findings": [
-      {
-        "kind": "task_binding_missing",
-        "text": "TASK-001 missing ac=/evidence= binding — replan+freeze new truth (no old-shape compat; see global-boundaries §2.1)",
-        "task_id": "TASK-001"
-      },
-      {
-        "kind": "task_binding_missing",
-        "text": "TASK-002 missing ac=/evidence= binding — replan+freeze new truth (no old-shape compat; see global-boundaries §2.1)",
-        "task_id": "TASK-002"
-      }
-    ],
-    "reason_code": "task_checkbox_evidence_failed"
+    "unbound": 0,
+    "findings": [],
+    "reason_code": ""
   },
   "evidence_gate_truth": false,
-  "diagnostics": [
-    {
-      "severity": "error",
-      "code": "task_binding_missing",
-      "path": "docs/beacon/v0.1.5/features/watchdog/tasks.md",
-      "text": "TASK-001 missing ac=/evidence= binding — replan+freeze new truth (no old-shape compat; see global-boundaries §2.1)",
-      "task_id": "TASK-001",
-      "evidence_path": null,
-      "ac_id": null
-    },
-    {
-      "severity": "error",
-      "code": "task_binding_missing",
-      "path": "docs/beacon/v0.1.5/features/watchdog/tasks.md",
-      "text": "TASK-002 missing ac=/evidence= binding — replan+freeze new truth (no old-shape compat; see global-boundaries §2.1)",
-      "task_id": "TASK-002",
-      "evidence_path": null,
-      "ac_id": null
-    }
-  ]
+  "diagnostics": []
 }
