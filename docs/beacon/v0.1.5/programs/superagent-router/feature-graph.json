@@ -312,6 +312,30 @@
       "status": "released",
       "released_note": "v0.1.5 · AC-001..006 全 pass；实测登记表 12 -> 28 条",
       "summary": "adb projects import --scan 扫描登记项目"
+    },
+    {
+      "phase": 14,
+      "priority": "P0",
+      "slug": "agent-supervisor",
+      "lake_or_ocean": "湖",
+      "depends_on": [
+        "watchdog"
+      ],
+      "parity_subset": [
+        "ownership-label",
+        "adopt-classify",
+        "adopt-idempotent",
+        "four-fact-state",
+        "permission-policy",
+        "orphan-probe-once",
+        "archive-not-delete",
+        "max-active-cap",
+        "inbox-attention"
+      ],
+      "harness_route": "beacon-gen-truth",
+      "status": "released",
+      "released_note": "v0.1.5 · AC-001..009 全 pass；真机 176 agents 分类 owned=1 foreign=175",
+      "summary": "paseo agent 生命周期管理：认领 / 看住 / 动作 / 收口"
     }
   ],
   "topology_order": [
@@ -327,6 +351,7 @@
     "metrics",
     "feishu-inbound",
     "install",
-    "projects-import"
+    "projects-import",
+    "agent-supervisor"
   ]
 }
