@@ -1,15 +1,15 @@
 {
   "schema_version": "1.0",
-  "feature": "router-loop",
-  "feature_slug": "router-loop",
+  "feature": "watchdog",
+  "feature_slug": "watchdog",
   "version": "v0.1.5",
   "status": "blocked",
   "blocked": true,
   "reason_code": "feature_package_validation_failed",
-  "generated_at": "2026-11-01T15:44:13.586098+00:00",
-  "package_dir": "docs/beacon/v0.1.5/features/router-loop",
+  "generated_at": "2026-11-02T03:26:28.165800+00:00",
+  "package_dir": "docs/beacon/v0.1.5/features/watchdog",
   "truth_frontmatter": {
-    "slug": "router-loop",
+    "slug": "watchdog",
     "version": "v0.1.5",
     "status": "frozen",
     "language": "zh",
@@ -21,10 +21,10 @@
     "materials_status": "current",
     "intent_confirmed": "true",
     "canonical_refs": {
-      "truth": "docs/beacon/v0.1.5/features/router-loop/truth.md",
-      "tests": "docs/beacon/v0.1.5/features/router-loop/tests.md",
-      "tasks": "docs/beacon/v0.1.5/features/router-loop/tasks.md",
-      "evidence": "docs/beacon/v0.1.5/features/router-loop/evidence.md"
+      "truth": "docs/beacon/v0.1.5/features/watchdog/truth.md",
+      "tests": "docs/beacon/v0.1.5/features/watchdog/tests.md",
+      "tasks": "docs/beacon/v0.1.5/features/watchdog/tasks.md",
+      "evidence": "docs/beacon/v0.1.5/features/watchdog/evidence.md"
     }
   },
   "ac_count": 7,
@@ -57,7 +57,7 @@
     {
       "severity": "error",
       "code": "task_binding_missing",
-      "path": "docs/beacon/v0.1.5/features/router-loop/tasks.md",
+      "path": "docs/beacon/v0.1.5/features/watchdog/tasks.md",
       "text": "TASK-001 missing ac=/evidence= binding — replan+freeze new truth (no old-shape compat; see global-boundaries §2.1)",
       "task_id": "TASK-001",
       "evidence_path": null,
@@ -66,7 +66,7 @@
     {
       "severity": "error",
       "code": "task_binding_missing",
-      "path": "docs/beacon/v0.1.5/features/router-loop/tasks.md",
+      "path": "docs/beacon/v0.1.5/features/watchdog/tasks.md",
       "text": "TASK-002 missing ac=/evidence= binding — replan+freeze new truth (no old-shape compat; see global-boundaries §2.1)",
       "task_id": "TASK-002",
       "evidence_path": null,
