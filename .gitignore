@@ -144,3 +144,6 @@ cmd/adbd/adbd
 # adbd runtime config (may carry operator secrets)
 **/.beacon/config
 **/.beacon/adbd-*
+
+# machine-local workspace mapping (absolute paths)
+config/workspaces.json

@@ -1,0 +1,312 @@
+{
+  "schema_version": "1.0",
+  "notes": "Machine-local: copy to config/workspaces.json and point each path at your checkout. Absolute paths differ per machine, so the real file stays gitignored.",
+  "workspaces": [
+    {
+      "slug": "a-share-quant",
+      "path": "/path/to/products/a-share-quant",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "account-warmer",
+      "path": "/path/to/products/account-warmer",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "agent-delivery-bus",
+      "path": "/path/to/products/agent-delivery-bus",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "agent-ops",
+      "path": "/path/to/products/agent-ops",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "airline-carryon-standard",
+      "path": "/path/to/products/airline-carryon-standard",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "airline-ticketing-assistant",
+      "path": "/path/to/products/airline-ticketing-assistant",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "beacon",
+      "path": "/path/to/products/beacon",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "beacon-go",
+      "path": "/path/to/products/beacon-go",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "cc-game-studios",
+      "path": "/path/to/products/cc-game-studios",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "deepseek-harness",
+      "path": "/path/to/products/deepseek-harness",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "demo-app",
+      "path": "/path/to/products/demo-app",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "distill",
+      "path": "/path/to/products/distill",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "dy-nowm",
+      "path": "/path/to/products/dy-nowm",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "fintech-info-gap",
+      "path": "/path/to/products/fintech-info-gap",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "gh-carwash-paystack",
+      "path": "/path/to/products/gh-carwash-paystack",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "go-stock",
+      "path": "/path/to/products/go-stock",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "grokbot-field-notes",
+      "path": "/path/to/products/grokbot-field-notes",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "guandan",
+      "path": "/path/to/products/guandan",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "headlong-flywheel",
+      "path": "/path/to/products/headlong-flywheel",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "iota-mining",
+      "path": "/path/to/products/iota-mining",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "justin-ecommerce",
+      "path": "/path/to/products/justin-ecommerce",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "justin-mc-lai-skills",
+      "path": "/path/to/products/justin-mc-lai-skills",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "justinsun-prize",
+      "path": "/path/to/products/justinsun-prize",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "kuaishou-wecom-linkcard",
+      "path": "/path/to/products/kuaishou-wecom-linkcard",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "kunqi-fde-studio",
+      "path": "/path/to/products/kunqi-fde-studio",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "kunqi-lai-resume",
+      "path": "/path/to/products/kunqi-lai-resume",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "milemon",
+      "path": "/path/to/products/milemon",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "office-toolkit",
+      "path": "/path/to/products/office-toolkit",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "opc-erp",
+      "path": "/path/to/products/opc-erp",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "open-saas-base",
+      "path": "/path/to/products/open-saas-base",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "openbot",
+      "path": "/path/to/products/openbot",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "openmuse",
+      "path": "/path/to/products/openmuse",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "paseo",
+      "path": "/path/to/products/paseo",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "pricefair",
+      "path": "/path/to/products/pricefair",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "quantmind",
+      "path": "/path/to/products/quantmind",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "shopxo_canada",
+      "path": "/path/to/products/shopxo_canada",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "slow_uni_bmtop",
+      "path": "/path/to/products/slow_uni_bmtop",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "studio",
+      "path": "/path/to/products/studio",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "sub2api-private",
+      "path": "/path/to/products/sub2api-private",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "tool-station-network",
+      "path": "/path/to/products/tool-station-network",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "wx-cli-again",
+      "path": "/path/to/products/wx-cli-again",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "xmao-autochess",
+      "path": "/path/to/products/xmao-autochess",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "xmao-sms-desktop",
+      "path": "/path/to/products/xmao-sms-desktop",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "xyrelay-client",
+      "path": "/path/to/products/xyrelay-client",
+      "root": "products",
+      "aliases": []
+    },
+    {
+      "slug": "badminton-studio",
+      "path": "/path/to/selfmedia/badminton-studio",
+      "root": "selfmedia",
+      "aliases": []
+    },
+    {
+      "slug": "prism",
+      "path": "/path/to/selfmedia/prism",
+      "root": "selfmedia",
+      "aliases": []
+    },
+    {
+      "slug": "selfmedia-creator",
+      "path": "/path/to/selfmedia/selfmedia-creator",
+      "root": "selfmedia",
+      "aliases": []
+    },
+    {
+      "slug": "sidepilot",
+      "path": "/path/to/selfmedia/sidepilot",
+      "root": "selfmedia",
+      "aliases": []
+    },
+    {
+      "slug": "workbench-desktop-shell",
+      "path": "/path/to/selfmedia/workbench-desktop-shell",
+      "root": "selfmedia",
+      "aliases": []
+    },
+    {
+      "slug": "x-ops",
+      "path": "/path/to/selfmedia/x-ops",
+      "root": "selfmedia",
+      "aliases": []
+    },
+    {
+      "slug": "workspace-ops",
+      "path": "/path/to/personal/workspace-ops",
+      "root": "personal",
+      "aliases": []
+    }
+  ]
+}
