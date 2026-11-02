@@ -90,6 +90,28 @@ func Adopt(runner TaggingRunner, store *Store, apply bool) (AdoptResult, error) 
 	owned, foreign := classifyOwnership(agents, bindingThreads(bindings))
 	res.Owned, res.Foreign = len(owned), len(foreign)
 
+	// AC-003: `paseo ls --json` carries no labels, so ask the filter once per
+	// label value. Without this a second --apply would re-report every tag even
+	// though paseo stored it already.
+	lookup, _ := runner.(LabelLookup)
+	foreignTagged := map[string]bool{}
+	ownedTagged := map[string]map[string]bool{}
+	if lookup != nil {
+		if ids, err := lookup.LabeledIDs(ForeignLabel, ForeignLabelValue); err == nil {
+			foreignTagged = ids
+		}
+		for _, target := range owned {
+			if _, done := ownedTagged[target.Item]; done {
+				continue
+			}
+			ids, err := lookup.LabeledIDs(OwnershipLabel, target.Item)
+			if err != nil {
+				continue
+			}
+			ownedTagged[target.Item] = ids
+		}
+	}
+
 	for _, target := range owned {
 		row := AdoptRow{
 			AgentID:   target.Agent.ID,
@@ -98,7 +120,7 @@ func Adopt(runner TaggingRunner, store *Store, apply bool) (AdoptResult, error) 
 			Item:      target.Item,
 			Label:     OwnershipLabel + "=" + target.Item,
 		}
-		if target.Agent.Label(OwnershipLabel) == target.Item {
+		if target.Agent.Label(OwnershipLabel) == target.Item || ownedTagged[target.Item][target.Agent.ID] {
 			// AC-003: the label is already right, so the second run makes no
 			// call and writes no duplicate.
 			row.Action, row.Reason = AdoptActionSkip, "already_tagged"
@@ -122,7 +144,7 @@ func Adopt(runner TaggingRunner, store *Store, apply bool) (AdoptResult, error) 
 			Ownership: AdoptOwnershipForeign,
 			Label:     ForeignLabel + "=" + ForeignLabelValue,
 		}
-		if agent.Label(ForeignLabel) == ForeignLabelValue {
+		if agent.Label(ForeignLabel) == ForeignLabelValue || foreignTagged[agent.ID] {
 			row.Action, row.Reason = AdoptActionSkip, "already_foreign"
 			res.Skipped++
 		} else {

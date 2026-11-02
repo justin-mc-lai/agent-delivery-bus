@@ -61,10 +61,29 @@ func newSupFake(t *testing.T) *supFake {
 		labelsPath: filepath.Join(dir, "labels.log"),
 		knownPath:  filepath.Join(dir, "known-agents.txt"),
 	}
+	filterPath := filepath.Join(dir, "label-filter.py")
+	if err := os.WriteFile(filterPath, []byte(`import json, sys
+path, kv = sys.argv[1], sys.argv[2]
+key, value = kv.split("=", 1)
+doc = json.load(open(path))
+agents = doc.get("agents", doc) if isinstance(doc, dict) else doc
+keep = [a for a in agents if (a.get("labels") or {}).get(key) == value]
+print(json.dumps({"agents": keep}))
+`), 0o644); err != nil {
+		t.Fatalf("write label filter: %v", err)
+	}
 	script := `#!/bin/sh
 if [ -n "$FAKE_SUP_LOG" ]; then printf '%s\n' "$*" >> "$FAKE_SUP_LOG"; fi
 case "$1" in
   ls)
+    if [ "$2" = "--label" ]; then
+      if [ -n "$FAKE_SUP_AGENTS" ] && [ -f "$FAKE_SUP_AGENTS" ]; then
+        python3 "__ADBD_LABEL_FILTER__" "$FAKE_SUP_AGENTS" "$3"
+      else
+        printf '{"agents":[]}\n'
+      fi
+      exit 0
+    fi
     if [ -n "$FAKE_SUP_AGENTS" ] && [ -f "$FAKE_SUP_AGENTS" ]; then
       cat "$FAKE_SUP_AGENTS"
     else
@@ -97,6 +116,7 @@ case "$1" in
 esac
 exit 0
 `
+	script = strings.ReplaceAll(script, "__ADBD_LABEL_FILTER__", filterPath)
 	if err := os.WriteFile(f.bin, []byte(script), 0o755); err != nil {
 		t.Fatalf("write fake paseo: %v", err)
 	}

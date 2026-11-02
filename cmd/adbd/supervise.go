@@ -814,6 +814,14 @@ type TaggingRunner interface {
 	AgentLabeler
 }
 
+// LabelLookup is an optional capability: paseo's `ls --json` does not return
+// labels, but `ls --label k=v` filters by one. A runner that implements this
+// can report which agents already carry a label, which is what makes a second
+// `adopt --apply` report the same numbers as the first (AC-003).
+type LabelLookup interface {
+	LabeledIDs(key, value string) (map[string]bool, error)
+}
+
 // SupervisorRunner is the whole paseo surface supervision needs: list, tag,
 // permit, probe, archive. It is an interface so a test can prove each action
 // without a real paseo, and because the loop must be unable to invent a sixth
@@ -835,11 +843,29 @@ type PaseoCliRunner struct {
 	Bin string
 }
 
-// compile-time proof that the CLI runner satisfies both seams.
+// compile-time proof that the CLI runner satisfies the seams.
 var (
 	_ SupervisorRunner = PaseoCliRunner{}
 	_ TaggingRunner    = PaseoCliRunner{}
+	_ LabelLookup      = PaseoCliRunner{}
 )
+
+// LabeledIDs lists the ids of agents that already carry key=value.
+func (r PaseoCliRunner) LabeledIDs(key, value string) (map[string]bool, error) {
+	out, err := r.run("ls", "--label", key+"="+value, "--json")
+	if err != nil {
+		return nil, err
+	}
+	agents, err := parseAgentList(out)
+	if err != nil {
+		return nil, err
+	}
+	ids := make(map[string]bool, len(agents))
+	for _, a := range agents {
+		ids[a.ID] = true
+	}
+	return ids, nil
+}
 
 func (r PaseoCliRunner) bin() string {
 	if bin := strings.TrimSpace(r.Bin); bin != "" {
