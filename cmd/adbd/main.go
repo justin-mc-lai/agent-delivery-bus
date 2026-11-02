@@ -70,6 +70,8 @@ func run(args []string, stdout, stderr io.Writer) int {
 		return runMetrics(args[1:], stdout, stderr)
 	case "agent":
 		return runAgent(args[1:], stdout, stderr)
+	case "install":
+		return runInstall(args[1:], stdout, stderr)
 	default:
 		fmt.Fprintf(stderr, "adbd: unknown command %q\n", args[0])
 		usage(stderr)
@@ -95,6 +97,7 @@ usage:
   adbd metrics --once [--since RFC3339] [--root <dir>] [--outcome json|text]
   adbd agent  plist [--outcome json|text]
   adbd agent  status [--outcome json|text]
+  adbd install --dry-run | --apply | --uninstall | --status [--root R] [--home H]
 
 common flags:
   --root PATH        ADB root, defaults to "." (env ADBD_ROOT)
@@ -138,6 +141,32 @@ watchdog flags:
 agent subcommands:
   plist              print the launchd job to stdout; writes no file, runs nothing
   status             read-only report: plist on disk? loaded in launchd?
+
+install flags (exactly one action per call):
+  --dry-run          print the four resident jobs (label, plist path, verb,
+                     interval, installed) and write nothing; calls no launchctl
+  --apply            write the four plists to <home>/Library/LaunchAgents, then
+                     bootout+bootstrap each; a second run is a no-op
+  --uninstall        bootout and delete the four plists; a no-op when absent
+  --status           read-only: installed / loaded / last_exit per job
+  --home H           home directory whose Library/LaunchAgents holds the plists
+                     (default: the current user's home)
+  --root R           ADB root; also the --root every job is launched with
+
+install behaviour:
+  Writes four launchd jobs, one per resident pass:
+    com.agent-delivery-bus.adbd           watchdog --once      every 600s
+    com.agent-delivery-bus.adbd-route     route --once         every 120s
+    com.agent-delivery-bus.adbd-github    poll-github --once   every 120s
+    com.agent-delivery-bus.adbd-reconcile reconcile --once     every 120s
+  Each plist runs this executable with --once and one shared --root, keeps its
+  logs in <root>/.beacon/adbd-<suffix>.out.log/.err.log and gets a PATH with
+  /opt/homebrew/bin and <home>/.local/bin. ADBD_LLM_API_KEY is copied from the
+  environment into EnvironmentVariables when set; its value is never printed.
+  A plist that cannot be written stops the whole install with exit 2,
+  reason_code=install_failed and the first failing path: half an install is
+  never reported as success. --status prints reason_code=launchctl_unavailable
+  when launchctl cannot be run at all.
 
 reconcile behaviour:
   One pass asks paseo for the status of every agent that still holds a lease and
