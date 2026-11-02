@@ -208,6 +208,27 @@
       "status": "released",
       "released_note": "v0.1.5 · AC-001..006 全 pass；真机 studio 目录命中、未登记回落并留痕",
       "summary": "按 thread 解析目标仓库，解析不到回落并记录"
+    },
+    {
+      "phase": 9,
+      "priority": "P1",
+      "slug": "reply-delivery",
+      "lake_or_ocean": "湖",
+      "depends_on": [
+        "thread-workdir"
+      ],
+      "parity_subset": [
+        "feishu-send",
+        "trace-delivery-fields",
+        "failure-keeps-decision",
+        "idempotency-key",
+        "non-feishu-skip",
+        "disabled-by-default"
+      ],
+      "harness_route": "beacon-gen-truth",
+      "status": "released",
+      "released_note": "v0.1.5 · AC-001..006 全 pass；fake 发送器验证 argv 与裸 chat_id",
+      "summary": "reply 决策真投递到飞书（默认可关闭）"
     }
   ],
   "topology_order": [
@@ -218,6 +239,7 @@
     "skill-trigger",
     "github-issue",
     "worker-report",
-    "thread-workdir"
+    "thread-workdir",
+    "reply-delivery"
   ]
 }
