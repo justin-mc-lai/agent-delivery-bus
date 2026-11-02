@@ -249,6 +249,26 @@
       "status": "released",
       "released_note": "v0.1.5 · AC-001..005 全 pass；真实输出 task_completion p50=113s",
       "summary": "四个效果指标，从已有流水聚合"
+    },
+    {
+      "phase": 11,
+      "priority": "P1",
+      "slug": "feishu-inbound",
+      "lake_or_ocean": "湖",
+      "depends_on": [
+        "reply-delivery"
+      ],
+      "parity_subset": [
+        "ndjson-map",
+        "text-only",
+        "bot-skip",
+        "bad-line-tolerant",
+        "dedupe"
+      ],
+      "harness_route": "beacon-gen-truth",
+      "status": "released",
+      "released_note": "v0.1.5 · AC-001..005 全 pass；fixture 实测 accepted=1 skipped=4 deduped=1",
+      "summary": "lark-cli event consume 的 NDJSON -> intake；缺 bot 进群未做真机验证"
     }
   ],
   "topology_order": [
@@ -261,6 +281,7 @@
     "worker-report",
     "thread-workdir",
     "reply-delivery",
-    "metrics"
+    "metrics",
+    "feishu-inbound"
   ]
 }
