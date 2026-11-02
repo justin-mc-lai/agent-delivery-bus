@@ -18,7 +18,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 )
 
@@ -71,11 +73,24 @@ type PaseoDispatcher struct {
 	Provider string
 	// Model is adbd_worker_model, passed to `paseo run` for a new worker.
 	Model string
-	// Workdir is the repository root a new worker is pointed at (`--cwd`).
+	// Workdir is the repository root a new worker is pointed at (`--cwd`) when
+	// the thread names no registered project. Kept alongside FallbackWorkdir so
+	// the older spelling keeps working.
 	Workdir string
 	// Mode is the provider mode for a new worker (opencode: build|plan,
 	// claude: bypass, codex: full-access). Empty means DefaultWorkerMode.
 	Mode string
+	// Registry maps a thread's project key onto a repository directory
+	// (feature thread-workdir). The zero value resolves nothing, so a daemon
+	// with no registry keeps its single fixed directory.
+	Registry ProjectRegistry
+	// FallbackWorkdir is the directory a worker gets when the thread resolves to
+	// no existing project directory (AC-004). Empty falls back to Workdir, then
+	// DefaultWorkerWorkdir.
+	FallbackWorkdir string
+	// ReportsPath is the ledger a workdir fallback is recorded in
+	// (.beacon/adbd-reports.jsonl). Empty means no record is written.
+	ReportsPath string
 }
 
 // compile-time proof that the production dispatcher satisfies both seams.
@@ -106,6 +121,10 @@ func (d PaseoDispatcher) Dispatch(thread, agentID, text string) error {
 //
 // It never returns "" or a placeholder: a failure is a typed error, never a
 // silent fallback to a name nobody verified.
+//
+// AC-005 (thread-workdir): the first two steps return before any directory is
+// resolved, so a thread that already owns a live worker is reused as-is -- no
+// second workdir resolution and no second workdir_fallback record.
 func (d PaseoDispatcher) EnsureWorker(thread, current string) (string, error) {
 	current = strings.TrimSpace(current)
 	if !isPlaceholderAgentID(current) {
@@ -160,9 +179,12 @@ func (d PaseoDispatcher) create(thread string) (string, error) {
 	if model == "" {
 		model = DefaultWorkerModel
 	}
-	workdir := strings.TrimSpace(d.Workdir)
-	if workdir == "" {
-		workdir = DefaultWorkerWorkdir
+	// AC-003/AC-004: the repository comes from the thread, not from wherever the
+	// daemon happens to run; an unresolvable thread keeps the configured default
+	// and leaves a record saying so.
+	workdir, fallbackReason := d.createWorkdir(thread)
+	if fallbackReason != "" {
+		d.recordWorkdirFallback(thread, fallbackReason)
 	}
 
 	mode := strings.TrimSpace(d.Mode)
@@ -200,6 +222,74 @@ func (d PaseoDispatcher) create(thread string) (string, error) {
 		return "", &WorkerResolveError{Op: "run", Err: fmt.Errorf("%w (thread %s)", parseErr, thread)}
 	}
 	return id, nil
+}
+
+// createWorkdir decides the `--cwd` of a worker that is about to be created.
+//
+// A thread that resolves to an existing project directory gets exactly that
+// directory. Every other outcome -- no project key, an unregistered project, a
+// registered repo that is gone -- gets the configured fallback directory and a
+// non-empty reason, which is what the caller turns into a ledger record. The
+// two outcomes are exclusive: one dispatch either resolved or fell back, never
+// both.
+func (d PaseoDispatcher) createWorkdir(thread string) (workdir, fallbackReason string) {
+	fallback := d.fallbackWorkdir()
+	key := threadWorkdirKey(thread)
+	if key == "" {
+		return fallback, ReasonNoProjectKey
+	}
+	if dir, ok := d.Registry.Resolve(key); ok {
+		return dir, ""
+	}
+	if _, registered := d.Registry.Lookup(key); registered {
+		// Registered, but the directory is not there any more.
+		return fallback, ReasonRepoMissing
+	}
+	return fallback, ReasonProjectNotRegistered
+}
+
+// fallbackWorkdir is the directory used when a thread names no usable project:
+// FallbackWorkdir, then the older Workdir spelling, then the package default.
+func (d PaseoDispatcher) fallbackWorkdir() string {
+	for _, candidate := range []string{d.FallbackWorkdir, d.Workdir} {
+		if dir := strings.TrimSpace(candidate); dir != "" {
+			return dir
+		}
+	}
+	return DefaultWorkerWorkdir
+}
+
+// recordWorkdirFallback appends one workdir_fallback line to the reports ledger.
+//
+// Writing is best effort: a read-only or missing ledger must not stop a
+// dispatch, because the message is more valuable than the record of it being
+// imperfect. The line carries exactly kind/thread/reason, and reconcile.go's
+// receipt reader ignores rows without an agent_id, so the two shapes coexist.
+func (d PaseoDispatcher) recordWorkdirFallback(thread, reason string) {
+	path := strings.TrimSpace(d.ReportsPath)
+	if path == "" {
+		return
+	}
+	data, err := json.Marshal(workdirFallbackRecord{
+		Kind:   WorkdirFallbackKind,
+		Thread: thread,
+		Reason: reason,
+	})
+	if err != nil {
+		return
+	}
+	data = append(data, '\n')
+	if dir := filepath.Dir(path); dir != "" && dir != "." {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			return
+		}
+	}
+	f, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o644)
+	if err != nil {
+		return
+	}
+	defer func() { _ = f.Close() }()
+	_, _ = f.Write(data)
 }
 
 // workerBootstrapPrompt is the only text a freshly created worker receives. The

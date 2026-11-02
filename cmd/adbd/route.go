@@ -945,18 +945,27 @@ func runRoute(args []string, stdout, stderr io.Writer) int {
 		return 1
 	}
 
+	// thread-workdir AC-002/AC-004: the project registry decides where a new
+	// worker lands, and the reports ledger is where a fallback is recorded. Both
+	// paths are root-relative unless the operator configured an absolute one.
+	workerDir := workerWorkdir(cfg.WorkerWorkdir, cf.root)
+	projectsFile := projectsFilePath(cfg.ProjectsFile, cf.root)
+
 	router := &Router{
 		Store:        &Store{Path: cf.statePath, SlowPath: cf.slowPath},
 		Decider:      decider,
 		Fallback:     fallback,
 		DeciderLabel: deciderLabel,
 		Dispatcher: PaseoDispatcher{
-			Bin:      bin,
-			WorkerID: agentID,
-			Provider: cfg.WorkerProvider,
-			Model:    cfg.WorkerModel,
-			Workdir:  workerWorkdir(cfg.WorkerWorkdir, cf.root),
-			Mode:     cfg.WorkerMode,
+			Bin:             bin,
+			WorkerID:        agentID,
+			Provider:        cfg.WorkerProvider,
+			Model:           cfg.WorkerModel,
+			Workdir:         workerDir,
+			Mode:            cfg.WorkerMode,
+			Registry:        loadProjectRegistry(projectsFile, cf.root),
+			FallbackWorkdir: workerDir,
+			ReportsPath:     filepath.Join(cf.root, ".beacon", reportsFile),
 		},
 		TracePath:     tracePath,
 		AgentID:       agentID,

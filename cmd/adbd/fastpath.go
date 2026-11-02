@@ -511,6 +511,10 @@ type Config struct {
 	// in. Empty means DefaultWorkerMode (build) — the provider default asks a
 	// human and an unattended worker would sit on a permission request forever.
 	WorkerMode string
+	// ProjectsFile is adbd_projects_file: the project registry a thread is
+	// resolved against (feature thread-workdir). Empty means
+	// <root>/config/projects.json.
+	ProjectsFile string
 	// FeedChannel is adbd_feed_project_channel: the channel `adbd feed` stamps its
 	// events with when the caller names none. Empty means DefaultFeedChannel.
 	FeedChannel string
@@ -644,6 +648,10 @@ func LoadConfig(path string) (Config, error) {
 	cfg.GitHubLabels = configList(values["adbd_github_labels"])
 	cfg.WorkerWorkdir = strings.TrimSpace(values["adbd_worker_workdir"])
 	cfg.WorkerMode = strings.TrimSpace(values["adbd_worker_mode"])
+	// thread-workdir AC-002: the registry is overridable, and an empty value keeps
+	// the <root>/config/projects.json default (resolved by the caller, which is
+	// the only place that knows the root).
+	cfg.ProjectsFile = strings.TrimSpace(values["adbd_projects_file"])
 	cfg.GitHubProxy = strings.TrimSpace(values["adbd_github_proxy"])
 	if bin := strings.TrimSpace(values["adbd_gh_bin"]); bin != "" {
 		cfg.GHBin = bin
