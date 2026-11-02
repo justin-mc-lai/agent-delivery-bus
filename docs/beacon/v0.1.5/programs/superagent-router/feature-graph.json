@@ -336,6 +336,29 @@
       "status": "released",
       "released_note": "v0.1.5 · AC-001..009 全 pass；真机 176 agents 分类 owned=1 foreign=175",
       "summary": "paseo agent 生命周期管理：认领 / 看住 / 动作 / 收口"
+    },
+    {
+      "phase": 15,
+      "priority": "P0",
+      "slug": "worker-crud",
+      "lake_or_ocean": "湖",
+      "depends_on": [
+        "agent-supervisor"
+      ],
+      "parity_subset": [
+        "worker-list",
+        "worker-show",
+        "worker-create",
+        "worker-update",
+        "worker-archive",
+        "no-hard-delete",
+        "ownership-guard",
+        "workspace-mapping"
+      ],
+      "harness_route": "beacon-gen-truth",
+      "status": "released",
+      "released_note": "v0.1.5 · AC-001..008 全 pass；真机 176 worker 带项目映射；无硬删除",
+      "summary": "paseo worker 统一增删改查（只归档不硬删）"
     }
   ],
   "topology_order": [
@@ -352,6 +375,7 @@
     "feishu-inbound",
     "install",
     "projects-import",
-    "agent-supervisor"
+    "agent-supervisor",
+    "worker-crud"
   ]
 }
