@@ -23,6 +23,7 @@ from .registry import ALLOWED_CLASSES, ProjectRegistry
 from .requirement_index import (
     describe_index,
     enumerate_sources,
+    exec_state_path_for,
     generate_index,
     write_index,
 )
@@ -151,6 +152,28 @@ def build_parser() -> argparse.ArgumentParser:
     projects_restore = projects_sub.add_parser("restore", help="restore an archived project by index/slug")
     projects_restore.add_argument("target")
     projects_restore.add_argument("--json", action="store_true")
+    projects_import = projects_sub.add_parser(
+        "import",
+        help="scan a directory for repos that carry docs/beacon/<v>/features and register them (dry-run by default)",
+    )
+    projects_import.add_argument(
+        "--scan", required=True, help="directory whose direct subdirectories are candidate repos"
+    )
+    projects_import.add_argument(
+        "--apply", action="store_true", help="write the registry (default: dry-run, nothing is written)"
+    )
+    projects_import.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="refresh repo/docs_version of an already registered slug instead of skipping it",
+    )
+    projects_import.add_argument(
+        "--register-kernel",
+        dest="register_kernel",
+        action="store_true",
+        help="also run `beacon-go projects register --project <repo> --version <v>` for each written entry",
+    )
+    projects_import.add_argument("--json", action="store_true")
 
     workflow = sub.add_parser("workflow", help="manage third-party enforced workflows (presets + local)")
     workflow_sub = workflow.add_subparsers(dest="workflow_command", required=True)
@@ -888,6 +911,115 @@ def _auto_dispatch_on_approve(
     }
 
 
+#: How a reason code from `projects import` gets its next step (AC-006).
+_IMPORT_RESUME_ACTIONS = {
+    "scan_dir_missing": "pass --scan <dir> pointing at a directory of repositories",
+    "no_projects_found": "check the directory holds direct subdirectories with docs/beacon/<v>/features/",
+    "registry_invalid": "repair config/projects.json or start again from config/projects.example.json",
+}
+
+
+def _run_projects_import(args: argparse.Namespace) -> dict[str, Any]:
+    """`adb projects import --scan <dir>` (AC-001..AC-006).
+
+    The registry written is ``--config`` (default ``config/projects.json`` on a
+    fresh install, ``config/projects.local.json`` when that local override
+    exists).  Dry-run unless ``--apply``: in dry-run mode the would-be entries
+    are printed and the registry file is never touched.  ``--register-kernel`` is an
+    explicit opt-in and is honoured as soon as it is passed (it writes to the
+    kernel, not to the registry file); a kernel failure only feeds
+    ``kernel_failed=<n>`` and never blocks the JSON write.
+    """
+    from .projects_import import (
+        load_registry,
+        merge,
+        register_kernel,
+        save_registry,
+        scan_projects,
+        summary_line,
+    )
+
+    apply_changes = bool(getattr(args, "apply", False))
+    overwrite = bool(getattr(args, "overwrite", False))
+    asked_kernel = bool(getattr(args, "register_kernel", False))
+    registry_path = str(args.config)
+    counts = {"found": 0, "new": 0, "existing": 0, "updated": 0, "kernel_failed": 0}
+
+    def report(
+        reason_code: str = "",
+        lines: list[str] | None = None,
+        extra: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        payload: dict[str, Any] = {
+            "dry_run": not apply_changes,
+            "scan_root": str(getattr(args, "scan", "") or ""),
+            "registry": registry_path,
+            "counts": dict(counts),
+            "text": "\n".join([summary_line(counts), *(lines or [])]),
+        }
+        if extra:
+            payload.update(extra)
+        return envelope(
+            status="pass",
+            reason_code=reason_code,
+            resume_action=_IMPORT_RESUME_ACTIONS.get(reason_code, ""),
+            data=payload,
+        )
+
+    try:
+        scanned = scan_projects(getattr(args, "scan", ""))
+    except DeliveryBusError as exc:  # AC-006: reason code, exit 0
+        return report(exc.reason_code, extra={"error": str(exc), "scanned": []})
+    if not scanned:  # AC-006: an empty scan result is a reason code too
+        return report("no_projects_found", extra={"scanned": []})
+
+    try:
+        registry = load_registry(registry_path)
+    except DeliveryBusError as exc:  # AC-006: never overwrite a broken file
+        return report(exc.reason_code, extra={"error": str(exc), "scanned": scanned})
+
+    counts["found"] = len(scanned)
+    new, existing, updated = merge(registry, scanned, overwrite=overwrite)
+    counts["new"] = len(new)
+    counts["existing"] = len(existing)
+    counts["updated"] = len(updated)
+
+    # AC-003: only `projects` changed; every other top-level key rides along.
+    written: list[str] = []
+    if apply_changes:
+        written.append(str(save_registry(registry_path, registry)))
+
+    kernel_ok: list[dict[str, Any]] = []
+    kernel_failed: list[dict[str, Any]] = []
+    if asked_kernel:
+        # AC-005: the entries this run wrote; one failure blocks nothing.
+        kernel_ok, kernel_failed = register_kernel([*new, *updated])
+        counts["kernel_failed"] = len(kernel_failed)
+
+    lines: list[str] = []
+    for entry in new:
+        lines.append(f"+ {entry['slug']} {entry['docs_version']} {entry['repo']}")
+    for entry in updated:
+        lines.append(f"~ {entry['slug']} {entry['docs_version']} {entry['repo']}")
+    for entry in existing:
+        lines.append(f"= {entry['slug']} (already registered, skipped)")
+    for row in kernel_failed:
+        lines.append(f"! kernel_failed {row.get('slug', '')}: {row.get('reason', '')}")
+
+    return report(
+        "",
+        lines,
+        {
+            "scanned": scanned,
+            "new": new,
+            "existing": existing,
+            "updated": updated,
+            "written": written,
+            "kernel": {"ok": kernel_ok, "failed": kernel_failed},
+        },
+    )
+
+
 def execute(args: argparse.Namespace) -> dict[str, Any]:
     if args.command == "backup":
         from datetime import datetime
@@ -929,9 +1061,15 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                     resume_action="pass --projects /path/to/repo[,/path/to/other]",
                 )
             sources, skipped = enumerate_sources(roots, version=args.version or None)
+            # worker-report AC-004: merge what `adbd reconcile` observed about the
+            # workers of each root. A root without the file behaves exactly as
+            # before (the loader returns no rows for a missing file).
+            exec_state_paths = [exec_state_path_for(root) for root in roots]
             storage = Storage(args.db)
             try:
-                bundle = generate_index(sources, storage=storage)
+                bundle = generate_index(
+                    sources, storage=storage, exec_state_paths=exec_state_paths
+                )
             finally:
                 storage.close()
             written = write_index(bundle, args.out)
@@ -948,6 +1086,9 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
                         str(record["req_id"]) for record in bundle.document["requirements"]
                     ],
                     "skipped": skipped,
+                    "exec_state_sources": [
+                        str(path) for path in exec_state_paths if path.is_file()
+                    ],
                     "write": written,
                     "text": (
                         f"count={counted} missing={missing_count} "
@@ -971,6 +1112,13 @@ def execute(args: argparse.Namespace) -> dict[str, Any]:
         raise DeliveryBusError(
             "index_command_invalid", f"Unknown index command: {args.index_command}"
         )
+
+    if args.command == "projects" and args.projects_command == "import":
+        # Off the control-plane path on purpose: importing must tolerate a
+        # missing scan directory or an unusable registry file (AC-006 turns
+        # both into reason codes with exit 0), so it must not go through the
+        # strict ProjectRegistry.load() below.
+        return _run_projects_import(args)
 
     registry = ProjectRegistry.load(args.config)
     storage = Storage(args.db)

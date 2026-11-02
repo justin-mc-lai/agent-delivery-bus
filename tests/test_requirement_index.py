@@ -17,6 +17,7 @@ from agent_delivery_bus.errors import DeliveryBusError
 from agent_delivery_bus.requirement_index import (
     BUDGET_BYTES,
     EXEC_STATES,
+    EXEC_STATE_SOURCE_INVALID,
     LIFECYCLE_SOURCE_MISSING,
     RECORD_FIELDS,
     SCHEMA_VERSION,
@@ -29,7 +30,9 @@ from agent_delivery_bus.requirement_index import (
     describe_index,
     dumps,
     enumerate_sources,
+    exec_state_path_for,
     generate_index,
+    load_exec_state_file,
     parse_frontmatter,
     req_id_for,
     resolve_version,
@@ -333,6 +336,177 @@ class RequirementIndexSelfContainedTests(unittest.TestCase):
                 self.assertEqual(
                     shard_records[entry["req_id"]]["truth_ref"], entry["truth_ref"]
                 )
+
+
+class RequirementIndexExecStateSourceTests(unittest.TestCase):
+    """AC-004 (worker-report): merge the daemon's exec_state projection."""
+
+    def test_exec_state_source(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "alpha"
+            root.mkdir()
+            sources = [
+                _package(root, "alpha", "one", stage="truth"),
+                _package(root, "alpha", "two", stage="implement"),
+            ]
+            # The SQLite ledger knows one requirement and says "running".
+            storage = Storage(str(Path(tmp) / "adb.sqlite3"))
+            self.addCleanup(storage.close)
+            set_exec_state(storage, "req:alpha:one", {"exec_state": "running", "worker": "ag_old"})
+
+            # Without the file nothing changes: both rows stay unknown.
+            before = generate_index(sources, storage=storage, generated_at=STAMP).document
+            self.assertEqual(
+                [record["exec_state"] for record in before["requirements"]],
+                ["running", "unknown"],
+            )
+
+            exec_state_path = exec_state_path_for(root)
+            exec_state_path.parent.mkdir(parents=True, exist_ok=True)
+            exec_state_path.write_text(
+                json.dumps(
+                    {
+                        "req:alpha:one": {
+                            "exec_state": "done",
+                            "worker": "ag_alpha",
+                            "thread": "skill:alpha:one",
+                            "updated_at": "2026-11-01T07:40:00+00:00",
+                        }
+                    },
+                    indent=2,
+                    sort_keys=True,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            rows = load_exec_state_file(exec_state_path)
+            self.assertEqual(sorted(rows), ["req:alpha:one"])
+            self.assertEqual(rows["req:alpha:one"]["exec_state"], "done")
+            self.assertEqual(rows["req:alpha:one"]["thread_id"], "skill:alpha:one")
+
+            after = generate_index(
+                sources,
+                storage=storage,
+                exec_state_paths=[exec_state_path],
+                generated_at=STAMP,
+            ).document
+            records = _by_req_id(after)
+            # AC-004: the file wins per req_id ...
+            self.assertEqual(records["req:alpha:one"]["exec_state"], "done")
+            self.assertEqual(records["req:alpha:one"]["worker"], "ag_alpha")
+            self.assertEqual(records["req:alpha:one"]["thread_id"], "skill:alpha:one")
+            # ... a requirement with no row anywhere stays unknown ...
+            self.assertEqual(records["req:alpha:two"]["exec_state"], "unknown")
+            self.assertEqual(records["req:alpha:two"]["worker"], "")
+            # ... and truth_stage is untouched by anything exec_state says.
+            self.assertEqual(records["req:alpha:one"]["truth_stage"], "truth")
+            self.assertEqual(records["req:alpha:two"]["truth_stage"], "implement")
+            self.assertEqual(
+                [record["truth_stage"] for record in after["requirements"]],
+                [record["truth_stage"] for record in before["requirements"]],
+            )
+            # The projection is read-only: the ledger it merged over is unchanged.
+            stored = storage.get_requirement_exec_state("req:alpha:one")
+            self.assertEqual(stored["exec_state"], "running")
+            self.assertEqual(stored["worker"], "ag_old")
+
+            # A missing file is "no rows", never an error.
+            self.assertEqual(load_exec_state_file(Path(tmp) / "nowhere.json"), {})
+            # A damaged file is loud, never silently treated as "no rows".
+            exec_state_path.write_text("{not json", encoding="utf-8")
+            with self.assertRaises(DeliveryBusError) as ctx:
+                load_exec_state_file(exec_state_path)
+            self.assertEqual(ctx.exception.reason_code, EXEC_STATE_SOURCE_INVALID)
+
+    def test_exec_state_source_cli_merge(self):
+        """`adb index generate` merges .beacon/adbd-exec-state.json when present."""
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp)
+            root = workspace / "alpha"
+            root.mkdir()
+            _beacon_project(root, "one")
+            exec_state_path = exec_state_path_for(root)
+            exec_state_path.parent.mkdir(parents=True, exist_ok=True)
+            exec_state_path.write_text(
+                json.dumps(
+                    {
+                        "req:alpha:one": {
+                            "exec_state": "done",
+                            "worker": "ag_alpha",
+                            "thread": "skill:alpha:one",
+                            "updated_at": "2026-11-01T07:40:00+00:00",
+                        }
+                    }
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            out = workspace / "out" / "requirement-index.json"
+            bin_dir = _fake_kernel_bin(
+                workspace / "bin",
+                {
+                    "features": [
+                        {"slug": "one", "lifecycle_stage": "truth", "lifecycle_status": "Completed"}
+                    ]
+                },
+            )
+            env = _cli_env(ADB_REQUIREMENT_INDEX_NOW=STAMP)
+            env["PATH"] = str(bin_dir) + os.pathsep + env.get("PATH", "")
+            result = subprocess.run(
+                CLI
+                + [
+                    "--db",
+                    str(workspace / "adb.sqlite3"),
+                    "index",
+                    "generate",
+                    "--projects",
+                    str(root),
+                    "--out",
+                    str(out),
+                    "--json",
+                ],
+                capture_output=True,
+                text=True,
+                env=env,
+                cwd=str(workspace),
+            )
+            self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+            payload = json.loads(result.stdout)
+            self.assertEqual(
+                [str(Path(item).name) for item in payload["data"]["exec_state_sources"]],
+                ["adbd-exec-state.json"],
+            )
+            document = json.loads(out.read_text(encoding="utf-8"))
+            record = _by_req_id(document)["req:alpha:one"]
+            self.assertEqual(record["exec_state"], "done")
+            self.assertEqual(record["worker"], "ag_alpha")
+            self.assertEqual(record["thread_id"], "skill:alpha:one")
+            self.assertEqual(record["truth_stage"], "truth")
+
+            # Same roots twice: still byte identical (the merge is deterministic).
+            first_bytes = out.read_bytes()
+            again = subprocess.run(
+                CLI
+                + [
+                    "--db",
+                    str(workspace / "adb.sqlite3"),
+                    "index",
+                    "generate",
+                    "--projects",
+                    str(root),
+                    "--out",
+                    str(out),
+                    "--json",
+                ],
+                capture_output=True,
+                text=True,
+                env=env,
+                cwd=str(workspace),
+            )
+            self.assertEqual(again.returncode, 0, again.stderr + again.stdout)
+            self.assertEqual(out.read_bytes(), first_bytes)
 
 
 class RequirementIndexWriteAuthorityTests(unittest.TestCase):

@@ -113,6 +113,14 @@ WRITE_NOT_ALLOWED = "write_not_allowed"
 INDEX_FILE_MISSING = "index_file_missing"
 INDEX_FILE_UNREADABLE = "index_file_unreadable"
 INDEX_FILE_INVALID = "index_file_invalid"
+#: The adbd exec_state projection (feature worker-report) could not be read.
+EXEC_STATE_SOURCE_UNREADABLE = "exec_state_source_unreadable"
+EXEC_STATE_SOURCE_INVALID = "exec_state_source_invalid"
+
+#: Where the adbd daemon projects what it observed about running workers
+#: (``adbd reconcile --once`` writes this file).
+EXEC_STATE_DIRNAME = ".beacon"
+EXEC_STATE_FILENAME = "adbd-exec-state.json"
 
 #: Environment override for the injected clock (reproducible CLI runs).
 CLOCK_ENV = "ADB_REQUIREMENT_INDEX_NOW"
@@ -858,21 +866,108 @@ def generate_index(
     sources: Iterable[RequirementSource],
     *,
     storage: Any = None,
+    exec_rows: Mapping[str, Mapping[str, Any]] | None = None,
+    exec_state_paths: Iterable[str | Path] | None = None,
     generated_at: str | None = None,
     budget: int = BUDGET_BYTES,
 ) -> IndexBundle:
-    """Convenience wrapper: read exec state from the ADB ledger, then build."""
-    exec_rows: dict[str, Mapping[str, Any]] = {}
+    """Convenience wrapper: collect exec state from every source, then build.
+
+    Precedence per ``req_id`` (worker-report AC-004): the ADB SQLite ledger is
+    the baseline, then explicit ``exec_rows``, then each
+    ``.beacon/adbd-exec-state.json`` -- so a receipt the daemon just observed
+    wins over whatever the ledger last recorded, and a requirement with no row
+    anywhere stays ``unknown``.
+    """
+    rows: dict[str, Mapping[str, Any]] = {}
     if storage is not None:
-        exec_rows = {
+        rows = {
             str(row["req_id"]): row for row in storage.list_requirement_exec_states()
         }
+    for req_id, row in (exec_rows or {}).items():
+        rows[str(req_id)] = row
+    # Sorted and de-duplicated so two runs over the same roots merge in the same
+    # order: the generated index has to stay byte-identical (AC-002).
+    for path in sorted({str(Path(item).expanduser()) for item in (exec_state_paths or ())}):
+        rows.update(load_exec_state_file(path))
     return build_index(
         sources,
-        exec_rows=exec_rows,
+        exec_rows=rows,
         generated_at=generated_at,
         budget=budget,
     )
+
+
+def exec_state_path_for(root: str | Path) -> Path:
+    """The daemon's exec_state projection inside one project root."""
+    return Path(root).expanduser() / EXEC_STATE_DIRNAME / EXEC_STATE_FILENAME
+
+
+def load_exec_state_file(path: str | Path) -> dict[str, dict[str, Any]]:
+    """Read ``.beacon/adbd-exec-state.json`` into ADB-shaped exec rows.
+
+    Returns ``{req_id: {req_id, exec_state, thread_id, worker, blockers}}``.
+    A missing (or empty) file is an empty mapping -- AC-004's "文件不存在时行为
+    不变" -- because a project that never ran ``adbd reconcile`` owes the index
+    nothing. An unreadable or malformed file is a loud ``DeliveryBusError``
+    instead: silently dropping those rows would make the index claim
+    ``unknown`` for work that demonstrably finished.
+    """
+    source = Path(path).expanduser()
+    if not source.is_file():
+        return {}
+    try:
+        text = source.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError) as exc:
+        raise DeliveryBusError(
+            EXEC_STATE_SOURCE_UNREADABLE,
+            f"exec_state source unreadable: {source} ({exc})",
+            resume_action="check permissions on .beacon/adbd-exec-state.json, then rerun adbd reconcile --once",
+        ) from None
+    if not text.strip():
+        return {}
+    try:
+        document = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise DeliveryBusError(
+            EXEC_STATE_SOURCE_INVALID,
+            f"exec_state source is not JSON: {source} ({exc})",
+            resume_action="regenerate it with `adbd reconcile --once`",
+        ) from None
+    if not isinstance(document, Mapping):
+        raise DeliveryBusError(
+            EXEC_STATE_SOURCE_INVALID,
+            f"exec_state source is not a JSON object: {source}",
+            resume_action="regenerate it with `adbd reconcile --once`",
+        )
+
+    rows: dict[str, dict[str, Any]] = {}
+    for raw_req_id, entry in document.items():
+        req_id = str(raw_req_id).strip()
+        if not req_id:
+            continue
+        if not isinstance(entry, Mapping):
+            raise DeliveryBusError(
+                EXEC_STATE_SOURCE_INVALID,
+                f"exec_state entry for {req_id} is not an object: {source}",
+                resume_action="regenerate it with `adbd reconcile --once`",
+            )
+        state = str(entry.get("exec_state") or UNKNOWN)
+        if state not in EXEC_STATES:
+            raise DeliveryBusError(
+                EXEC_STATE_INVALID,
+                f"Unsupported exec_state {state!r} for {req_id} in {source}",
+                resume_action="use one of " + ", ".join(EXEC_STATES),
+            )
+        rows[req_id] = {
+            "req_id": req_id,
+            "exec_state": state,
+            # The daemon records the intake thread; the index calls it thread_id.
+            "thread_id": str(entry.get("thread") or entry.get("thread_id") or ""),
+            "worker": str(entry.get("worker") or ""),
+            "blockers": [str(item) for item in (entry.get("blockers") or [])],
+        }
+    return rows
 
 
 # --- writable half (ADB-owned) ---------------------------------------------
