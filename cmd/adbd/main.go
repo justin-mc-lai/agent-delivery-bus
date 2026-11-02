@@ -63,6 +63,8 @@ func run(args []string, stdout, stderr io.Writer) int {
 		return runWatchdog(args[1:], stdout, stderr)
 	case "poll-github":
 		return runPollGitHub(args[1:], stdout, stderr)
+	case "metrics":
+		return runMetrics(args[1:], stdout, stderr)
 	case "agent":
 		return runAgent(args[1:], stdout, stderr)
 	default:
@@ -86,6 +88,7 @@ usage:
   adbd reconcile --once [--outcome json|text]
   adbd watchdog --once [--apply] [--outcome json|text]
   adbd poll-github --once [--root <dir>] [--outcome json|text]
+  adbd metrics --once [--since RFC3339] [--root <dir>] [--outcome json|text]
   adbd agent  plist [--outcome json|text]
   adbd agent  status [--outcome json|text]
 
@@ -143,6 +146,24 @@ reconcile behaviour:
 poll-github flags:
   --once             run one poll pass and exit (the scheduled rhythm); the
                      poller has no resident mode, so a bare run is also one pass
+
+metrics flags:
+  --once             collect one metrics snapshot and exit; there is no
+                     resident mode, every run is exactly one pass
+  --since RFC3339    only count records at or after this instant (default: all)
+  --decisions PATH   decision trace, defaults to <beacon>/adbd-decisions.jsonl
+  --reports PATH     worker receipt ledger, defaults to <beacon>/adbd-reports.jsonl
+
+metrics behaviour:
+  Aggregates four effect metrics from the ledgers adbd already writes; it adds
+  no instrumentation and writes nothing. time_to_first_worker pairs a slow-path
+  recorded_at with the first decision for the same message_id; task_completion
+  is finished_at - dispatched_at per receipt; decisions_per_thread is decisions
+  over distinct threads; fastpath_share is the reason_code=deduped|bound_thread
+  rows over all rows. Percentiles use nearest-rank; fewer than 5 samples omit
+  p95_ms and label that metric insufficient_data. A missing or empty ledger is
+  count=0 with status=insufficient_data and exit 0: no percentile is ever
+  invented.
 
 poll-github behaviour:
   Polls the open issues of every adbd_github_repos entry through the gh CLI and
