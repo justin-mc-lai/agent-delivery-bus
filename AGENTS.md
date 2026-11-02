@@ -24,11 +24,17 @@ This file is Beacon-managed agent operation guidance.
   6. `docs/beacon/<version>/.machine/`
 - For greenfield projects: start with architecture blueprint, then enter think → user-story → prd.
 - For takeover projects: document current-state architecture, service map, constraints, and version timeline before new implementation.
-- If context blocks are missing/corrupted, run:
-  - `beacon doctor setup-context --project-root .`
-  - `beacon doctor verify-context --project-root . --strict`
-- After runtime/version upgrades on a real project, sync machine requirement materials before QA:
-  - `beacon doctor sync-materials --project-root . --version <version> --all-features`
+- Runtime toolchain is **beacon-go** (the Python v1 `beacon` CLI is no longer installed).
+  Verify with:
+  - `beacon-go truth list --project .`
+  - `beacon-go gate status --feature <slug> --project .`
+  - `beacon-go spine show --project . --feature <slug> --json`
+  - `beacon-go doctor rebuild --project .`
+- Repo checks that still matter:
+  - `python3 -m pytest tests/ -q`
+  - `cd cmd/adbd && go test ./...`
+- No beacon-go equivalent yet (open gap): program graph validation (`beacon program
+  validate-graph`) and v1 feature-package validation (`beacon validate-feature-package`).
 <!-- BEACON:END -->
 
 

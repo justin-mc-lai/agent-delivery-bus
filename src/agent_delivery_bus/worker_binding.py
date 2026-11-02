@@ -29,43 +29,50 @@ DEFAULT_RUNNER_PROFILE = {
 DEFAULT_BINDING_PROFILE = "beacon"
 BINDING_SCHEMA_VERSION = "1.1"
 
-# Built-in reference profile: stage → Beacon skill / command.
+# Built-in reference profile: stage → beacon-go skill / command.
+#
+# The runtime toolchain is beacon-go (the Python v1 `beacon` CLI is not installed
+# any more). A stage with an empty template is skill-driven: the host agent loads
+# `beacon_skill` and follows it, because no single beacon-go command means "run
+# this stage" for that stage yet.
 STAGE_BEACON_BINDING: dict[str, dict[str, str]] = {
     "goal": {
-        "beacon_skill": "beacon-goal",
+        "beacon_skill": "beacon-go-goal",
         "public_harness": "goal",
         "beacon_command_template": (
-            'beacon goal run "{feature}" --project . --version {docs_version} --auto-tick'
+            'beacon-go goal run "<utterance>" --project . --feature {feature}'
         ),
     },
     "plan": {
-        "beacon_skill": "beacon-plan",
+        "beacon_skill": "beacon-go-plan",
         "public_harness": "plan",
-        "beacon_command_template": 'beacon workflow run plan "{feature}" --project . --version {docs_version}',
+        # No beacon-go CLI for program/plan authoring yet: skill-driven.
+        "beacon_command_template": "",
     },
     "truth": {
-        "beacon_skill": "beacon-truth",
+        "beacon_skill": "beacon-go-truth",
         "public_harness": "truth",
         "beacon_command_template": (
-            'beacon truth gen "{feature}" --project . --version {docs_version} --intent-first'
+            'beacon-go truth create --project . --slug {feature} --version {docs_version}'
         ),
     },
     "implement": {
-        "beacon_skill": "beacon-implement",
+        "beacon_skill": "beacon-go-implement",
         "public_harness": "implement",
-        "beacon_command_template": (
-            'beacon implement run "{feature}" --project . --version {docs_version} --mode single'
-        ),
+        # Stage work is dispatched to an executor; the skill carries the contract.
+        "beacon_command_template": "",
     },
     "qa": {
-        "beacon_skill": "beacon-qa",
+        "beacon_skill": "beacon-go-qa",
         "public_harness": "qa",
-        "beacon_command_template": 'beacon qa "{feature}" --project . --version {docs_version}',
+        "beacon_command_template": (
+            'beacon-go qa evaluate --feature {feature} --project . --evaluator <evaluator>'
+        ),
     },
     "freeze": {
-        "beacon_skill": "beacon-truth",
+        "beacon_skill": "beacon-go-truth",
         "public_harness": "truth",
-        "beacon_command_template": 'beacon freeze "{feature}" --project . --version {docs_version}',
+        "beacon_command_template": 'beacon-go truth freeze --feature {feature} --project .',
     },
 }
 

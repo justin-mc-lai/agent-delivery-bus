@@ -81,7 +81,7 @@ class BeaconAdapter:
                 bool(context.get("pass")),
                 reason_code="beacon_context_invalid",
                 resume_action=(
-                    f"run `beacon doctor setup-context --project-root {project.repo}` "
+                    f"run `beacon-go doctor rebuild --project {project.repo}` "
                     "and verify manually; Delivery Bus will not auto-repair"
                 ),
                 detail=context if isinstance(context, dict) else {"raw": context},

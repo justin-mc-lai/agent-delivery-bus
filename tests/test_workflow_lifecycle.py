@@ -104,12 +104,12 @@ class PresetTests(unittest.TestCase):
 class BeaconStageTests(unittest.TestCase):
     def test_beacon_stages_force_load(self):
         expected = {
-            "plan": "beacon-plan",
-            "truth": "beacon-truth",
-            "implement": "beacon-implement",
-            "qa": "beacon-qa",
-            "freeze": "beacon-truth",
-            "goal": "beacon-goal",
+            "plan": "beacon-go-plan",
+            "truth": "beacon-go-truth",
+            "implement": "beacon-go-implement",
+            "qa": "beacon-go-qa",
+            "freeze": "beacon-go-truth",
+            "goal": "beacon-go-goal",
         }
         for stage, skill in expected.items():
             binding = resolve_worker_binding(stage=stage, feature="f", docs_version="v0.0.7")

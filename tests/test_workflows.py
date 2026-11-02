@@ -28,7 +28,7 @@ class WorkflowRegistryTests(unittest.TestCase):
     def test_presets_are_open_source_and_exclude_private_workflows(self):
         self.assertEqual(sorted(PRESET_SOURCE), ["openspec", "superpowers"])
         self.assertNotIn("beacon", PRESET_SOURCE)
-        self.assertNotIn("beacon-goal", PRESET_SOURCE)
+        self.assertNotIn("beacon-go-goal", PRESET_SOURCE)
         aider = build_preset("superpowers")
         self.assertEqual(aider["skills"], ["superpowers"])
         self.assertIn("implement", aider["stages"])
@@ -46,7 +46,7 @@ class WorkflowRegistryTests(unittest.TestCase):
 
     def test_unknown_preset_fails_closed(self):
         with self.assertRaises(Exception) as ctx:
-            build_preset("beacon-goal")
+            build_preset("beacon-go-goal")
         self.assertEqual(ctx.exception.reason_code, "workflow_preset_unknown")
 
 
