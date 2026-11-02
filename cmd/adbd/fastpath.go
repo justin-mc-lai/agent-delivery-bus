@@ -554,6 +554,13 @@ type Config struct {
 	GitHubProxy string
 	// GHBin is adbd_gh_bin: the gh executable, defaulting to "gh".
 	GHBin string
+	// ReplyBin is adbd_reply_bin: the outbound sender binary (lark-cli). Empty
+	// keeps reply delivery switched off, which is the default (reply-delivery
+	// AC-006).
+	ReplyBin string
+	// ReplyIdentity is adbd_reply_identity: the sender identity a reply is sent
+	// as, "bot" by default (reply-delivery AC-001).
+	ReplyIdentity string
 }
 
 // defaultConfig is the operator-facing baseline, so a missing or partial config
@@ -572,6 +579,7 @@ func defaultConfig() Config {
 		GHBin:          DefaultGHBin,
 		WorkerProvider: DefaultWorkerProvider,
 		WorkerModel:    DefaultWorkerModel,
+		ReplyIdentity:  DefaultReplyIdentity,
 	}
 }
 
@@ -655,6 +663,15 @@ func LoadConfig(path string) (Config, error) {
 	cfg.GitHubProxy = strings.TrimSpace(values["adbd_github_proxy"])
 	if bin := strings.TrimSpace(values["adbd_gh_bin"]); bin != "" {
 		cfg.GHBin = bin
+	}
+	// reply-delivery: the outbound mouth. An empty adbd_reply_bin means "do not
+	// speak" (AC-006), so a config file that never mentions replies behaves
+	// exactly like the daemon before this feature. The identity only matters once
+	// a bin exists, but its default is named here so the trace and the CLI agree.
+	cfg.ReplyBin = strings.TrimSpace(values["adbd_reply_bin"])
+	cfg.ReplyIdentity = strings.TrimSpace(values["adbd_reply_identity"])
+	if cfg.ReplyIdentity == "" {
+		cfg.ReplyIdentity = DefaultReplyIdentity
 	}
 	if raw := strings.TrimSpace(values["adbd_github_limit"]); raw != "" {
 		limit, err := strconv.Atoi(raw)

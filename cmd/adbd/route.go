@@ -129,8 +129,8 @@ type Decision struct {
 	MessageID  string
 	Decision   string
 	ReasonCode string
-	// Reply is the text the router would say back. reply is recorded, never
-	// delivered (truth.md Open Question Q2: channel delivery lands in M4).
+	// Reply is the text the router says back. reply-delivery AC-001: the router
+	// hands it to the injected Replier; with no Replier it stays trace-only.
 	Reply string
 }
 
@@ -171,6 +171,17 @@ type traceRecord struct {
 	DecidedAt  string `json:"decided_at"`
 	// Decider is "rule" (implicit, omitted), "llm", or "llm_fallback_rules".
 	Decider string `json:"decider,omitempty"`
+	// Delivered is nil for every verdict that has no outbound step (route,
+	// ignore, escalate, and a reply the router refused), so the eight-key shape
+	// frozen by AC-004 stays intact for those rows. A reply row always carries it:
+	// true when the sender accepted the text, false when it did not (AC-002).
+	Delivered *bool `json:"delivered,omitempty"`
+	// DeliveryReason is sent / not_configured / unsupported_channel /
+	// send_failed, and only on a reply row (AC-002).
+	DeliveryReason string `json:"delivery_reason,omitempty"`
+	// DeliveryDetail is the sender's own explanation, capped at 200 characters,
+	// and only when the send failed (AC-003).
+	DeliveryDetail string `json:"delivery_detail,omitempty"`
 }
 
 // traceDecider maps a decider label to the value the trace carries. The default
@@ -211,6 +222,13 @@ type Router struct {
 	DeciderLabel string
 	// Dispatcher is the injected hands; the router owns no execution tool.
 	Dispatcher Dispatcher
+	// Replier is the injected mouth (reply-delivery AC-001). nil means reply
+	// delivery is switched off, which is the default (AC-006): the verdict is
+	// still traced, and the trace says not_configured.
+	Replier Replier
+	// ReplyChannel is the only channel a reply may go out on. Empty means
+	// DefaultReplyChannel (feishu).
+	ReplyChannel string
 	// TracePath defaults to <queue dir>/adbd-decisions.jsonl.
 	TracePath string
 	// HeartbeatPath defaults to <queue dir>/adbd-heartbeat.json. Every drain
@@ -450,7 +468,9 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 		decision, reject, usable := r.validate(item, decision)
 		if !usable {
 			// AC-002 / AC-007: an unusable verdict is recorded and the item is
-			// left failed; it never re-enters the backlog.
+			// left failed; it never re-enters the backlog. A rejected reply is
+			// never sent, so its row carries no delivered / delivery_reason: the
+			// frozen vocabulary has no honest token for "nothing was attempted".
 			lines = append(lines, trace(item, decision.Decision, reject))
 			seen[key] = struct{}{}
 			res.Failed++
@@ -499,10 +519,19 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 			seen[key] = struct{}{}
 			res.Applied++
 
-		case DecisionReply, DecisionIgnore, DecisionEscalate:
-			// reply is recorded, not delivered (Q2); ignore and escalate are
-			// accounting only. All three are terminal, so the item leaves the
-			// queue.
+		case DecisionReply:
+			// reply-delivery AC-002: the verdict is terminal whatever the channel
+			// does next, so the row is built first and the delivery outcome is
+			// stamped into it afterwards. A send failure never fails the item
+			// (AC-003): attempts stay untouched and the process keeps breathing.
+			rec := trace(item, decision.Decision, decision.ReasonCode)
+			r.attachDelivery(&rec, item, decision)
+			lines = append(lines, rec)
+			seen[key] = struct{}{}
+			res.Applied++
+
+		case DecisionIgnore, DecisionEscalate:
+			// Accounting only: both are terminal, so the item leaves the queue.
 			lines = append(lines, trace(item, decision.Decision, decision.ReasonCode))
 			seen[key] = struct{}{}
 			res.Applied++
@@ -951,6 +980,13 @@ func runRoute(args []string, stdout, stderr io.Writer) int {
 	workerDir := workerWorkdir(cfg.WorkerWorkdir, cf.root)
 	projectsFile := projectsFilePath(cfg.ProjectsFile, cf.root)
 
+	// reply-delivery AC-006: no adbd_reply_bin means no mouth at all. The replier
+	// stays nil, so every reply row records not_configured and nothing is spawned.
+	var replier Replier
+	if replyBin := strings.TrimSpace(cfg.ReplyBin); replyBin != "" {
+		replier = LarkReplier{Bin: replyBin, Identity: cfg.ReplyIdentity}
+	}
+
 	router := &Router{
 		Store:        &Store{Path: cf.statePath, SlowPath: cf.slowPath},
 		Decider:      decider,
@@ -969,6 +1005,8 @@ func runRoute(args []string, stdout, stderr io.Writer) int {
 		},
 		TracePath:     tracePath,
 		AgentID:       agentID,
+		Replier:       replier,
+		ReplyChannel:  DefaultReplyChannel,
 		TTL:           DefaultTTL,
 		Limit:         limit,
 		MaxAttempts:   DefaultMaxDispatchAttempts,

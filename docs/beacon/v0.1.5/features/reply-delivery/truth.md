@@ -52,7 +52,7 @@ scope_mode: "lake"
 
 | AC ID | Criterion |
 |-------|-----------|
-| AC-001 | `adbd_reply_bin` 非空且 `thread` 属于 feishu 频道时，reply 决策调用一次 `<bin> im +messages-send --chat-id <thread> --text <reply> --as <adbd_reply_identity> --idempotency-key <message_id>`；`adbd_reply_identity` 默认 `bot` |
+| AC-001 | `adbd_reply_bin` 非空且 `thread` 属于 feishu 频道时，reply 决策调用一次 `<bin> im +messages-send --chat-id <chat_id> --text <reply> --as <adbd_reply_identity> --idempotency-key <message_id>`，其中 `<chat_id>` 是 thread 去掉 `feishu:` 前缀后的裸 ID；`adbd_reply_identity` 默认 `bot` |
 | AC-002 | 每条 reply 决策的 trace 增加 `delivered`（true/false）与 `delivery_reason`（`sent`/`not_configured`/`unsupported_channel`/`send_failed`）两个字段；其余字段不变 |
 | AC-003 | 发送失败时：条目仍然 applied（不进入重试），trace 记 `delivered=false`、`delivery_reason=send_failed`，并带 `delivery_detail`（stderr 前 200 字符）；进程退出码不受影响 |
 | AC-004 | 同一 `message_id` 重复 reply 时使用同一 `--idempotency-key`；测试断言两次调用携带相同键 |

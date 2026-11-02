@@ -177,6 +177,9 @@ config keys (.beacon/config, key=value):
   adbd_github_limit=50               issues fetched per repo per pass
   adbd_github_proxy=http://host:port injected as HTTPS_PROXY/HTTP_PROXY for gh
   adbd_gh_bin=gh                     gh executable path
+  adbd_reply_bin=                    outbound sender binary (e.g. lark-cli);
+                                     empty means reply delivery is off (default)
+  adbd_reply_identity=bot            identity a reply is sent as: bot or user
   note: polled issues arrive on channel "github", so add github to
   adbd_allow_channels (or set adbd_allow_all=true) for them to reach intake
 `)
