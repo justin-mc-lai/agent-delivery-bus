@@ -359,9 +359,11 @@ func orNone(value string) string {
 func watchedThreads(snap *snapshot, activity map[string]threadActivity, now time.Time) []threadView {
 	views := map[string]threadView{}
 	for _, binding := range snap.Bindings {
-		if binding == nil || !isLiveState(binding.State) {
+		if binding == nil || binding.State == StateDone || !isLiveState(binding.State) {
 			// Only live leases are watched: a released or unbound thread owes
-			// nobody progress, and watching it would nag forever.
+			// nobody progress, and watching it would nag forever. A `done`
+			// binding (feature worker-report) is finished work, not a stall:
+			// skipping it here is what stops the false alarm (AC-007).
 			continue
 		}
 		last := binding.UpdatedAt

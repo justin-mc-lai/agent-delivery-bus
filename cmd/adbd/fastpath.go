@@ -36,6 +36,13 @@ const (
 	StateLeasing  = "leasing"
 	StateExpiring = "expiring"
 	StateReleased = "released"
+	// StateDone is the worker-report terminal state (feature worker-report):
+	// `adbd reconcile` observed the worker go running -> idle. It is deliberately
+	// NOT a live state, so a finished thread stops being watched, stops being
+	// reconciled and stops holding a lease -- every reader already asks
+	// isLiveState first. It is also outside the intake state machine: every
+	// Transition event from done is rejected (done is terminal).
+	StateDone = "done"
 )
 
 // Intake routes. These are the four values the caller is allowed to see.
@@ -234,6 +241,11 @@ type Binding struct {
 	TTL       time.Duration `json:"ttl_ns"`
 	ExpiresAt time.Time     `json:"expires_at"`
 	UpdatedAt time.Time     `json:"updated_at"`
+	// LastSeenStatus is the last worker status `adbd reconcile` observed for this
+	// binding (running / idle, normalised). Empty means "never observed" and is
+	// the honest starting point: without a `running` sighting an `idle` one is
+	// not a completion.
+	LastSeenStatus string `json:"last_seen_status,omitempty"`
 }
 
 // leaseTTL is the lease length this binding renews to.
@@ -864,12 +876,21 @@ func (c *Core) Intake(in IntakeInput) (IntakeResult, error) {
 		}
 
 		// AC-005: nothing bound here (or the binding was explicitly released).
-		if binding == nil || binding.State == StateUnbound || binding.State == StateReleased {
+		// "Live" is the whole test on purpose: a `done` binding (feature
+		// worker-report) holds no worker any more, and forwarding to it would
+		// mean sending the message first and only then failing the transition.
+		if binding == nil || !isLiveState(binding.State) {
 			reason := ReasonNoBinding
 			state := StateUnbound
-			if binding != nil && binding.State == StateReleased {
+			switch {
+			case binding == nil:
+			case binding.State == StateReleased:
 				reason = ReasonBindingReleased
 				state = StateReleased
+			case binding.State == StateDone:
+				// The worker finished this thread: the follow-up is new work, so it
+				// goes back to the front desk instead of to an idle agent.
+				state = StateDone
 			}
 			snap.DedupeKeys[idemKey] = now
 			return c.toSlowPath(in, reason, state, LeaseNone, now, &res)

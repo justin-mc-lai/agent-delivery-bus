@@ -9,6 +9,7 @@
 //	adbd status --channel C --thread T [--outcome json|text]
 //	adbd route  --once [--limit N] [--outcome json|text]
 //	adbd route  --list-tools
+//	adbd reconcile --once [--root <dir>] [--outcome json|text]
 //	adbd watchdog --once [--apply] [--outcome json|text]
 //	adbd poll-github --once [--root <dir>] [--outcome json|text]
 //	adbd agent  plist | status
@@ -56,6 +57,8 @@ func run(args []string, stdout, stderr io.Writer) int {
 		return runStatus(args[1:], stdout, stderr)
 	case "route":
 		return runRoute(args[1:], stdout, stderr)
+	case "reconcile":
+		return runReconcile(args[1:], stdout, stderr)
 	case "watchdog":
 		return runWatchdog(args[1:], stdout, stderr)
 	case "poll-github":
@@ -80,6 +83,7 @@ usage:
   adbd status --channel C --thread T [--outcome json|text]
   adbd route  --once [--limit N] [--outcome json|text]
   adbd route  --list-tools
+  adbd reconcile --once [--outcome json|text]
   adbd watchdog --once [--apply] [--outcome json|text]
   adbd poll-github --once [--root <dir>] [--outcome json|text]
   adbd agent  plist [--outcome json|text]
@@ -109,6 +113,13 @@ route flags:
                      means a worker is created per thread
   --trace PATH       decision trace, defaults to <root>/.beacon/adbd-decisions.jsonl
 
+reconcile flags:
+  --once             run one reconcile pass and exit (reads "paseo inspect
+                     <id> --json" for every leased binding; writes
+                     .beacon/adbd-reports.jsonl and .beacon/adbd-exec-state.json)
+  --reports PATH     worker receipt ledger, defaults to <root>/.beacon/adbd-reports.jsonl
+  --exec-state PATH  exec state document, defaults to <root>/.beacon/adbd-exec-state.json
+
 watchdog flags:
   --once             run one watch pass and exit (the launchd rhythm)
   --apply            act on a stall instead of only observing it
@@ -120,6 +131,14 @@ watchdog flags:
 agent subcommands:
   plist              print the launchd job to stdout; writes no file, runs nothing
   status             read-only report: plist on disk? loaded in launchd?
+
+reconcile behaviour:
+  One pass asks paseo for the status of every agent that still holds a lease and
+  treats "running -> idle" as completion: the binding becomes "done", one receipt
+  line lands in adbd-reports.jsonl (once per agent) and the requirement's row in
+  adbd-exec-state.json becomes exec_state=done. A paseo that cannot be asked
+  (missing binary, non-zero exit, unparsable output) prints
+  reason_code=paseo_unavailable, exits 2 and changes nothing.
 
 poll-github flags:
   --once             run one poll pass and exit (the scheduled rhythm); the
