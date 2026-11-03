@@ -10,7 +10,9 @@ base_package_fingerprint: 7262dada40312e2350eae9adb929db4b8744873b9c3fa5757d2c9d
 
 ## Resolution
 
-Applied in eebe66d (tests.md TC commands now run from the repo root).
+Applied in eebe66d and 252d0aa: the TC commands now use `go -C cmd/adbd` (the Go module
+lives in cmd/adbd, the repo root has no go.mod) and the assertions carry no backticks.
+`beacon-go qa autotest run` executes all 9 TCs: 9 passed, 0 failed.
 The kernel's rebase/refreeze reported no pending change for this id, so it was
 closed by hand rather than left open.
 
