@@ -89,6 +89,7 @@ Every AC must trace to the intent or evidence it serves.
 | AC-007 | constraints：不可信输入 | truth.md#Acceptance-Criteria |
 | AC-008 | 用户决策：先接 LLM 再发版 | truth.md#Acceptance-Criteria |
 | AC-009 | 用户要求：判断完之后真的派得出去 | truth.md#Acceptance-Criteria |
+| AC-010 | 用户决策：按来源分级信任（github 是工作请求，群聊不是） | truth.md#Acceptance-Criteria |
 
 ## Acceptance Criteria
 
@@ -100,8 +101,9 @@ Every AC must trace to the intent or evidence it serves.
 | AC-004 | 每个决定写一行 `.beacon/adbd-decisions.jsonl`，字段固定：`channel` / `thread` / `message_id` / `decision` / `reason_code` / `batch_size` / `untrusted` / `decided_at`；同一消息重复 drain 不产生第二行 |
 | AC-005 | 派活失败时条目进入 `backed_off` 并记录 `attempts`；连续失败 3 次后自动转 `escalate`（reason_code=`dispatch_attempts_exhausted`），不再重试 |
 | AC-006 | `route --once` 处理完成后把未 applied 的条目原子写回队列；进程在 drain 中途被杀，重启后这些条目仍在（测试：处理一半时模拟失败，断言队列仍含未处理项且已 applied 的不会被再次派活） |
-| AC-007 | 所有入站文本标记 `untrusted=true` 并写入 trace；派给 worker 的文本以固定守卫行开头（`UNTRUSTED_INPUT`）；含高危动词（`delete` / `push` / `release` / `deploy`）的 untrusted 文本不得判为 `route`，必须 `escalate`（reason_code=`untrusted_high_risk`）；`reply` 文本超过 100 个字符被拒绝（reason_code=`reply_too_long`） |
+| AC-007 | 每条入站文本按来源给出 `source_trust`（`trusted` / `untrusted`）并写入 trace；来源不在 `adbd_trusted_channels` 时 `source_trust=untrusted`，派给 worker 的文本以固定守卫行 `UNTRUSTED_INPUT` 开头，且含高危动词（`delete` / `push` / `release` / `deploy`）时不得判为 `route`，必须 `escalate`（reason_code=`untrusted_high_risk`）；来源在 `adbd_trusted_channels` 时 `source_trust=trusted`，不加守卫行，高危词不触发逐条升级；`reply` 文本超过 100 个字符被拒绝（reason_code=`reply_too_long`） |
 | AC-009 | 派活前必须解析出**真实存在**的 worker：① 绑定里已有 agent id 且 `paseo inspect` 成功 → 复用；② 否则 `adbd_worker_agent_id` 非空且 inspect 成功 → 用它；③ 两者都不成立时，用 `paseo run --no-wait --json --provider <adbd_worker_provider> --model <adbd_worker_model> --title <thread> --cwd <root>` 新建，解析返回的 `agentId` 并写回绑定，供后续消息复用；④ 新建失败 → `dispatch_failed`，条目保留 attempts。任何情况下都不得把一个未经验证的固定 id（例如 `main`）当作真实 worker 发送 |
+| AC-010 | 新增 `adbd_trusted_channels`（逗号分隔，默认 `github,skill`）：来源命中该列表时 trace 记 `source_trust=trusted`，派活文本不带 `UNTRUSTED_INPUT` 前缀，高危词不触发逐条升级；未命中时 trace 记 `source_trust=untrusted`，行为与 AC-007 的不可信分支完全一致；配置为空字符串时视为没有任何可信来源 |
 | AC-008 | `adbd_decider=llm` 时启用 LLMDecider（实现同一 `Decider` 接口）：一次 drain 只发一个 OpenAI 兼容 `/chat/completions` 请求携带整批；响应必须是 JSON 数组且每项含 `message_id` / `decision` / `reason_code`；校验失败的条目记 `decision_invalid` 并置 failed；HTTP 超时、非 2xx 响应时回退 RuleDecider 并在 trace 记 `decider=llm_fallback_rules`；LLM 不得产出四选一以外的决策，也不得把高危 untrusted 文本判成 route（代码复核，不依赖提示词） |
 
 ## 配置项

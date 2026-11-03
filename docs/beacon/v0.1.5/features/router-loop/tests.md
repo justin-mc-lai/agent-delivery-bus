@@ -18,6 +18,7 @@ materials_status: current
 | AC-006 | TC-RL-006 | behavior | `go test ./... -run RestartReplayNoDoubleDispatch` | exit_code_0；中途失败后队列保留未处理项；已 applied 的不再派活 |
 | AC-007 | TC-RL-007 | behavior | `go test ./... -run UntrustedGuardAndLimits` | exit_code_0；trace 标 untrusted=true；派活文本以 UNTRUSTED_INPUT 开头；高危动词转 escalate；超长 reply 记 reply_too_long |
 | AC-009 | TC-RL-010 | behavior | `go test ./... -run WorkerResolution` | exit_code_0；绑定内 id 可 inspect → 直接复用不新建；配置 id 可 inspect → 用它；都不可用 → 调 `paseo run --no-wait --json` 并解析 agentId，写回绑定；新建失败 → dispatch_failed 且 attempts 递增；`main` 不会被当作真实 worker 发送 |
+| AC-010 | TC-RL-012 | behavior | `go test ./... -run TrustedSourceSkipsGuard` | exit_code_0；github/skill 来源 trace 记 source_trust=trusted、派活文本不含 UNTRUSTED_INPUT、含 release 仍可 route；feishu 来源仍 escalate/untrusted_high_risk；空配置视为无可信来源 |
 | AC-008 | TC-RL-009 | behavior | `go test ./... -run LLMDeciderContract` | exit_code_0；httptest 服务收到**一个**请求且 body 含整批；正常 JSON → 决策生效；坏 JSON/未知决策 → decision_invalid + failed；非 2xx → 回退规则且 trace 记 llm_fallback_rules；LLM 把高危文本判成 route 时被代码翻回 escalate |
 
 ## State machine slots
