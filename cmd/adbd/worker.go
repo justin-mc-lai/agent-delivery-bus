@@ -832,8 +832,12 @@ type workerEnv struct {
 	runner PaseoCliRunner
 	root   string
 	beacon string
-	cfg    Config
-	asJSON bool
+	// statePath is the binding document. Archive must release the bindings that
+	// point at the worker it just archived (AC-005); without that a follow-up on
+	// the thread wakes the archived agent right back up.
+	statePath string
+	cfg       Config
+	asJSON    bool
 }
 
 // addWorkerCommonFlags mirrors addCommonFlags for this surface only.
@@ -872,11 +876,12 @@ func newWorkerEnv(cf *commonFlags, jsonOut bool, stderr io.Writer) (workerEnv, i
 	}
 	root := absoluteBase(cf.root)
 	return workerEnv{
-		runner: PaseoCliRunner{Bin: bin},
-		root:   root,
-		beacon: filepath.Join(root, ".beacon"),
-		cfg:    cfg,
-		asJSON: jsonOut || cf.outcome == "json",
+		runner:    PaseoCliRunner{Bin: bin},
+		root:      root,
+		beacon:    filepath.Join(root, ".beacon"),
+		statePath: cf.statePath,
+		cfg:       cfg,
+		asJSON:    jsonOut || cf.outcome == "json",
 	}, 0
 }
 
@@ -1638,17 +1643,20 @@ type workerAuditRecord struct {
 	Ownership string `json:"ownership"`
 	Item      string `json:"item,omitempty"`
 	Forced    bool   `json:"forced,omitempty"`
+	// ReleasedBindings counts the bindings this archive let go (AC-005).
+	ReleasedBindings int `json:"released_bindings,omitempty"`
 }
 
 // WorkerArchived is the answer of `worker archive`.
 type WorkerArchived struct {
-	ID              string `json:"id"`
-	Ownership       string `json:"ownership"`
-	Item            string `json:"item,omitempty"`
-	Archived        bool   `json:"archived"`
-	AlreadyArchived bool   `json:"already_archived"`
-	Forced          bool   `json:"forced"`
-	AuditPath       string `json:"audit_path,omitempty"`
+	ID               string `json:"id"`
+	ReleasedBindings int    `json:"released_bindings,omitempty"`
+	Ownership        string `json:"ownership"`
+	Item             string `json:"item,omitempty"`
+	Archived         bool   `json:"archived"`
+	AlreadyArchived  bool   `json:"already_archived"`
+	Forced           bool   `json:"forced"`
+	AuditPath        string `json:"audit_path,omitempty"`
 }
 
 func runWorkerArchive(args []string, stdout, stderr io.Writer) int {
@@ -1731,13 +1739,21 @@ func runWorkerArchive(args []string, stdout, stderr io.Writer) int {
 		})
 	}
 	archived := WorkerArchived{ID: agent.ID, Ownership: ownership, Item: item, Archived: true, Forced: force}
+	released, relErr := releaseBindingsForAgent(env, agent.ID)
+	if relErr != nil {
+		// The archive happened; the binding release did not. Report it instead of
+		// claiming a clean archive, because the stale binding wakes the agent up.
+		fmt.Fprintf(stderr, "adbd worker archive: archived %s but could not release its bindings: %v\n", agent.ID, relErr)
+	}
+	archived.ReleasedBindings = released
 	path, err := env.appendWorkerAudit(workerAuditRecord{
-		At:        workerClock().UTC().Format(time.RFC3339),
-		Action:    "archive",
-		AgentID:   agent.ID,
-		Ownership: ownership,
-		Item:      item,
-		Forced:    force,
+		At:               workerClock().UTC().Format(time.RFC3339),
+		Action:           "archive",
+		AgentID:          agent.ID,
+		Ownership:        ownership,
+		Item:             item,
+		Forced:           force,
+		ReleasedBindings: released,
 	})
 	archived.AuditPath = path
 	if err != nil {
@@ -1790,4 +1806,33 @@ func (e workerEnv) appendWorkerAudit(record workerAuditRecord) (string, error) {
 		return path, err
 	}
 	return path, f.Close()
+}
+
+// releaseBindingsForAgent marks every binding that points at agentID as released.
+//
+// AC-005: an archived worker must not stay routable. The binding row stays (the
+// thread keeps its history) but its state becomes released, so intake takes the
+// slow path instead of waking the archived agent through the fast path.
+func releaseBindingsForAgent(env workerEnv, agentID string) (int, error) {
+	path := strings.TrimSpace(env.statePath)
+	if path == "" {
+		path = filepath.Join(env.beacon, "adbd-state.json")
+	}
+	if _, err := os.Stat(path); err != nil {
+		return 0, nil // no state document yet: nothing is bound
+	}
+	store := &Store{Path: path, SlowPath: filepath.Join(env.beacon, "adbd-slowpath.jsonl")}
+	released := 0
+	err := store.Update(func(snap *snapshot) error {
+		for _, binding := range snap.Bindings {
+			if binding == nil || binding.AgentID != agentID || binding.State == StateReleased {
+				continue
+			}
+			binding.State = StateReleased
+			binding.UpdatedAt = workerClock().UTC()
+			released++
+		}
+		return nil
+	})
+	return released, err
 }

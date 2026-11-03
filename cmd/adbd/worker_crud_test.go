@@ -1085,3 +1085,56 @@ func TestForeignWorkerNeedsForce(t *testing.T) {
 		t.Fatalf("update foreign --force = %d, want 0", code)
 	}
 }
+
+// TC-WC-009 (AC-005): archiving a worker releases the bindings that point at it,
+// otherwise a follow-up on the thread wakes the archived agent right back up.
+func TestArchiveReleasesBindings(t *testing.T) {
+	h := newWorkerCLIHarness(t)
+	h.seedAlpha()
+
+	statePath := filepath.Join(h.root, ".beacon", "adbd-state.json")
+	h.mkdir(filepath.Dir(statePath))
+	state := map[string]any{
+		"version": 1,
+		"bindings": map[string]any{
+			"skill\x00skill:demo:a": map[string]any{
+				"channel": "skill", "thread": "skill:demo:a", "agent_id": "ag_alpha",
+				"state": "bound", "ttl_ns": 86400000000000,
+				"expires_at": "2030-01-01T00:00:00Z", "updated_at": "2026-01-01T00:00:00Z",
+			},
+		},
+		"dedupe_keys": map[string]any{},
+	}
+	raw, err := json.Marshal(state)
+	if err != nil {
+		t.Fatalf("marshal state: %v", err)
+	}
+	if err := os.WriteFile(statePath, raw, 0o644); err != nil {
+		t.Fatalf("write state: %v", err)
+	}
+
+	code, out, errOut := h.run("archive", "ag_alpha")
+	if code != 0 {
+		t.Fatalf("archive = %d (stdout=%q stderr=%q), want 0", code, out, errOut)
+	}
+
+	data, err := os.ReadFile(statePath)
+	if err != nil {
+		t.Fatalf("read state: %v", err)
+	}
+	var after struct {
+		Bindings map[string]struct {
+			State string `json:"state"`
+		} `json:"bindings"`
+	}
+	if err := json.Unmarshal(data, &after); err != nil {
+		t.Fatalf("unmarshal state: %v", err)
+	}
+	b, ok := after.Bindings["skill\x00skill:demo:a"]
+	if !ok {
+		t.Fatalf("binding row disappeared; want it kept and released")
+	}
+	if b.State != StateReleased {
+		t.Fatalf("binding state = %q, want %q", b.State, StateReleased)
+	}
+}
