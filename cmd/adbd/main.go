@@ -192,9 +192,14 @@ supervise behaviour (agent-supervisor AC-004..AC-007):
   acted on again.
 
 inbox behaviour (agent-supervisor AC-009):
-  Recomputes the same classification read-only and prints only the items waiting
-  on a human -- waiting_permission and waiting_input -- longest wait first. An
-  empty inbox prints exactly NOTHING and exits 0.
+  Recomputes the same classification read-only and prints the items waiting on
+  a human, longest wait first. There are three classes: waiting_permission and
+  waiting_input from the pass, plus escalated -- the router's decision=escalate
+  verdicts in <root>/.beacon/adbd-decisions.jsonl whose decided_at is inside
+  adbd_inbox_escalation_window. Each line starts with class=<class>; an
+  escalated row carries reason_code= and its waiting duration. Rows outside the
+  window never appear, and a missing decisions file is not an error. An empty
+  inbox prints exactly NOTHING and exits 0.
 
 worker behaviour (worker-crud AC-001..AC-008):
   One management surface over the paseo agent population, mapped to projects.
@@ -330,6 +335,7 @@ config keys (.beacon/config, key=value):
   adbd_reply_identity=bot            identity a reply is sent as: bot or user
   adbd_grace_after=5m                idle, unreported owned agent -> orphan after this
   adbd_max_active=8                  ceiling on owned+working agents (0=default 8)
+  adbd_inbox_escalation_window=24h   how long an escalate decision stays in inbox
   adbd_report_dir=<root>/.beacon/adbd-reports  where <item>.json reports live
   note: polled issues arrive on channel "github", so add github to
   adbd_allow_channels (or set adbd_allow_all=true) for them to reach intake

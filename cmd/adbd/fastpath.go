@@ -590,6 +590,11 @@ type Config struct {
 	// <item>.json. Empty means <root>/.beacon/adbd-reports, resolved by the
 	// caller, which is the only place that knows the root.
 	ReportDir string
+	// InboxEscalationWindow is adbd_inbox_escalation_window: how far back an
+	// escalate decision in .beacon/adbd-decisions.jsonl still counts as a live
+	// question in the inbox (agent-supervisor AC-009). Defaults to
+	// DefaultInboxEscalationWindow (24h).
+	InboxEscalationWindow time.Duration
 }
 
 // defaultConfig is the operator-facing baseline, so a missing or partial config
@@ -611,6 +616,8 @@ func defaultConfig() Config {
 		ReplyIdentity:  DefaultReplyIdentity,
 		GraceAfter:     DefaultGraceAfter,
 		MaxActive:      DefaultMaxActive,
+		// AC-009: an escalate decision is a live question for one day by default.
+		InboxEscalationWindow: DefaultInboxEscalationWindow,
 		// AC-010: the default trust list. It is copied so a caller that appends
 		// to its Config cannot mutate the shared default.
 		TrustedChannels: append([]string(nil), DefaultTrustedChannels...),
@@ -736,6 +743,15 @@ func LoadConfig(path string) (Config, error) {
 			return cfg, fmt.Errorf("adbd_max_active %q is not a positive integer (e.g. 8)", raw)
 		}
 		cfg.MaxActive = limit
+	}
+	// AC-009: a window that quietly becomes "forever" would keep dead
+	// escalations in front of a human, so an unreadable value is an error.
+	if raw := strings.TrimSpace(values["adbd_inbox_escalation_window"]); raw != "" {
+		window, err := time.ParseDuration(raw)
+		if err != nil || window <= 0 {
+			return cfg, fmt.Errorf("adbd_inbox_escalation_window %q is not a positive duration (e.g. 24h)", raw)
+		}
+		cfg.InboxEscalationWindow = window
 	}
 	if raw := strings.TrimSpace(values["adbd_github_limit"]); raw != "" {
 		limit, err := strconv.Atoi(raw)
