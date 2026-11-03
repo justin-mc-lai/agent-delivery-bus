@@ -1,0 +1,19 @@
+---
+slug: worker-sdd-binding
+version: v0.1.5
+materials_status: draft
+---
+
+# Evidence Index: worker-sdd-binding
+
+| Surface | Authority | Canonical Artifact | Status | Route |
+|---------|-----------|--------------------|--------|-------|
+| truth | requirement_truth | docs/beacon/v0.1.5/features/worker-sdd-binding/truth.md | draft | truth |
+| tests | test_truth | docs/beacon/v0.1.5/features/worker-sdd-binding/tests.md | draft | qa |
+| plan | support_advisory | docs/beacon/v0.1.5/features/worker-sdd-binding/tasks.md | present | truth |
+| program | support_advisory | docs/beacon/v0.1.5/programs/superagent-router/feature-graph.json | present | truth |
+
+## 证据要求（冻结后由 implement 与 qa 填）
+
+- AC-001..007：`go test -run ...` 的输出
+- AC-002：真机对未冻结 slug 派活的拒绝输出
