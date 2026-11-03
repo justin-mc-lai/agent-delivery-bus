@@ -6,13 +6,15 @@
       "slug": "a-share-quant",
       "path": "/path/to/products/a-share-quant",
       "root": "products",
-      "aliases": []
+      "aliases": [],
+      "github": "owner/repo"
     },
     {
       "slug": "account-warmer",
       "path": "/path/to/products/account-warmer",
       "root": "products",
-      "aliases": []
+      "aliases": [],
+      "github": "owner/repo"
     },
     {
       "slug": "agent-delivery-bus",

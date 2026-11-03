@@ -515,7 +515,11 @@ func TestFeedEndToEndTrace(t *testing.T) {
 	const text = "add a retry to the webhook handler"
 
 	// (a) Slow path: feed queues, the router drains, the worker sees the guard.
+	// AC-010 makes "skill" a trusted channel by default, so this part pins the
+	// strict setting (adbd_trusted_channels=) to keep exercising the untrusted
+	// path: the trusted path is TC-RL-012's job.
 	slow := newFeedHarness(t)
+	slow.writeConfig("adbd_trusted_channels=\n")
 	code, out, errOut := slow.feedProject("studio", "ac-003", text)
 	if code != 0 {
 		t.Fatalf("feed exit = %d, want 0 (stderr: %s)", code, errOut)

@@ -232,17 +232,18 @@ func TestReplyTraceFields(t *testing.T) {
 	wantReply := []string{
 		"batch_size", "channel", "decided_at", "decision",
 		"delivered", "delivery_reason", "message_id", "reason_code",
-		"thread", "untrusted",
+		"source_trust", "thread", "untrusted",
 	}
 	if strings.Join(replyKeys, ",") != strings.Join(wantReply, ",") {
 		t.Fatalf("reply trace keys = %v, want exactly %v", replyKeys, wantReply)
 	}
 
 	// AC-002 "其余字段不变": a verdict with no outbound step keeps the frozen
-	// eight-key shape (route.go AC-004), so old expectations cannot drift.
+	// eight-key shape (route.go AC-004) plus AC-010's source_trust, so old
+	// expectations cannot drift.
 	wantRoute := []string{
 		"batch_size", "channel", "decided_at", "decision",
-		"message_id", "reason_code", "thread", "untrusted",
+		"message_id", "reason_code", "source_trust", "thread", "untrusted",
 	}
 	if got := jsonKeys(fields["m-route"]); strings.Join(got, ",") != strings.Join(wantRoute, ",") {
 		t.Fatalf("route trace keys = %v, want exactly %v", got, wantRoute)

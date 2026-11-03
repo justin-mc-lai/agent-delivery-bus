@@ -538,7 +538,7 @@ func TestDecisionTraceIsIdempotent(t *testing.T) {
 	}
 	wantKeys := []string{
 		"batch_size", "channel", "decided_at", "decision",
-		"message_id", "reason_code", "thread", "untrusted",
+		"message_id", "reason_code", "source_trust", "thread", "untrusted",
 	}
 	raw, err := os.ReadFile(h.tracePath)
 	if err != nil {
@@ -863,5 +863,232 @@ func TestQueueStateWalks(t *testing.T) {
 	}
 	if q := h.queue(); len(q) != 0 {
 		t.Fatalf("queue after escalation = %+v, want empty", q)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// TC-RL-012 (AC-010): trust is graded by source, and only by source
+// ---------------------------------------------------------------------------
+
+// loadOperatorConfig writes an .beacon/config body and reads it back through
+// LoadConfig, so the trust assertions below are made against what the daemon
+// really loads, not against a hand-built Config.
+func (h *routeHarness) loadOperatorConfig(body string) Config {
+	h.t.Helper()
+	if err := os.MkdirAll(h.beacon, 0o755); err != nil {
+		h.t.Fatalf("mkdir beacon: %v", err)
+	}
+	if err := os.WriteFile(h.configPath, []byte(body), 0o644); err != nil {
+		h.t.Fatalf("write config: %v", err)
+	}
+	cfg, err := LoadConfig(h.configPath)
+	if err != nil {
+		h.t.Fatalf("LoadConfig: %v", err)
+	}
+	return cfg
+}
+
+func TestSourceTrustGradedByChannel(t *testing.T) {
+	// One text, three sources. "release" is a high-risk verb: untrusted it must
+	// escalate, trusted it is simply the job.
+	const risky = "please release v0.1.5 to the customers"
+
+	h := newRouteHarness(t, RuleDecider{})
+	cfg := h.loadOperatorConfig("adbd_allow_channels=github,feishu,skill\n")
+
+	// The default trust list (AC-010): github and skill, never a chat channel.
+	if got := strings.Join(cfg.TrustedChannels, ","); got != "github,skill" {
+		t.Fatalf("default adbd_trusted_channels = %q, want github,skill", got)
+	}
+	if !cfg.IsTrustedChannel("github") {
+		t.Fatal("github is not trusted by default")
+	}
+	if !cfg.IsTrustedChannel("GITHUB") || !cfg.IsTrustedChannel(" skill ") {
+		t.Fatal("trust matching is not case-insensitive / space-insensitive")
+	}
+	if cfg.IsTrustedChannel("feishu") {
+		t.Fatal("feishu is trusted by default; a chat channel must not be")
+	}
+	h.router.TrustedChannels = cfg.TrustedChannels
+
+	h.enqueue(
+		QueueItem{Channel: "github", Thread: "ghacme/1", MessageID: "gh-release", Text: risky},
+		QueueItem{Channel: "feishu", Thread: "fs/1", MessageID: "fs-release", Text: risky},
+		QueueItem{Channel: "skill", Thread: "skill:adbd:1", MessageID: "sk-release", Text: risky},
+	)
+	res := h.drain()
+	if res.Batch != 3 || res.Applied != 3 {
+		t.Fatalf("drain = %+v, want batch=3 applied=3", res)
+	}
+
+	// github: trusted -> routed, traced as trusted, no guard line on the wire.
+	gh := h.traceFor("gh-release")
+	if gh.Decision != DecisionRoute || gh.ReasonCode != ReasonNewWork {
+		t.Fatalf("github trace = %+v, want route/new_work (a trusted release request is work)", gh)
+	}
+	if gh.SourceTrust != SourceTrustTrusted || gh.Untrusted {
+		t.Fatalf("github trace = %+v, want source_trust=trusted untrusted=false", gh)
+	}
+
+	// feishu: untrusted -> escalated, nothing dispatched.
+	fs := h.traceFor("fs-release")
+	if fs.Decision != DecisionEscalate || fs.ReasonCode != ReasonUntrustedHighRisk {
+		t.Fatalf("feishu trace = %+v, want escalate/untrusted_high_risk", fs)
+	}
+	if fs.SourceTrust != SourceTrustUntrusted || !fs.Untrusted {
+		t.Fatalf("feishu trace = %+v, want source_trust=untrusted untrusted=true", fs)
+	}
+
+	// skill: trusted like github.
+	sk := h.traceFor("sk-release")
+	if sk.Decision != DecisionRoute || sk.SourceTrust != SourceTrustTrusted {
+		t.Fatalf("skill trace = %+v, want route with source_trust=trusted", sk)
+	}
+
+	// Exactly the two trusted items were dispatched, verbatim: no guard line.
+	if len(h.dispatcher.calls) != 2 {
+		t.Fatalf("dispatcher calls = %d, want 2 (%#v)", len(h.dispatcher.calls), h.dispatcher.calls)
+	}
+	for _, call := range h.dispatcher.calls {
+		if strings.Contains(call.text, UntrustedGuardLine) {
+			t.Fatalf("trusted dispatch %q carries %s", call.text, UntrustedGuardLine)
+		}
+		if call.text != risky {
+			t.Fatalf("trusted dispatch = %q, want the request verbatim %q", call.text, risky)
+		}
+	}
+
+	// Same source, empty trust list: github now behaves exactly like the chat
+	// channel. An explicitly empty adbd_trusted_channels= must not fall back to
+	// the default.
+	e := newRouteHarness(t, RuleDecider{})
+	emptyCfg := e.loadOperatorConfig("adbd_allow_channels=github,feishu\nadbd_trusted_channels=\n")
+	if len(emptyCfg.TrustedChannels) != 0 {
+		t.Fatalf("adbd_trusted_channels= loaded as %v, want no trusted channel", emptyCfg.TrustedChannels)
+	}
+	if emptyCfg.IsTrustedChannel("github") || emptyCfg.IsTrustedChannel("skill") {
+		t.Fatal("an empty adbd_trusted_channels still trusts a channel")
+	}
+	e.router.TrustedChannels = emptyCfg.TrustedChannels
+	e.enqueue(
+		QueueItem{Channel: "github", Thread: "ghacme/2", MessageID: "gh-release", Text: risky},
+		QueueItem{Channel: "feishu", Thread: "fs/2", MessageID: "fs-release", Text: risky},
+	)
+	e.drain()
+	for _, id := range []string{"gh-release", "fs-release"} {
+		rec := e.traceFor(id)
+		if rec.Decision != DecisionEscalate || rec.ReasonCode != ReasonUntrustedHighRisk {
+			t.Fatalf("%s trace = %+v, want escalate/untrusted_high_risk with no trusted source", id, rec)
+		}
+		if rec.SourceTrust != SourceTrustUntrusted {
+			t.Fatalf("%s trace = %+v, want source_trust=untrusted", id, rec)
+		}
+	}
+	if got := len(e.dispatcher.calls); got != 0 {
+		t.Fatalf("dispatcher calls = %d, want 0 when nothing is trusted (%#v)", got, e.dispatcher.calls)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// TC-RL-012 (AC-010): the guard line is applied at dispatch, exactly once
+// ---------------------------------------------------------------------------
+
+func TestSourceTrustGuardAppliedOnceAtDispatch(t *testing.T) {
+	const request = "add a retry to the webhook handler"
+
+	h := newRouteHarness(t, RuleDecider{})
+	h.router.TrustedChannels = []string{"github", "skill"}
+	// Both texts arrive already guarded, exactly as the intake boundary leaves
+	// them (feed.go / github.go / feishu.go all tag the text before intake).
+	h.enqueue(
+		QueueItem{Channel: "github", Thread: "ghacme/3", MessageID: "gh-work", Text: guardedText(request)},
+		QueueItem{Channel: "feishu", Thread: "fs/3", MessageID: "fs-work", Text: guardedText(request)},
+	)
+	h.drain()
+
+	if len(h.dispatcher.calls) != 2 {
+		t.Fatalf("dispatcher calls = %d, want 2 (%#v)", len(h.dispatcher.calls), h.dispatcher.calls)
+	}
+	byThread := map[string]string{}
+	for _, call := range h.dispatcher.calls {
+		byThread[call.thread] = call.text
+	}
+	// Trusted: the intake tag is stripped, the request is verbatim.
+	if got := byThread["ghacme/3"]; got != request {
+		t.Fatalf("trusted dispatch = %q, want the request verbatim %q", got, request)
+	}
+	// Untrusted: exactly one guard line, never two.
+	untrusted := byThread["fs/3"]
+	if !strings.HasPrefix(untrusted, UntrustedGuardLine+"\n") {
+		t.Fatalf("untrusted dispatch = %q, want the %s prefix", untrusted, UntrustedGuardLine)
+	}
+	if n := strings.Count(untrusted, UntrustedGuardLine); n != 1 {
+		t.Fatalf("untrusted dispatch carries %d guard lines, want exactly 1: %q", n, untrusted)
+	}
+	if untrusted != guardedText(request) {
+		t.Fatalf("untrusted dispatch = %q, want %q", untrusted, guardedText(request))
+	}
+}
+
+// ---------------------------------------------------------------------------
+// AC-010 backward compatibility: a trace written before source_trust existed
+// ---------------------------------------------------------------------------
+
+func TestLegacyTraceRowsKeepWorking(t *testing.T) {
+	h := newRouteHarness(t, RuleDecider{})
+	if err := os.MkdirAll(h.beacon, 0o755); err != nil {
+		t.Fatalf("mkdir beacon: %v", err)
+	}
+	// The pre-AC-010 row shape: eight keys, untrusted=true, no source_trust.
+	legacy := `{"channel":"feishu","thread":"t-old","message_id":"m-old","decision":"route",` +
+		`"reason_code":"new_work","batch_size":1,"untrusted":true,"decided_at":"2026-01-02T03:04:05Z"}` + "\n"
+	if err := os.WriteFile(h.tracePath, []byte(legacy), 0o644); err != nil {
+		t.Fatalf("write legacy trace: %v", err)
+	}
+
+	// The message the legacy row already covers is not decided or dispatched again.
+	h.enqueue(QueueItem{Channel: "feishu", Thread: "t-old", MessageID: "m-old", Text: "add a retry"})
+	res := h.drain()
+	if res.Skipped != 1 || res.Decided != 0 {
+		t.Fatalf("drain = %+v, want skipped=1 decided=0", res)
+	}
+	if got := len(h.dispatcher.calls); got != 0 {
+		t.Fatalf("legacy-covered message dispatched %d time(s), want 0", got)
+	}
+	if got := len(h.trace()); got != 1 {
+		t.Fatalf("trace lines = %d, want the untouched legacy row", got)
+	}
+
+	// A new row is written next to it in the current shape.
+	h.enqueue(QueueItem{Channel: "feishu", Thread: "t-new", MessageID: "m-new", Text: "add a retry"})
+	res = h.drain()
+	if res.Applied != 1 {
+		t.Fatalf("drain = %+v, want applied=1", res)
+	}
+	rec := h.traceFor("m-new")
+	if rec.SourceTrust != SourceTrustUntrusted || !rec.Untrusted {
+		t.Fatalf("new row = %+v, want source_trust=untrusted untrusted=true", rec)
+	}
+}
+
+// The guard strip for a trusted source removes a guard *line*, never the word
+// inside the body: a github issue may legitimately quote the token.
+func TestUnguardedTextOnlyStripsTheGuardLine(t *testing.T) {
+	cases := []struct {
+		name string
+		in   string
+		want string
+	}{
+		{"guard line plus body", UntrustedGuardLine + "\nadd a retry", "add a retry"},
+		{"guard line plus CRLF body", UntrustedGuardLine + "\r\nadd a retry", "add a retry"},
+		{"guard line only", UntrustedGuardLine, ""},
+		{"no guard", "add a retry", "add a retry"},
+		{"token quoted in the body", UntrustedGuardLine + " is the token we set", UntrustedGuardLine + " is the token we set"},
+		{"token mid-body", "the " + UntrustedGuardLine + " line is noisy", "the " + UntrustedGuardLine + " line is noisy"},
+	}
+	for _, tc := range cases {
+		if got := unguardedText(tc.in); got != tc.want {
+			t.Fatalf("%s: unguardedText(%q) = %q, want %q", tc.name, tc.in, got, tc.want)
+		}
 	}
 }

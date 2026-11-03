@@ -82,6 +82,14 @@ const (
 	lockPollEvery   = 2 * time.Millisecond
 )
 
+// DefaultTrustedChannels is the adbd_trusted_channels baseline (AC-010).
+//
+// github issues are work requests written for this bus, and a skill session is
+// this machine's own operator talking to it, so both are trusted; a chat channel
+// is not in the list on purpose. An operator who wants nothing trusted sets
+// adbd_trusted_channels= (empty), which trusts no channel at all.
+var DefaultTrustedChannels = []string{"github", "skill"}
+
 // Event is a state-machine event on the thread_binding axis.
 type Event string
 
@@ -489,6 +497,13 @@ type Config struct {
 	AllowAll bool
 	// AllowedChannels is adbd_allow_channels, comma separated.
 	AllowedChannels []string
+	// TrustedChannels is adbd_trusted_channels, comma separated (AC-010). A
+	// channel in this list is a source whose text is a work request rather than
+	// hostile input: its trace says source_trust=trusted, the dispatched text
+	// carries no UNTRUSTED_INPUT guard line, and a high-risk verb in it is not a
+	// per-message escalation. Everything else keeps the AC-007 untrusted rules.
+	// Nil or empty means "no trusted source", never "trust everything".
+	TrustedChannels []string
 	// PaseoBin is adbd_paseo_bin, the runner binary path.
 	PaseoBin string
 	// RouterAgent is adbd_router_agent, the legacy spelling of the router's
@@ -596,6 +611,9 @@ func defaultConfig() Config {
 		ReplyIdentity:  DefaultReplyIdentity,
 		GraceAfter:     DefaultGraceAfter,
 		MaxActive:      DefaultMaxActive,
+		// AC-010: the default trust list. It is copied so a caller that appends
+		// to its Config cannot mutate the shared default.
+		TrustedChannels: append([]string(nil), DefaultTrustedChannels...),
 	}
 }
 
@@ -644,6 +662,14 @@ func LoadConfig(path string) (Config, error) {
 			cfg.AllowAll = false
 			cfg.AllowedChannels = listed
 		}
+	}
+	// AC-010 source trust. The key is read only when it is present: an absent key
+	// keeps the github,skill default, while an explicitly empty value
+	// (adbd_trusted_channels=) means "trust no channel" and must not fall back to
+	// the default -- that is the operator's emergency brake, and silently
+	// re-arming it would be the worst possible behaviour.
+	if raw, ok := values["adbd_trusted_channels"]; ok {
+		cfg.TrustedChannels = configList(raw)
 	}
 	cfg.PaseoBin = values["adbd_paseo_bin"]
 	cfg.RouterAgent = values["adbd_router_agent"]
@@ -778,6 +804,32 @@ func configList(raw string) []string {
 		}
 	}
 	return out
+}
+
+// IsTrustedChannel reports whether channel is in adbd_trusted_channels (AC-010).
+// The match is case-insensitive and ignores surrounding space on both sides, so
+// "GitHub" in the config matches a "github" item. An empty channel or an empty
+// list is never trusted: trust has to be granted, never assumed.
+func (c Config) IsTrustedChannel(channel string) bool {
+	return channelInList(c.TrustedChannels, channel)
+}
+
+// channelInList is the one trust comparison, shared by Config and Router, so the
+// CLI and a directly constructed Router can never disagree about who is trusted.
+func channelInList(list []string, channel string) bool {
+	channel = strings.TrimSpace(channel)
+	if channel == "" {
+		return false
+	}
+	for _, candidate := range list {
+		if candidate = strings.TrimSpace(candidate); candidate == "" {
+			continue
+		}
+		if strings.EqualFold(candidate, channel) {
+			return true
+		}
+	}
+	return false
 }
 
 // configDuration reads one positive duration key, keeping the frozen default when

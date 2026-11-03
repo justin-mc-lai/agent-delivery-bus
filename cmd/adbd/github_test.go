@@ -565,7 +565,10 @@ func TestGitHubGhErrorCodes(t *testing.T) {
 
 func TestGitHubPollEndToEnd(t *testing.T) {
 	h := newGHHarness(t)
-	h.configure("adbd_github_repos=o/r")
+	// AC-010 trusts github by default; this test pins the strict setting
+	// (adbd_trusted_channels=) because it is about the untrusted path: an issue
+	// body from a stranger must reach the worker behind the guard line.
+	h.configure("adbd_github_repos=o/r", "adbd_trusted_channels=")
 	h.setIssues("o/r", ghIssueJSON(7, "Fix the thing", "steps to reproduce", "2026-02-06T09:00:00Z"))
 
 	code, out, errOut := h.poll()

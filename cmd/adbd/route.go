@@ -12,10 +12,13 @@
 //     process: the only way work leaves it is the injected Dispatcher interface,
 //     process spawning lives in dispatch.go, and `adbd route --list-tools`
 //     enumerates the toolset at runtime, where it is empty.
-//   - Every inbound text is untrusted (AC-007): it is tagged in the trace, the
-//     dispatched text is prefixed with the guard line, high-risk verbs are
-//     escalated instead of dispatched, and a reply over the word limit is
-//     rejected.
+//   - Every inbound text carries a source trust (AC-007, AC-010). A trusted
+//     source -- a channel named in adbd_trusted_channels -- is a work request:
+//     its trace says source_trust=trusted, its text reaches the worker with no
+//     guard line, and a high-risk verb in it is not by itself an escalation.
+//     Everything else is untrusted: it is tagged in the trace, the dispatched
+//     text is prefixed with the guard line, high-risk verbs are escalated
+//     instead of dispatched, and a reply over the word limit is rejected.
 //
 // Storage note: the queue and the trace are the only state this loop owns. Both
 // are plain JSONL so an operator can read them with `tail -f`, and the queue is
@@ -67,8 +70,13 @@ const (
 )
 
 const (
-	// UntrustedGuardLine starts every text handed to a worker (AC-007).
+	// UntrustedGuardLine starts every text handed to a worker for an untrusted
+	// source (AC-007). A trusted source never gets it (AC-010).
 	UntrustedGuardLine = "UNTRUSTED_INPUT"
+	// SourceTrustTrusted / SourceTrustUntrusted are the only two values the trace
+	// may carry for source_trust (AC-010).
+	SourceTrustTrusted   = "trusted"
+	SourceTrustUntrusted = "untrusted"
 	// DefaultMaxReplyRunes is the reply ceiling from AC-007.
 	DefaultMaxReplyRunes = 100
 	// DefaultMaxDispatchAttempts is the retry ceiling from AC-005.
@@ -124,6 +132,10 @@ type QueueItem struct {
 	Attempts int `json:"attempts,omitempty"`
 	// Bound is drain-time only: the decider sees it, the queue never stores it.
 	Bound bool `json:"-"`
+	// Trusted is drain-time only too: it is recomputed on every drain from
+	// adbd_trusted_channels (AC-010), so changing the config re-classifies queued
+	// text instead of being frozen at the moment it arrived.
+	Trusted bool `json:"-"`
 }
 
 // Decision is one decider verdict for one queue item.
@@ -173,6 +185,11 @@ type traceRecord struct {
 	BatchSize  int    `json:"batch_size"`
 	Untrusted  bool   `json:"untrusted"`
 	DecidedAt  string `json:"decided_at"`
+	// SourceTrust is AC-010's addition to the frozen AC-004 key set: "trusted" or
+	// "untrusted", always written. A row written before this change simply has no
+	// source_trust key when it is read back, which no reader depends on -- the
+	// dedupe index only looks at channel / thread / message_id.
+	SourceTrust string `json:"source_trust"`
 	// Decider is "rule" (implicit, omitted), "llm", or "llm_fallback_rules".
 	Decider string `json:"decider,omitempty"`
 	// Delivered is nil for every verdict that has no outbound step (route,
@@ -254,6 +271,9 @@ type Router struct {
 	MaxAttempts int
 	// MaxReplyRunes is the reply ceiling (AC-007).
 	MaxReplyRunes int
+	// TrustedChannels is adbd_trusted_channels (AC-010): the channels whose text
+	// is a work request, not hostile input. Nil or empty trusts nothing.
+	TrustedChannels []string
 	// MaxActive is adbd_max_active: the ceiling on owned agents that are working
 	// right now (agent-supervisor AC-008). Zero or negative disables the ceiling.
 	MaxActive int
@@ -281,7 +301,11 @@ func NewRouter(store *Store, decider Decider, dispatcher Dispatcher) *Router {
 		// AC-009: no placeholder default. An empty AgentID means "configure no
 		// standing worker", which makes the router resolve one per message (bound
 		// id first, then a freshly created worker) instead of guessing "main".
-		AgentID:       "",
+		AgentID: "",
+		// AC-010: TrustedChannels stays nil here, which trusts nothing. The CLI is
+		// what loads adbd_trusted_channels (default github,skill) and hands it in,
+		// so a Router built by hand fails closed instead of inheriting a trust
+		// list nobody configured.
 		TTL:           DefaultTTL,
 		MaxAttempts:   DefaultMaxDispatchAttempts,
 		MaxReplyRunes: DefaultMaxReplyRunes,
@@ -350,6 +374,13 @@ func (r *Router) maxReplyRunes() int {
 		return DefaultMaxReplyRunes
 	}
 	return r.MaxReplyRunes
+}
+
+// isTrustedChannel answers whether this router treats the channel's text as a
+// work request (AC-010). It is asked once per item, at drain time, so the answer
+// always reflects the configuration that is live now.
+func (r *Router) isTrustedChannel(channel string) bool {
+	return channelInList(r.TrustedChannels, channel)
 }
 
 // maxActive is the ceiling from AC-008 of the agent-supervisor lake; zero or
@@ -444,6 +475,8 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 	for i := range batch {
 		binding := snap.Bindings[bindingKey(batch[i].Channel, batch[i].Thread)]
 		batch[i].Bound = binding != nil && isLiveState(binding.State)
+		// AC-010: the source trust the decider and the dispatch seam both read.
+		batch[i].Trusted = r.isTrustedChannel(batch[i].Channel)
 	}
 
 	seen, err := readTraceIndex(r.tracePath())
@@ -731,12 +764,29 @@ func (r *Router) resolveWorker(item QueueItem, binding *Binding) (string, error)
 }
 
 // dispatch is the only exit from the router to the outside world. The guard line
-// is added here, so no dispatcher can bypass it (AC-007).
+// is decided here and nowhere else, so no dispatcher can bypass it (AC-007) and
+// no caller can stack a second one (AC-010).
 func (r *Router) dispatch(item QueueItem, agentID string) error {
 	if r.Dispatcher == nil {
 		return errors.New("adbd route: no dispatcher configured")
 	}
-	return r.Dispatcher.Dispatch(item.Thread, agentID, guardedText(item.Text))
+	return r.Dispatcher.Dispatch(item.Thread, agentID, dispatchText(item))
+}
+
+// dispatchText is the one place the guard line is applied (AC-007, AC-010).
+//
+//   - untrusted source -> the text starts with the guard line, exactly once:
+//     guardedText is idempotent, so a text the intake boundary already tagged
+//     (feed.go / feishu.go / github.go) is not tagged twice.
+//   - trusted source   -> the text goes to the worker without the guard line. Any
+//     tag the intake boundary added on the way in is stripped here, because the
+//     trust decision belongs to the router (it is the only component that knows
+//     adbd_trusted_channels) and the worker must see the request verbatim.
+func dispatchText(item QueueItem) string {
+	if item.Trusted {
+		return unguardedText(item.Text)
+	}
+	return guardedText(item.Text)
 }
 
 // guardedText marks inbound text as untrusted data, not instructions.
@@ -750,6 +800,24 @@ func guardedText(text string) string {
 		return text
 	}
 	return UntrustedGuardLine + "\n" + text
+}
+
+// unguardedText removes the guard line the intake boundary may have added, so a
+// trusted source reaches the worker exactly as it was written. Only a leading
+// guard *line* is removed -- the guard plus its terminator -- never a mention of
+// the word inside the body, so a request that happens to quote the token keeps
+// every character it had.
+func unguardedText(text string) string {
+	if text == UntrustedGuardLine {
+		return ""
+	}
+	if rest, ok := strings.CutPrefix(text, UntrustedGuardLine+"\r\n"); ok {
+		return rest
+	}
+	if rest, ok := strings.CutPrefix(text, UntrustedGuardLine+"\n"); ok {
+		return rest
+	}
+	return text
 }
 
 // ensureBinding binds the thread to the worker that just took the work, so the
@@ -788,6 +856,10 @@ func ensureBinding(snap *snapshot, item QueueItem, agentID string, now time.Time
 }
 
 func newTrace(item QueueItem, decision, reason string, batch int, now time.Time) traceRecord {
+	trust := SourceTrustUntrusted
+	if item.Trusted {
+		trust = SourceTrustTrusted
+	}
 	return traceRecord{
 		Channel:    item.Channel,
 		Thread:     item.Thread,
@@ -795,8 +867,12 @@ func newTrace(item QueueItem, decision, reason string, batch int, now time.Time)
 		Decision:   decision,
 		ReasonCode: reason,
 		BatchSize:  batch,
-		Untrusted:  true, // AC-007: every inbound text is untrusted.
-		DecidedAt:  now.Format(time.RFC3339),
+		// AC-007 / AC-010: the source decides the trust, and the trace states it
+		// twice -- the frozen AC-004 boolean and the AC-010 token -- so an old
+		// reader and a new one both see the same thing.
+		Untrusted:   !item.Trusted,
+		SourceTrust: trust,
+		DecidedAt:   now.Format(time.RFC3339),
 	}
 }
 
@@ -805,7 +881,7 @@ func newTrace(item QueueItem, decision, reason string, batch int, now time.Time)
 // It reads a batch and answers each item in a fixed order, so the same backlog
 // always produces the same trace:
 //
-//	high-risk verb -> escalate / untrusted_high_risk (never dispatch sabotage)
+//	high-risk verb + untrusted -> escalate / untrusted_high_risk
 //	bound thread   -> route    / bound_thread
 //	question       -> reply    / question
 //	anything else  -> route    / new_work
@@ -827,8 +903,10 @@ func (d RuleDecider) Decide(items []QueueItem) ([]Decision, error) {
 func decideWithRules(item QueueItem) Decision {
 	decision := Decision{Channel: item.Channel, Thread: item.Thread, MessageID: item.MessageID}
 	switch {
-	case hasHighRiskVerb(item.Text):
-		// AC-007: untrusted text may not ask for a destructive verb.
+	case hasHighRiskVerb(item.Text) && !item.Trusted:
+		// AC-007 / AC-010: only untrusted text may not ask for a destructive
+		// verb. A trusted source is a work request -- "release v0.1.5" from
+		// github or from a skill session is the job, not an injection attempt.
 		decision.Decision = DecisionEscalate
 		decision.ReasonCode = ReasonUntrustedHighRisk
 	case item.Bound:
@@ -1091,7 +1169,10 @@ func runRoute(args []string, stdout, stderr io.Writer) int {
 		MaxAttempts:   DefaultMaxDispatchAttempts,
 		MaxReplyRunes: DefaultMaxReplyRunes,
 		MaxActive:     cfg.MaxActive,
-		Now:           time.Now,
+		// AC-010: source trust comes from the operator config, never from the
+		// message itself. An empty list here means every source is untrusted.
+		TrustedChannels: cfg.TrustedChannels,
+		Now:             time.Now,
 	}
 	// AC-008 (agent-supervisor): the ceiling counts owned agents that are working
 	// right now, so the counter reads the same ownership truth supervision uses --
