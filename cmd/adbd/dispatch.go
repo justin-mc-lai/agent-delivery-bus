@@ -306,8 +306,13 @@ func (d PaseoDispatcher) recordWorkdirFallback(thread, reason string) {
 // workerBootstrapPrompt is the only text a freshly created worker receives. The
 // actual message is delivered afterwards with `paseo send`, so this line just
 // tells the new worker what it is and where it may work.
+//
+// worker-sdd-binding AC-005: the same SDD guard paragraph the dispatched text
+// carries is appended here too. A worker that only ever reads its creation
+// prompt (and no message yet) must still know both rules: look at the spine
+// first, and do not modify code no frozen acceptance criterion covers.
 func workerBootstrapPrompt(thread string) string {
-	return fmt.Sprintf("ADB worker for thread %q: wait for the next dispatch. Work only inside the repository that thread names; if the thread does not name one, ask before touching any file.", thread)
+	return fmt.Sprintf("ADB worker for thread %q: wait for the next dispatch. Work only inside the repository that thread names; if the thread does not name one, ask before touching any file.", thread) + " " + sddGuard
 }
 
 // parseAgentID reads the agentId out of `paseo run --json` output. The last

@@ -538,7 +538,7 @@ func TestDecisionTraceIsIdempotent(t *testing.T) {
 	}
 	wantKeys := []string{
 		"batch_size", "channel", "decided_at", "decision",
-		"message_id", "reason_code", "source_trust", "thread", "untrusted",
+		"message_id", "reason_code", "sdd", "source_trust", "thread", "untrusted",
 	}
 	raw, err := os.ReadFile(h.tracePath)
 	if err != nil {

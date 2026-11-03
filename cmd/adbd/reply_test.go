@@ -232,7 +232,7 @@ func TestReplyTraceFields(t *testing.T) {
 	wantReply := []string{
 		"batch_size", "channel", "decided_at", "decision",
 		"delivered", "delivery_reason", "message_id", "reason_code",
-		"source_trust", "thread", "untrusted",
+		"sdd", "source_trust", "thread", "untrusted",
 	}
 	if strings.Join(replyKeys, ",") != strings.Join(wantReply, ",") {
 		t.Fatalf("reply trace keys = %v, want exactly %v", replyKeys, wantReply)
@@ -243,7 +243,7 @@ func TestReplyTraceFields(t *testing.T) {
 	// expectations cannot drift.
 	wantRoute := []string{
 		"batch_size", "channel", "decided_at", "decision",
-		"message_id", "reason_code", "source_trust", "thread", "untrusted",
+		"message_id", "reason_code", "sdd", "source_trust", "thread", "untrusted",
 	}
 	if got := jsonKeys(fields["m-route"]); strings.Join(got, ",") != strings.Join(wantRoute, ",") {
 		t.Fatalf("route trace keys = %v, want exactly %v", got, wantRoute)

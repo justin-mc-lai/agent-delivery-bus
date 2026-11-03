@@ -504,6 +504,14 @@ type Config struct {
 	// per-message escalation. Everything else keeps the AC-007 untrusted rules.
 	// Nil or empty means "no trusted source", never "trust everything".
 	TrustedChannels []string
+	// SDDGate is adbd_sdd_gate (worker-sdd-binding AC-007): the structural gate
+	// that refuses to hand a Beacon-managed project's work to a worker when the
+	// feature truth is missing or not frozen. Default on; `off` turns the whole
+	// gate off, which the trace then records as sdd=gated_off.
+	SDDGate bool
+	// BeaconDocsRoot is adbd_beacon_docs_root: where a project keeps its Beacon
+	// tree, relative to the project directory. Defaults to "docs/beacon".
+	BeaconDocsRoot string
 	// PaseoBin is adbd_paseo_bin, the runner binary path.
 	PaseoBin string
 	// RouterAgent is adbd_router_agent, the legacy spelling of the router's
@@ -621,6 +629,11 @@ func defaultConfig() Config {
 		// AC-010: the default trust list. It is copied so a caller that appends
 		// to its Config cannot mutate the shared default.
 		TrustedChannels: append([]string(nil), DefaultTrustedChannels...),
+		// worker-sdd-binding AC-007: the structural gate is on unless an operator
+		// says otherwise, so a daemon that never mentions the key still refuses
+		// to dispatch against an unfrozen truth.
+		SDDGate:        true,
+		BeaconDocsRoot: DefaultBeaconDocsRoot,
 	}
 }
 
@@ -697,6 +710,18 @@ func LoadConfig(path string) (Config, error) {
 		cfg.WorkerModel = DefaultWorkerModel
 	}
 	cfg.FeedChannel = strings.TrimSpace(values["adbd_feed_project_channel"])
+
+	// worker-sdd-binding AC-007: the structural gate. The key is read only when it
+	// is present, and only an explicit off/false/0/no switches the gate off -- a
+	// typo keeps it on, because a gate that silently disables itself is worse than
+	// one that refuses. The docs root is a path inside the project, so an empty
+	// value keeps the docs/beacon default instead of meaning "the repo root".
+	if raw, ok := values["adbd_sdd_gate"]; ok {
+		cfg.SDDGate = configSwitchOn(raw, true)
+	}
+	if root := strings.TrimSpace(values["adbd_beacon_docs_root"]); root != "" {
+		cfg.BeaconDocsRoot = root
+	}
 
 	// GitHub source (feature github-issue). Repos and labels are comma separated
 	// lists; every entry is trimmed and the empty ones dropped, so a trailing
@@ -809,6 +834,18 @@ func LoadConfig(path string) (Config, error) {
 		*item.dst = parsed
 	}
 	return cfg, nil
+}
+
+// configSwitchOn reads a boolean-ish config value. Anything unrecognized keeps
+// the fallback, so a typo can never widen what the daemon is allowed to do.
+func configSwitchOn(raw string, fallback bool) bool {
+	switch strings.ToLower(strings.TrimSpace(raw)) {
+	case "on", "true", "1", "yes", "enabled":
+		return true
+	case "off", "false", "0", "no", "disabled":
+		return false
+	}
+	return fallback
 }
 
 // configList splits one comma-separated config value into its non-empty entries.

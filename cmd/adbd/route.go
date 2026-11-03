@@ -51,6 +51,10 @@ const (
 	// DecisionInvalid is never produced by a decider: it is the audit token the
 	// router writes when a decider returns something outside the four above.
 	DecisionInvalid = "decision_invalid"
+	// DecisionRefuse is the router's own verdict for an item the SDD gate will
+	// not let out (worker-sdd-binding AC-002/AC-003). No decider may return it --
+	// validate() refuses it -- because only the router knows the truth state.
+	DecisionRefuse = "refuse"
 )
 
 // Reason codes are stable machine tokens, never prose: a caller can branch on
@@ -132,6 +136,11 @@ type QueueItem struct {
 	Attempts int `json:"attempts,omitempty"`
 	// Bound is drain-time only: the decider sees it, the queue never stores it.
 	Bound bool `json:"-"`
+	// SDD is the lane the structural gate graded this item onto, and it is
+	// drain-time only as well (worker-sdd-binding AC-001). It is recomputed on
+	// every drain, so freezing a truth.md is picked up without a restart, and it
+	// is what dispatchText reads when it decides to prepend the guard paragraph.
+	SDD string `json:"-"`
 	// Trusted is drain-time only too: it is recomputed on every drain from
 	// adbd_trusted_channels (AC-010), so changing the config re-classifies queued
 	// text instead of being frozen at the moment it arrived.
@@ -192,6 +201,11 @@ type traceRecord struct {
 	SourceTrust string `json:"source_trust"`
 	// Decider is "rule" (implicit, omitted), "llm", or "llm_fallback_rules".
 	Decider string `json:"decider,omitempty"`
+	// SDD is the structural grade the worker-sdd-binding gate reached for this
+	// item: gated / guard_only / not_applicable / gated_off. It is written on
+	// every row -- including replies and escalates -- so the audit trail states
+	// what the gate thought instead of leaving a reader to re-derive it.
+	SDD string `json:"sdd"`
 	// Delivered is nil for every verdict that has no outbound step (route,
 	// ignore, escalate, and a reply the router refused), so the eight-key shape
 	// frozen by AC-004 stays intact for those rows. A reply row always carries it:
@@ -229,6 +243,12 @@ type DrainResult struct {
 	// ReasonCode is set when the drain deliberately did less than it could, so a
 	// scheduler can tell "nothing to do" from "refused on purpose" (AC-008).
 	ReasonCode string `json:"reason_code,omitempty"`
+	// SDDGate and BeaconDocsRoot report the structural-gate configuration this
+	// drain ran with (worker-sdd-binding AC-007): `route --once --json` shows the
+	// setting next to the per-item `sdd` verdict, so an operator can tell a gate
+	// that passed from a gate that was switched off.
+	SDDGate        bool   `json:"sdd_gate"`
+	BeaconDocsRoot string `json:"beacon_docs_root"`
 }
 
 // Router is the resident front desk.
@@ -283,6 +303,20 @@ type Router struct {
 	// locked state document. A nil counter or a failed read leaves the ceiling
 	// unapplied rather than blocking work behind a broken probe.
 	ActiveCounter ActiveCounter
+	// Registry is the project registry the structural gate resolves a thread's
+	// project root through (worker-sdd-binding AC-001). It is the same registry
+	// the dispatcher uses for `--cwd`, so the gate never inspects a directory the
+	// worker would not be started in. The zero value resolves nothing, which makes
+	// every thread guard_only instead of refusing work it cannot grade.
+	Registry ProjectRegistry
+	// SDDGate is adbd_sdd_gate: the structural gate's master switch (AC-007). Its
+	// zero value is off, which is the "nothing configured" state for a Router
+	// built by hand; the CLI always wires it from the config, where the default is
+	// on. Turning it off writes sdd=gated_off and refuses nothing.
+	SDDGate bool
+	// BeaconDocsRoot is adbd_beacon_docs_root: where a project keeps its Beacon
+	// tree. Empty means DefaultBeaconDocsRoot.
+	BeaconDocsRoot string
 	// Now is injectable so the trace timestamp is exact in tests.
 	Now func() time.Time
 }
@@ -433,6 +467,11 @@ func (r *Router) beat(now time.Time) error {
 // the item is marked failed (AC-002), so the daemon keeps breathing.
 func (r *Router) DrainOnce() (DrainResult, error) {
 	res := DrainResult{Traces: []traceRecord{}}
+	if r != nil {
+		// AC-007: the drain reports the gate it ran with, even on an empty batch.
+		res.SDDGate = r.SDDGate
+		res.BeaconDocsRoot = r.beaconDocsRoot()
+	}
 	if r == nil || r.Store == nil || strings.TrimSpace(r.Store.SlowPath) == "" {
 		return res, errors.New("adbd route: slow-path queue path is empty")
 	}
@@ -472,11 +511,18 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 	if err != nil {
 		return res, err
 	}
+	// graded is the per-item structural grade (worker-sdd-binding AC-001). It is
+	// computed once per item, after the trust grade and before any worker exists,
+	// and it is what the route branch refuses on.
+	graded := make(map[string]sddVerdict, len(batch))
 	for i := range batch {
 		binding := snap.Bindings[bindingKey(batch[i].Channel, batch[i].Thread)]
 		batch[i].Bound = binding != nil && isLiveState(binding.State)
 		// AC-010: the source trust the decider and the dispatch seam both read.
 		batch[i].Trusted = r.isTrustedChannel(batch[i].Channel)
+		verdict := r.sddGate(batch[i].Thread)
+		batch[i].SDD = verdict.Lane
+		graded[dedupeKey(batch[i].Channel, batch[i].Thread, batch[i].MessageID)] = verdict
 	}
 
 	seen, err := readTraceIndex(r.tracePath())
@@ -578,6 +624,20 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 				lines = append(lines, trace(item, DecisionEscalate, ReasonDispatchAttemptsExhausted))
 				seen[key] = struct{}{}
 				res.Applied++
+				continue
+			}
+			if verdict, known := graded[key]; known && verdict.Refuse {
+				// worker-sdd-binding AC-002/AC-003: a Beacon-managed project whose
+				// feature truth is missing or not frozen gets no worker. The item
+				// keeps its place in the queue (no attempt burned, no binding
+				// written) and the row says refuse, so retrying cannot bypass the
+				// gate: the next drain re-reads the truth, and only a frozen one may
+				// be dispatched against.
+				item.ReasonCode = verdict.ReasonCode
+				pending = append(pending, item)
+				lines = append(lines, trace(item, DecisionRefuse, verdict.ReasonCode))
+				res.Failed++
+				res.ReasonCode = verdict.ReasonCode
 				continue
 			}
 			// AC-009: resolve a worker paseo confirms exists before anything is
@@ -784,9 +844,19 @@ func (r *Router) dispatch(item QueueItem, agentID string) error {
 //     adbd_trusted_channels) and the worker must see the request verbatim.
 func dispatchText(item QueueItem) string {
 	if item.Trusted {
-		return unguardedText(item.Text)
+		// worker-sdd-binding AC-005: a gated or guard_only text carries the SDD
+		// guard paragraph; a not_applicable project is dispatched exactly as
+		// before (AC-006).
+		return sddGuardedText(item.SDD, unguardedText(item.Text))
 	}
-	return guardedText(item.Text)
+	// Untrusted text keeps UNTRUSTED_INPUT as its very first line (AC-007): the
+	// marker tells the worker the body is data, so the SDD paragraph goes after
+	// it and before the request, never in front of the marker.
+	body := unguardedText(item.Text)
+	if strings.TrimSpace(body) == "" {
+		return guardedText(item.Text)
+	}
+	return guardedText(sddGuardedText(item.SDD, body))
 }
 
 // guardedText marks inbound text as untrusted data, not instructions.
@@ -867,6 +937,9 @@ func newTrace(item QueueItem, decision, reason string, batch int, now time.Time)
 		Decision:   decision,
 		ReasonCode: reason,
 		BatchSize:  batch,
+		// worker-sdd-binding AC-001: the structural grade travels with the row,
+		// so a refusal is explainable without re-running the gate.
+		SDD: item.SDD,
 		// AC-007 / AC-010: the source decides the trust, and the trace states it
 		// twice -- the frozen AC-004 boolean and the AC-010 token -- so an old
 		// reader and a new one both see the same thing.
@@ -1017,6 +1090,10 @@ func writeQueue(path string, items []QueueItem) error {
 
 // readTraceIndex returns the (channel, thread, message_id) keys that already have
 // an audit line. Those items are applied, whatever the queue still says.
+//
+// A `refuse` row is deliberately NOT applied (worker-sdd-binding AC-004): the
+// item it describes is still queued, waiting for its truth to be frozen, so
+// indexing it here would silently drop work instead of retrying it.
 func readTraceIndex(path string) (map[string]struct{}, error) {
 	seen := map[string]struct{}{}
 	data, err := os.ReadFile(path)
@@ -1033,6 +1110,9 @@ func readTraceIndex(path string) (map[string]struct{}, error) {
 		var rec traceRecord
 		if err := json.Unmarshal([]byte(line), &rec); err != nil {
 			return nil, fmt.Errorf("adbd route: %s line %d is not a decision trace: %w", path, i+1, err)
+		}
+		if rec.Decision == DecisionRefuse {
+			continue
 		}
 		seen[dedupeKey(rec.Channel, rec.Thread, rec.MessageID)] = struct{}{}
 	}
@@ -1136,6 +1216,10 @@ func runRoute(args []string, stdout, stderr io.Writer) int {
 	// paths are root-relative unless the operator configured an absolute one.
 	workerDir := workerWorkdir(cfg.WorkerWorkdir, cf.root)
 	projectsFile := projectsFilePath(cfg.ProjectsFile, cf.root)
+	// The structural gate and the dispatcher read the SAME registry: the project
+	// directory the gate judges is the directory the worker is started in
+	// (worker-sdd-binding AC-001).
+	registry := loadProjectRegistry(projectsFile, cf.root)
 
 	// reply-delivery AC-006: no adbd_reply_bin means no mouth at all. The replier
 	// stays nil, so every reply row records not_configured and nothing is spawned.
@@ -1156,7 +1240,7 @@ func runRoute(args []string, stdout, stderr io.Writer) int {
 			Model:           cfg.WorkerModel,
 			Workdir:         workerDir,
 			Mode:            cfg.WorkerMode,
-			Registry:        loadProjectRegistry(projectsFile, cf.root),
+			Registry:        registry,
 			FallbackWorkdir: workerDir,
 			ReportsPath:     filepath.Join(cf.root, ".beacon", reportsFile),
 		},
@@ -1169,6 +1253,12 @@ func runRoute(args []string, stdout, stderr io.Writer) int {
 		MaxAttempts:   DefaultMaxDispatchAttempts,
 		MaxReplyRunes: DefaultMaxReplyRunes,
 		MaxActive:     cfg.MaxActive,
+		// worker-sdd-binding AC-001/AC-007: the structural gate. The config default
+		// is on, so a daemon that never mentioned the key still refuses to dispatch
+		// against an unfrozen truth.
+		SDDGate:        cfg.SDDGate,
+		BeaconDocsRoot: cfg.BeaconDocsRoot,
+		Registry:       registry,
 		// AC-010: source trust comes from the operator config, never from the
 		// message itself. An empty list here means every source is untrusted.
 		TrustedChannels: cfg.TrustedChannels,
