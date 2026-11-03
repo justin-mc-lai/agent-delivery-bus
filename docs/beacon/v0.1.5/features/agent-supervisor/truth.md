@@ -107,7 +107,7 @@ Every AC must trace to the intent or evidence it serves.
 | AC-006 | orphan 首次出现时向该 agent 发送一次探针消息并写入 `probed_at`；下一轮仍为 orphan 且 `probed_at` 非空时状态转 failed，不再发第二次；同一工作项在一轮内最多一次探针 |
 | AC-007 | done 与 failed 的工作项执行 `paseo archive <agent>` 并记审计；只 archive 不 delete；已归档的 agent 在后续 supervise 中不再产生动作 |
 | AC-008 | owned 且 working 的数量达到 `adbd_max_active`（默认 8）时，`route` 不再新建 worker，返回 `reason_code=max_active_reached`，队列条目保留 |
-| AC-009 | `adbd inbox` 只输出 waiting_permission 与 waiting_input 两类工作项，按等待时长降序；两类都为空时输出 `NOTHING` 且退出码 0 |
+| AC-009 | `adbd inbox` 输出三类工作项：waiting_permission、waiting_input、escalated；escalated 取自 `.beacon/adbd-decisions.jsonl` 中 `decision=escalate` 且 `decided_at` 落在 `adbd_inbox_escalation_window`（默认 24h）内的条目；三类合并后按等待时长降序；三类都为空时输出 `NOTHING` 且退出码 0 |
 
 ## 配置项
 

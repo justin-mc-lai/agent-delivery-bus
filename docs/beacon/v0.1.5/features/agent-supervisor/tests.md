@@ -19,6 +19,7 @@ materials_status: current
 | AC-007 | TC-AS-007 | behavior | `go test ./... -run TerminalItemsArchived` | exit_code_0；done/failed 调 archive 一次；无 delete；再次 supervise 无动作 |
 | AC-008 | TC-AS-008 | behavior | `go test ./... -run MaxActiveBlocksNewWorker` | exit_code_0；达到上限时 route 返回 max_active_reached 且队列保留 |
 | AC-009 | TC-AS-009 | behavior | `go test ./... -run InboxOnlyNeedsHuman` | exit_code_0；只列两类并按等待时长排序；空时输出 NOTHING |
+| AC-009 | TC-AS-011 | behavior | `go test ./... -run InboxShowsEscalations` | exit_code_0；24h 内 escalate 进 inbox 并标注来源；窗口外不出现；三类皆空时输出 NOTHING |
 
 ## State machine slots
 
