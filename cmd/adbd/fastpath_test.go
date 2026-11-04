@@ -40,9 +40,10 @@ const baseTime = "2026-02-06T09:00:00Z"
 // writeRecordingRunner writes a real #!/bin/sh executable that records its own
 // argv, one call per line as `arg|arg|arg|`. It never touches real paseo.
 //
-// It also speaks the two verbs worker resolution needs (truth.md AC-009): every
-// `inspect` succeeds and `run --json` answers with an agent id, so a route drain
-// behind this stub resolves a worker instead of failing.
+// It also speaks the three verbs worker resolution and the dispatch check need
+// (truth.md AC-009, dispatch-liveness AC-002): every `inspect` succeeds,
+// `run --json` answers with an agent id, and `logs`/`send` are answered by the
+// shared liveness arms, so a routed message looks verified instead of unreadable.
 func writeRecordingRunner(t *testing.T, argvLog string) string {
 	t.Helper()
 	script := filepath.Join(t.TempDir(), "recording-paseo.sh")
@@ -51,6 +52,7 @@ func writeRecordingRunner(t *testing.T, argvLog string) string {
 	body.WriteString("case \"$1\" in\n")
 	body.WriteString("  inspect) exit 0 ;;\n")
 	body.WriteString("  run) printf '%s\\n' '{\"agentId\":\"ag-recording-worker\"}'; exit 0 ;;\n")
+	body.WriteString(livenessProbeCases(filepath.Dir(argvLog) + "/timeline"))
 	body.WriteString("esac\n")
 	body.WriteString("printf '%s|' \"$@\" >> " + shellQuote(argvLog) + "\n")
 	body.WriteString("printf '\\n' >> " + shellQuote(argvLog) + "\n")

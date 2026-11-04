@@ -229,11 +229,14 @@ func feedFields(t *testing.T, out string) map[string]string {
 //
 // Like writeRecordingRunner it speaks the AC-009 worker-resolution verbs: any
 // `inspect` succeeds and `run --json` answers with an agent id, so only `send`
-// calls (the text the worker actually receives) reach the log.
+// calls (the text the worker actually receives) reach the log. The liveness arms
+// (dispatch-liveness AC-002) keep these dispatches verifiable, and they are
+// placed before the recording so a `logs` probe never counts as a message.
 func writeTextLogRunner(t *testing.T, logPath string) string {
 	t.Helper()
 	script := filepath.Join(t.TempDir(), "stub-paseo-text.sh")
 	body := "#!/bin/sh\n" +
+		livenessProbeIfs(filepath.Dir(logPath)+"/timeline") +
 		"case \"$1\" in\n" +
 		"  inspect) exit 0 ;;\n" +
 		"  run) printf '%s\\n' '{\"agentId\":\"ag-textlog-worker\"}'; exit 0 ;;\n" +

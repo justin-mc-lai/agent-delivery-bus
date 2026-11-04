@@ -22,6 +22,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 // Defaults for creating a worker (truth.md AC-009 config table).
@@ -38,6 +39,18 @@ const (
 	// requests pile up and the worker sits there), so unattended workers must be
 	// created in an edit-capable mode.
 	DefaultWorkerMode = "build"
+	// DefaultWorkerWorkspace is adbd_worker_workspace's default: a linked worktree
+	// rather than a local copy (dispatch-liveness AC-001).
+	//
+	// The difference is not cosmetic. `--new-workspace local` copies the whole
+	// repository; on a 53MB checkout the copy was not ready yet, and the first turn
+	// was aborted ~90ms in with 0 tokens -- twice, silently. `worktree` starts the
+	// same worker without that copy, and the same repository produced output.
+	DefaultWorkerWorkspace = "worktree"
+	// WorkspaceWorktree and WorkspaceLocal are the two values
+	// adbd_worker_workspace accepts, spelled as paseo spells them.
+	WorkspaceWorktree = "worktree"
+	WorkspaceLocal    = "local"
 )
 
 // WorkerResolveError is the typed failure of the worker-resolution seam. Callers
@@ -91,6 +104,20 @@ type PaseoDispatcher struct {
 	// ReportsPath is the ledger a workdir fallback is recorded in
 	// (.beacon/adbd-reports.jsonl). Empty means no record is written.
 	ReportsPath string
+	// Workspace is adbd_worker_workspace: the `--new-workspace` mode of a created
+	// worker, worktree or local. Empty means DefaultWorkerWorkspace.
+	Workspace string
+	// Check is adbd_worker_dispatch_check: whether a send is followed by the
+	// liveness probe (dispatch-liveness AC-002). Its zero value is off, so a
+	// dispatcher built by hand never starts external probes; the daemon always
+	// wires it from the config, where the default is on.
+	Check bool
+	// Timeout is adbd_worker_dispatch_timeout_sec: how long one liveness check may
+	// wait for progress. Zero means DefaultDispatchTimeout.
+	Timeout time.Duration
+	// Retries is adbd_worker_dispatch_retries: how many extra sends a dead worker
+	// gets before the dispatch is called dead. Zero means none.
+	Retries int
 }
 
 // compile-time proof that the production dispatcher satisfies both seams.
@@ -101,12 +128,16 @@ var (
 
 // Dispatch sends one guarded text to one agent. The text is passed as a single
 // argv element, so no shell ever parses it.
+//
+// dispatch-liveness: the send itself is unchanged (AC-007); what changed is that
+// Send now also proves the worker started (AC-002/AC-003). The typed verdicts
+// DispatchDeadError / DispatchUnverifiedError travel through this wrapper via
+// %w, so the router can tell them apart with errors.As and requeue the item
+// instead of counting it as applied.
 func (d PaseoDispatcher) Dispatch(thread, agentID, text string) error {
-	bin := d.bin()
-	out, err := exec.Command(bin, "send", agentID, text).CombinedOutput()
-	if err != nil {
-		return fmt.Errorf("dispatcher %s send %s (thread %s): %w (output: %s)",
-			bin, agentID, thread, err, strings.TrimSpace(string(out)))
+	if err := d.Send(agentID, text); err != nil {
+		return fmt.Errorf("dispatcher %s send %s (thread %s): %w",
+			d.bin(), agentID, thread, err)
 	}
 	return nil
 }
@@ -195,14 +226,23 @@ func (d PaseoDispatcher) create(thread string) (string, error) {
 	if mode == "" {
 		mode = DefaultWorkerMode
 	}
+	// AC-001 (dispatch-liveness): the workspace mode is configuration, not a
+	// constant. Both modes are valid -- local is still a legitimate choice on a
+	// small repository -- and both keep --cwd, which is what actually places the
+	// worker in the right repository.
+	workspace := strings.TrimSpace(d.Workspace)
+	if workspace == "" {
+		workspace = DefaultWorkerWorkspace
+	}
 
 	args := []string{
 		"run", "--no-wait", "--json",
 		"--mode", mode,
 		// Without --new-workspace paseo reuses the caller workspace and
 		// ignores --cwd, so the worker would land in whichever repo the
-		// daemon happened to be started from.
-		"--new-workspace", "local",
+		// daemon happened to be started from. Which KIND of workspace it is
+		// decides whether the first turn survives a big repository.
+		"--new-workspace", workspace,
 		"--title", title,
 		"--cwd", workdir,
 		"--provider", provider,

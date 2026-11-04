@@ -71,7 +71,24 @@ const (
 	// on owned, working agents is reached, so no new worker is created and the
 	// queue item keeps its place instead of being lost.
 	ReasonMaxActiveReached = "max_active_reached"
+	// ReasonDispatchDead is dispatch-liveness AC-004: the send was accepted but the
+	// worker never started, and the retries are spent. The item goes back to the
+	// queue; no binding is written, because a silent worker owns nothing.
+	ReasonDispatchDead = "dispatch_dead"
+	// ReasonDispatchUnverified is dispatch-liveness AC-005: the liveness probe
+	// itself failed, so nothing was learned. It is requeued like a death and is
+	// never reported as success.
+	ReasonDispatchUnverified = "dispatch_unverified"
+	// ReasonDispatchUnchecked is dispatch-liveness AC-006: the operator turned the
+	// check off (adbd_worker_dispatch_check=off), so the send ran unverified. The
+	// dispatch still succeeded -- the row just must not imply it was checked.
+	ReasonDispatchUnchecked = "dispatch_unchecked"
 )
+
+// DecisionDispatchDead is dispatch-liveness AC-004's verdict token. It is
+// deliberately NOT a decider verdict: only the router knows whether a worker
+// started, so it can never arrive from a Decider (validate() refuses it).
+const DecisionDispatchDead = "dispatch_dead"
 
 const (
 	// UntrustedGuardLine starts every text handed to a worker for an untrusted
@@ -179,6 +196,16 @@ type Dispatcher interface {
 // is an error, never "main".
 type WorkerResolver interface {
 	EnsureWorker(thread, current string) (string, error)
+}
+
+// DispatchCheckReporter is the optional capability of a Dispatcher that knows
+// whether its send path verifies that the worker started (dispatch-liveness
+// AC-006). The router asks it only after a successful send, and only to label
+// the row: a dispatcher that does not implement it is assumed to have checked
+// nothing to report, which keeps every existing Dispatcher (stubs included)
+// behaving exactly as before.
+type DispatchCheckReporter interface {
+	DispatchChecked() bool
 }
 
 // traceRecord is one line of .beacon/adbd-decisions.jsonl. The field set is
@@ -661,6 +688,24 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 			if err == nil {
 				err = r.dispatch(item, agentID)
 			}
+			var dead *DispatchDeadError
+			var unverified *DispatchUnverifiedError
+			if err != nil && (errors.As(err, &dead) || errors.As(err, &unverified)) {
+				// dispatch-liveness AC-004/AC-005: the send went out but the worker did
+				// not start (dispatch_dead), or nobody could tell (dispatch_unverified).
+				// Neither is a delivery: the item goes back to the queue with no
+				// binding written -- a silent worker may not own the thread -- and the
+				// drain itself still succeeds, so a dead worker never kills the router.
+				reason := ReasonDispatchDead
+				if errors.As(err, &unverified) {
+					reason = ReasonDispatchUnverified
+				}
+				pending = append(pending, item)
+				lines = append(lines, trace(item, DecisionDispatchDead, reason))
+				res.Failed++
+				res.ReasonCode = reason
+				continue
+			}
 			if err != nil {
 				// AC-005: backed_off -- the item keeps its attempts and stays
 				// queued, so the next drain retries it. AC-009 ④: a worker that
@@ -687,7 +732,7 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 				// workers must not sail past the limit on a count it read once.
 				active++
 			}
-			lines = append(lines, trace(item, DecisionRoute, decision.ReasonCode))
+			lines = append(lines, trace(item, DecisionRoute, r.routeReason(decision)))
 			seen[key] = struct{}{}
 			res.Applied++
 
@@ -821,6 +866,19 @@ func (r *Router) resolveWorker(item QueueItem, binding *Binding) (string, error)
 			item.Thread)
 	}
 	return candidate, nil
+}
+
+// routeReason is the reason a successful route row carries. It is the decider's
+// own reason, with one exception (dispatch-liveness AC-006): when the dispatcher
+// reports that its send path performed no liveness check, the row says
+// dispatch_unchecked instead. The verdict stays `route` and nothing else about
+// the row changes -- the only thing being corrected is the implication that
+// somebody verified the worker started.
+func (r *Router) routeReason(decision Decision) string {
+	if reporter, ok := r.Dispatcher.(DispatchCheckReporter); ok && !reporter.DispatchChecked() {
+		return ReasonDispatchUnchecked
+	}
+	return decision.ReasonCode
 }
 
 // dispatch is the only exit from the router to the outside world. The guard line
@@ -1093,7 +1151,10 @@ func writeQueue(path string, items []QueueItem) error {
 //
 // A `refuse` row is deliberately NOT applied (worker-sdd-binding AC-004): the
 // item it describes is still queued, waiting for its truth to be frozen, so
-// indexing it here would silently drop work instead of retrying it.
+// indexing it here would silently drop work instead of retrying it. A
+// `dispatch_dead` row is not applied for the same reason (dispatch-liveness
+// AC-004): it is the record of a requeue, and the whole point of the requeue is
+// that the next drain tries the item again rather than skipping it forever.
 func readTraceIndex(path string) (map[string]struct{}, error) {
 	seen := map[string]struct{}{}
 	data, err := os.ReadFile(path)
@@ -1111,7 +1172,7 @@ func readTraceIndex(path string) (map[string]struct{}, error) {
 		if err := json.Unmarshal([]byte(line), &rec); err != nil {
 			return nil, fmt.Errorf("adbd route: %s line %d is not a decision trace: %w", path, i+1, err)
 		}
-		if rec.Decision == DecisionRefuse {
+		if rec.Decision == DecisionRefuse || rec.Decision == DecisionDispatchDead {
 			continue
 		}
 		seen[dedupeKey(rec.Channel, rec.Thread, rec.MessageID)] = struct{}{}
@@ -1243,6 +1304,13 @@ func runRoute(args []string, stdout, stderr io.Writer) int {
 			Registry:        registry,
 			FallbackWorkdir: workerDir,
 			ReportsPath:     filepath.Join(cf.root, ".beacon", reportsFile),
+			// dispatch-liveness: the workspace mode and the post-send liveness
+			// check. The config defaults are worktree + check on, so a daemon that
+			// never mentioned either key still gets both.
+			Workspace: cfg.WorkerWorkspace,
+			Check:     cfg.DispatchCheck,
+			Timeout:   cfg.DispatchTimeout,
+			Retries:   cfg.DispatchRetries,
 		},
 		TracePath:     tracePath,
 		AgentID:       agentID,

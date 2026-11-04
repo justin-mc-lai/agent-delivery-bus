@@ -534,6 +534,20 @@ type Config struct {
 	// in. Empty means DefaultWorkerMode (build) — the provider default asks a
 	// human and an unattended worker would sit on a permission request forever.
 	WorkerMode string
+	// WorkerWorkspace is adbd_worker_workspace: the `--new-workspace` mode of a
+	// created worker, worktree or local (dispatch-liveness AC-001). Empty means
+	// DefaultWorkerWorkspace (worktree).
+	WorkerWorkspace string
+	// DispatchCheck is adbd_worker_dispatch_check: whether a send is followed by
+	// the liveness probe (dispatch-liveness AC-002). Default on; `off` skips the
+	// probe and the trace says dispatch_unchecked (AC-006).
+	DispatchCheck bool
+	// DispatchTimeout is adbd_worker_dispatch_timeout_sec: the ceiling on one
+	// liveness check. Default DefaultDispatchTimeout (10s).
+	DispatchTimeout time.Duration
+	// DispatchRetries is adbd_worker_dispatch_retries: how many extra sends a dead
+	// worker gets before the dispatch is called dead. Default 1.
+	DispatchRetries int
 	// ProjectsFile is adbd_projects_file: the project registry a thread is
 	// resolved against (feature thread-workdir). Empty means
 	// <root>/config/projects.json.
@@ -621,9 +635,17 @@ func defaultConfig() Config {
 		GHBin:          DefaultGHBin,
 		WorkerProvider: DefaultWorkerProvider,
 		WorkerModel:    DefaultWorkerModel,
-		ReplyIdentity:  DefaultReplyIdentity,
-		GraceAfter:     DefaultGraceAfter,
-		MaxActive:      DefaultMaxActive,
+		// dispatch-liveness: a worker is born in a worktree, and a send is verified
+		// against the agent's own timeline unless the operator turns the check off.
+		// Both are on by default because the failure they prevent (a worker that
+		// silently never ran, counted as delivered) is invisible otherwise.
+		WorkerWorkspace: DefaultWorkerWorkspace,
+		DispatchCheck:   true,
+		DispatchTimeout: DefaultDispatchTimeout,
+		DispatchRetries: DefaultDispatchRetries,
+		ReplyIdentity:   DefaultReplyIdentity,
+		GraceAfter:      DefaultGraceAfter,
+		MaxActive:       DefaultMaxActive,
 		// AC-009: an escalate decision is a live question for one day by default.
 		InboxEscalationWindow: DefaultInboxEscalationWindow,
 		// AC-010: the default trust list. It is copied so a caller that appends
@@ -730,6 +752,39 @@ func LoadConfig(path string) (Config, error) {
 	cfg.GitHubLabels = configList(values["adbd_github_labels"])
 	cfg.WorkerWorkdir = strings.TrimSpace(values["adbd_worker_workdir"])
 	cfg.WorkerMode = strings.TrimSpace(values["adbd_worker_mode"])
+	// dispatch-liveness AC-001: the workspace mode. An unknown value is a config
+	// error rather than a silent default, because "--new-workspace typo" is not a
+	// mode paseo would accept and the worker would never be created at all.
+	if raw := strings.TrimSpace(values["adbd_worker_workspace"]); raw != "" {
+		workspace := strings.ToLower(raw)
+		if workspace != WorkspaceWorktree && workspace != WorkspaceLocal {
+			return cfg, fmt.Errorf("adbd_worker_workspace %q is neither %q nor %q", raw, WorkspaceWorktree, WorkspaceLocal)
+		}
+		cfg.WorkerWorkspace = workspace
+	}
+	// dispatch-liveness AC-002/AC-006: the check switch. Only an explicit
+	// off/false/0/no disables it, so a typo keeps the safety on -- the same rule
+	// adbd_sdd_gate follows. An absent key keeps defaultConfig's on.
+	if raw, ok := values["adbd_worker_dispatch_check"]; ok {
+		cfg.DispatchCheck = configSwitchOn(raw, true)
+	}
+	// AC-005: the wait has a hard bound and the retry count is finite. Both keys are
+	// read as numbers of seconds/counts, and an unreadable value is an error: a
+	// timeout that quietly became 0 would make every dispatch look dead.
+	if raw := strings.TrimSpace(values["adbd_worker_dispatch_timeout_sec"]); raw != "" {
+		seconds, err := strconv.Atoi(raw)
+		if err != nil || seconds <= 0 {
+			return cfg, fmt.Errorf("adbd_worker_dispatch_timeout_sec %q is not a positive integer (e.g. 10)", raw)
+		}
+		cfg.DispatchTimeout = time.Duration(seconds) * time.Second
+	}
+	if raw := strings.TrimSpace(values["adbd_worker_dispatch_retries"]); raw != "" {
+		retries, err := strconv.Atoi(raw)
+		if err != nil || retries < 0 {
+			return cfg, fmt.Errorf("adbd_worker_dispatch_retries %q is not a non-negative integer (e.g. 1)", raw)
+		}
+		cfg.DispatchRetries = retries
+	}
 	// thread-workdir AC-002: the registry is overridable, and an empty value keeps
 	// the <root>/config/projects.json default (resolved by the caller, which is
 	// the only place that knows the root).

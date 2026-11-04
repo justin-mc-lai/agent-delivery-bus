@@ -55,6 +55,10 @@ func writeFakeSDDPaseo(t *testing.T, callsDir string) string {
 	t.Helper()
 	script := filepath.Join(t.TempDir(), "fake-sdd-paseo.sh")
 	body := "#!/bin/sh\n" +
+		// dispatch-liveness AC-002: the shared arms answer `logs`/`send` for the
+		// post-send check before the generic recorder below, so a probe is never
+		// recorded as a paseo call and a routed message stays verifiable.
+		livenessProbeIfs(callsDir+"/timeline") +
 		"dir=" + shellQuote(callsDir) + "\n" +
 		"mkdir -p \"$dir\"\n" +
 		"verb=\"$1\"\n" +

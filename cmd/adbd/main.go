@@ -143,6 +143,21 @@ route flags:
                      means a worker is created per thread
   --trace PATH       decision trace, defaults to <root>/.beacon/adbd-decisions.jsonl
 
+dispatch liveness (dispatch-liveness AC-001..AC-006):
+  A "paseo send" that exits 0 is not proof the worker ran: the turn can be
+  aborted before the model is ever called (0 tokens, agent back to idle). So
+  after each send the router reads the agent's own timeline
+  ("paseo logs <id> --tail 200") and counts the lines starting with [Thought],
+  [Shell], [Message received], [Assistant] or [Tool]. Growth inside
+  adbd_worker_dispatch_timeout_sec = alive. No growth after
+  adbd_worker_dispatch_retries extra sends = dead: the trace records
+  decision=dispatch_dead, the item returns to the queue and no binding is
+  written. A probe that cannot read the timeline is never success either: the
+  row says reason_code=dispatch_unverified and the item is requeued. With
+  adbd_worker_dispatch_check=off nothing is probed and a successful row carries
+  reason_code=dispatch_unchecked (the decision stays route). New workers are
+  created with --new-workspace worktree unless adbd_worker_workspace=local.
+
 reconcile flags:
   --once             run one reconcile pass and exit (reads "paseo inspect
                      <id> --json" for every leased binding; writes
@@ -311,6 +326,13 @@ config keys (.beacon/config, key=value):
   adbd_worker_provider=opencode      provider for a newly created worker
   adbd_worker_model=deepseek/deepseek-flash  model for a newly created worker
   adbd_worker_mode=build             mode for a newly created worker
+  adbd_worker_workspace=worktree     --new-workspace of a new worker: worktree or local
+                                     (local copies the whole repo; on a big repository the
+                                     first turn can be aborted before it ever runs)
+  adbd_worker_dispatch_check=on      verify a send actually started; off skips the check
+                                     and the trace says reason_code=dispatch_unchecked
+  adbd_worker_dispatch_timeout_sec=10  how long one liveness check may wait for progress
+  adbd_worker_dispatch_retries=1     extra sends a dead worker gets before dispatch_dead
   adbd_worker_workdir=<root>         --cwd when a thread names no registered project
   adbd_projects_file=<root>/config/projects.json  project registry a thread is resolved against
                                      (entries may carry slug/aliases/repo and an optional github=owner/repo)

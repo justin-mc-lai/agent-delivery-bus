@@ -75,7 +75,7 @@ print(json.dumps({"agents": keep}))
 	script := `#!/bin/sh
 if [ -n "$FAKE_SUP_LOG" ]; then printf '%s\n' "$*" >> "$FAKE_SUP_LOG"; fi
 case "$1" in
-  ls)
+__ADBD_LIVENESS_ARMS__  ls)
     if [ "$2" = "--label" ]; then
       if [ -n "$FAKE_SUP_AGENTS" ] && [ -f "$FAKE_SUP_AGENTS" ]; then
         python3 "__ADBD_LABEL_FILTER__" "$FAKE_SUP_AGENTS" "$3"
@@ -117,6 +117,9 @@ esac
 exit 0
 `
 	script = strings.ReplaceAll(script, "__ADBD_LABEL_FILTER__", filterPath)
+	// dispatch-liveness AC-002: `send` records a timeline marker and `logs` answers
+	// the probe, so a routed message is verifiable instead of unreadable.
+	script = strings.ReplaceAll(script, "__ADBD_LIVENESS_ARMS__", livenessProbeCases(filepath.Join(dir, "timeline")))
 	if err := os.WriteFile(f.bin, []byte(script), 0o755); err != nil {
 		t.Fatalf("write fake paseo: %v", err)
 	}
