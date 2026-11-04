@@ -655,6 +655,20 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 			continue
 		}
 
+		// gh-bug-binding AC-003: the binding gate is a pre-filter, not a branch of
+		// the route verdict. An issue that names no frozen AC must be refused and
+		// kept queued no matter what the decider answered -- otherwise a model that
+		// says "escalate" or "ignore" would silently consume the item and the
+		// refusal would never be visible.
+		if verdict, known := graded[key]; known && verdict.Refuse {
+			item.ReasonCode = verdict.ReasonCode
+			pending = append(pending, item)
+			lines = append(lines, trace(item, DecisionRefuse, verdict.ReasonCode))
+			res.Failed++
+			res.ReasonCode = verdict.ReasonCode
+			continue
+		}
+
 		decision, ok := byKey[key]
 		if !ok {
 			// AC-008: a decider that returns no verdict for an item has not
