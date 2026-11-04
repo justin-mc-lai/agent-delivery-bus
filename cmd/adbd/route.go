@@ -158,6 +158,18 @@ type QueueItem struct {
 	// every drain, so freezing a truth.md is picked up without a restart, and it
 	// is what dispatchText reads when it decides to prepend the guard paragraph.
 	SDD string `json:"-"`
+	// Labels are the source's labels as they arrived (gh-bug-binding AC-001). They
+	// are persisted with the item because the bug-binding gate re-reads them on
+	// every drain, and they are the only place a gh issue declares the AC it
+	// violates -- the router never infers it from the body.
+	Labels []string `json:"labels,omitempty"`
+	// ACRef is `<slug>#<AC-ID>` for a bound gh issue, drain-time only: it is the
+	// gate's reading of the labels and it travels into the trace and the
+	// dispatched text (gh-bug-binding AC-002).
+	ACRef string `json:"-"`
+	// Binding is the bug-binding gate's state for a gh thread (BindingOn /
+	// BindingOff), drain-time only (gh-bug-binding AC-007).
+	Binding string `json:"-"`
 	// Trusted is drain-time only too: it is recomputed on every drain from
 	// adbd_trusted_channels (AC-010), so changing the config re-classifies queued
 	// text instead of being frozen at the moment it arrived.
@@ -233,6 +245,14 @@ type traceRecord struct {
 	// every row -- including replies and escalates -- so the audit trail states
 	// what the gate thought instead of leaving a reader to re-derive it.
 	SDD string `json:"sdd"`
+	// ACRef is `<slug>#<AC-ID>` for a gh issue that declared its binding
+	// (gh-bug-binding AC-002). It is written even when the issue was refused, so
+	// the row keeps both the claim and the verdict (AC-007).
+	ACRef string `json:"ac_ref,omitempty"`
+	// Binding is the bug-binding gate's state for a gh row: `on`, or `binding_off`
+	// when adbd_bug_binding=off made the gate fall back to guard_only
+	// (gh-bug-binding AC-007). Empty for non-gh rows.
+	Binding string `json:"binding,omitempty"`
 	// Delivered is nil for every verdict that has no outbound step (route,
 	// ignore, escalate, and a reply the router refused), so the eight-key shape
 	// frozen by AC-004 stays intact for those rows. A reply row always carries it:
@@ -276,6 +296,9 @@ type DrainResult struct {
 	// that passed from a gate that was switched off.
 	SDDGate        bool   `json:"sdd_gate"`
 	BeaconDocsRoot string `json:"beacon_docs_root"`
+	// BugBinding reports adbd_bug_binding (gh-bug-binding AC-007): the switch that
+	// decides whether a gh issue must declare a frozen AC before it is dispatched.
+	BugBinding bool `json:"bug_binding"`
 }
 
 // Router is the resident front desk.
@@ -344,6 +367,12 @@ type Router struct {
 	// BeaconDocsRoot is adbd_beacon_docs_root: where a project keeps its Beacon
 	// tree. Empty means DefaultBeaconDocsRoot.
 	BeaconDocsRoot string
+	// BugBinding is adbd_bug_binding (gh-bug-binding AC-007): when on, a gh issue
+	// in a Beacon-managed project must declare the frozen AC it violates. Its
+	// zero value is off, so a Router built by hand keeps the pre-feature
+	// guard_only behaviour; the CLI wires it from the config, where the default
+	// is on.
+	BugBinding bool
 	// Now is injectable so the trace timestamp is exact in tests.
 	Now func() time.Time
 }
@@ -498,6 +527,7 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 		// AC-007: the drain reports the gate it ran with, even on an empty batch.
 		res.SDDGate = r.SDDGate
 		res.BeaconDocsRoot = r.beaconDocsRoot()
+		res.BugBinding = r.BugBinding
 	}
 	if r == nil || r.Store == nil || strings.TrimSpace(r.Store.SlowPath) == "" {
 		return res, errors.New("adbd route: slow-path queue path is empty")
@@ -547,8 +577,12 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 		batch[i].Bound = binding != nil && isLiveState(binding.State)
 		// AC-010: the source trust the decider and the dispatch seam both read.
 		batch[i].Trusted = r.isTrustedChannel(batch[i].Channel)
-		verdict := r.sddGate(batch[i].Thread)
+		verdict := r.sddGateItem(batch[i])
 		batch[i].SDD = verdict.Lane
+		// gh-bug-binding AC-002: the AC reference and the binding state travel on
+		// the item into both the trace row and the dispatched text.
+		batch[i].ACRef = verdict.ACRef
+		batch[i].Binding = verdict.Binding
 		graded[dedupeKey(batch[i].Channel, batch[i].Thread, batch[i].MessageID)] = verdict
 	}
 
@@ -732,7 +766,7 @@ func (r *Router) DrainOnce() (DrainResult, error) {
 				// workers must not sail past the limit on a count it read once.
 				active++
 			}
-			lines = append(lines, trace(item, DecisionRoute, r.routeReason(decision)))
+			lines = append(lines, trace(item, DecisionRoute, r.routeReason(decision, graded[key])))
 			seen[key] = struct{}{}
 			res.Applied++
 
@@ -869,12 +903,20 @@ func (r *Router) resolveWorker(item QueueItem, binding *Binding) (string, error)
 }
 
 // routeReason is the reason a successful route row carries. It is the decider's
-// own reason, with one exception (dispatch-liveness AC-006): when the dispatcher
-// reports that its send path performed no liveness check, the row says
-// dispatch_unchecked instead. The verdict stays `route` and nothing else about
-// the row changes -- the only thing being corrected is the implication that
-// somebody verified the worker started.
-func (r *Router) routeReason(decision Decision) string {
+// own reason, with two exceptions:
+//
+//   - gh-bug-binding AC-004: a lane that never refuses but has something to say
+//     (issue_exempt_no_ac) wins, because the frozen truth promises that exact
+//     token on the row of an exempt issue.
+//   - dispatch-liveness AC-006: when the dispatcher reports that its send path
+//     performed no liveness check, the row says dispatch_unchecked instead. The
+//     verdict stays `route` and nothing else about the row changes -- the only
+//     thing being corrected is the implication that somebody verified the worker
+//     started.
+func (r *Router) routeReason(decision Decision, verdict sddVerdict) string {
+	if verdict.ReasonCode != "" {
+		return verdict.ReasonCode
+	}
 	if reporter, ok := r.Dispatcher.(DispatchCheckReporter); ok && !reporter.DispatchChecked() {
 		return ReasonDispatchUnchecked
 	}
@@ -901,16 +943,22 @@ func (r *Router) dispatch(item QueueItem, agentID string) error {
 //     trust decision belongs to the router (it is the only component that knows
 //     adbd_trusted_channels) and the worker must see the request verbatim.
 func dispatchText(item QueueItem) string {
+	// gh-bug-binding AC-002: a bound issue's request is prefixed by the AC it must
+	// align with and the regression rule. The block goes on the body, so the SDD
+	// guard paragraph and UNTRUSTED_INPUT stay the first things a worker reads.
+	body := unguardedText(item.Text)
+	if item.ACRef != "" {
+		body = bugBindingParagraph(item.ACRef) + "\n" + body
+	}
 	if item.Trusted {
 		// worker-sdd-binding AC-005: a gated or guard_only text carries the SDD
 		// guard paragraph; a not_applicable project is dispatched exactly as
 		// before (AC-006).
-		return sddGuardedText(item.SDD, unguardedText(item.Text))
+		return sddGuardedText(item.SDD, body)
 	}
 	// Untrusted text keeps UNTRUSTED_INPUT as its very first line (AC-007): the
 	// marker tells the worker the body is data, so the SDD paragraph goes after
 	// it and before the request, never in front of the marker.
-	body := unguardedText(item.Text)
 	if strings.TrimSpace(body) == "" {
 		return guardedText(item.Text)
 	}
@@ -998,6 +1046,11 @@ func newTrace(item QueueItem, decision, reason string, batch int, now time.Time)
 		// worker-sdd-binding AC-001: the structural grade travels with the row,
 		// so a refusal is explainable without re-running the gate.
 		SDD: item.SDD,
+		// gh-bug-binding AC-002/AC-007: a bound issue's AC reference and the
+		// binding gate's state travel with the row, so an operator can audit both
+		// the claim and the verdict without re-reading GitHub.
+		ACRef:   item.ACRef,
+		Binding: item.Binding,
 		// AC-007 / AC-010: the source decides the trust, and the trace states it
 		// twice -- the frozen AC-004 boolean and the AC-010 token -- so an old
 		// reader and a new one both see the same thing.
@@ -1327,6 +1380,9 @@ func runRoute(args []string, stdout, stderr io.Writer) int {
 		SDDGate:        cfg.SDDGate,
 		BeaconDocsRoot: cfg.BeaconDocsRoot,
 		Registry:       registry,
+		// gh-bug-binding AC-007: the config default is on, so a daemon that never
+		// mentioned the key still refuses an issue that declares no frozen AC.
+		BugBinding: cfg.BugBinding,
 		// AC-010: source trust comes from the operator config, never from the
 		// message itself. An empty list here means every source is untrusted.
 		TrustedChannels: cfg.TrustedChannels,

@@ -12,6 +12,7 @@
 //	no project directory resolves            -> guard_only
 //	project is not Beacon-managed            -> not_applicable
 //	Beacon-managed + skill:<project>:<slug>  -> gated, subject to the truth check
+//	Beacon-managed + gh:<owner>/<repo>#<n>   -> gated, subject to the bug binding
 //	Beacon-managed + any other thread        -> guard_only
 //	adbd_sdd_gate=off                        -> gated_off (never refuse)
 //
@@ -26,6 +27,15 @@
 // one trace row, keeps the queue item and touches no worker binding, so the work
 // is retried after the truth is frozen instead of being lost -- and retrying
 // alone never bypasses the gate, because every drain re-reads the truth.
+//
+// A GitHub issue is the second gated shape (feature gh-bug-binding, v0.1.5): a
+// bug report has to declare the frozen acceptance criterion it violates with a
+// `beacon:ac=<slug>#<AC-ID>` label, or carry `beacon:no-ac` when it is a chore.
+// No declaration (or an ambiguous one) is issue_unbound; a declaration whose
+// package is unfrozen is truth_not_frozen; one whose package does not contain
+// that AC is ac_not_found. A bound, frozen, existing AC dispatches with the AC
+// reference in the text and the trace. adbd_bug_binding=off falls that lane back
+// to guard_only and the row says binding_off.
 package main
 
 import (
@@ -85,23 +95,34 @@ const sddGuard = "SDD: run `beacon-go spine show --project . --feature <slug>` f
 	"Do not modify code that no frozen acceptance criterion covers."
 
 // sddVerdict is one item's grade. Lane is always set; Refuse is true only for
-// the two refusals, which also name their ReasonCode.
+// the refusals, which also name their ReasonCode.
 type sddVerdict struct {
-	Lane       string
-	Refuse     bool
+	Lane   string
+	Refuse bool
+	// ReasonCode is the stable token the trace carries: a refusal's reason, or
+	// the explanatory code of a lane that never refuses (issue_exempt_no_ac).
 	ReasonCode string
+	// ACRef is `<slug>#<AC-ID>` for a gh issue that declared its binding. It is
+	// set even on a refusal, so the audit row keeps both the claim and the
+	// verdict (gh-bug-binding AC-007).
+	ACRef string
+	// Binding is the bug-binding gate's own state for a gh thread: BindingOn, or
+	// BindingOff when adbd_bug_binding=off. Empty for non-gh threads.
+	Binding string
 }
 
-// sddGate grades one thread. It reads the filesystem (the project directory, the
-// Beacon tree, one truth.md) and nothing else: no network, no subprocess, so a
-// drain holding the queue lock cannot block on an external CLI.
-func (r *Router) sddGate(thread string) sddVerdict {
+// sddGateItem grades one queue item. It reads the filesystem (the project
+// directory, the Beacon tree, one truth.md and the files next to it) and nothing
+// else: no network, no subprocess, so a drain holding the queue lock cannot block
+// on an external CLI.
+func (r *Router) sddGateItem(item QueueItem) sddVerdict {
 	// AC-007: an operator who turned the gate off gets no refusal at all. The
 	// lane still says so, so the trace shows the gate was off rather than
 	// guessing that every project happened to be fine.
 	if !r.SDDGate {
 		return sddVerdict{Lane: SDDLaneGatedOff}
 	}
+	thread := strings.TrimSpace(item.Thread)
 	repo, ok := r.sddProjectRoot(thread)
 	if !ok {
 		// No project directory resolves: there is nothing to grade against, so
@@ -112,13 +133,20 @@ func (r *Router) sddGate(thread string) sddVerdict {
 	version, managed := beaconManaged(repo, r.beaconDocsRoot())
 	if !managed {
 		// AC-006: not a Beacon project (content, research, a plain checkout), so
-		// nothing about this dispatch changes.
+		// nothing about this dispatch changes. For a gh issue that also means the
+		// bug-binding gate has no baseline to hang on: the dispatch is untouched.
 		return sddVerdict{Lane: SDDLaneNotApplicable}
+	}
+	if _, isGitHub := ghThreadRepo(thread); isGitHub {
+		// gh-bug-binding: an issue must declare the frozen AC it violates. The
+		// old guard_only answer was the loophole this lake closes.
+		return r.bugBindingGate(item, repo, version)
 	}
 	slug, ok := featureSlugFromThread(thread)
 	if !ok {
 		// A Beacon project, but the thread cannot be mapped onto a requirement
-		// (a gh: issue, say): dispatch, guarded, no refusal.
+		// (a feishu thread, a malformed skill thread): dispatch, guarded, no
+		// refusal.
 		return sddVerdict{Lane: SDDLaneGuardOnly}
 	}
 	status, err := readTruthStatus(featureTruthPath(repo, r.beaconDocsRoot(), version, slug))
@@ -135,6 +163,295 @@ func (r *Router) sddGate(thread string) sddVerdict {
 		return sddVerdict{Lane: SDDLaneGated, Refuse: true, ReasonCode: ReasonTruthNotFrozen}
 	}
 	return sddVerdict{Lane: SDDLaneGated}
+}
+
+// ---------------------------------------------------------------------------
+// gh bug binding (feature gh-bug-binding, v0.1.5)
+// ---------------------------------------------------------------------------
+
+// Bug-binding label grammar. The issue declares its own ownership with a label;
+// the router never infers it from the issue body (frozen non-goal: 不猜归属).
+const (
+	// bugACLabelPrefix is `beacon:ac=<slug>#<AC-ID>`.
+	bugACLabelPrefix = "beacon:ac="
+	// bugNoACLabel is the explicit exemption for chores that are not a contract
+	// violation: `beacon:no-ac`.
+	bugNoACLabel = "beacon:no-ac"
+	// bugBindingClause is the sentence every bound dispatch must carry (AC-002):
+	// fixing one criterion may not silently break another.
+	bugBindingClause = "回归必须让其它 AC 保持绿"
+	// bugBindingTokenLen caps one side of a binding (slug, AC id), matching the
+	// frozen thread alphabet's 64-character ceiling.
+	bugBindingTokenLen = 64
+)
+
+// Bug-binding reason codes. Stable machine tokens, never prose.
+const (
+	// ReasonIssueUnbound: a Beacon-managed gh issue that declared no frozen AC
+	// (no label, a malformed label, or more than one ac label).
+	ReasonIssueUnbound = "issue_unbound"
+	// ReasonIssueExemptNoAC: the issue carried beacon:no-ac, so it is a chore and
+	// is dispatched with the SDD guard instead of being refused.
+	ReasonIssueExemptNoAC = "issue_exempt_no_ac"
+	// ReasonACNotFound: the issue declared a frozen package that does not contain
+	// the AC id it claims to violate.
+	ReasonACNotFound = "ac_not_found"
+)
+
+// Bug-binding trace tokens, written to the `binding` field of every gh row so the
+// audit trail states whether the gate judged it at all.
+const (
+	// BindingOn: the gate was on and graded the issue.
+	BindingOn = "on"
+	// BindingOff: adbd_bug_binding=off, so the gh lane fell back to guard_only.
+	// The token is deliberately literal `binding_off`, which is what the frozen
+	// truth promises an operator will see.
+	BindingOff = "binding_off"
+)
+
+// bugBinding is one issue's declaration, as parsed from its labels.
+type bugBinding struct {
+	// Bound is true only for exactly one well-formed ac label.
+	Bound bool
+	// Exempt is true only for beacon:no-ac with no ac label beside it.
+	Exempt bool
+	Slug   string
+	ACID   string
+}
+
+// ref is the trace's ac_ref value: `<slug>#<AC-ID>`, empty when nothing was
+// declared.
+func (b bugBinding) ref() string {
+	if !b.Bound {
+		return ""
+	}
+	return b.Slug + "#" + b.ACID
+}
+
+// parseBugBindingLabels reads the declaration out of an issue's labels (AC-001).
+//
+//	beacon:ac=<slug>#<AC-ID>  -> Bound (exactly one, well-formed)
+//	beacon:no-ac             -> Exempt
+//	nothing / malformed      -> neither (unbound)
+//	two or more ac labels    -> neither (ambiguous is not bound)
+//
+// Every ambiguity resolves to "unbound", because guessing which criterion an
+// issue violates is exactly what the frozen non-goal forbids. Matching is
+// case-insensitive and trims spaces: a label is typed by a human.
+func parseBugBindingLabels(labels []string) bugBinding {
+	var (
+		bound     bugBinding
+		acCount   int
+		exempt    bool
+		malformed bool
+	)
+	for _, raw := range labels {
+		label := strings.TrimSpace(raw)
+		if label == "" {
+			continue
+		}
+		lowered := strings.ToLower(label)
+		if lowered == bugNoACLabel {
+			exempt = true
+			continue
+		}
+		if !strings.HasPrefix(lowered, bugACLabelPrefix) {
+			// Another `beacon:ac*` spelling (no `=`, a dash) is a typo the caller
+			// must fix, not a criterion to guess at.
+			if strings.HasPrefix(lowered, "beacon:ac") {
+				malformed = true
+			}
+			continue
+		}
+		slug, acID, ok := parseBugACValue(label[len(bugACLabelPrefix):])
+		if !ok {
+			malformed = true
+			continue
+		}
+		acCount++
+		bound.Slug, bound.ACID = slug, acID
+	}
+	switch {
+	case malformed, acCount > 1, acCount == 1 && exempt:
+		// Ambiguous in every direction: refuse to guess.
+		return bugBinding{}
+	case acCount == 1:
+		bound.Bound = true
+		return bound
+	case exempt:
+		return bugBinding{Exempt: true}
+	default:
+		return bugBinding{}
+	}
+}
+
+// parseBugACValue splits `<slug>#<AC-ID>`. Both sides must be a binding token and
+// there must be exactly one `#`, so `a#AC-1#x` is a malformed label rather than
+// two answers.
+func parseBugACValue(value string) (slug, acID string, ok bool) {
+	slug, acID, found := strings.Cut(value, "#")
+	if !found || strings.Contains(acID, "#") {
+		return "", "", false
+	}
+	if !isBindingToken(slug) || !isBindingToken(acID) {
+		return "", "", false
+	}
+	return slug, acID, true
+}
+
+// isBindingToken reports whether s is a non-empty, bounded token of letters,
+// digits, dot, underscore and dash. AC ids are upper case (AC-001), so this is
+// deliberately not the lowercase thread alphabet.
+func isBindingToken(s string) bool {
+	if s == "" || len(s) > bugBindingTokenLen {
+		return false
+	}
+	for i := 0; i < len(s); i++ {
+		c := s[i]
+		switch {
+		case c >= 'a' && c <= 'z', c >= 'A' && c <= 'Z', c >= '0' && c <= '9':
+		case c == '.', c == '_', c == '-':
+		default:
+			return false
+		}
+	}
+	return true
+}
+
+// bugBindingGate grades one gh issue against the frozen requirement package
+// (AC-002 .. AC-006). repo and version are already resolved by sddGateItem, so
+// this function only reads the package itself.
+func (r *Router) bugBindingGate(item QueueItem, repo, version string) sddVerdict {
+	// AC-007 (config): the switch. Off means the gh lane keeps its pre-feature
+	// behaviour -- the SDD guard, no refusal -- and the row says binding_off, so a
+	// disabled gate is never mistaken for a passing one.
+	if !r.BugBinding {
+		return sddVerdict{Lane: SDDLaneGuardOnly, Binding: BindingOff}
+	}
+	binding := parseBugBindingLabels(item.Labels)
+	if !binding.Bound {
+		if binding.Exempt {
+			// AC-004: an explicit exemption is a chore, not a contract
+			// violation. It dispatches, guarded, and the row says why.
+			return sddVerdict{
+				Lane:       SDDLaneGuardOnly,
+				ReasonCode: ReasonIssueExemptNoAC,
+				Binding:    BindingOn,
+			}
+		}
+		// AC-003: no declaration (or an ambiguous one) means the issue cannot say
+		// which frozen criterion it breaks. Refuse and keep it in the queue.
+		return sddVerdict{Lane: SDDLaneGated, Refuse: true, ReasonCode: ReasonIssueUnbound, Binding: BindingOn}
+	}
+	ref := binding.ref()
+	dir := featurePackageDir(repo, r.beaconDocsRoot(), version, binding.Slug)
+	status, err := readTruthStatus(filepath.Join(dir, beaconTruthFile))
+	if err != nil {
+		// The slug names a package that does not exist in this tree: there is no
+		// baseline at all, which is the same verdict as a missing feature.
+		return sddVerdict{
+			Lane:       SDDLaneGated,
+			Refuse:     true,
+			ReasonCode: ReasonFeatureNotRegistered,
+			ACRef:      ref,
+			Binding:    BindingOn,
+		}
+	}
+	if !isFrozenStatus(status) {
+		// AC-005: the same judgment a skill thread gets. An unfrozen baseline is
+		// not a baseline, so the bug waits for a refreeze instead of being fixed
+		// against a moving target.
+		return sddVerdict{
+			Lane:       SDDLaneGated,
+			Refuse:     true,
+			ReasonCode: ReasonTruthNotFrozen,
+			ACRef:      ref,
+			Binding:    BindingOn,
+		}
+	}
+	if !packageHasAC(dir, binding.ACID) {
+		// AC-006: the package is frozen but does not contain the AC the issue
+		// claims to violate -- the label is stale or invented.
+		return sddVerdict{
+			Lane:       SDDLaneGated,
+			Refuse:     true,
+			ReasonCode: ReasonACNotFound,
+			ACRef:      ref,
+			Binding:    BindingOn,
+		}
+	}
+	// AC-002: bound, frozen, and the criterion exists. The lane is gated and the
+	// AC reference travels with the dispatch text and the trace.
+	return sddVerdict{Lane: SDDLaneGated, ACRef: ref, Binding: BindingOn}
+}
+
+// packageHasAC answers "does this requirement package contain that AC id?".
+//
+// The search is token-matched over the package's own markdown files: the frozen
+// rule is "包内出现该 AC ID", and a substring hit inside `AC-0010` must not count
+// as `AC-001`. truth.md is the authority; the sibling files are the same package
+// and are read only so a criterion spelled out in tests.md still counts.
+func packageHasAC(dir, acID string) bool {
+	if !isBindingToken(acID) {
+		return false
+	}
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return false
+	}
+	for _, entry := range entries {
+		if entry.IsDir() || !strings.HasSuffix(strings.ToLower(entry.Name()), ".md") {
+			continue
+		}
+		data, err := os.ReadFile(filepath.Join(dir, entry.Name()))
+		if err != nil {
+			continue
+		}
+		if containsToken(string(data), acID) {
+			return true
+		}
+	}
+	return false
+}
+
+// containsToken reports whether doc contains token delimited by characters that
+// are not part of a binding token, so `AC-001` is found in `| AC-001 |` and not
+// in `AC-0010`.
+func containsToken(doc, token string) bool {
+	for start := 0; start+len(token) <= len(doc); {
+		index := strings.Index(doc[start:], token)
+		if index < 0 {
+			return false
+		}
+		index += start
+		end := index + len(token)
+		leftOK := index == 0 || !isBindingByte(doc[index-1])
+		rightOK := end == len(doc) || !isBindingByte(doc[end])
+		if leftOK && rightOK {
+			return true
+		}
+		start = index + 1
+	}
+	return false
+}
+
+// isBindingByte is one byte of a binding token (see isBindingToken).
+func isBindingByte(c byte) bool {
+	switch {
+	case c >= 'a' && c <= 'z', c >= 'A' && c <= 'Z', c >= '0' && c <= '9':
+		return true
+	case c == '.', c == '_', c == '-':
+		return true
+	}
+	return false
+}
+
+// bugBindingParagraph is the block prepended to a bound issue's dispatch text
+// (AC-002): the AC reference the fix must align with, and the regression rule.
+// Two lines, so a worker reading only the head of the message still knows both.
+func bugBindingParagraph(acRef string) string {
+	return "绑定 AC: " + acRef + "\n" +
+		"本次修复必须对齐 " + acRef + "；" + bugBindingClause + "。"
 }
 
 // beaconDocsRoot is adbd_beacon_docs_root with its default applied. The default
@@ -176,7 +493,13 @@ func featureSlugFromThread(thread string) (string, bool) {
 // featureTruthPath is <repo>/<docsRoot>/<version>/features/<slug>/truth.md -- the
 // one file the gate judges.
 func featureTruthPath(repo, docsRoot, version, slug string) string {
-	return filepath.Join(beaconDocsBase(repo, docsRoot), version, beaconFeaturesDir, slug, beaconTruthFile)
+	return filepath.Join(featurePackageDir(repo, docsRoot, version, slug), beaconTruthFile)
+}
+
+// featurePackageDir is <repo>/<docsRoot>/<version>/features/<slug> -- the
+// requirement package a bound gh issue points at.
+func featurePackageDir(repo, docsRoot, version, slug string) string {
+	return filepath.Join(beaconDocsBase(repo, docsRoot), version, beaconFeaturesDir, slug)
 }
 
 // beaconDocsBase resolves the Beacon documentation root against a project. An

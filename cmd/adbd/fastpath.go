@@ -297,6 +297,10 @@ type slowPathRecord struct {
 	Text       string `json:"text"`
 	ReasonCode string `json:"reason_code"`
 	RecordedAt string `json:"recorded_at"`
+	// Labels are the source labels this event carried (gh-bug-binding AC-001).
+	// They are persisted with the queue line because the bug-binding gate has to
+	// re-read them on every drain, long after the poll that produced them.
+	Labels []string `json:"labels,omitempty"`
 }
 
 // Store keeps runtime state in one JSON document plus an append-only slow-path
@@ -512,6 +516,11 @@ type Config struct {
 	// BeaconDocsRoot is adbd_beacon_docs_root: where a project keeps its Beacon
 	// tree, relative to the project directory. Defaults to "docs/beacon".
 	BeaconDocsRoot string
+	// BugBinding is adbd_bug_binding (gh-bug-binding AC-007): when on, a gh issue
+	// in a Beacon-managed project must declare the frozen AC it violates with a
+	// `beacon:ac=<slug>#<AC-ID>` label, or carry `beacon:no-ac`. Default on; `off`
+	// falls the gh lane back to guard_only and the trace says binding_off.
+	BugBinding bool
 	// PaseoBin is adbd_paseo_bin, the runner binary path.
 	PaseoBin string
 	// RouterAgent is adbd_router_agent, the legacy spelling of the router's
@@ -656,6 +665,10 @@ func defaultConfig() Config {
 		// to dispatch against an unfrozen truth.
 		SDDGate:        true,
 		BeaconDocsRoot: DefaultBeaconDocsRoot,
+		// gh-bug-binding AC-007: the binding gate is on unless an operator says
+		// otherwise, so a daemon that never mentions the key still refuses a bug
+		// that cannot name the frozen criterion it violates.
+		BugBinding: true,
 	}
 }
 
@@ -743,6 +756,12 @@ func LoadConfig(path string) (Config, error) {
 	}
 	if root := strings.TrimSpace(values["adbd_beacon_docs_root"]); root != "" {
 		cfg.BeaconDocsRoot = root
+	}
+	// gh-bug-binding AC-007: the binding gate follows the same rule as
+	// adbd_sdd_gate -- only an explicit off/false/0/no disables it, because a gate
+	// that silently disables itself is worse than one that refuses.
+	if raw, ok := values["adbd_bug_binding"]; ok {
+		cfg.BugBinding = configSwitchOn(raw, true)
 	}
 
 	// GitHub source (feature github-issue). Repos and labels are comma separated
@@ -1027,6 +1046,10 @@ type IntakeInput struct {
 	Thread    string
 	MessageID string
 	Text      string
+	// Labels are the source's labels, when it has any (gh-bug-binding AC-001).
+	// They are carried into the slow-path queue so the router can grade a bug
+	// against the frozen AC it declared; a source without labels leaves it nil.
+	Labels []string
 }
 
 // IntakeResult is the decision plus the accounting the caller needs.
@@ -1171,6 +1194,7 @@ func (c *Core) toSlowPath(in IntakeInput, reason, state, lease string, now time.
 		Text:       in.Text,
 		ReasonCode: reason,
 		RecordedAt: now.Format(time.RFC3339),
+		Labels:     append([]string(nil), in.Labels...),
 	}
 	if err := c.Store.appendSlowPath(rec); err != nil {
 		return err

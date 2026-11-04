@@ -389,6 +389,9 @@ func (p *GitHubPoller) submit(repo string, issue GitHubIssue) (IntakeResult, err
 		Thread:    GitHubThread(repo, issue.Number),
 		MessageID: GitHubMessageID(issue),
 		Text:      guardedText(GitHubText(issue)),
+		// gh-bug-binding AC-001: the issue's labels are the only place it can
+		// declare which frozen AC it violates, so they travel with the event.
+		Labels: issue.labelNames(),
 	}
 	return p.Core.Intake(in)
 }
